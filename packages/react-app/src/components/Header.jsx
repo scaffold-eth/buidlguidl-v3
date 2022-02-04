@@ -44,11 +44,11 @@ export default function Header({
         <Flex shrink={0} mr={9} mt={{ base: userIsRegistered ? 5 : 0, lg: 0 }}>
           <NavLink to="/" exact>
             <span role="img" aria-label="castle icon">
-              🏃‍♀️
+              🏰️
             </span>{" "}
-            <chakra.strong display={{ base: "none", md: "inline-block" }}>SpeedRunEthereum.com</chakra.strong>
+            <chakra.strong display={{ base: "none", md: "inline-block" }}>BuidlGuidl v3</chakra.strong>
             <chakra.strong display={{ base: "inline-block", md: "none" }}>
-              {isSignerProviderConnected ? "SRE" : "SpeedRunEthereum.com"}
+              {isSignerProviderConnected ? "BGv3" : "BuidlGuidl v3"}
             </chakra.strong>
           </NavLink>
         </Flex>

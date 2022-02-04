@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Container, Box, Text } from "@chakra-ui/react";
+import { Container, Box, Text, Link } from "@chakra-ui/react";
 import ChallengeExpandedCard from "../components/ChallengeExpandedCard";
 import { challengeInfo } from "../data/challenges";
 import useCustomColorModes from "../hooks/useCustomColorModes";
@@ -20,18 +20,18 @@ export default function HomeView({ connectedBuilder }) {
 
   return (
     <Container maxW="container.lg" centerContent>
-      <Text color={primaryFontColor} mb="12" fontSize="xl" textAlign="center">
-        <span role="img" aria-label="teacher icon">
-          👩‍🏫
-        </span>{" "}
-        Learn how to build on Ethereum; the superpowers and the gotchas.
-      </Text>
-      <Text color={primaryFontColor} mb="12" fontSize="xl" textAlign="center">
-        <span role="img" aria-label="mage icon">
-          🧙‍♀️
-        </span>{" "}
-        Craft your web3 portfolio and meet other builders.
-      </Text>
+      <Container maxW="container.md" centerContent>
+        <Text color={primaryFontColor} mb="12" fontSize="xl" textAlign="center">
+          The{" "}
+          <span role="img" aria-label="castle icon">
+            🏰
+          </span>{" "}
+          BuidlGuidl is a curated group of Ethereum builders creating products, prototypes, and tutorials with 🏗
+          <Link href="https://github.com/scaffold-eth/scaffold-eth" isExternal>
+            scaffold-eth
+          </Link>
+        </Text>
+      </Container>
 
       <Box>
         {Object.entries(challengeInfo).map(([challengeId, challenge], index) => (
