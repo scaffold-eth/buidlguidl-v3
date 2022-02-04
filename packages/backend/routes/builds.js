@@ -19,10 +19,10 @@ router.get("/", async (req, res) => {
 /**
  * Create a new build in draft mode
  */
-router.post("/", withRole("builder"), async (request, response) => {
+router.post("/", withRole("builder"), async (req, res) => {
   console.log("POST /builds");
-  const { buildUrl, desc, image, name, signature } = request.body;
-  const address = request.address;
+  const { buildUrl, desc, image, name, signature } = req.body;
+  const address = req.address;
 
   const verifyOptions = {
     messageId: "buildSubmit",
@@ -31,7 +31,7 @@ router.post("/", withRole("builder"), async (request, response) => {
   };
 
   if (!verifySignature(signature, verifyOptions)) {
-    response.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
 
@@ -57,16 +57,16 @@ router.post("/", withRole("builder"), async (request, response) => {
   const event = createEvent(EVENT_TYPES.BUILD_SUBMIT, eventPayload, signature);
   db.createEvent(event); // INFO: async, no await here
 
-  response.sendStatus(200);
+  res.sendStatus(200);
 });
 
 /**
  * Publish / Delete a build
  */
-router.patch("/", withRole("admin"), async (request, response) => {
+router.patch("/", withRole("admin"), async (req, res) => {
   console.log("PATCH /builds");
-  const { buildId, newStatus, signature, userAddress } = request.body;
-  const address = request.address;
+  const { buildId, newStatus, signature, userAddress } = req.body;
+  const address = req.address;
 
   const verifyOptions = {
     messageId: "buildReview",
@@ -76,12 +76,12 @@ router.patch("/", withRole("admin"), async (request, response) => {
   };
 
   if (!verifySignature(signature, verifyOptions)) {
-    response.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
 
   if (newStatus !== "ACCEPTED" && newStatus !== "REJECTED") {
-    response.status(400).send("Invalid status");
+    res.status(400).send("Invalid status");
     return;
   }
 
@@ -100,7 +100,7 @@ router.patch("/", withRole("admin"), async (request, response) => {
   const event = createEvent(EVENT_TYPES.BUILD_REVIEW, eventPayload, signature);
   db.createEvent(event); // INFO: async, no await here
 
-  response.sendStatus(200);
+  res.sendStatus(200);
 });
 
 module.exports = router;

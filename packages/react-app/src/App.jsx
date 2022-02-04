@@ -142,9 +142,7 @@ function App() {
     async function fetchUserData() {
       console.log("getting user data");
       try {
-        const fetchedUserObject = await axios.get(serverUrl + `/user`, {
-          params: { address },
-        });
+        const fetchedUserObject = await axios.get(serverUrl + `/builders/${address}`);
         setUserRole(USER_ROLES[fetchedUserObject.data.role] ?? USER_ROLES.registered);
         setConnectedBuilder(fetchedUserObject.data);
       } catch (e) {
