@@ -1,22 +1,21 @@
-import React, { useMemo } from "react";
-import { Container, Box, Text, Link } from "@chakra-ui/react";
-import ChallengeExpandedCard from "../components/ChallengeExpandedCard";
-import { challengeInfo } from "../data/challenges";
+import React, { useEffect, useState } from "react";
+import { Container, SimpleGrid, Text, Link } from "@chakra-ui/react";
+import { getAllBuilds } from "../data/api";
 import useCustomColorModes from "../hooks/useCustomColorModes";
-import { CHALLENGE_SUBMISSION_STATUS } from "../helpers/constants";
+import BuildCard from "../components/BuildCard";
 
-export default function HomeView({ connectedBuilder }) {
+export default function HomeView() {
+  const [builds, setBuilds] = useState([]);
   const { primaryFontColor } = useCustomColorModes();
 
-  const builderCompletedChallenges = useMemo(() => {
-    if (!connectedBuilder?.challenges) {
-      return [];
-    }
+  useEffect(() => {
+    const updateBuilds = async () => {
+      const allBuilds = await getAllBuilds();
+      setBuilds(allBuilds);
+    };
 
-    return Object.keys(connectedBuilder.challenges).filter(
-      challengeId => connectedBuilder.challenges[challengeId].status === CHALLENGE_SUBMISSION_STATUS.ACCEPTED,
-    );
-  }, [connectedBuilder]);
+    updateBuilds();
+  }, []);
 
   return (
     <Container maxW="container.lg" centerContent>
@@ -26,23 +25,19 @@ export default function HomeView({ connectedBuilder }) {
           <span role="img" aria-label="castle icon">
             🏰
           </span>{" "}
-          BuidlGuidl is a curated group of Ethereum builders creating products, prototypes, and tutorials with 🏗
+          <strong>BuidlGuidl</strong> is a curated group of Ethereum builders creating products, prototypes, and
+          tutorials with 🏗
           <Link href="https://github.com/scaffold-eth/scaffold-eth" isExternal>
             scaffold-eth
           </Link>
         </Text>
       </Container>
 
-      <Box>
-        {Object.entries(challengeInfo).map(([challengeId, challenge], index) => (
-          <ChallengeExpandedCard
-            challengeId={challengeId}
-            challenge={challenge}
-            challengeIndex={index}
-            builderCompletedChallenges={builderCompletedChallenges}
-          />
+      <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
+        {builds.map(build => (
+          <BuildCard build={build} key={build.id} />
         ))}
-      </Box>
+      </SimpleGrid>
     </Container>
   );
 }

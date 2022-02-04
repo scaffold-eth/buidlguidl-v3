@@ -75,33 +75,28 @@ export default function Header({
               </NavLink>
             </chakra.li>
           )}
-          {/* ToDo. At least Builder */}
-          {(USER_ROLES.builder === userRole || USER_ROLES.admin === userRole) && (
-            <>
-              <chakra.li key="/builders" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-                <NavLink
-                  to="/builders"
-                  exact
-                  activeStyle={{
-                    color: primaryColorString,
-                  }}
-                >
-                  Builders
-                </NavLink>
-              </chakra.li>
-              <chakra.li key="/builds" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-                <NavLink
-                  to="/builds"
-                  exact
-                  activeStyle={{
-                    color: primaryColorString,
-                  }}
-                >
-                  Builds
-                </NavLink>
-              </chakra.li>
-            </>
-          )}
+          <chakra.li key="/builders" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <NavLink
+              to="/builders"
+              exact
+              activeStyle={{
+                color: primaryColorString,
+              }}
+            >
+              Builders
+            </NavLink>
+          </chakra.li>
+          <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <NavLink
+              to="/activity"
+              exact
+              activeStyle={{
+                color: primaryColorString,
+              }}
+            >
+              Activity
+            </NavLink>
+          </chakra.li>
           {USER_ROLES.admin === userRole && (
             <>
               <chakra.li key="/submission-review" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
@@ -113,17 +108,6 @@ export default function Header({
                   }}
                 >
                   Review Submissions
-                </NavLink>
-              </chakra.li>
-              <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-                <NavLink
-                  to="/activity"
-                  exact
-                  activeStyle={{
-                    color: primaryColorString,
-                  }}
-                >
-                  Activity
                 </NavLink>
               </chakra.li>
             </>

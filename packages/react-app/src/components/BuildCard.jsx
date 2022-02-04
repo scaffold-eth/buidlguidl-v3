@@ -16,9 +16,6 @@ const BuildCard = ({ build }) => {
         <Text color={secondaryFontColor}>{build.desc}</Text>
         <Spacer />
         <ButtonGroup variant="outline" size="sm" spacing="2">
-          <Button disabled variant="outline" isFullWidth>
-            Fund
-          </Button>
           <Button isFullWidth as="a" href={build.branch} target="_blank" rel="noopener noreferrer">
             Fork
           </Button>
