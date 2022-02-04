@@ -1,4 +1,3 @@
-export { default as ChallengeDetailView } from "./ChallengeDetailView";
 export { default as HomeView } from "./HomeView";
 export { default as BuildsListView } from "./BuildsListView";
 export { default as BuilderListView } from "./BuilderListView";

@@ -9,14 +9,7 @@ import axios from "axios";
 import { useUserProvider } from "./hooks";
 import { Header, ColorModeSwitcher } from "./components";
 import { INFURA_ID, SERVER_URL as serverUrl } from "./constants";
-import {
-  BuilderListView,
-  ChallengeDetailView,
-  BuilderProfileView,
-  SubmissionReviewView,
-  HomeView,
-  ActivityView,
-} from "./views";
+import { BuilderListView, BuilderProfileView, SubmissionReviewView, HomeView, ActivityView } from "./views";
 import { USER_ROLES } from "./helpers/constants";
 import { providerPromiseWrapper } from "./helpers/blockchainProviders";
 import BlockchainProvidersContext from "./contexts/blockchainProvidersContext";
@@ -185,15 +178,6 @@ function App() {
               address={address}
               userRole={userRole}
               userProvider={userProvider}
-            />
-          </Route>
-          <Route path="/challenge/:challengeId">
-            <ChallengeDetailView
-              serverUrl={serverUrl}
-              address={address}
-              userProvider={userProvider}
-              userRole={userRole}
-              loadWeb3Modal={loadWeb3Modal}
             />
           </Route>
           {/* ToDo: Protect this route on the frontend? */}

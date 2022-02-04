@@ -30,7 +30,6 @@ import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileChallengesTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
 import { challengeInfo } from "../data/challenges";
 import { CHALLENGE_SUBMISSION_STATUS, userFunctionDescription } from "../helpers/constants";
-import ChallengeStatusTag from "../components/ChallengeStatusTag";
 import { getAcceptedChallenges } from "../helpers/builders";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getChallengeEventsForUser } from "../data/api";
@@ -157,7 +156,6 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                       <Th>Contract</Th>
                       <Th>Live Demo</Th>
                       <Th>Updated</Th>
-                      <Th>Status</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -210,13 +208,6 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                             ) : (
                               <DateWithTooltip timestamp={lastEventForChallenge?.timestamp} />
                             )}
-                          </Td>
-                          <Td>
-                            <ChallengeStatusTag
-                              status={lastSubmission.status}
-                              comment={lastSubmission.reviewComment}
-                              autograding={lastSubmission.autograding}
-                            />
                           </Td>
                         </Tr>
                       );
