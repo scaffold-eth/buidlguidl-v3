@@ -2,12 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link as RouteLink, useParams } from "react-router-dom";
 import axios from "axios";
 import {
-  useToast,
-  useColorModeValue,
   Box,
   Button,
-  Center,
-  Link,
   HStack,
   Text,
   Flex,
@@ -23,30 +19,19 @@ import {
   SimpleGrid,
   GridItem,
   Tag,
-  SkeletonText,
 } from "@chakra-ui/react";
 import { InfoOutlineIcon } from "@chakra-ui/icons";
 import BuilderProfileCard from "../components/BuilderProfileCard";
-import BuilderProfileChallengesTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
-import { challengeInfo } from "../data/challenges";
-import { CHALLENGE_SUBMISSION_STATUS, userFunctionDescription } from "../helpers/constants";
-import { getAcceptedChallenges } from "../helpers/builders";
+import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
+import { userFunctionDescription } from "../helpers/constants";
 import useCustomColorModes from "../hooks/useCustomColorModes";
-import { getChallengeEventsForUser } from "../data/api";
-import { byTimestamp } from "../helpers/sorting";
-import DateWithTooltip from "../components/DateWithTooltip";
 
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
   const { builderAddress } = useParams();
-  const { primaryFontColor, secondaryFontColor, borderColor, iconBgColor } = useCustomColorModes();
+  const { secondaryFontColor, borderColor, iconBgColor } = useCustomColorModes();
   const [builder, setBuilder] = useState();
-  const [challengeEvents, setChallengeEvents] = useState([]);
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
-  const [isLoadingTimestamps, setIsLoadingTimestamps] = useState(false);
-  const toast = useToast({ position: "top", isClosable: true });
-  const toastVariant = useColorModeValue("subtle", "solid");
-  const challenges = builder?.challenges ? Object.entries(builder.challenges) : undefined;
-  const acceptedChallenges = getAcceptedChallenges(builder?.challenges);
+  const builds = builder?.builds ? Object.entries(builder.builds) : undefined;
   const isMyProfile = builderAddress === address;
 
   const fetchBuilder = async () => {
@@ -58,29 +43,6 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
 
   useEffect(() => {
     fetchBuilder();
-    // eslint-disable-next-line
-  }, [builderAddress]);
-
-  useEffect(() => {
-    if (!builderAddress) {
-      return;
-    }
-
-    async function fetchChallengeEvents() {
-      setIsLoadingTimestamps(true);
-      try {
-        const fetchedChallengeEvents = await getChallengeEventsForUser(builderAddress);
-        setChallengeEvents(fetchedChallengeEvents.sort(byTimestamp).reverse());
-        setIsLoadingTimestamps(false);
-      } catch (error) {
-        toast({
-          description: "Can't get challenges metadata. Please try again",
-          status: "error",
-          variant: toastVariant,
-        });
-      }
-    }
-    fetchChallengeEvents();
     // eslint-disable-next-line
   }, [builderAddress]);
 
@@ -105,10 +67,10 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               </Flex>
               <div>
                 <Text fontSize="xl" fontWeight="medium" textAlign="right">
-                  {acceptedChallenges.length}
+                  {/* ToDo. Accepted Builds*/} 0
                 </Text>
                 <Text fontSize="sm" color={secondaryFontColor} textAlign="right">
-                  challenges completed
+                  builds
                 </Text>
               </div>
             </Flex>
@@ -134,81 +96,36 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           </HStack>
           <Flex mb={4}>
             <Text fontSize="2xl" fontWeight="bold">
-              Challenges
+              Builds
             </Text>
             <Spacer />
           </Flex>
-          {isLoadingBuilder && <BuilderProfileChallengesTableSkeleton />}
+          {isLoadingBuilder && <BuilderProfileBuildsTableSkeleton />}
           {!isLoadingBuilder &&
-            (challenges ? (
+            (builds ? (
               <Box overflowX="auto">
                 <Table>
                   {isMyProfile && (
                     <TableCaption>
                       <Button as={RouteLink} colorScheme="blue" to="/">
-                        Start a challenge
+                        Submit a new Build
                       </Button>
                     </TableCaption>
                   )}
                   <Thead>
                     <Tr>
                       <Th>Name</Th>
-                      <Th>Contract</Th>
-                      <Th>Live Demo</Th>
-                      <Th>Updated</Th>
+                      <Th>Link</Th>
+                      <Th>Created</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {challenges.map(([challengeId, lastSubmission]) => {
-                      if (!challengeInfo[challengeId]) {
-                        return null;
-                      }
-                      const lastEventForChallenge = challengeEvents.filter(
-                        event => event.payload.challengeId === challengeId,
-                      )[0];
+                    {builds.map(([buildId, buildInfo]) => {
                       return (
-                        <Tr key={challengeId}>
-                          <Td>
-                            <Link as={RouteLink} to={`/challenge/${challengeId}`} fontWeight="700" color="teal.500">
-                              {challengeInfo[challengeId].label}
-                            </Link>
-                          </Td>
-                          <Td>
-                            {lastSubmission.status === CHALLENGE_SUBMISSION_STATUS.ACCEPTED ? (
-                              <Link
-                                // Legacy branchUrl
-                                href={lastSubmission.contractUrl || lastSubmission.branchUrl}
-                                color="teal.500"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Code
-                              </Link>
-                            ) : (
-                              <Center>-</Center>
-                            )}
-                          </Td>
-                          <Td>
-                            {lastSubmission.status === CHALLENGE_SUBMISSION_STATUS.ACCEPTED ? (
-                              <Link
-                                href={lastSubmission.deployedUrl}
-                                color="teal.500"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Demo
-                              </Link>
-                            ) : (
-                              <Center>-</Center>
-                            )}
-                          </Td>
-                          <Td>
-                            {isLoadingTimestamps ? (
-                              <SkeletonText noOfLines={1} />
-                            ) : (
-                              <DateWithTooltip timestamp={lastEventForChallenge?.timestamp} />
-                            )}
-                          </Td>
+                        <Tr key={buildId}>
+                          <Td>Name</Td>
+                          <Td>Link</Td>
+                          <Td>Created</Td>
                         </Tr>
                       );
                     })}
@@ -227,20 +144,17 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               >
                 {isMyProfile ? (
                   <Box maxW="xs" textAlign="center">
-                    <Text fontWeight="medium" color={primaryFontColor} mb={2}>
-                      Start a new challenge
-                    </Text>
                     <Text color={secondaryFontColor} mb={4}>
-                      Show off your skills. Learn everything you need to build on Ethereum!
+                      Show off your skills.
                     </Text>
                     <Button as={RouteLink} colorScheme="blue" to="/">
-                      Start a challenge
+                      Submit a New Build
                     </Button>
                   </Box>
                 ) : (
                   <Box maxW="xs" textAlign="center">
                     <Text color={secondaryFontColor} mb={4}>
-                      This builder hasn't completed any challenges.
+                      This builder doesn't have any builds.
                     </Text>
                   </Box>
                 )}
