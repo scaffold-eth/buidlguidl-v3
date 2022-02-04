@@ -1,6 +1,8 @@
 require("dotenv").config();
 const firebaseAdmin = require("firebase-admin");
 
+throw new Error("Firabase Connector is disabled for now");
+
 console.log("using firebase");
 if (process.env.NODE_ENV === "test") {
   // We won't be using firebase for testing for now. At some point,
