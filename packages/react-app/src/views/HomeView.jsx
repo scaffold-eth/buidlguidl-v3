@@ -21,7 +21,7 @@ export default function HomeView({ userProvider, connectedBuilder }) {
 
   return (
     <Container maxW="container.lg" centerContent>
-      <Container maxW="container.md" centerContent>
+      <Container maxW="container.sm" centerContent>
         <Text color={primaryFontColor} mb="12" fontSize="xl" textAlign="center">
           The{" "}
           <span role="img" aria-label="castle icon">
