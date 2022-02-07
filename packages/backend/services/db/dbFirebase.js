@@ -93,13 +93,8 @@ const createBuild = build => {
 };
 
 const findAllBuilds = async (isDraft = false) => {
-  const buildsSnapshot = await database.collection("builds").get();
-  const allBuilds = buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  if (isDraft) {
-    return allBuilds.filter(build => build.isDraft);
-  }
-
-  return allBuilds;
+  const buildsSnapshot = await database.collection("builds").where("isDraft", "==", !!isDraft).get();
+  return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
 const findBuilderBuilds = async builderAddress => {
@@ -115,7 +110,7 @@ const findBuilderBuilds = async builderAddress => {
 
 const publishBuild = buildId => {
   const buildRef = database.collection("builds").doc(buildId);
-  return buildRef.update({ isDraft: true });
+  return buildRef.update({ isDraft: false });
 };
 
 const removeBuild = buildId => {

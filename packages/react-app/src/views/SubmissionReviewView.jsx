@@ -142,7 +142,7 @@ export default function SubmissionReviewView({ userProvider }) {
               ) : (
                 draftBuilds.map(build => (
                   <BuildReviewRow
-                    key={`${build.userAddress}_${build.id}`}
+                    key={`${build.builder}_${build.id}`}
                     build={build}
                     isLoading={isLoadingDraftBuilds}
                     approveClick={handleSendBuildReview("ACCEPTED")}

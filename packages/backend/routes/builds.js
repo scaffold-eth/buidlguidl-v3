@@ -60,7 +60,7 @@ router.post("/", withRole("builder"), async (req, res) => {
   const dbResponse = await db.createBuild(buildData);
 
   const eventPayload = {
-    userAddress: address,
+    builder: address,
     buildUrl,
     name,
     buildId: dbResponse.id,
@@ -105,7 +105,7 @@ router.patch("/", withRole("admin"), async (req, res) => {
 
   const eventPayload = {
     reviewAction: newStatus,
-    userAddress,
+    builder: userAddress,
     reviewerAddress: address,
     buildId,
   };

@@ -9,7 +9,7 @@ export default function BuildReviewRow({ build, isLoading, approveClick, rejectC
     <Tr>
       <Td>
         <Link as={RouteLink} to={`/builders/${build.address}`} pos="relative">
-          <Address address={build.address} w="12.5" fontSize="16" />
+          <Address address={build.builder} w="12.5" fontSize="16" />
         </Link>
       </Td>
       <Td>{build.name}</Td>
@@ -29,7 +29,7 @@ export default function BuildReviewRow({ build, isLoading, approveClick, rejectC
             colorScheme="red"
             disabled={isLoading}
             className="danger"
-            onClick={() => rejectClick(build.address, build.id)}
+            onClick={() => rejectClick(build.builder, build.id)}
             size="xs"
           >
             Reject
@@ -39,7 +39,7 @@ export default function BuildReviewRow({ build, isLoading, approveClick, rejectC
             colorScheme="green"
             disabled={isLoading}
             style={{ marginRight: 10 }}
-            onClick={() => approveClick(build.address, build.id)}
+            onClick={() => approveClick(build.builder, build.id)}
             size="xs"
           >
             Approve
