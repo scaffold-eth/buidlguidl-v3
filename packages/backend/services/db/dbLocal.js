@@ -131,7 +131,7 @@ const findBuilderBuilds = builderAddress => {
 
 const publishBuild = buildId => {
   const existingBuild = database.builds[buildId];
-  delete existingBuild.isDraft;
+  existingBuild.isDraft = false;
   database.builds[buildId] = existingBuild;
 
   persist();

@@ -1,8 +1,6 @@
 require("dotenv").config();
 const firebaseAdmin = require("firebase-admin");
 
-throw new Error("Firabase Connector is disabled for now");
-
 console.log("using firebase");
 if (process.env.NODE_ENV === "test") {
   // We won't be using firebase for testing for now. At some point,
@@ -105,12 +103,19 @@ const findAllBuilds = async (isDraft = false) => {
 };
 
 const findBuilderBuilds = async builderAddress => {
-  throw new Error("Not implemented yet.");
+  // ToDo. Use subcollections?
+  const buildsSnapshot = await database
+    .collection("builds")
+    .where("builder", "==", builderAddress)
+    .where("isDraft", "==", false)
+    .get();
+
+  return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
 const publishBuild = buildId => {
   const buildRef = database.collection("builds").doc(buildId);
-  return buildRef.update({ isDraft: null });
+  return buildRef.update({ isDraft: true });
 };
 
 const removeBuild = buildId => {
