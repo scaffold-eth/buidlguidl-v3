@@ -5,7 +5,7 @@ global.console.log = jest.fn(); // skip server logs
 const { URLSearchParams } = require("url");
 
 const db = require("./dbLocal");
-const { EVENT_TYPES, queryParamsToConditions } = require("../utils/events");
+const { EVENT_TYPES, queryParamsToConditions } = require("../../utils/events");
 const {
   createTestEvent,
   clearDb,
@@ -23,7 +23,7 @@ const {
   challengeReviewApproveEventB,
   challengeReviewRejectEventA,
   challengeReviewRejectEventB,
-} = require("../utils/testingUtils");
+} = require("../../utils/testingUtils");
 
 const queryStringToQueryObject = queryString => {
   const queryObject = {};

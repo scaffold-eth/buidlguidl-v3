@@ -1,4 +1,4 @@
-const db = require("../services/db");
+const db = require("../services/db/db");
 const { EVENT_TYPES, createEvent } = require("./events");
 
 const hardhatAddress1 = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";

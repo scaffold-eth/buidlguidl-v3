@@ -1,4 +1,4 @@
-const db = require("../services/db");
+const db = require("../services/db/db");
 
 /**
  * Middleware that adds to the request the address sent in the headers.

@@ -1,5 +1,5 @@
 const express = require("express");
-const db = require("../services/db");
+const db = require("../services/db/db");
 const { queryParamsToConditions, validateEventsQueryParams } = require("../utils/events");
 
 const router = express.Router();

@@ -4,10 +4,7 @@ const fs = require("fs");
 const https = require("https");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const db = require("./services/db");
-const { withAddress } = require("./middlewares/auth");
-const { getSignMessageForId, verifySignature } = require("./utils/sign");
-const { EVENT_TYPES, createEvent } = require("./utils/events");
+const { getSignMessageForId } = require("./utils/sign");
 
 const buildersRoutes = require("./routes/builders");
 const buildsRoutes = require("./routes/builds");

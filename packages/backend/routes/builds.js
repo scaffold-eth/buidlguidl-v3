@@ -1,5 +1,5 @@
 const express = require("express");
-const db = require("../services/db");
+const db = require("../services/db/db");
 const { verifySignature } = require("../utils/sign");
 const { EVENT_TYPES, createEvent } = require("../utils/events");
 const { withRole } = require("../middlewares/auth");

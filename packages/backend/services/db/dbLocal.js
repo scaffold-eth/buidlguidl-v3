@@ -6,7 +6,7 @@
  */
 require("dotenv").config();
 const fs = require("fs");
-const { getProp } = require("../utils/object");
+const { getProp } = require("../../utils/object");
 
 console.log("using local db");
 
