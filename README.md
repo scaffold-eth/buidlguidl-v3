@@ -39,3 +39,16 @@ yarn start
 ```
 
 At this point, you should have the app available at <http://localhost:3000>.
+
+## Builder / Admin role
+
+If you want to have a builder or admin role, you can edit `packages/backend/local_database/local_db.json` (created after the first time you run `yarn backend`) and add your address:
+
+```json
+"<YOUR_ADDRESS>": {
+  "creationTimestamp": 1633088553221,
+  "role": "admin",
+},
+```
+
+Remember to restart the backend & refresh the page.
