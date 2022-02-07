@@ -85,7 +85,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         Cell: ({ value }) => <BuilderAddressCell builderId={value} mainnetProvider={mainnetProvider} />,
       },
       {
-        Header: "Challenges",
+        Header: "Builds",
         accessor: "challenges",
         sortDescFirst: true,
       },

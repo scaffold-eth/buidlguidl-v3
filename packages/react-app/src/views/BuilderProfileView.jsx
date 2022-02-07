@@ -58,7 +58,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               </Flex>
               <div>
                 <Text fontSize="xl" fontWeight="medium" textAlign="right">
-                  {/* ToDo. Accepted Builds*/} 0
+                  {builder?.builds.length}
                 </Text>
                 <Text fontSize="sm" color={secondaryFontColor} textAlign="right">
                   builds
