@@ -15,9 +15,9 @@ import {
   Spinner,
   Text,
   Tooltip,
-  useToast,
   LinkBox,
   LinkOverlay,
+  chakra,
 } from "@chakra-ui/react";
 import QRPunkBlockie from "./QrPunkBlockie";
 import useDisplayAddress from "../hooks/useDisplayAddress";
@@ -25,7 +25,6 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ellipsizedAddress } from "../helpers/strings";
 import { USER_ROLES } from "../helpers/constants";
 import HeroIconUser from "./icons/HeroIconUser";
-import SignatureSignUp from "./SignatureSignUp";
 
 /*
   ~ What it does? ~
@@ -68,13 +67,10 @@ export default function Account({
   isWalletConnected,
   loadWeb3Modal,
   logoutOfWeb3Modal,
-  setUserRole,
-  userProvider,
   userRole,
 }) {
   const ens = useDisplayAddress(ensProvider, address);
   const shortAddress = ellipsizedAddress(address);
-  const toast = useToast({ position: "top", isClosable: true });
   const [isPopoverOpen, setIsPopoverOpen] = useState(true);
   const registerButtonRef = useRef();
   const openPopover = () => setIsPopoverOpen(true);
@@ -131,23 +127,6 @@ export default function Account({
     </LinkBox>
   );
 
-  const handleSignUpSuccess = () => {
-    closePopover();
-    toast({
-      title: "You are now registered!",
-      description: (
-        <>
-          Visit{" "}
-          <Link href="/portfolio" textDecoration="underline">
-            your portfolio
-          </Link>{" "}
-          to start building
-        </>
-      ),
-      status: "success",
-    });
-  };
-
   const anonymousMenu = address && (
     <Popover placement="bottom-end" initialFocusRef={registerButtonRef} isOpen={isPopoverOpen} onClose={closePopover}>
       <PopoverTrigger>
@@ -173,22 +152,18 @@ export default function Account({
           _active={{ background: "none" }}
         >
           <Text color={primaryFontColor} fontWeight="bold" textAlign="center" mb={1}>
-            Register as a builder
+            Join the BuidlGuidl
           </Text>
           <Text color={secondaryFontColor} fontSize="sm" fontWeight="normal" textAlign="center" mb={6}>
-            Sign a message with your wallet to create a builder profile.
+            Complete SpeedRunEthereum to join the BuidlGuidl
           </Text>
           <Box m="auto" p="px" borderWidth="1px" borderColor={dividerColor} borderRadius={8}>
             <QRPunkBlockie address={address} w={19} borderRadius={6} />
           </Box>
           <UserDisplayName textAlign="center" mb={6} />
-          <SignatureSignUp
-            ref={registerButtonRef}
-            userProvider={userProvider}
-            address={address}
-            onSuccess={handleSignUpSuccess}
-            setUserRole={setUserRole}
-          />
+          <Button as={Link} href="https://speedrunethereum.com" colorScheme="blue" isExternal>
+            <chakra.span ml={2}>Go SpeedRunEthereum</chakra.span>
+          </Button>
         </PopoverBody>
       </PopoverContent>
     </Popover>
