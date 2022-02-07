@@ -85,6 +85,13 @@ const createBuild = db.createBuild;
 const findAllBuilds = db.findAllBuilds;
 
 /**
+ * @param {Address} builderAddress
+ * @returns {{name: string, desc: string, branch: string, readMore: string,
+ *   image: string}[]}
+ */
+const findBuilderBuilds = db.findBuilderBuilds;
+
+/**
  *
  * @param {string} buildId
  */
@@ -126,6 +133,7 @@ module.exports = {
 
   createBuild,
   findAllBuilds,
+  findBuilderBuilds,
   publishBuild,
   removeBuild,
 

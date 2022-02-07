@@ -17,6 +17,17 @@ router.get("/", async (req, res) => {
 });
 
 /**
+ * Get all Builds for a given Builder
+ */
+router.get("/:builderAddress", async (req, res) => {
+  const builderAddress = req.params.builderAddress;
+  console.log(`/builds/${builderAddress}`);
+
+  const builderBuilds = await db.findBuilderBuilds(builderAddress);
+  res.json(builderBuilds);
+});
+
+/**
  * Create a new build in draft mode
  */
 router.post("/", withRole("builder"), async (req, res) => {
@@ -41,6 +52,7 @@ router.post("/", withRole("builder"), async (req, res) => {
     image,
     name,
     address,
+    builder: address,
     submittedTimestamp: new Date().getTime(),
     isDraft: true,
   };

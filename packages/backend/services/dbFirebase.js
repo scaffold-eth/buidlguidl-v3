@@ -104,6 +104,10 @@ const findAllBuilds = async (isDraft = false) => {
   return allBuilds;
 };
 
+const findBuilderBuilds = async builderAddress => {
+  throw new Error("Not implemented yet.");
+};
+
 const publishBuild = buildId => {
   const buildRef = database.collection("builds").doc(buildId);
   return buildRef.update({ isDraft: null });
@@ -123,6 +127,7 @@ module.exports = {
   findEventsWhere,
   createBuild,
   findAllBuilds,
+  findBuilderBuilds,
   publishBuild,
   removeBuild,
 };

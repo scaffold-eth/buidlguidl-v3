@@ -123,6 +123,12 @@ const findAllBuilds = (isDraft = false) => {
   return allBuilds;
 };
 
+const findBuilderBuilds = builderAddress => {
+  return database.builds
+    .filter(build => build.builder === builderAddress && !build.isDraft)
+    .map((build, index) => ({ id: index.toString(), ...build }));
+};
+
 const publishBuild = buildId => {
   const existingBuild = database.builds[buildId];
   delete existingBuild.isDraft;
@@ -149,6 +155,7 @@ module.exports = {
 
   createBuild,
   findAllBuilds,
+  findBuilderBuilds,
   publishBuild,
   removeBuild,
 

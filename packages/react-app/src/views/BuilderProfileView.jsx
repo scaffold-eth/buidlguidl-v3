@@ -1,43 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouteLink, useParams } from "react-router-dom";
 import axios from "axios";
-import {
-  Box,
-  Button,
-  HStack,
-  Text,
-  Flex,
-  Spacer,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  Container,
-  SimpleGrid,
-  GridItem,
-  Tag,
-} from "@chakra-ui/react";
+import { Box, Button, HStack, Text, Flex, Spacer, Container, SimpleGrid, GridItem, Tag } from "@chakra-ui/react";
 import { InfoOutlineIcon } from "@chakra-ui/icons";
 import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
 import { userFunctionDescription } from "../helpers/constants";
 import useCustomColorModes from "../hooks/useCustomColorModes";
+import BuildCard from "../components/BuildCard";
 
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
   const { builderAddress } = useParams();
   const { secondaryFontColor, borderColor, iconBgColor } = useCustomColorModes();
   const [builder, setBuilder] = useState();
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
-  const builds = builder?.builds ? Object.entries(builder.builds) : undefined;
   const isMyProfile = builderAddress === address;
 
   const fetchBuilder = async () => {
     setIsLoadingBuilder(true);
     const fetchedBuilder = await axios.get(serverUrl + `/builders/${builderAddress}`);
-    setBuilder(fetchedBuilder.data);
+    const buildsFromBuilder = await axios.get(serverUrl + `/builds/${builderAddress}`);
+
+    const builderData = {
+      ...fetchedBuilder.data,
+      builds: buildsFromBuilder.data,
+    };
+
+    console.log(builderData);
+
+    setBuilder(builderData);
     setIsLoadingBuilder(false);
   };
 
@@ -99,38 +90,21 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               Builds
             </Text>
             <Spacer />
+            {isMyProfile && (
+              <Button as={RouteLink} colorScheme="blue" to="/">
+                Submit a new Build
+              </Button>
+            )}
           </Flex>
           {isLoadingBuilder && <BuilderProfileBuildsTableSkeleton />}
           {!isLoadingBuilder &&
-            (builds ? (
+            (builder?.builds.length ? (
               <Box overflowX="auto">
-                <Table>
-                  {isMyProfile && (
-                    <TableCaption>
-                      <Button as={RouteLink} colorScheme="blue" to="/">
-                        Submit a new Build
-                      </Button>
-                    </TableCaption>
-                  )}
-                  <Thead>
-                    <Tr>
-                      <Th>Name</Th>
-                      <Th>Link</Th>
-                      <Th>Created</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {builds.map(([buildId, buildInfo]) => {
-                      return (
-                        <Tr key={buildId}>
-                          <Td>Name</Td>
-                          <Td>Link</Td>
-                          <Td>Created</Td>
-                        </Tr>
-                      );
-                    })}
-                  </Tbody>
-                </Table>
+                <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
+                  {builder?.builds.map(build => (
+                    <BuildCard build={build} key={build.id} />
+                  ))}
+                </SimpleGrid>
               </Box>
             ) : (
               <Flex
@@ -142,22 +116,11 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                 py={36}
                 w="full"
               >
-                {isMyProfile ? (
-                  <Box maxW="xs" textAlign="center">
-                    <Text color={secondaryFontColor} mb={4}>
-                      Show off your skills.
-                    </Text>
-                    <Button as={RouteLink} colorScheme="blue" to="/">
-                      Submit a New Build
-                    </Button>
-                  </Box>
-                ) : (
-                  <Box maxW="xs" textAlign="center">
-                    <Text color={secondaryFontColor} mb={4}>
-                      This builder doesn't have any builds.
-                    </Text>
-                  </Box>
-                )}
+                <Box maxW="xs" textAlign="center">
+                  <Text color={secondaryFontColor} mb={4}>
+                    This builder doesn't have any builds.
+                  </Text>
+                </Box>
               </Flex>
             ))}
         </GridItem>
