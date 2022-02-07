@@ -9,7 +9,6 @@ export const CHALLENGE_SUBMISSION_STATUS = {
 
 export const USER_ROLES = {
   anonymous: "user_role.anonymous",
-  registered: "user_role.registered",
   builder: "user_role.builder",
   admin: "user_role.administrator",
 };

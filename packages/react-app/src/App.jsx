@@ -127,6 +127,7 @@ function App() {
     }
   }, [loadWeb3Modal]);
 
+  // ToDo. We could merge these two states.
   const [userRole, setUserRole] = useState(null);
   const [connectedBuilder, setConnectedBuilder] = useState(null);
 
@@ -135,7 +136,7 @@ function App() {
       console.log("getting user data");
       try {
         const fetchedUserObject = await axios.get(serverUrl + `/builders/${address}`);
-        setUserRole(USER_ROLES[fetchedUserObject.data.role] ?? USER_ROLES.registered);
+        setUserRole(USER_ROLES[fetchedUserObject.data.role] ?? USER_ROLES.anonymous);
         setConnectedBuilder(fetchedUserObject.data);
       } catch (e) {
         setUserRole(USER_ROLES.anonymous);
@@ -163,7 +164,7 @@ function App() {
         />
         <Switch>
           <Route exact path="/">
-            <HomeView connectedBuilder={connectedBuilder} />
+            <HomeView userProvider={userProvider} connectedBuilder={connectedBuilder} />
           </Route>
           <Route exact path="/portfolio">
             {address && <Redirect to={"/builders/" + address} />}

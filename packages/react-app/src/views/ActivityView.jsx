@@ -26,7 +26,7 @@ export default function ActivityView() {
         Activity feed
       </Heading>
       <Text color={secondaryFontColor} textAlign="center" mb={10}>
-        Last 25 things happening at SRE.
+        Last 25 things happening at BuidlGuidl.
       </Text>
       {isLoadingEvents ? (
         <Box w="100%" maxW="500px">
