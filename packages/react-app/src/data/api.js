@@ -32,7 +32,7 @@ export const getBuildSubmitSignMessage = async (address, buildUrl) => {
       },
     });
 
-    return JSON.stringify(signMessageResponse.data);
+    return signMessageResponse.data;
   } catch (error) {
     console.error(error);
     throw new Error(`Couldn't get the signature message`);
@@ -78,7 +78,7 @@ export const getBuildReviewSignMessage = async (reviewerAddress, buildId, review
       },
     });
 
-    return JSON.stringify(signMessageResponse.data);
+    return signMessageResponse.data;
   } catch (error) {
     console.error(error);
     throw new Error(`Couldn't get the signature message`);

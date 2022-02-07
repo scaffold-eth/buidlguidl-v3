@@ -3,18 +3,9 @@ const ethers = require("ethers");
 const getSignMessageForId = (messageId, options) => {
   switch (messageId) {
     case "buildSubmit":
-      return JSON.stringify({
-        messageId,
-        address: options.address,
-        buildUrl: options.buildUrl,
-      });
+      return `I want to submit a new build: ${options.buildUrl} as ${options.address}`;
     case "buildReview":
-      return JSON.stringify({
-        messageId,
-        address: options.address,
-        buildId: options.buildId,
-        newStatus: options.newStatus,
-      });
+      return `I want to set the "${options.newStatus}" status to build#${options.buildId} as ${options.address}`;
     case "builderUpdateSocials":
       return `I want to update my social links as ${options.address}`;
     default:
