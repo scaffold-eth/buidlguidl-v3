@@ -9,7 +9,14 @@ import axios from "axios";
 import { useUserProvider } from "./hooks";
 import { Header, ColorModeSwitcher } from "./components";
 import { INFURA_ID, SERVER_URL as serverUrl } from "./constants";
-import { BuilderListView, BuilderProfileView, SubmissionReviewView, HomeView, ActivityView } from "./views";
+import {
+  BuilderListView,
+  BuilderProfileView,
+  BuilderCreateView,
+  SubmissionReviewView,
+  HomeView,
+  ActivityView,
+} from "./views";
 import { USER_ROLES } from "./helpers/constants";
 import { providerPromiseWrapper } from "./helpers/blockchainProviders";
 import BlockchainProvidersContext from "./contexts/blockchainProvidersContext";
@@ -172,6 +179,9 @@ function App() {
           <Route path="/builders" exact>
             <BuilderListView serverUrl={serverUrl} mainnetProvider={mainnetProvider} userRole={userRole} />
           </Route>
+          <Route path="/builders/add" exact>
+            <BuilderCreateView userProvider={userProvider} mainnetProvider={mainnetProvider} />
+          </Route>
           <Route path="/builders/:builderAddress">
             <BuilderProfileView
               serverUrl={serverUrl}
@@ -181,7 +191,6 @@ function App() {
               userProvider={userProvider}
             />
           </Route>
-          {/* ToDo: Protect this route on the frontend? */}
           <Route path="/submission-review" exact>
             <SubmissionReviewView userProvider={userProvider} mainnetProvider={mainnetProvider} />
           </Route>

@@ -1,16 +1,7 @@
-export const JS_CHALLENGE_REPO = "https://github.com/scaffold-eth/scaffold-eth-challenges";
-export const TS_CHALLENGE_REPO = "https://github.com/scaffold-eth/scaffold-eth-typescript-challenges";
-
-export const CHALLENGE_SUBMISSION_STATUS = {
-  ACCEPTED: "ACCEPTED",
-  REJECTED: "REJECTED",
-  SUBMITTED: "SUBMITTED",
-};
-
 export const USER_ROLES = {
-  anonymous: "user_role.anonymous",
-  builder: "user_role.builder",
-  admin: "user_role.administrator",
+  anonymous: "anonymous",
+  builder: "builder",
+  admin: "admin",
 };
 
 export const USER_FUNCTIONS = {

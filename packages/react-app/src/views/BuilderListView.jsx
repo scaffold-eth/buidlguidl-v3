@@ -27,7 +27,6 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import BuilderListSkeleton from "../components/skeletons/BuilderListSkeleton";
 import DateWithTooltip from "../components/DateWithTooltip";
 import SocialLink from "../components/SocialLink";
-import { getAcceptedChallenges } from "../helpers/builders";
 import Address from "../components/Address";
 import { bySocialWeight } from "../data/socials";
 import { USER_ROLES } from "../helpers/constants";
@@ -113,7 +112,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
 
       const processedBuilders = fetchedBuilders.data.map(builder => ({
         builder: builder.id,
-        challenges: getAcceptedChallenges(builder?.challenges)?.length ?? 0,
+        challenges: 0,
         socials: builder,
         lastActivity: builderLastActivity(builder),
       }));
