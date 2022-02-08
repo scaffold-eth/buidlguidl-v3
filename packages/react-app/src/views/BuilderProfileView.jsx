@@ -5,7 +5,7 @@ import { Box, Button, HStack, Text, Flex, Spacer, Container, SimpleGrid, GridIte
 import { InfoOutlineIcon } from "@chakra-ui/icons";
 import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
-import { userFunctionDescription } from "../helpers/constants";
+import { USER_FUNCTIONS } from "../helpers/constants";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import BuildCard from "../components/BuildCard";
 
@@ -72,8 +72,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               <div>
                 <Text fontSize="xl" fontWeight="medium" textAlign="right">
                   {builder?.function ? (
-                    <Tag colorScheme={userFunctionDescription[builder?.function].colorScheme} variant="solid">
-                      {userFunctionDescription[builder?.function].label}
+                    <Tag colorScheme={USER_FUNCTIONS[builder?.function].colorScheme} variant="solid">
+                      {USER_FUNCTIONS[builder?.function].label}
                     </Tag>
                   ) : (
                     "-"
