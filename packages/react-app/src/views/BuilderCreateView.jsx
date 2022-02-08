@@ -6,7 +6,6 @@ import {
   Container,
   FormControl,
   FormLabel,
-  Input,
   Button,
   Radio,
   RadioGroup,
@@ -17,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { USER_FUNCTIONS, USER_ROLES } from "../helpers/constants";
 import { getPostCreateUserSignMessage, postCreateUser } from "../data/api";
+import AddressInput from "../components/AddressInput";
 
 const INITIAL_FORM_STATE = { builderRole: USER_ROLES.builder };
 
@@ -127,21 +127,30 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
 
   return (
     <Container maxW="container.sm" centerContent>
-      <Heading as="h1">Create Builder</Heading>
-      <Box>
-        <FormControl mb={4} isRequired>
-          <FormLabel htmlFor="builderAddress">Builder Address</FormLabel>
-          <Input
-            // ToDo. ENS input
+      <Heading as="h1">Add Builder</Heading>
+      <Box mt={4} bgColor="#f8f8f8" py={25} px={50}>
+        <FormControl mb={8} isRequired>
+          <FormLabel htmlFor="builderAddress">
+            <strong>Builder Address</strong>
+          </FormLabel>
+          <AddressInput
+            autoFocus
             id="builderAddress"
-            placeholder="0x0"
+            ensProvider={mainnetProvider}
+            placeholder="Builder Address"
             value={formState.builderAddress || ""}
-            onChange={handleInputChange}
+            onChange={value =>
+              setFormState(prevFormState => ({
+                ...prevFormState,
+                builderAddress: value,
+              }))
+            }
           />
         </FormControl>
-
-        <FormControl mb={4} isRequired>
-          <FormLabel htmlFor="builderRole">Builder Role</FormLabel>
+        <FormControl mb={8} isRequired>
+          <FormLabel htmlFor="builderRole">
+            <strong>Builder Role</strong>
+          </FormLabel>
           <RadioGroup
             id="builderRole"
             onChange={value =>
@@ -159,8 +168,10 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
           </RadioGroup>
         </FormControl>
 
-        <FormControl mb={4} isRequired>
-          <FormLabel htmlFor="builderFunction">Builder Function</FormLabel>
+        <FormControl mb={8} isRequired>
+          <FormLabel htmlFor="builderFunction">
+            <strong>Builder Function</strong>
+          </FormLabel>
           <Select
             id="builderFunction"
             placeholder="Select option"
@@ -175,7 +186,7 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
           </Select>
         </FormControl>
 
-        <Button colorScheme="blue" mt={8} px={4} onClick={handleSubmit} isLoading={isSubmitting}>
+        <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isSubmitting} isFullWidth>
           Add Builder
         </Button>
       </Box>
