@@ -13,10 +13,12 @@ import {
   Select,
   useToast,
   useColorModeValue,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { USER_FUNCTIONS, USER_ROLES } from "../helpers/constants";
 import { getPostCreateUserSignMessage, postCreateUser } from "../data/api";
 import AddressInput from "../components/AddressInput";
+import { ethers } from "ethers";
 
 const INITIAL_FORM_STATE = { builderRole: USER_ROLES.builder };
 
@@ -24,8 +26,7 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
   const address = useUserAddress(userProvider);
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
-  // ToDo. Handle Errors.
-  // const [formErrors, setFormErrors] = useState({});
+  const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toast = useToast({ position: "top", isClosable: true });
@@ -34,18 +35,17 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
-    // const nextErrors = {
-    //   buildName: !buildName,
-    //   description: !description,
-    //   buildUrl: !buildUrl,
-    //   imageUrl: false,
-    // };
-    //
-    // setErrors(nextErrors);
-    // if (Object.values(nextErrors).some(hasError => hasError)) {
-    //   setIsSubmitting(false);
-    //   return;
-    // }
+    const nextErrors = {
+      builderAddress: !formState.builderAddress || !ethers.utils.isAddress(formState.builderAddress),
+      builderRole: !formState.builderRole,
+      builderFunction: !formState.builderFunction,
+    };
+
+    setFormErrors(nextErrors);
+    if (Object.values(nextErrors).some(hasError => hasError)) {
+      setIsSubmitting(false);
+      return;
+    }
 
     let signMessage;
     try {
@@ -80,9 +80,6 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
         builderFunction: formState.builderFunction,
       });
     } catch (error) {
-      console.log(error.data);
-      console.log(error.status);
-      console.log(JSON.stringify(error));
       if (error.status === 401) {
         toast({
           status: "error",
@@ -129,7 +126,7 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
     <Container maxW="container.sm" centerContent>
       <Heading as="h1">Add Builder</Heading>
       <Box mt={4} bgColor="#f8f8f8" py={25} px={50}>
-        <FormControl mb={8} isRequired>
+        <FormControl mb={8} isRequired isInvalid={formErrors.builderAddress}>
           <FormLabel htmlFor="builderAddress">
             <strong>Builder Address</strong>
           </FormLabel>
@@ -146,29 +143,31 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
               }))
             }
           />
+          <FormErrorMessage>Invalid address</FormErrorMessage>
         </FormControl>
-        <FormControl mb={8} isRequired>
+        <FormControl mb={8} isRequired isInvalid={formErrors.builderRole}>
           <FormLabel htmlFor="builderRole">
             <strong>Builder Role</strong>
           </FormLabel>
           <RadioGroup
             id="builderRole"
+            value={formState.builderRole || USER_ROLES.builder}
             onChange={value =>
               setFormState(prevFormState => ({
                 ...prevFormState,
                 builderRole: value,
               }))
             }
-            value={formState.builderRole || USER_ROLES.builder}
           >
             <Stack direction="row" spacing={4}>
               <Radio value={USER_ROLES.builder}>{USER_ROLES.builder}</Radio>
               <Radio value={USER_ROLES.admin}>{USER_ROLES.admin}</Radio>
             </Stack>
           </RadioGroup>
+          <FormErrorMessage>Required</FormErrorMessage>
         </FormControl>
 
-        <FormControl mb={8} isRequired>
+        <FormControl mb={8} isRequired isInvalid={formErrors.builderFunction}>
           <FormLabel htmlFor="builderFunction">
             <strong>Builder Function</strong>
           </FormLabel>
@@ -176,7 +175,7 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
             id="builderFunction"
             placeholder="Select option"
             onChange={handleInputChange}
-            value={formState.builderFunction}
+            value={formState.builderFunction || ""}
           >
             {Object.keys(USER_FUNCTIONS).map(value => (
               <option key={value} value={value}>
@@ -184,6 +183,7 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
               </option>
             ))}
           </Select>
+          <FormErrorMessage>Required</FormErrorMessage>
         </FormControl>
 
         <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isSubmitting} isFullWidth>

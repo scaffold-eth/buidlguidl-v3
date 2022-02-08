@@ -3,6 +3,7 @@ const db = require("../services/db/db");
 const { verifySignature } = require("../utils/sign");
 const { withAddress, withRole } = require("../middlewares/auth");
 const { EVENT_TYPES, createEvent } = require("../utils/events");
+const { ethers } = require("ethers");
 
 const router = express.Router();
 
@@ -33,9 +34,15 @@ router.post("/create", withRole("admin"), async (req, res) => {
     return;
   }
 
+  // ToDo. Param validation.
   const { builderAddress, builderFunction, builderRole, signature } = req.body;
   const address = req.address;
   console.log("POST /builders/create", address, builderAddress);
+
+  if (!ethers.utils.isAddress(builderAddress)) {
+    res.status(400).send("Invalid address");
+    return;
+  }
 
   const verifyOptions = {
     messageId: "builderCreate",
