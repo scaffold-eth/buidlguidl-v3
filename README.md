@@ -1,4 +1,4 @@
-# BuidlGuidl v3
+# BuidlGuidl v3 [![Netlify Status](https://api.netlify.com/api/v1/badges/8364bb50-487e-4f28-b83d-0ce3172352a6/deploy-status)](https://app.netlify.com/sites/nostalgic-lewin-237ec8/deploys)
 
 The 🏰 BuidlGuidl is a curated group of Ethereum builders creating products, prototypes, and tutorials with 🏗 [scaffold-eth](https://github.com/scaffold-eth/scaffold-eth)
 
