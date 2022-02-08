@@ -1,6 +1,20 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { chakra, useColorModeValue, Box, Flex, HStack, Spacer } from "@chakra-ui/react";
+import {
+  chakra,
+  useColorModeValue,
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Spacer,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Account } from "./index";
 import { USER_ROLES } from "../helpers/constants";
 import useCustomColorModes from "../hooks/useCustomColorModes";
@@ -17,6 +31,7 @@ export default function Header({
   setUserRole,
 }) {
   const { secondaryFontColor, borderColor } = useCustomColorModes();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const primaryColorString = useColorModeValue("var(--chakra-colors-gray-700)", "var(--chakra-colors-gray-200)");
   const isSignerProviderConnected =
     injectedProvider && injectedProvider.getSigner && injectedProvider.getSigner()._isSigner;
@@ -98,19 +113,32 @@ export default function Header({
             </NavLink>
           </chakra.li>
           {USER_ROLES.admin === userRole && (
-            <>
-              <chakra.li key="/submission-review" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-                <NavLink
-                  to="/submission-review"
-                  exact
-                  activeStyle={{
-                    color: primaryColorString,
-                  }}
-                >
-                  Review Submissions
-                </NavLink>
-              </chakra.li>
-            </>
+            <Menu isOpen={isOpen}>
+              <MenuButton
+                as={Button}
+                variant="link"
+                color={secondaryFontColor}
+                _hover={{ color: primaryColorString }}
+                rightIcon={<ChevronDownIcon />}
+                onMouseEnter={onOpen}
+                onMouseLeave={onClose}
+              >
+                Admin
+              </MenuButton>
+              <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>
+                <MenuItem>
+                  <NavLink
+                    to="/submission-review"
+                    exact
+                    activeStyle={{
+                      color: primaryColorString,
+                    }}
+                  >
+                    Review Submissions
+                  </NavLink>
+                </MenuItem>
+              </MenuList>
+            </Menu>
           )}
         </HStack>
         <Spacer />
