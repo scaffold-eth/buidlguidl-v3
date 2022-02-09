@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
+import axios from "axios";
 import { useUserAddress } from "eth-hooks";
 import {
   Button,
@@ -19,8 +20,10 @@ import {
   Box,
   Text,
   Image,
+  Spinner,
 } from "@chakra-ui/react";
 import { getBuildSubmitSignMessage, postBuildSubmit } from "../data/api";
+import { SERVER_URL as serverUrl } from "../constants";
 
 export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
   const address = useUserAddress(userProvider);
@@ -34,21 +37,36 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [imgFile, setImgFile] = useState(null);
-  const [uploadingImg, setUploadingImg] = useState(false);
+  const [isUploadingImg, setIsUploadingImg] = useState(false);
   const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
     accept: "image/*",
     multiple: false,
-    onDrop: droppedFiles => {
+    onDrop: async droppedFiles => {
       if (!droppedFiles.length) {
         return;
       }
 
-      setUploadingImg(true);
-
-      console.log("droppedFiles", droppedFiles);
       const file = Object.assign(droppedFiles[0], {
         preview: URL.createObjectURL(droppedFiles[0]),
       });
+
+      const formData = new FormData();
+      formData.append("imageFile", file);
+
+      let response;
+      try {
+        setIsUploadingImg(true);
+        response = await axios.post(serverUrl + "/builds/upload-img", formData, {
+          headers: { "content-type": "multipart/form-data", address },
+        });
+      } catch (error) {
+        console.log(error);
+        setImageUrl(null);
+      } finally {
+        setIsUploadingImg(false);
+      }
+
+      setImageUrl(response.data.imgUrl);
       setImgFile(file);
     },
   });
@@ -143,7 +161,6 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
 
   return (
     <Modal isOpen onClose={onClose}>
-      {/*<Modal isOpen={isOpen} onClose={onClose}>*/}
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>New Build</ModalHeader>
@@ -198,17 +215,15 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
                       setImgFile(null);
                     }}
                   >
-                    (❌ Remove)
+                    (
+                    <span role="img" aria-label="cross icon">
+                      ❌
+                    </span>{" "}
+                    Remove)
                   </Button>
                 )}
               </strong>
             </FormLabel>
-            {/*<Input*/}
-            {/*  id="imageUrl"*/}
-            {/*  placeholder="https://..."*/}
-            {/*  value={imageUrl}*/}
-            {/*  onChange={evt => setImageUrl(evt.target.value)}*/}
-            {/*/>*/}
             <Box
               textAlign="center"
               borderStyle="dashed"
@@ -218,6 +233,7 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
               {...getRootProps({ className: "dropzone" })}
             >
               <Input id="imageUrl" {...getInputProps()} />
+              {isUploadingImg && <Spinner />}
               {imgFile ? (
                 <Image boxSize="100px" objectFit="cover" src={imgFile.preview} />
               ) : (
