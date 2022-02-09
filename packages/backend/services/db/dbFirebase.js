@@ -16,7 +16,9 @@ if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     storageBucket: "buidlguidl-v3.appspot.com",
   });
 } else {
-  firebaseAdmin.initializeApp();
+  firebaseAdmin.initializeApp({
+    storageBucket: "buidlguidl-v3.appspot.com",
+  });
 }
 
 // Docs: https://firebase.google.com/docs/firestore/quickstart#node.js_1
