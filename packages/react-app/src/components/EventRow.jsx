@@ -6,7 +6,8 @@ import { eventDisplay } from "../helpers/events";
 import DateWithTooltip from "./DateWithTooltip";
 
 const EventRow = ({ event }) => {
-  const userAddress = event.payload.userAddress;
+  // ToDo. Fix this.
+  const userAddress = event.payload.userAddress || event.payload.builder || event.payload.builderAddress;
 
   return (
     <Tr>
