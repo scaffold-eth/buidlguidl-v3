@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDropzone } from "react-dropzone";
 import { useUserAddress } from "eth-hooks";
 import {
   Button,
@@ -15,6 +16,9 @@ import {
   ModalOverlay,
   useToast,
   useColorModeValue,
+  Box,
+  Text,
+  Image,
 } from "@chakra-ui/react";
 import { getBuildSubmitSignMessage, postBuildSubmit } from "../data/api";
 
@@ -28,6 +32,26 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
   const [imageUrl, setImageUrl] = useState("");
   const [errors, setErrors] = useState({ buildName: false, description: false, buildUrl: false, imageUrl: false });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [imgFile, setImgFile] = useState(null);
+  const [uploadingImg, setUploadingImg] = useState(false);
+  const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
+    accept: "image/*",
+    multiple: false,
+    onDrop: droppedFiles => {
+      if (!droppedFiles.length) {
+        return;
+      }
+
+      setUploadingImg(true);
+
+      console.log("droppedFiles", droppedFiles);
+      const file = Object.assign(droppedFiles[0], {
+        preview: URL.createObjectURL(droppedFiles[0]),
+      });
+      setImgFile(file);
+    },
+  });
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
@@ -118,14 +142,17 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen onClose={onClose}>
+      {/*<Modal isOpen={isOpen} onClose={onClose}>*/}
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>New build form</ModalHeader>
+        <ModalHeader>New Build</ModalHeader>
         <ModalCloseButton />
         <ModalBody px={8} pb={8}>
           <FormControl mb={4} isRequired isInvalid={errors.buildName}>
-            <FormLabel htmlFor="buildName">Build name</FormLabel>
+            <FormLabel htmlFor="buildName">
+              <strong>Build name</strong>
+            </FormLabel>
             <Input
               id="buildName"
               placeholder="Build name"
@@ -135,7 +162,9 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
             <FormErrorMessage>This field is required</FormErrorMessage>
           </FormControl>
           <FormControl mb={4} isRequired isInvalid={errors.description}>
-            <FormLabel htmlFor="description">Description</FormLabel>
+            <FormLabel htmlFor="description">
+              <strong>Description</strong>
+            </FormLabel>
             <Textarea
               id="description"
               placeholder="Write a short description for this build"
@@ -145,7 +174,9 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
             <FormErrorMessage>This field is required</FormErrorMessage>
           </FormControl>
           <FormControl mb={4} isRequired isInvalid={errors.buildUrl}>
-            <FormLabel htmlFor="buildUrl">Branch URL</FormLabel>
+            <FormLabel htmlFor="buildUrl">
+              <strong>Branch URL</strong>
+            </FormLabel>
             <Input
               id="buildUrl"
               placeholder="https://..."
@@ -155,13 +186,46 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
             <FormErrorMessage>This field is required</FormErrorMessage>
           </FormControl>
           <FormControl mb={4} isInvalid={errors.imageUrl}>
-            <FormLabel htmlFor="imageUrl">Image URL</FormLabel>
-            <Input
-              id="imageUrl"
-              placeholder="https://..."
-              value={imageUrl}
-              onChange={evt => setImageUrl(evt.target.value)}
-            />
+            <FormLabel htmlFor="imageUrl">
+              <strong>
+                Image{" "}
+                {imgFile && (
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={() => {
+                      URL.revokeObjectURL(imgFile.preview);
+                      setImgFile(null);
+                    }}
+                  >
+                    (❌ Remove)
+                  </Button>
+                )}
+              </strong>
+            </FormLabel>
+            {/*<Input*/}
+            {/*  id="imageUrl"*/}
+            {/*  placeholder="https://..."*/}
+            {/*  value={imageUrl}*/}
+            {/*  onChange={evt => setImageUrl(evt.target.value)}*/}
+            {/*/>*/}
+            <Box
+              textAlign="center"
+              borderStyle="dashed"
+              p="20px"
+              borderWidth="2px"
+              borderColor={isDragAccept ? "green.200" : isDragReject ? "red.200" : "gray.200"}
+              {...getRootProps({ className: "dropzone" })}
+            >
+              <Input id="imageUrl" {...getInputProps()} />
+              {imgFile ? (
+                <Image boxSize="100px" objectFit="cover" src={imgFile.preview} />
+              ) : (
+                <Text fontSize="sm" color="">
+                  Drag & drop or click to select the image
+                </Text>
+              )}
+            </Box>
           </FormControl>
           <Button colorScheme="blue" mt={8} px={4} onClick={handleSubmit} isLoading={isSubmitting} isFullWidth>
             Submit
