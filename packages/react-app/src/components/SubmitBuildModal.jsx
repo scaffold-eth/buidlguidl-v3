@@ -36,7 +36,6 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
   const [errors, setErrors] = useState({ buildName: false, description: false, buildUrl: false, imageUrl: false });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [imgFile, setImgFile] = useState(null);
   const [isUploadingImg, setIsUploadingImg] = useState(false);
   const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
     accept: "image/*",
@@ -46,9 +45,7 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
         return;
       }
 
-      const file = Object.assign(droppedFiles[0], {
-        preview: URL.createObjectURL(droppedFiles[0]),
-      });
+      const file = droppedFiles[0];
 
       const formData = new FormData();
       formData.append("imageFile", file);
@@ -61,13 +58,11 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
         });
       } catch (error) {
         console.log(error);
-        setImageUrl(null);
       } finally {
         setIsUploadingImg(false);
       }
 
       setImageUrl(response.data.imgUrl);
-      setImgFile(file);
     },
   });
 
@@ -79,7 +74,6 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
     setDescription("");
     setBuildUrl("");
     setImageUrl("");
-    setImgFile(null);
   };
 
   const handleSubmit = async () => {
@@ -207,13 +201,12 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
             <FormLabel htmlFor="imageUrl">
               <strong>
                 Image{" "}
-                {imgFile && (
+                {imageUrl && (
                   <Button
                     variant="link"
                     size="sm"
                     onClick={() => {
-                      URL.revokeObjectURL(imgFile.preview);
-                      setImgFile(null);
+                      setImageUrl(null);
                     }}
                   >
                     ( Remove
@@ -235,8 +228,8 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
             >
               <Input id="imageUrl" {...getInputProps()} />
               {isUploadingImg && <Spinner />}
-              {imgFile ? (
-                <Image boxSize="100px" objectFit="cover" src={imgFile.preview} />
+              {imageUrl ? (
+                <Image boxSize="100px" objectFit="cover" src={imageUrl} />
               ) : (
                 <Text fontSize="sm" color="">
                   Drag & drop or click to select the image
