@@ -70,7 +70,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
   });
   user = await db.findUserByAddress(builderAddress);
   console.log("New user created: ", builderAddress);
-  const event = createEvent(EVENT_TYPES.USER_CREATE, { builderAddress }, signature);
+  const event = createEvent(EVENT_TYPES.USER_CREATE, { userAddress: builderAddress }, signature);
   db.createEvent(event); // INFO: async, no await here
 
   res.json(user.data);

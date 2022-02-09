@@ -7,7 +7,7 @@ import DateWithTooltip from "./DateWithTooltip";
 
 const EventRow = ({ event }) => {
   // ToDo. Fix this.
-  const userAddress = event.payload.userAddress || event.payload.builder || event.payload.builderAddress;
+  const userAddress = event.payload.userAddress;
 
   return (
     <Tr>
