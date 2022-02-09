@@ -79,6 +79,7 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
     setDescription("");
     setBuildUrl("");
     setImageUrl("");
+    setImgFile(null);
   };
 
   const handleSubmit = async () => {
@@ -160,7 +161,7 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
   };
 
   return (
-    <Modal isOpen onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>New Build</ModalHeader>
@@ -215,11 +216,11 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
                       setImgFile(null);
                     }}
                   >
-                    (
+                    ( Remove
                     <span role="img" aria-label="cross icon">
                       ❌
-                    </span>{" "}
-                    Remove)
+                    </span>
+                    )
                   </Button>
                 )}
               </strong>

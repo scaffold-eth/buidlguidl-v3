@@ -1,6 +1,7 @@
 const express = require("express");
 const formidable = require("formidable");
 const db = require("../services/db/db");
+const storage = require("../services/storage/storage");
 const { verifySignature } = require("../utils/sign");
 const { EVENT_TYPES, createEvent } = require("../utils/events");
 const { withRole } = require("../middlewares/auth");
@@ -76,16 +77,21 @@ router.post("/", withRole("builder"), async (req, res) => {
 router.post("/upload-img", withRole("builder"), async (req, res) => {
   const form = formidable();
 
-  form.parse(req, (err, fields, files) => {
+  form.parse(req, async (err, fields, files) => {
     const file = files.imageFile;
     if (err || !file) {
       return res.sendStatus(400);
     }
-    // ToDo. Storage Service to support local & firebase.
-    const imgUrl = file.filepath;
-    console.log("Uploaded file", file.originalFilename);
 
-    return res.json({ imgUrl });
+    let imgFullUrl;
+    try {
+      imgFullUrl = await storage.uploadFile(file, req);
+    } catch (e) {
+      return res.sendStatus(400);
+    }
+
+    console.log("Uploaded file", imgFullUrl);
+    return res.json({ imgUrl: imgFullUrl });
   });
 });
 
