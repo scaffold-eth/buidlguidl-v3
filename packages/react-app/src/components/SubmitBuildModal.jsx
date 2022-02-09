@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDropzone } from "react-dropzone";
+import axios from "axios";
 import { useUserAddress } from "eth-hooks";
 import {
   Button,
@@ -15,8 +17,13 @@ import {
   ModalOverlay,
   useToast,
   useColorModeValue,
+  Box,
+  Text,
+  Image,
+  Spinner,
 } from "@chakra-ui/react";
 import { getBuildSubmitSignMessage, postBuildSubmit } from "../data/api";
+import { SERVER_URL as serverUrl } from "../constants";
 
 export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
   const address = useUserAddress(userProvider);
@@ -28,6 +35,36 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
   const [imageUrl, setImageUrl] = useState("");
   const [errors, setErrors] = useState({ buildName: false, description: false, buildUrl: false, imageUrl: false });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [isUploadingImg, setIsUploadingImg] = useState(false);
+  const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
+    accept: "image/*",
+    multiple: false,
+    onDrop: async droppedFiles => {
+      if (!droppedFiles.length) {
+        return;
+      }
+
+      const file = droppedFiles[0];
+
+      const formData = new FormData();
+      formData.append("imageFile", file);
+
+      let response;
+      try {
+        setIsUploadingImg(true);
+        response = await axios.post(serverUrl + "/builds/upload-img", formData, {
+          headers: { "content-type": "multipart/form-data", address },
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsUploadingImg(false);
+      }
+
+      setImageUrl(response.data.imgUrl);
+    },
+  });
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
@@ -121,11 +158,13 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>New build form</ModalHeader>
+        <ModalHeader>New Build</ModalHeader>
         <ModalCloseButton />
         <ModalBody px={8} pb={8}>
           <FormControl mb={4} isRequired isInvalid={errors.buildName}>
-            <FormLabel htmlFor="buildName">Build name</FormLabel>
+            <FormLabel htmlFor="buildName">
+              <strong>Build name</strong>
+            </FormLabel>
             <Input
               id="buildName"
               placeholder="Build name"
@@ -135,7 +174,9 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
             <FormErrorMessage>This field is required</FormErrorMessage>
           </FormControl>
           <FormControl mb={4} isRequired isInvalid={errors.description}>
-            <FormLabel htmlFor="description">Description</FormLabel>
+            <FormLabel htmlFor="description">
+              <strong>Description</strong>
+            </FormLabel>
             <Textarea
               id="description"
               placeholder="Write a short description for this build"
@@ -145,7 +186,9 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
             <FormErrorMessage>This field is required</FormErrorMessage>
           </FormControl>
           <FormControl mb={4} isRequired isInvalid={errors.buildUrl}>
-            <FormLabel htmlFor="buildUrl">Branch URL</FormLabel>
+            <FormLabel htmlFor="buildUrl">
+              <strong>Branch URL</strong>
+            </FormLabel>
             <Input
               id="buildUrl"
               placeholder="https://..."
@@ -155,13 +198,44 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
             <FormErrorMessage>This field is required</FormErrorMessage>
           </FormControl>
           <FormControl mb={4} isInvalid={errors.imageUrl}>
-            <FormLabel htmlFor="imageUrl">Image URL</FormLabel>
-            <Input
-              id="imageUrl"
-              placeholder="https://..."
-              value={imageUrl}
-              onChange={evt => setImageUrl(evt.target.value)}
-            />
+            <FormLabel htmlFor="imageUrl">
+              <strong>
+                Image{" "}
+                {imageUrl && (
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={() => {
+                      setImageUrl(null);
+                    }}
+                  >
+                    ( Remove
+                    <span role="img" aria-label="cross icon">
+                      ❌
+                    </span>
+                    )
+                  </Button>
+                )}
+              </strong>
+            </FormLabel>
+            <Box
+              textAlign="center"
+              borderStyle="dashed"
+              p="20px"
+              borderWidth="2px"
+              borderColor={isDragAccept ? "green.200" : isDragReject ? "red.200" : "gray.200"}
+              {...getRootProps({ className: "dropzone" })}
+            >
+              <Input id="imageUrl" {...getInputProps()} />
+              {isUploadingImg && <Spinner />}
+              {imageUrl ? (
+                <Image boxSize="100px" objectFit="cover" src={imageUrl} />
+              ) : (
+                <Text fontSize="sm" color="">
+                  Drag & drop or click to select the image
+                </Text>
+              )}
+            </Box>
           </FormControl>
           <Button colorScheme="blue" mt={8} px={4} onClick={handleSubmit} isLoading={isSubmitting} isFullWidth>
             Submit

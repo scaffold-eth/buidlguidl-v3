@@ -23,8 +23,10 @@
     "ethers": "^5.1.4",
     "express": "^4.17.1",
     "firebase-admin": "^9.11.1",
+    "formidable": "^2.0.1",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
+    "mime-types": "^2.1.34",
     "nodemon": "^2.0.12",
     "prettier": "^2.4.0"
   }

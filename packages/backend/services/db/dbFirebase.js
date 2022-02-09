@@ -1,7 +1,7 @@
 require("dotenv").config();
 const firebaseAdmin = require("firebase-admin");
 
-console.log("using firebase");
+console.log("using Firebase DB");
 if (process.env.NODE_ENV === "test") {
   // We won't be using firebase for testing for now. At some point,
   // we might want to run tests against the Staging firebase instance.
@@ -13,6 +13,7 @@ if (process.env.NODE_ENV === "test") {
 if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.applicationDefault(),
+    storageBucket: "buidlguidl-v3.appspot.com",
   });
 } else {
   firebaseAdmin.initializeApp();

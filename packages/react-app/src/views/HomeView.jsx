@@ -13,7 +13,7 @@ export default function HomeView({ userProvider, connectedBuilder }) {
   useEffect(() => {
     const updateBuilds = async () => {
       const allBuilds = await getAllBuilds();
-      setBuilds(allBuilds);
+      setBuilds(allBuilds.filter(build => !build.isDraft));
     };
 
     updateBuilds();
