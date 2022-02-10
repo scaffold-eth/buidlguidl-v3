@@ -13,7 +13,7 @@ import {
   BuilderListView,
   BuilderProfileView,
   BuilderCreateView,
-  SubmissionReviewView,
+  AllBuildsReviewView,
   HomeView,
   ActivityView,
 } from "./views";
@@ -179,9 +179,6 @@ function App() {
           <Route path="/builders" exact>
             <BuilderListView serverUrl={serverUrl} mainnetProvider={mainnetProvider} userRole={userRole} />
           </Route>
-          <Route path="/builders/add" exact>
-            <BuilderCreateView userProvider={userProvider} mainnetProvider={mainnetProvider} />
-          </Route>
           <Route path="/builders/:builderAddress">
             <BuilderProfileView
               serverUrl={serverUrl}
@@ -191,11 +188,14 @@ function App() {
               userProvider={userProvider}
             />
           </Route>
-          <Route path="/submission-review" exact>
-            <SubmissionReviewView userProvider={userProvider} mainnetProvider={mainnetProvider} />
-          </Route>
           <Route path="/activity" exact>
             <ActivityView />
+          </Route>
+          <Route path="/admin/add-builder" exact>
+            <BuilderCreateView userProvider={userProvider} mainnetProvider={mainnetProvider} />
+          </Route>
+          <Route path="/admin/builds-review" exact>
+            <AllBuildsReviewView userProvider={userProvider} mainnetProvider={mainnetProvider} />
           </Route>
         </Switch>
         <ColorModeSwitcher />

@@ -128,7 +128,7 @@ export default function Header({
               <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>
                 <MenuItem>
                   <NavLink
-                    to="/builders/add"
+                    to="/admin/add-builder"
                     exact
                     activeStyle={{
                       color: primaryColorString,
@@ -139,7 +139,7 @@ export default function Header({
                 </MenuItem>
                 <MenuItem>
                   <NavLink
-                    to="/submission-review"
+                    to="/admin/builds-review"
                     exact
                     activeStyle={{
                       color: primaryColorString,
