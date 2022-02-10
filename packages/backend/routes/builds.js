@@ -30,7 +30,7 @@ router.get("/:builderAddress", async (req, res) => {
 });
 
 /**
- * Create a new build in draft mode
+ * Create a new build.
  */
 router.post("/", withRole("builder"), async (req, res) => {
   console.log("POST /builds");
@@ -56,7 +56,6 @@ router.post("/", withRole("builder"), async (req, res) => {
     address,
     builder: address,
     submittedTimestamp: new Date().getTime(),
-    isDraft: true,
   };
 
   const dbResponse = await db.createBuild(buildData);
