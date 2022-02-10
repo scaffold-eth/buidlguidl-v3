@@ -115,13 +115,9 @@ const findBuilderBuilds = async builderAddress => {
   return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-const publishBuild = buildId => {
+const featureBuild = (buildId, featured) => {
   const buildRef = database.collection("builds").doc(buildId);
-  return buildRef.update({ isDraft: false });
-};
-
-const removeBuild = buildId => {
-  return database.collection("builds").doc(buildId).delete();
+  return buildRef.update({ featured });
 };
 
 module.exports = {
@@ -135,6 +131,5 @@ module.exports = {
   createBuild,
   findAllBuilds,
   findBuilderBuilds,
-  publishBuild,
-  removeBuild,
+  featureBuild,
 };

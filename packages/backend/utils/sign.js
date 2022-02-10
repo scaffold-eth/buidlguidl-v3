@@ -1,7 +1,6 @@
 const ethers = require("ethers");
 
 const getSignMessageForId = (messageId, options) => {
-  console.log("OPTTT", options);
   switch (messageId) {
     case "buildSubmit":
       return `I want to submit a new build: ${options.buildUrl} as ${options.address}`;
