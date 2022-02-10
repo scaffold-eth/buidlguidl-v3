@@ -18,7 +18,7 @@ import {
 import BuildReviewRow from "../components/BuildReviewRow";
 import { BuildsTableSkeleton } from "../components/skeletons/SubmissionReviewTableSkeleton";
 import useCustomColorModes from "../hooks/useCustomColorModes";
-import { getAllBuilds, getBuildReviewSignMessage, patchBuildReview } from "../data/api";
+import { getAllBuilds, getBuildFeatureSignMessage, patchBuildFeature } from "../data/api";
 import HeroIconInbox from "../components/icons/HeroIconInbox";
 import { bySubmittedTimestamp } from "../helpers/sorting";
 
@@ -56,10 +56,10 @@ export default function AllBuildsReviewView({ userProvider }) {
     // eslint-disable-next-line
   }, [address]);
 
-  const handleSendBuildReview = reviewType => async (userAddress, buildId) => {
+  const handleMarkBuildAsFeatured = featured => async (userAddress, buildId) => {
     let signMessage;
     try {
-      signMessage = await getBuildReviewSignMessage(address, buildId, reviewType);
+      signMessage = await getBuildFeatureSignMessage(address, buildId, featured);
     } catch (error) {
       toast({
         description: " Sorry, the server is overloaded. 🧯🚒🔥",
@@ -82,7 +82,7 @@ export default function AllBuildsReviewView({ userProvider }) {
     }
 
     try {
-      await patchBuildReview(address, signature, { userAddress, buildId, newStatus: reviewType });
+      await patchBuildFeature(address, signature, { userAddress, buildId, featured });
     } catch (error) {
       if (error.status === 401) {
         toast({
@@ -101,7 +101,7 @@ export default function AllBuildsReviewView({ userProvider }) {
     }
 
     toast({
-      description: "Review submitted successfully",
+      description: "Build updated successfully",
       status: "success",
       variant: toastVariant,
     });
@@ -149,8 +149,8 @@ export default function AllBuildsReviewView({ userProvider }) {
                     key={`${build.builder}_${build.id}`}
                     build={build}
                     isLoading={isLoadingBuilds}
-                    approveClick={handleSendBuildReview("ACCEPTED")}
-                    rejectClick={handleSendBuildReview("REJECTED")}
+                    featuredClick={handleMarkBuildAsFeatured(true)}
+                    notFeaturedClick={handleMarkBuildAsFeatured(false)}
                   />
                 ))
               )}
@@ -189,8 +189,8 @@ export default function AllBuildsReviewView({ userProvider }) {
                     key={`${build.builder}_${build.id}`}
                     build={build}
                     isLoading={isLoadingBuilds}
-                    approveClick={handleSendBuildReview("ACCEPTED")}
-                    rejectClick={handleSendBuildReview("REJECTED")}
+                    featuredClick={handleMarkBuildAsFeatured(true)}
+                    notFeaturedClick={handleMarkBuildAsFeatured(false)}
                   />
                 ))
               )}

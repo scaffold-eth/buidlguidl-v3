@@ -4,7 +4,7 @@ import { Box, Button, Center, HStack, Image, Link, Td, Text, Tr } from "@chakra-
 import Address from "./Address";
 import DateWithTooltip from "./DateWithTooltip";
 
-export default function BuildReviewRow({ build, isLoading, approveClick, rejectClick }) {
+export default function BuildReviewRow({ build, isLoading, featuredClick, notFeaturedClick }) {
   return (
     <Tr>
       <Td>
@@ -32,28 +32,29 @@ export default function BuildReviewRow({ build, isLoading, approveClick, rejectC
         <DateWithTooltip timestamp={build.submittedTimestamp} />
       </Td>
       <Td>
-        <HStack spacing={3}>
+        {build.featured ? (
           <Button
             type="button"
             colorScheme="red"
             disabled={isLoading}
             className="danger"
-            onClick={() => rejectClick(build.builder, build.id)}
+            onClick={() => notFeaturedClick(build.builder, build.id)}
             size="xs"
           >
-            Reject
+            Unfeature
           </Button>
+        ) : (
           <Button
             type="button"
             colorScheme="green"
             disabled={isLoading}
             style={{ marginRight: 10 }}
-            onClick={() => approveClick(build.builder, build.id)}
+            onClick={() => featuredClick(build.builder, build.id)}
             size="xs"
           >
-            Approve
+            Feature
           </Button>
-        </HStack>
+        )}
       </Td>
     </Tr>
   );

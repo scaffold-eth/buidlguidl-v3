@@ -3,7 +3,7 @@ const EVENT_TYPES = {
   CHALLENGE_REVIEW: "challenge.review",
   CHALLENGE_AUTOGRADE: "challenge.autograde",
   BUILD_SUBMIT: "build.submit",
-  BUILD_REVIEW: "build.review",
+  BUILD_FEATURED: "build.featured",
   USER_CREATE: "user.create",
   USER_UPDATE: "user.update",
 };

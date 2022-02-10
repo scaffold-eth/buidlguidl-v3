@@ -94,14 +94,9 @@ const findBuilderBuilds = db.findBuilderBuilds;
 /**
  *
  * @param {string} buildId
+ * @param {boolean} featured
  */
-const publishBuild = db.publishBuild;
-
-/**
- *
- * @param {string} buildId
- */
-const removeBuild = db.removeBuild;
+const featureBuild = db.featureBuild;
 
 // Shared by implementations.
 // ToDo: This is very inefficient,´. We fetch the whole database every time we call this.
@@ -134,8 +129,7 @@ module.exports = {
   createBuild,
   findAllBuilds,
   findBuilderBuilds,
-  publishBuild,
-  removeBuild,
+  featureBuild,
 
   getAllChallenges,
 

@@ -96,18 +96,18 @@ router.post("/upload-img", withRole("builder"), async (req, res) => {
 });
 
 /**
- * Publish / Delete a build
+ * Feature / Unfeature a build
  */
 router.patch("/", withRole("admin"), async (req, res) => {
   console.log("PATCH /builds");
-  const { buildId, newStatus, signature, userAddress } = req.body;
+  const { buildId, featured, signature, userAddress } = req.body;
   const address = req.address;
 
   const verifyOptions = {
-    messageId: "buildReview",
+    messageId: "buildFeature",
     address,
     buildId,
-    newStatus,
+    featured,
   };
 
   if (!verifySignature(signature, verifyOptions)) {
@@ -115,24 +115,15 @@ router.patch("/", withRole("admin"), async (req, res) => {
     return;
   }
 
-  if (newStatus !== "ACCEPTED" && newStatus !== "REJECTED") {
-    res.status(400).send("Invalid status");
-    return;
-  }
-
-  if (newStatus === "ACCEPTED") {
-    await db.publishBuild(buildId);
-  } else if (newStatus === "REJECTED") {
-    await db.removeBuild(buildId);
-  }
+  await db.featureBuild(buildId, Boolean(featured));
 
   const eventPayload = {
-    reviewAction: newStatus,
+    featured,
     userAddress,
     reviewerAddress: address,
     buildId,
   };
-  const event = createEvent(EVENT_TYPES.BUILD_REVIEW, eventPayload, signature);
+  const event = createEvent(EVENT_TYPES.BUILD_FEATURED, eventPayload, signature);
   db.createEvent(event); // INFO: async, no await here
 
   res.sendStatus(200);

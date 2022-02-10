@@ -75,14 +75,14 @@ export const postBuildSubmit = async (address, signature, { buildUrl, desc, imag
   }
 };
 
-export const getBuildReviewSignMessage = async (reviewerAddress, buildId, reviewType) => {
+export const getBuildFeatureSignMessage = async (reviewerAddress, buildId, featured) => {
   try {
     const signMessageResponse = await axios.get(`${serverUrl}/sign-message`, {
       params: {
-        messageId: "buildReview",
+        messageId: "buildFeature",
         address: reviewerAddress,
         buildId,
-        newStatus: reviewType,
+        featured,
       },
     });
 
@@ -93,11 +93,11 @@ export const getBuildReviewSignMessage = async (reviewerAddress, buildId, review
   }
 };
 
-export const patchBuildReview = async (address, signature, { userAddress, buildId, newStatus }) => {
+export const patchBuildFeature = async (address, signature, { userAddress, buildId, featured }) => {
   try {
     await axios.patch(
       `${serverUrl}/builds`,
-      { userAddress, buildId, newStatus, signature },
+      { userAddress, buildId, featured, signature },
       {
         headers: {
           address,

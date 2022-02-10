@@ -131,16 +131,10 @@ const findBuilderBuilds = builderAddress => {
     .map((build, index) => ({ id: index.toString(), ...build }));
 };
 
-const publishBuild = buildId => {
+const featureBuild = (buildId, featured) => {
   const existingBuild = database.builds[buildId];
-  existingBuild.isDraft = false;
+  existingBuild.featured = featured;
   database.builds[buildId] = existingBuild;
-
-  persist();
-};
-
-const removeBuild = buildId => {
-  database.builds = [...database.builds.slice(0, buildId), ...database.builds.slice(buildId + 1)];
 
   persist();
 };
@@ -158,8 +152,7 @@ module.exports = {
   createBuild,
   findAllBuilds,
   findBuilderBuilds,
-  publishBuild,
-  removeBuild,
+  featureBuild,
 
   __internal_database: database, // testing only
 };

@@ -4,7 +4,7 @@ const EVENT_TYPES = {
   CHALLENGE_REVIEW: "challenge.review",
   CHALLENGE_AUTOGRADE: "challenge.autograde",
   BUILD_SUBMIT: "build.submit",
-  BUILD_REVIEW: "build.review",
+  BUILD_FEATURED: "build.featured",
   USER_CREATE: "user.create",
   USER_UPDATE: "user.update",
 };
@@ -29,8 +29,8 @@ export const eventDisplay = ({ type, payload }) => {
       return `just submitted a new build!`;
     }
 
-    case EVENT_TYPES.BUILD_REVIEW: {
-      return `A submitted build has been ${payload.reviewAction.toLowerCase()}`;
+    case EVENT_TYPES.BUILD_FEATURED: {
+      return `A submitted build has been ${payload.featured ? "featured" : "unfeatured"}`;
     }
 
     case EVENT_TYPES.USER_CREATE: {

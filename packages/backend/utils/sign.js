@@ -1,11 +1,17 @@
 const ethers = require("ethers");
 
 const getSignMessageForId = (messageId, options) => {
+  console.log("OPTTT", options);
   switch (messageId) {
     case "buildSubmit":
       return `I want to submit a new build: ${options.buildUrl} as ${options.address}`;
-    case "buildReview":
-      return `I want to set the "${options.newStatus}" status to build#${options.buildId} as ${options.address}`;
+    case "buildFeature":
+      // ToDo. Something going on with bool values:
+      // When calling from /sign-message, it's a string, not boolean.
+      // When we call it from the PATH /build it's a boolean (since we compose the object)
+      // One possible solution, use an express boolean parser.
+      const featured = typeof options.featured === "boolean" ? options.featured : options.featured === "true";
+      return `I want to ${featured ? "feature" : "unfeature"} the build#${options.buildId} as ${options.address}`;
     case "builderCreate":
       return `I want to add the builder "${options.builderAddress}" to BuidlGuidl as ${options.address}`;
     case "builderUpdateSocials":
