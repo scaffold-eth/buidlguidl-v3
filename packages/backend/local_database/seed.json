@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.3",
   "users": {
     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266": {
       "creationTimestamp": 1633088553221,
@@ -20,21 +20,28 @@
       "desc": "Mint and display NFTs on Ethereum with a full example app...",
       "branch": "https://github.com/scaffold-eth/scaffold-eth/tree/simple-nft-example",
       "readMore": "",
-      "image": "https://buidlguidl.com/assets/simplenft.png"
+      "image": "https://buidlguidl.com/assets/simplenft.png",
+      "builder": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "submittedTimestamp": 1633088553221,
+      "featured": true
     },
     {
       "name": "🧾 Minimum Viable Payment Channel",
       "desc": "Make micro payments in ETH with signatures over a open session",
       "branch": "https://github.com/scaffold-eth/scaffold-eth/tree/payment-channel",
       "readMore": "",
-      "image": "https://buidlguidl.com/assets/paymentchannel.png"
+      "image": "https://buidlguidl.com/assets/paymentchannel.png",
+      "builder": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "submittedTimestamp": 1633088553222
     },
     {
       "name": "📈 Bonding Curve",
       "desc": "Learn about bonding curves and play around with the 😃 bonding curve token",
       "branch": "https://github.com/scaffold-eth/scaffold-eth/tree/bonding-curve",
       "readMore": "",
-      "image": "https://buidlguidl.com/assets/bondingcurve.png"
+      "image": "https://buidlguidl.com/assets/bondingcurve.png",
+      "builder": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "submittedTimestamp": 1633088553221
     }
   ],
   "events": []
