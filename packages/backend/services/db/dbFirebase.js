@@ -95,8 +95,8 @@ const createBuild = build => {
   return database.collection("builds").add(build);
 };
 
-const findAllBuilds = async (isDraft = false) => {
-  const buildsSnapshot = await database.collection("builds").where("isDraft", "==", !!isDraft).get();
+const findAllBuilds = async (featured = false) => {
+  const buildsSnapshot = await database.collection("builds").where("featured", "==", featured).get();
   return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 

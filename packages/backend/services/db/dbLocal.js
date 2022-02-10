@@ -114,10 +114,10 @@ const createBuild = build => {
   return { ...build, id: String(database.builds.length - 1) };
 };
 
-const findAllBuilds = (isDraft = false) => {
+const findAllBuilds = (featured = false) => {
   const allBuilds = database.builds.map((build, index) => ({ id: index.toString(), ...build }));
-  if (isDraft) {
-    return allBuilds.filter(build => build.isDraft);
+  if (featured) {
+    return allBuilds.filter(build => build.featured);
   }
 
   return allBuilds;

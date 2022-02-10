@@ -13,8 +13,8 @@ const router = express.Router();
  */
 router.get("/", async (req, res) => {
   console.log("/builds");
-  const isDraft = req.query.isDraft;
-  const allBuilds = await db.findAllBuilds(isDraft);
+  const featured = !!req.query.featured;
+  const allBuilds = await db.findAllBuilds(featured);
   res.json(allBuilds);
 });
 
@@ -55,6 +55,7 @@ router.post("/", withRole("builder"), async (req, res) => {
     name,
     address,
     builder: address,
+    featured: false,
     submittedTimestamp: new Date().getTime(),
   };
 

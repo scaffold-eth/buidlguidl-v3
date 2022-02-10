@@ -12,14 +12,22 @@ export const getAllEvents = async (limit = null) => {
   }
 };
 
-export const getAllBuilds = async () => {
+export const getAllBuilds = async (featured = false) => {
   try {
-    const response = await axios.get(`${serverUrl}/builds`);
+    const response = await axios.get(`${serverUrl}/builds`, {
+      params: {
+        featured,
+      },
+    });
     return response.data;
   } catch (err) {
     console.log("error fetching builds", err);
     return [];
   }
+};
+
+export const getAllFeaturedBuilds = async () => {
+  return getAllBuilds(true);
 };
 
 export const getBuildSubmitSignMessage = async (address, buildUrl) => {

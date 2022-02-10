@@ -1,5 +1,5 @@
 {
-  "version": "1.0.3",
+  "version": "1.0.4",
   "users": {
     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266": {
       "creationTimestamp": 1633088553221,
@@ -32,7 +32,8 @@
       "readMore": "",
       "image": "https://buidlguidl.com/assets/paymentchannel.png",
       "builder": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-      "submittedTimestamp": 1633088553222
+      "submittedTimestamp": 1633088553222,
+      "featured": false
     },
     {
       "name": "📈 Bonding Curve",
@@ -41,7 +42,8 @@
       "readMore": "",
       "image": "https://buidlguidl.com/assets/bondingcurve.png",
       "builder": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-      "submittedTimestamp": 1633088553221
+      "submittedTimestamp": 1633088553221,
+      "featured": false
     }
   ],
   "events": []

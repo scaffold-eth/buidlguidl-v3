@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, SimpleGrid, Text, Link, useDisclosure } from "@chakra-ui/react";
-import { getAllBuilds } from "../data/api";
+import { getAllFeaturedBuilds } from "../data/api";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
@@ -12,7 +12,7 @@ export default function HomeView({ userProvider, connectedBuilder }) {
 
   useEffect(() => {
     const updateBuilds = async () => {
-      const allBuilds = await getAllBuilds();
+      const allBuilds = await getAllFeaturedBuilds();
       setBuilds(allBuilds.filter(build => !build.isDraft));
     };
 
