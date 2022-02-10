@@ -95,18 +95,22 @@ const createBuild = build => {
   return database.collection("builds").add(build);
 };
 
-const findAllBuilds = async (featured = false) => {
-  const buildsSnapshot = await database.collection("builds").where("featured", "==", featured).get();
+const findAllBuilds = async (featured = null) => {
+  let buildsSnapshot;
+  if (typeof featured === "boolean") {
+    // Only featured / not featured
+    buildsSnapshot = await database.collection("builds").where("featured", "==", featured).get();
+  } else {
+    // All builds
+    buildsSnapshot = await database.collection("builds").get();
+  }
+
   return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
 const findBuilderBuilds = async builderAddress => {
   // ToDo. Use subcollections?
-  const buildsSnapshot = await database
-    .collection("builds")
-    .where("builder", "==", builderAddress)
-    .where("isDraft", "==", false)
-    .get();
+  const buildsSnapshot = await database.collection("builds").where("builder", "==", builderAddress).get();
 
   return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };

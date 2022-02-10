@@ -13,7 +13,7 @@ const router = express.Router();
  */
 router.get("/", async (req, res) => {
   console.log("/builds");
-  const featured = !!req.query.featured;
+  const featured = req.query.featured ? Boolean(req.query.featured) : null;
   const allBuilds = await db.findAllBuilds(featured);
   res.json(allBuilds);
 });

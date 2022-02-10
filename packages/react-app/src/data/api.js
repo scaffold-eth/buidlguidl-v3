@@ -12,7 +12,7 @@ export const getAllEvents = async (limit = null) => {
   }
 };
 
-export const getAllBuilds = async (featured = false) => {
+export const getAllBuilds = async (featured = null) => {
   try {
     const response = await axios.get(`${serverUrl}/builds`, {
       params: {

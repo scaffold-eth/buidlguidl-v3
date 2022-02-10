@@ -114,9 +114,11 @@ const createBuild = build => {
   return { ...build, id: String(database.builds.length - 1) };
 };
 
-const findAllBuilds = (featured = false) => {
+const findAllBuilds = (featured = null) => {
   const allBuilds = database.builds.map((build, index) => ({ id: index.toString(), ...build }));
-  if (featured) {
+  console.log("featured", featured);
+  console.log("featured type", typeof featured === "boolean");
+  if (typeof featured === "boolean") {
     return allBuilds.filter(build => build.featured);
   }
 
@@ -125,7 +127,7 @@ const findAllBuilds = (featured = false) => {
 
 const findBuilderBuilds = builderAddress => {
   return database.builds
-    .filter(build => build.builder === builderAddress && !build.isDraft)
+    .filter(build => build.builder === builderAddress)
     .map((build, index) => ({ id: index.toString(), ...build }));
 };
 
