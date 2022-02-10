@@ -179,7 +179,7 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
             </FormLabel>
             <Textarea
               id="description"
-              placeholder="Write a short description for this build"
+              placeholder="Write a short description for this build.&#10;(Please include searchable keywords)"
               value={description}
               onChange={evt => setDescription(evt.target.value)}
             />
