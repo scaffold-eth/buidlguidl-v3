@@ -145,7 +145,7 @@ export default function Header({
                       color: primaryColorString,
                     }}
                   >
-                    Review Submissions
+                    Review Builds
                   </NavLink>
                 </MenuItem>
               </MenuList>
