@@ -117,88 +117,85 @@ export default function AllBuildsReviewView({ userProvider }) {
         Builds Review
       </Heading>
       <Box overflowX="auto">
+        <Heading as="h2" size="md" mt={6} mb={4}>
+          Featured Builds
+        </Heading>
         {isLoadingBuilds ? (
           <BuildsTableSkeleton />
         ) : (
-          <>
-            <Heading as="h2" size="md" mt={6} mb={4}>
-              Featured Builds
-            </Heading>
-            <Table mb={4}>
-              <Thead>
+          <Table mb={4}>
+            <Thead>
+              <Tr>
+                <Th>Builder</Th>
+                <Th>Build</Th>
+                <Th>Submitted time</Th>
+                <Th>Actions</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {!featuredBuilds || featuredBuilds.length === 0 ? (
                 <Tr>
-                  <Th>Builder</Th>
-                  <Th>Build Name</Th>
-                  <Th>Description</Th>
-                  <Th>Branch URL</Th>
-                  <Th>Submitted time</Th>
-                  <Th>Actions</Th>
+                  <Td colSpan={5}>
+                    <Text color={secondaryFontColor} textAlign="center" mb={4}>
+                      <Icon as={HeroIconInbox} w={6} h={6} color={secondaryFontColor} mt={6} mb={4} />
+                      <br />
+                      There is no featured Builds
+                    </Text>
+                  </Td>
                 </Tr>
-              </Thead>
-              <Tbody>
-                {!featuredBuilds || featuredBuilds.length === 0 ? (
-                  <Tr>
-                    <Td colSpan={5}>
-                      <Text color={secondaryFontColor} textAlign="center" mb={4}>
-                        <Icon as={HeroIconInbox} w={6} h={6} color={secondaryFontColor} mt={6} mb={4} />
-                        <br />
-                        There is no featured Builds
-                      </Text>
-                    </Td>
-                  </Tr>
-                ) : (
-                  featuredBuilds.map(build => (
-                    <BuildReviewRow
-                      key={`${build.builder}_${build.id}`}
-                      build={build}
-                      isLoading={isLoadingBuilds}
-                      approveClick={handleSendBuildReview("ACCEPTED")}
-                      rejectClick={handleSendBuildReview("REJECTED")}
-                    />
-                  ))
-                )}
-              </Tbody>
-            </Table>
-
-            <Heading as="h2" size="md" mt={6} mb={4}>
-              Other Builds
-            </Heading>
-            <Table mb={4}>
-              <Thead>
+              ) : (
+                featuredBuilds.map(build => (
+                  <BuildReviewRow
+                    key={`${build.builder}_${build.id}`}
+                    build={build}
+                    isLoading={isLoadingBuilds}
+                    approveClick={handleSendBuildReview("ACCEPTED")}
+                    rejectClick={handleSendBuildReview("REJECTED")}
+                  />
+                ))
+              )}
+            </Tbody>
+          </Table>
+        )}
+        <Heading as="h2" size="md" mt={10} mb={4}>
+          Other Builds
+        </Heading>
+        {isLoadingBuilds ? (
+          <BuildsTableSkeleton />
+        ) : (
+          <Table mb={4}>
+            <Thead>
+              <Tr>
+                <Th>Builder</Th>
+                <Th>Build</Th>
+                <Th>Submitted time</Th>
+                <Th>Actions</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {!notFeaturedBuilds || notFeaturedBuilds.length === 0 ? (
                 <Tr>
-                  <Th>Builder</Th>
-                  <Th>Build Name</Th>
-                  <Th>Description</Th>
-                  <Th>Branch URL</Th>
-                  <Th>Submitted time</Th>
-                  <Th>Actions</Th>
+                  <Td colSpan={5}>
+                    <Text color={secondaryFontColor} textAlign="center" mb={4}>
+                      <Icon as={HeroIconInbox} w={6} h={6} color={secondaryFontColor} mt={6} mb={4} />
+                      <br />
+                      There is no Builds
+                    </Text>
+                  </Td>
                 </Tr>
-              </Thead>
-              <Tbody>
-                {!notFeaturedBuilds || notFeaturedBuilds.length === 0 ? (
-                  <Tr>
-                    <Td colSpan={5}>
-                      <Text color={secondaryFontColor} textAlign="center" mb={4}>
-                        <Icon as={HeroIconInbox} w={6} h={6} color={secondaryFontColor} mt={6} mb={4} />
-                        <br />
-                        There is no Builds
-                      </Text>
-                    </Td>
-                  </Tr>
-                ) : (
-                  notFeaturedBuilds.map(build => (
-                    <BuildReviewRow
-                      key={`${build.builder}_${build.id}`}
-                      build={build}
-                      isLoading={isLoadingBuilds}
-                      approveClick={handleSendBuildReview("ACCEPTED")}
-                      rejectClick={handleSendBuildReview("REJECTED")}
-                    />
-                  ))
-                )}
-              </Tbody>
-            </Table>
-          </>
+              ) : (
+                notFeaturedBuilds.map(build => (
+                  <BuildReviewRow
+                    key={`${build.builder}_${build.id}`}
+                    build={build}
+                    isLoading={isLoadingBuilds}
+                    approveClick={handleSendBuildReview("ACCEPTED")}
+                    rejectClick={handleSendBuildReview("REJECTED")}
+                  />
+                ))
+              )}
+            </Tbody>
+          </Table>
         )}
       </Box>
     </Container>

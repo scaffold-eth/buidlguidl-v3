@@ -8,9 +8,7 @@ export const BuildsTableSkeleton = () => (
       <Thead>
         <Tr>
           <Th>Builder</Th>
-          <Th>Build Name</Th>
-          <Th>Description</Th>
-          <Th>Branch URL</Th>
+          <Th>Build</Th>
           <Th>Submitted time</Th>
           <Th>Actions</Th>
         </Tr>
