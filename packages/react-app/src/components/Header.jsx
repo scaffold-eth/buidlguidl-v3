@@ -32,7 +32,8 @@ export default function Header({
 }) {
   const { secondaryFontColor, borderColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const primaryColorString = useColorModeValue("var(--chakra-colors-gray-700)", "var(--chakra-colors-gray-200)");
+  const primaryColorString = useColorModeValue("gray.700", "gray.200");
+  const envMarkerBgColor = useColorModeValue("yellow.200", "yellow.800");
   const isSignerProviderConnected =
     injectedProvider && injectedProvider.getSigner && injectedProvider.getSigner()._isSigner;
   const userIsRegistered = userRole && USER_ROLES.anonymous !== userRole;
@@ -46,7 +47,7 @@ export default function Header({
       h={{ base: userIsRegistered ? "120px" : "80px", lg: "80px" }}
     >
       {ENVIRONMENT !== "production" && (
-        <Box pos="fixed" p="2px" fontSize={14} w="100%" bgColor="yellow.200" left={0} textAlign="center">
+        <Box pos="fixed" p="2px" fontSize={14} w="100%" bgColor={envMarkerBgColor} left={0} textAlign="center">
           Working on a {ENVIRONMENT} environment.
         </Box>
       )}
