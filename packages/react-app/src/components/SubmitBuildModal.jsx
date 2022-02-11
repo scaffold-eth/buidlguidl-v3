@@ -187,7 +187,7 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
           </FormControl>
           <FormControl mb={4} isRequired isInvalid={errors.buildUrl}>
             <FormLabel htmlFor="buildUrl">
-              <strong>Branch URL</strong>
+              <strong>Public Repo URL</strong>
             </FormLabel>
             <Input
               id="buildUrl"
