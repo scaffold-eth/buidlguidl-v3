@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Box, Flex, Button, Center, ButtonGroup, Text, Spacer } from "@chakra-ui/react";
+import { Image, Link, Box, Flex, Button, Center, ButtonGroup, Text, Spacer } from "@chakra-ui/react";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 
 const BuildCard = ({ build }) => {
@@ -14,7 +14,7 @@ const BuildCard = ({ build }) => {
         <Text color={secondaryFontColor}>{build.desc}</Text>
         <Spacer />
         <ButtonGroup variant="outline" size="sm" spacing="2">
-          <Button isFullWidth as="a" href={build.branch} target="_blank" rel="noopener noreferrer">
+          <Button isFullWidth as={Link} isExternal href={build.branch} _hover={{ textDecoration: "none" }}>
             Fork
           </Button>
         </ButtonGroup>
