@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link as RouteLink, useParams } from "react-router-dom";
 import axios from "axios";
 import { Box, Button, HStack, Text, Flex, Spacer, Container, SimpleGrid, GridItem, Tag } from "@chakra-ui/react";
@@ -16,7 +16,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
   const isMyProfile = builderAddress === address;
 
-  const fetchBuilder = async () => {
+  const fetchBuilder = useCallback(async () => {
     setIsLoadingBuilder(true);
     const fetchedBuilder = await axios.get(serverUrl + `/builders/${builderAddress}`);
     const buildsFromBuilder = await axios.get(serverUrl + `/builds/${builderAddress}`);
@@ -30,7 +30,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
 
     setBuilder(builderData);
     setIsLoadingBuilder(false);
-  };
+  }, []);
 
   useEffect(() => {
     fetchBuilder();
@@ -102,7 +102,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               <Box overflowX="auto">
                 <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
                   {builder?.builds.map(build => (
-                    <BuildCard build={build} key={build.id} userProvider={userProvider} />
+                    <BuildCard build={build} key={build.id} userProvider={userProvider} onDelete={fetchBuilder} />
                   ))}
                 </SimpleGrid>
               </Box>

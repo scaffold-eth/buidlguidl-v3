@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button, Container, SimpleGrid, Text, Link, useDisclosure } from "@chakra-ui/react";
 import { getAllFeaturedBuilds } from "../data/api";
 import useCustomColorModes from "../hooks/useCustomColorModes";
@@ -10,12 +10,12 @@ export default function HomeView({ userProvider, connectedBuilder }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { primaryFontColor } = useCustomColorModes();
 
-  useEffect(() => {
-    const updateBuilds = async () => {
-      const allBuilds = await getAllFeaturedBuilds();
-      setBuilds(allBuilds.filter(build => !build.isDraft));
-    };
+  const updateBuilds = useCallback(async () => {
+    const allBuilds = await getAllFeaturedBuilds();
+    setBuilds(allBuilds.filter(build => !build.isDraft));
+  }, []);
 
+  useEffect(() => {
     updateBuilds();
   }, []);
 
@@ -43,7 +43,7 @@ export default function HomeView({ userProvider, connectedBuilder }) {
 
       <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
         {builds.map(build => (
-          <BuildCard build={build} key={build.id} userProvider={userProvider} />
+          <BuildCard build={build} key={build.id} userProvider={userProvider} onDelete={updateBuilds} />
         ))}
       </SimpleGrid>
 

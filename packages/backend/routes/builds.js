@@ -158,6 +158,7 @@ router.patch("/", withRole("admin"), async (req, res) => {
     return;
   }
 
+  const build = await db.findBuildById(buildId);
   await db.featureBuild(buildId, Boolean(featured));
 
   const eventPayload = {
@@ -165,6 +166,7 @@ router.patch("/", withRole("admin"), async (req, res) => {
     userAddress,
     reviewerAddress: address,
     buildId,
+    name: build.name,
   };
   const event = createEvent(EVENT_TYPES.BUILD_FEATURED, eventPayload, signature);
   db.createEvent(event); // INFO: async, no await here

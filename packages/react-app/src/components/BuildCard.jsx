@@ -5,7 +5,7 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
 
-const BuildCard = ({ build, userProvider }) => {
+const BuildCard = ({ build, userProvider, onDelete }) => {
   const address = useUserAddress(userProvider);
   const { borderColor, secondaryFontColor } = useCustomColorModes();
   const [isDeletingBuild, setIsDeletingBuild] = useState(false);
@@ -73,6 +73,10 @@ const BuildCard = ({ build, userProvider }) => {
       variant: toastVariant,
     });
     setIsDeletingBuild(false);
+
+    if (typeof onDelete === "function") {
+      onDelete();
+    }
   };
 
   return (
