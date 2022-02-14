@@ -1,9 +1,17 @@
 import React from "react";
+import { useUserAddress } from "eth-hooks";
 import { Image, Link, Box, Flex, Button, Center, Text, Spacer } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 
-const BuildCard = ({ build }) => {
+const BuildCard = ({ build, userProvider }) => {
   const { borderColor, secondaryFontColor } = useCustomColorModes();
+  const address = useUserAddress(userProvider);
+
+  const isMyBuild = address === build.builder;
+
+  const handleDeleteBuild = () => console.log("ToDo: Deleting build...");
+
   return (
     <Box
       borderWidth="1px"
@@ -12,6 +20,7 @@ const BuildCard = ({ build }) => {
       overflow="hidden"
       display="flex"
       flexDirection="column"
+      pos="relative"
     >
       <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor}>
         {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
@@ -26,6 +35,13 @@ const BuildCard = ({ build }) => {
           Fork
         </Button>
       </Flex>
+      {isMyBuild && (
+        <Box pos="absolute" right={0} top={0} p="5px">
+          <Button variant="outline" colorScheme="red" size="sm" onClick={handleDeleteBuild}>
+            <DeleteIcon w={6} color="red.500" />
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
