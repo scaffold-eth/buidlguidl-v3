@@ -47,6 +47,23 @@ export const getBuildSubmitSignMessage = async (address, buildUrl) => {
   }
 };
 
+export const getBuildDeleteSignMessage = async (address, buildId) => {
+  try {
+    const signMessageResponse = await axios.get(serverUrl + `/sign-message`, {
+      params: {
+        messageId: "buildDelete",
+        address,
+        buildId,
+      },
+    });
+
+    return signMessageResponse.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Couldn't get the signature message`);
+  }
+};
+
 export const postBuildSubmit = async (address, signature, { buildUrl, desc, image, name }) => {
   try {
     await axios.post(
@@ -72,6 +89,24 @@ export const postBuildSubmit = async (address, signature, { buildUrl, desc, imag
     }
     console.error(error);
     throw new Error(`Couldn't save the build submission on the server`);
+  }
+};
+
+export const deleteBuild = async (address, signature, { buildId }) => {
+  try {
+    await axios.delete(`${serverUrl}/builds/${buildId}`, {
+      headers: {
+        address,
+      },
+    });
+  } catch (error) {
+    if (error.request?.status === 401) {
+      const WrongRoleError = new Error(`User doesn't have builder role or higher`);
+      WrongRoleError.status = 401;
+      throw WrongRoleError;
+    }
+    console.error(error);
+    throw new Error(`Couldn't delete the build`);
   }
 };
 
