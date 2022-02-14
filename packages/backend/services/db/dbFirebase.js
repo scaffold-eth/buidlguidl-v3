@@ -95,6 +95,15 @@ const createBuild = build => {
   return database.collection("builds").add(build);
 };
 
+const deleteBuild = buildId => {
+  return database.collection("builds").doc(buildId).delete();
+};
+
+const findBuildById = async buildId => {
+  const build = await database.collection("builds").doc(buildId).get();
+  return build.data();
+};
+
 const findAllBuilds = async (featured = null) => {
   let buildsSnapshot;
   if (typeof featured === "boolean") {
@@ -132,4 +141,6 @@ module.exports = {
   findAllBuilds,
   findBuilderBuilds,
   featureBuild,
+  deleteBuild,
+  findBuildById,
 };

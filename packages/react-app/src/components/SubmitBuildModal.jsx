@@ -146,7 +146,7 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
 
     toast({
       status: "success",
-      description: "Build submitted! It will show up once it's reviewed and accepted",
+      description: "Build submitted! You can see it in your portfolio.",
       variant: toastVariant,
     });
     clearForm();
