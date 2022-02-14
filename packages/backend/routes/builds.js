@@ -74,6 +74,49 @@ router.post("/", withRole("builder"), async (req, res) => {
   res.sendStatus(200);
 });
 
+/**
+ * Delete a build.
+ */
+router.delete("/:buildId", withRole("builder"), async (req, res) => {
+  const buildId = req.params.buildId;
+  console.log("DELETE /builds/", buildId);
+
+  const address = req.address;
+  const { signature } = req.body;
+
+  const verifyOptions = {
+    messageId: "buildDelete",
+    address,
+    buildId,
+  };
+
+  if (!verifySignature(signature, verifyOptions)) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  // Make sure build is owned by the user.
+  const build = await db.findBuildById(buildId);
+
+  if (build.builder !== address) {
+    res.status(401).send("Not your build.");
+    return;
+  }
+
+  await db.deleteBuild(buildId);
+
+  const eventPayload = {
+    userAddress: address,
+    buildId,
+    name: build.name,
+  };
+
+  const event = createEvent(EVENT_TYPES.BUILD_DELETE, eventPayload, signature);
+  db.createEvent(event); // INFO: async, no await here
+
+  res.sendStatus(200);
+});
+
 router.post("/upload-img", withRole("builder"), async (req, res) => {
   const form = formidable();
 

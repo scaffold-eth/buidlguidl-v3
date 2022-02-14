@@ -78,8 +78,20 @@ const findEventsWhere = db.findEventsWhere;
 const createBuild = db.createBuild;
 
 /**
+ * @param {string} buildId
+ */
+const deleteBuild = db.deleteBuild;
+
+/**
+ * @param {string} buildId
+ * @returns {{name: string, builder: string, desc: string, branch: string, readMore: string,
+ *   image: string}}
+ */
+const findBuildById = db.findBuildById;
+
+/**
  * @param {boolean} isDraft
- * @returns {{name: string, desc: string, branch: string, readMore: string,
+ * @returns {{name: string, builder: string, desc: string, branch: string, readMore: string,
  *   image: string}[]}
  */
 const findAllBuilds = db.findAllBuilds;
@@ -127,6 +139,8 @@ module.exports = {
   findEventsWhere,
 
   createBuild,
+  deleteBuild,
+  findBuildById,
   findAllBuilds,
   findBuilderBuilds,
   featureBuild,

@@ -114,6 +114,16 @@ const createBuild = build => {
   return { ...build, id: String(database.builds.length - 1) };
 };
 
+const deleteBuild = buildId => {
+  database.builds.splice(buildId, 1);
+
+  persist();
+};
+
+const findBuildById = buildId => {
+  return database.builds[buildId];
+};
+
 const findAllBuilds = (featured = null) => {
   const allBuilds = database.builds.map((build, index) => ({ id: index.toString(), ...build }));
   console.log("featured", featured);
@@ -150,6 +160,8 @@ module.exports = {
   findEventsWhere,
 
   createBuild,
+  deleteBuild,
+  findBuildById,
   findAllBuilds,
   findBuilderBuilds,
   featureBuild,

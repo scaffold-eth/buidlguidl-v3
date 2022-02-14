@@ -95,6 +95,9 @@ export const postBuildSubmit = async (address, signature, { buildUrl, desc, imag
 export const deleteBuild = async (address, signature, { buildId }) => {
   try {
     await axios.delete(`${serverUrl}/builds/${buildId}`, {
+      data: {
+        signature,
+      },
       headers: {
         address,
       },
