@@ -4,6 +4,8 @@ const getSignMessageForId = (messageId, options) => {
   switch (messageId) {
     case "buildSubmit":
       return `I want to submit a new build: ${options.buildUrl} as ${options.address}`;
+    case "buildDelete":
+      return `I want to delete build#${options.buildId} as ${options.address}`;
     case "buildFeature":
       // ToDo. Something going on with bool values:
       // When calling from /sign-message, it's a string, not boolean.
