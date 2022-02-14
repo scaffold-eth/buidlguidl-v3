@@ -17,7 +17,7 @@ export default function HomeView({ userProvider, connectedBuilder }) {
 
   useEffect(() => {
     updateBuilds();
-  }, []);
+  }, [updateBuilds]);
 
   return (
     <Container maxW="container.lg" centerContent>

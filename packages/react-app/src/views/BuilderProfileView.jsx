@@ -30,7 +30,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
 
     setBuilder(builderData);
     setIsLoadingBuilder(false);
-  }, []);
+  }, [builderAddress, serverUrl]);
 
   useEffect(() => {
     fetchBuilder();
