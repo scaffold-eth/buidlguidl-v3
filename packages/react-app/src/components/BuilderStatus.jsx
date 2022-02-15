@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import moment from "moment";
 import {
   Box,
@@ -20,15 +19,18 @@ import {
   FormControl,
 } from "@chakra-ui/react";
 import useSignedRequest from "../hooks/useSignedRequest";
+import useConnectedAddress from "../hooks/useConnectedAddress";
+import useCustomColorModes from "../hooks/useCustomColorModes";
 
 const BuilderStatus = ({ builder }) => {
-  const { builderAddress } = useParams();
+  const address = useConnectedAddress();
   const [currentStatus, setCurrentStatus] = useState(builder?.status);
   const [newStatusText, setNewStatusText] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isLoading, makeSignedRequest } = useSignedRequest("builderUpdateStatus", builder?.id);
+  const { secondaryFontColor } = useCustomColorModes();
 
-  const isMyProfile = builderAddress === builder?.id;
+  const isMyProfile = address === builder?.id;
 
   useEffect(() => {
     setCurrentStatus(builder?.status);
@@ -64,9 +66,13 @@ const BuilderStatus = ({ builder }) => {
     <>
       <Box mb={3}>
         <Box textAlign="center" fontStyle="italic">
-          <Tooltip label={moment(currentStatus?.timestamp).fromNow()}>
-            <Text>{currentStatus?.text}</Text>
-          </Tooltip>
+          {currentStatus?.text ? (
+            <Tooltip label={moment(currentStatus?.timestamp).fromNow()}>
+              <Text>{currentStatus?.text}</Text>
+            </Tooltip>
+          ) : (
+            <Text color={secondaryFontColor}>No status</Text>
+          )}
         </Box>
         {isMyProfile && (
           <Button mt={3} size="xs" variant="outline" onClick={onOpen} isFullWidth>
