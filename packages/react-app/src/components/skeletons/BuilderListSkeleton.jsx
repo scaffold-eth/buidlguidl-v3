@@ -11,7 +11,7 @@ const BuilderListSkeleton = () => (
       <Thead>
         <Tr>
           <Th>Builder</Th>
-          <Th>Challenges</Th>
+          <Th>Status</Th>
           <Th>Socials</Th>
           <Th>Last Activity</Th>
         </Tr>

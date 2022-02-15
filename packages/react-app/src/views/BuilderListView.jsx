@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import axios from "axios";
+import moment from "moment";
 import {
   Box,
   Button,
@@ -20,6 +21,7 @@ import {
   Flex,
   Select,
   Badge,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
@@ -69,6 +71,14 @@ const BuilderAddressCell = ({ builderId, mainnetProvider }) => {
   );
 };
 
+const BuilderStatusCell = ({ status }) => {
+  return (
+    <Tooltip label={moment(status?.timestamp).fromNow()}>
+      <Text>{status?.text}</Text>
+    </Tooltip>
+  );
+};
+
 export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
@@ -84,9 +94,10 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         Cell: ({ value }) => <BuilderAddressCell builderId={value} mainnetProvider={mainnetProvider} />,
       },
       {
-        Header: "Builds",
-        accessor: "challenges",
-        sortDescFirst: true,
+        Header: "Status",
+        accessor: "status",
+        disableSortBy: true,
+        Cell: ({ value }) => <BuilderStatusCell status={value} />,
       },
       {
         Header: "Socials",
@@ -112,7 +123,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
 
       const processedBuilders = fetchedBuilders.data.map(builder => ({
         builder: builder.id,
-        challenges: 0,
+        status: builder.status,
         socials: builder,
         lastActivity: builderLastActivity(builder),
       }));
