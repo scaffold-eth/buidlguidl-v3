@@ -176,7 +176,7 @@ const BuilderProfileCard = ({ builder, mainnetProvider, isMyProfile, userProvide
               )}
               <Divider mb={2} />
               <BuilderStatus builder={builder} />
-              <Divider mb={2} />
+              <Divider mb={6} />
               {hasProfileLinks ? (
                 <Flex mb={4} justifyContent="space-evenly" alignItems="center">
                   {Object.entries(builder.socialLinks)
