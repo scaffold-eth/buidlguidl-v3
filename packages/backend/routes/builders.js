@@ -119,7 +119,7 @@ router.post("/update-status", withAddress, async (req, res) => {
 
   const updatedUser = await db.updateUser(address, { status: newStatusData });
 
-  const event = createEvent(EVENT_TYPES.USER_UPDATE_STATUS, { userAddress: address, ...newStatusData }, signature);
+  const event = createEvent(EVENT_TYPES.USER_UPDATE_STATUS, { userAddress: address, text: status }, signature);
   db.createEvent(event); // INFO: async, no await here
 
   res.status(200).json(updatedUser);
