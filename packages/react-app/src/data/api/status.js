@@ -2,9 +2,11 @@ import axios from "axios";
 import { SERVER_URL as serverUrl } from "../../constants";
 
 export const postStatusUpdate = async (address, signature, options) => {
-  return { success: true };
+  return { status: { text: "Hellooo working on this", timestamp: 1633088553221 } };
+
+  // let response;
   // try {
-  //   await axios.post(
+  //   response = await axios.post(
   //     `${serverUrl}/builders/update-status`,
   //     { signature, ...options },
   //     {
@@ -22,4 +24,5 @@ export const postStatusUpdate = async (address, signature, options) => {
   //   console.error(error);
   //   throw new Error(`Couldn't save the status`);
   // }
+  // return response.data;
 };

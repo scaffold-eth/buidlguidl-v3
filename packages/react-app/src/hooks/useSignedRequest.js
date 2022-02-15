@@ -11,7 +11,6 @@ const useSignedRequest = (actionId, address) => {
   const [isLoading, setIsLoading] = useState(false);
   const userProviderData = useContext(BlockchainProvidersContext).user;
   const userProvider = userProviderData.provider;
-  console.log("userProvider", userProvider);
 
   /**
    * Options for getting the signature text and make the request.
