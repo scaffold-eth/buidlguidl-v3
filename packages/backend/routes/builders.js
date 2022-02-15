@@ -96,4 +96,33 @@ router.post("/update-socials", withAddress, async (req, res) => {
   res.status(200).json(updatedUser);
 });
 
+router.post("/update-status", withAddress, async (req, res) => {
+  const { status, signature } = req.body;
+  const address = req.address;
+  console.log("POST /builders/update-status", address, status);
+
+  const verifyOptions = {
+    messageId: "builderUpdateStatus",
+    address,
+    status,
+  };
+
+  if (!verifySignature(signature, verifyOptions)) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const newStatusData = {
+    text: status,
+    timestamp: new Date().getTime(),
+  };
+
+  const updatedUser = await db.updateUser(address, { status: newStatusData });
+
+  const event = createEvent(EVENT_TYPES.USER_UPDATE_STATUS, { userAddress: address, ...newStatusData }, signature);
+  db.createEvent(event); // INFO: async, no await here
+
+  res.status(200).json(updatedUser);
+});
+
 module.exports = router;

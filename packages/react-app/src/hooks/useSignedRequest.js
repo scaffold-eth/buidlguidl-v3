@@ -4,7 +4,7 @@ import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { postStatusUpdate } from "../data/api/status";
 
 const actionIdToRequest = {
-  statusUpdate: postStatusUpdate,
+  builderUpdateStatus: postStatusUpdate,
 };
 
 const useSignedRequest = (actionId, address) => {

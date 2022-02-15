@@ -17,6 +17,8 @@ const getSignMessageForId = (messageId, options) => {
       return `I want to add the builder "${options.builderAddress}" to BuidlGuidl as ${options.address}`;
     case "builderUpdateSocials":
       return `I want to update my social links as ${options.address}`;
+    case "builderUpdateStatus":
+      return `I want to update my status "${options.status}" as ${options.address}`;
     default:
       return "Invalid signing option";
   }

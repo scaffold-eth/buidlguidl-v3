@@ -26,7 +26,7 @@ const BuilderStatus = ({ builder }) => {
   const [currentStatus, setCurrentStatus] = useState(builder?.status);
   const [newStatusText, setNewStatusText] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isLoading, makeSignedRequest } = useSignedRequest("statusUpdate", builder?.id);
+  const { isLoading, makeSignedRequest } = useSignedRequest("builderUpdateStatus", builder?.id);
 
   const isMyProfile = builderAddress === builder?.id;
 

@@ -7,6 +7,7 @@ const EVENT_TYPES = {
   BUILD_FEATURED: "build.featured",
   USER_CREATE: "user.create",
   USER_UPDATE: "user.update",
+  USER_UPDATE_STATUS: "user.update_status",
 };
 
 // TODO we could check here if the payload is correct for the type
