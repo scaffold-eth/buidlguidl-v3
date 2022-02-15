@@ -33,9 +33,12 @@ const createUser = (userId, userData) => {
   return userDoc.set(userData);
 };
 
-const updateUser = (userId, userData) => {
+const updateUser = async (userId, userData) => {
   const userDoc = getUserDoc(userId);
-  return userDoc.update(userData);
+  await userDoc.update(userData);
+
+  const userSnapshot = await getUserSnapshotById(userId);
+  return userSnapshot.data();
 };
 
 const findAllUsers = async () => {
