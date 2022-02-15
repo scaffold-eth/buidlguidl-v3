@@ -36,11 +36,14 @@ import { USER_ROLES } from "../helpers/constants";
 const serverPath = "/builders";
 
 const builderLastActivity = builder => {
-  const lastChallengeUpdated = Object.values(builder?.challenges ?? {})
-    .map(challenge => challenge.submittedTimestamp)
-    .sort((t1, t2) => t2 - t1)?.[0];
+  // ToDo. Builds updated.
+  // const lastChallengeUpdated = Object.values(builder?.challenges ?? {})
+  //   .map(challenge => challenge.submittedTimestamp)
+  //   .sort((t1, t2) => t2 - t1)?.[0];
 
-  return lastChallengeUpdated ?? builder?.creationTimestamp;
+  const lastStatusUpdated = builder?.status?.timestamp;
+
+  return lastStatusUpdated ?? builder?.creationTimestamp;
 };
 
 const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
