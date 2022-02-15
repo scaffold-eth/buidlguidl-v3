@@ -51,6 +51,7 @@ function App() {
   const [providers, setProviders] = useState({
     mainnet: { provider: null, isReady: false },
     local: { provider: null, isReady: false },
+    user: { provider: null, isReady: false },
   });
 
   useEffect(() => {
@@ -81,7 +82,7 @@ function App() {
     scaffoldEthProviderPromise
       .then(provider => {
         if (DEBUG) console.log("📡 Connected to Mainnet Ethereum using the scaffold eth provider");
-        setProviders({ mainnet: { provider, isReady: true } });
+        setProviders(prevProviders => ({ ...prevProviders, mainnet: { provider, isReady: true } }));
       })
       .catch(() => {
         if (DEBUG) console.log("❌ 📡 Connection to Mainnet Ethereum using the scaffold eth provider failed");
@@ -89,7 +90,7 @@ function App() {
         mainnetInfuraProviderPromise
           .then(provider => {
             if (DEBUG) console.log("📡 Connected to Mainnet Ethereum using the infura provider as callback");
-            setProviders({ mainnet: { provider, isReady: true } });
+            setProviders(prevProviders => ({ ...prevProviders, mainnet: { provider, isReady: true } }));
           })
           .catch(() => {
             if (DEBUG) console.log("❌ 📡 Connection to Mainnet Ethereum using the infura provider as fallback failed");
@@ -103,8 +104,12 @@ function App() {
   const [injectedProvider, setInjectedProvider] = useState();
 
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
-  // TODO move the userProvider into the "providers" state, which is sent into the BlockchainProvidersContext
   const userProvider = useUserProvider(injectedProvider);
+
+  useEffect(() => {
+    setProviders(prevProviders => ({ ...prevProviders, user: { provider: userProvider, isReady: true } }));
+  }, [setProviders, userProvider]);
+
   // TODO address is derived from userProvider, so we should just send userProvider
   const address = useUserAddress(userProvider);
 

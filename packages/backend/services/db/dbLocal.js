@@ -81,6 +81,8 @@ const updateUser = (userId, userData) => {
   };
 
   persist();
+
+  return database.users[userId];
 };
 
 const findAllUsers = () => {

@@ -33,6 +33,7 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ellipsizedAddress } from "../helpers/strings";
 import { getUpdateSocialsSignMessage, postUpdateSocials } from "../data/api";
 import { bySocialWeight, socials } from "../data/socials";
+import BuilderStatus from "./BuilderStatus";
 
 const BuilderProfileCardSkeleton = ({ isLoaded, children }) => (
   <Skeleton isLoaded={isLoaded}>{isLoaded ? children() : <SkeletonText mt="4" noOfLines={4} spacing="4" />}</Skeleton>
@@ -173,7 +174,9 @@ const BuilderProfileCard = ({ builder, mainnetProvider, isMyProfile, userProvide
                   </Tooltip>
                 </Text>
               )}
-              <Divider mb={6} />
+              <Divider mb={2} />
+              <BuilderStatus builder={builder} />
+              <Divider mb={2} />
               {hasProfileLinks ? (
                 <Flex mb={4} justifyContent="space-evenly" alignItems="center">
                   {Object.entries(builder.socialLinks)
