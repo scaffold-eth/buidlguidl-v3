@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { Box, Button, Container, Heading, SkeletonText, Spinner, useToast, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Container,
+  Heading,
+  SkeletonText,
+  Spinner,
+  useToast,
+  useColorModeValue,
+  HStack,
+} from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import ReactMarkdown from "react-markdown";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
@@ -70,7 +80,7 @@ export default function BuildDetailView() {
   }
 
   return (
-    <Container maxW="container.md" mb="60px">
+    <Container maxW="container.md" mb="100px">
       <Box textAlign="center" mb={6}>
         <Heading as="h1" mb={4}>
           {build.label}
@@ -78,18 +88,42 @@ export default function BuildDetailView() {
       </Box>
       <SkeletonText mt="4" noOfLines={4} spacing="4" isLoaded={description} />
       <ReactMarkdown components={ChakraUIRenderer(chakraMarkdownComponents)}>{description}</ReactMarkdown>
-      <Box pos="fixed" bottom={0} p={6} left={0} right={0} w="full" display="flex" justifyContent="center">
+      <HStack
+        pos="fixed"
+        bottom={0}
+        p={6}
+        left={0}
+        right={0}
+        w="full"
+        display="flex"
+        justifyContent="center"
+        spacing={6}
+      >
         <Button
           as="a"
           colorScheme="gray"
-          variant="outline"
+          variant="solid"
+          border="1px solid"
           href={build.branch}
           target="_blank"
           rel="noopener noreferrer"
         >
           View it on Github <ExternalLinkIcon ml={1} />
         </Button>
-      </Box>
+        {build.demoUrl && (
+          <Button
+            as="a"
+            colorScheme="gray"
+            variant="solid"
+            border="1px solid"
+            href={build.demoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Live Demo <ExternalLinkIcon ml={1} />
+          </Button>
+        )}
+      </HStack>
     </Container>
   );
 }
