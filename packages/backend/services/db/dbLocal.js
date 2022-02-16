@@ -139,8 +139,8 @@ const findAllBuilds = (featured = null) => {
 
 const findBuilderBuilds = builderAddress => {
   return database.builds
-    .filter(build => build.builder === builderAddress)
-    .map((build, index) => ({ id: index.toString(), ...build }));
+    .map((build, index) => ({ id: index.toString(), ...build }))
+    .filter(build => build.builder === builderAddress);
 };
 
 const featureBuild = (buildId, featured) => {
