@@ -1,6 +1,18 @@
 import React, { useState } from "react";
 import { useUserAddress } from "eth-hooks";
-import { Image, Link, Box, Flex, Button, Center, Text, Spacer, useToast, useColorModeValue } from "@chakra-ui/react";
+import {
+  Image,
+  Link,
+  Box,
+  Flex,
+  Button,
+  Center,
+  Text,
+  Spacer,
+  useToast,
+  useColorModeValue,
+  ButtonGroup,
+} from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
@@ -98,9 +110,16 @@ const BuildCard = ({ build, userProvider, onDelete }) => {
           {build.desc}
         </Text>
         <Spacer />
-        <Button mt={3} variant="outline" size="sm" as={Link} isExternal href={build.branch} isFullWidth>
-          Fork
-        </Button>
+        <ButtonGroup>
+          <Button mt={3} variant="outline" size="sm" as={Link} isExternal href={build.branch} isFullWidth>
+            Fork
+          </Button>
+          {build.demoUrl && (
+            <Button mt={3} variant="outline" size="sm" as={Link} isExternal href={build.demoUrl} isFullWidth>
+              Live Demo
+            </Button>
+          )}
+        </ButtonGroup>
       </Flex>
       {isMyBuild && (
         <Box pos="absolute" right={0} top={0} p="5px">
