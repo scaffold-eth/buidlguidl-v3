@@ -53,7 +53,6 @@ router.post("/", withRole("builder"), async (req, res) => {
     desc,
     image,
     name,
-    address,
     builder: address,
     featured: false,
     submittedTimestamp: new Date().getTime(),
