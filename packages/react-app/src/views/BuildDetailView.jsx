@@ -104,6 +104,7 @@ export default function BuildDetailView() {
           colorScheme="gray"
           variant="solid"
           border="1px solid"
+          boxShadow="2xl"
           href={build.branch}
           target="_blank"
           rel="noopener noreferrer"
@@ -116,6 +117,7 @@ export default function BuildDetailView() {
             colorScheme="gray"
             variant="solid"
             border="1px solid"
+            boxShadow="2xl"
             href={build.demoUrl}
             target="_blank"
             rel="noopener noreferrer"
