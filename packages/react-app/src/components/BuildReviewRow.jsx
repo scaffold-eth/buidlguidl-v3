@@ -19,9 +19,16 @@ export default function BuildReviewRow({ build, isLoading, featuredClick, notFea
             <Text>{build.desc}</Text>
             <Text mt={2}>
               <Link href={build.branch} color="teal.500" target="_blank" rel="noopener noreferrer">
-                Link
+                Code
               </Link>
             </Text>
+            {build.demoUrl && (
+              <Text>
+                <Link href={build.demoUrl} color="teal.500" target="_blank" rel="noopener noreferrer">
+                  Demo
+                </Link>
+              </Text>
+            )}
           </Box>
           <Box>
             {build.image ? <Image src={build.image} h="100px" mx="auto" /> : <Center h="200px">No image</Center>}
