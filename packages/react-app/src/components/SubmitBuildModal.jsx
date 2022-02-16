@@ -31,6 +31,7 @@ export default function SubmitBuildModal({ isOpen, onClose }) {
   // Submission state.
   const [buildName, setBuildName] = useState("");
   const [description, setDescription] = useState("");
+  const [demoUrl, setDemoUrl] = useState("");
   const [buildUrl, setBuildUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [errors, setErrors] = useState({ buildName: false, description: false, buildUrl: false, imageUrl: false });
@@ -74,6 +75,7 @@ export default function SubmitBuildModal({ isOpen, onClose }) {
     setBuildName("");
     setDescription("");
     setBuildUrl("");
+    setDemoUrl("");
     setImageUrl("");
   };
 
@@ -82,6 +84,7 @@ export default function SubmitBuildModal({ isOpen, onClose }) {
       buildName: !buildName,
       description: !description,
       buildUrl: !buildUrl,
+      demoUrl: false,
       imageUrl: false,
     };
 
@@ -91,7 +94,7 @@ export default function SubmitBuildModal({ isOpen, onClose }) {
     }
 
     try {
-      await makeSignedRequest({ buildUrl, desc: description, image: imageUrl, name: buildName });
+      await makeSignedRequest({ buildUrl, demoUrl, desc: description, image: imageUrl, name: buildName });
     } catch (error) {
       toast({
         description: error.message,
@@ -151,6 +154,18 @@ export default function SubmitBuildModal({ isOpen, onClose }) {
               placeholder="https://..."
               value={buildUrl}
               onChange={evt => setBuildUrl(evt.target.value)}
+            />
+            <FormErrorMessage>This field is required</FormErrorMessage>
+          </FormControl>
+          <FormControl mb={4} isInvalid={errors.demoUrl}>
+            <FormLabel htmlFor="demoUrl">
+              <strong>Live Demo URL</strong>
+            </FormLabel>
+            <Input
+              id="demoUrl"
+              placeholder="https://..."
+              value={demoUrl}
+              onChange={evt => setDemoUrl(evt.target.value)}
             />
             <FormErrorMessage>This field is required</FormErrorMessage>
           </FormControl>

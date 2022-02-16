@@ -1,12 +1,13 @@
 import axios from "axios";
 import { SERVER_URL as serverUrl } from "../../constants";
 
-export const postBuildSubmit = async (address, signature, { buildUrl, desc, image, name }) => {
+export const postBuildSubmit = async (address, signature, { buildUrl, demoUrl, desc, image, name }) => {
   try {
     await axios.post(
       `${serverUrl}/builds`,
       {
         buildUrl,
+        demoUrl,
         desc,
         image,
         name,
