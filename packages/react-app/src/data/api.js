@@ -30,23 +30,6 @@ export const getAllFeaturedBuilds = async () => {
   return getAllBuilds(true);
 };
 
-export const getBuildSubmitSignMessage = async (address, buildUrl) => {
-  try {
-    const signMessageResponse = await axios.get(serverUrl + `/sign-message`, {
-      params: {
-        messageId: "buildSubmit",
-        address,
-        buildUrl,
-      },
-    });
-
-    return signMessageResponse.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error(`Couldn't get the signature message`);
-  }
-};
-
 export const getBuildDeleteSignMessage = async (address, buildId) => {
   try {
     const signMessageResponse = await axios.get(serverUrl + `/sign-message`, {
@@ -61,34 +44,6 @@ export const getBuildDeleteSignMessage = async (address, buildId) => {
   } catch (error) {
     console.error(error);
     throw new Error(`Couldn't get the signature message`);
-  }
-};
-
-export const postBuildSubmit = async (address, signature, { buildUrl, desc, image, name }) => {
-  try {
-    await axios.post(
-      `${serverUrl}/builds`,
-      {
-        buildUrl,
-        desc,
-        image,
-        name,
-        signature,
-      },
-      {
-        headers: {
-          address,
-        },
-      },
-    );
-  } catch (error) {
-    if (error.request?.status === 401) {
-      const WrongRoleError = new Error(`User doesn't have builder role or higher`);
-      WrongRoleError.status = 401;
-      throw WrongRoleError;
-    }
-    console.error(error);
-    throw new Error(`Couldn't save the build submission on the server`);
   }
 };
 
