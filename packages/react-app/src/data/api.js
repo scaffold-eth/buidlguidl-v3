@@ -2,6 +2,9 @@ import axios from "axios";
 
 import { SERVER_URL as serverUrl } from "../constants";
 
+export const getGithubReadmeUrlFromBranchUrl = branchUrl =>
+  branchUrl.replace("github.com", "raw.githubusercontent.com").replace(/\/tree\/(.*)/, "/$1/README.md");
+
 export const getAllEvents = async (limit = null) => {
   try {
     const response = await axios.get(`${serverUrl}/events?limit=${limit}`);

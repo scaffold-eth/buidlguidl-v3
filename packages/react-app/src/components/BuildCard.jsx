@@ -13,6 +13,7 @@ import {
   useColorModeValue,
   ButtonGroup,
 } from "@chakra-ui/react";
+import { Link as RouteLink } from "react-router-dom";
 import { DeleteIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
@@ -101,11 +102,15 @@ const BuildCard = ({ build, userProvider, onDelete }) => {
       flexDirection="column"
       pos="relative"
     >
-      <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor}>
-        {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
-      </Box>
+      <RouteLink to={`/build/${build.id}`}>
+        <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor}>
+          {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
+        </Box>
+      </RouteLink>
       <Flex pt={9} pb={4} px={4} direction="column" minH="240px" h="100%">
-        <Text fontWeight="bold">{build.name}</Text>
+        <RouteLink to={`/build/${build.id}`}>
+          <Text fontWeight="bold">{build.name}</Text>
+        </RouteLink>
         <Text color={secondaryFontColor} whiteSpace="pre-wrap">
           {build.desc}
         </Text>
