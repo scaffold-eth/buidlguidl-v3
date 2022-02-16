@@ -2,9 +2,11 @@ import { useContext, useState } from "react";
 import { getSignMessage } from "../data/api/signature";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { postStatusUpdate } from "../data/api/status";
+import { postBuildSubmit } from "../data/api/builds";
 
 const actionIdToRequest = {
   builderUpdateStatus: postStatusUpdate,
+  buildSubmit: postBuildSubmit,
 };
 
 const useSignedRequest = (actionId, address) => {

@@ -47,7 +47,7 @@ export default function HomeView({ userProvider, connectedBuilder }) {
         ))}
       </SimpleGrid>
 
-      <SubmitBuildModal isOpen={isOpen} onClose={onClose} userProvider={userProvider} />
+      <SubmitBuildModal isOpen={isOpen} onClose={onClose} />
     </Container>
   );
 }

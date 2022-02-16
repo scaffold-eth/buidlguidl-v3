@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
-import { useUserAddress } from "eth-hooks";
 import {
   Button,
   Input,
@@ -22,11 +21,12 @@ import {
   Image,
   Spinner,
 } from "@chakra-ui/react";
-import { getBuildSubmitSignMessage, postBuildSubmit } from "../data/api";
 import { SERVER_URL as serverUrl } from "../constants";
+import useSignedRequest from "../hooks/useSignedRequest";
+import useConnectedAddress from "../hooks/useConnectedAddress";
 
-export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
-  const address = useUserAddress(userProvider);
+export default function SubmitBuildModal({ isOpen, onClose }) {
+  const address = useConnectedAddress();
 
   // Submission state.
   const [buildName, setBuildName] = useState("");
@@ -34,7 +34,8 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
   const [buildUrl, setBuildUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [errors, setErrors] = useState({ buildName: false, description: false, buildUrl: false, imageUrl: false });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { isLoading, makeSignedRequest } = useSignedRequest("buildSubmit", address);
 
   const [isUploadingImg, setIsUploadingImg] = useState(false);
   const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
@@ -77,8 +78,6 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
   };
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
-
     const nextErrors = {
       buildName: !buildName,
       description: !description,
@@ -88,59 +87,17 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
 
     setErrors(nextErrors);
     if (Object.values(nextErrors).some(hasError => hasError)) {
-      setIsSubmitting(false);
-      return;
-    }
-
-    let signMessage;
-    try {
-      signMessage = await getBuildSubmitSignMessage(address, buildUrl);
-    } catch (error) {
-      toast({
-        description: "Can't get the message to sign. Please try again",
-        status: "error",
-        variant: toastVariant,
-      });
-      setIsSubmitting(false);
-      return;
-    }
-
-    let signature;
-    try {
-      signature = await userProvider.send("personal_sign", [signMessage, address]);
-    } catch (error) {
-      toast({
-        status: "error",
-        description: "The signature was cancelled",
-        variant: toastVariant,
-      });
-      setIsSubmitting(false);
       return;
     }
 
     try {
-      await postBuildSubmit(address, signature, {
-        buildUrl,
-        desc: description,
-        image: imageUrl,
-        name: buildName,
-      });
+      await makeSignedRequest({ buildUrl, desc: description, image: imageUrl, name: buildName });
     } catch (error) {
-      if (error.status === 401) {
-        toast({
-          status: "error",
-          description: "Submission Error. You don't have the required role.",
-          variant: toastVariant,
-        });
-        setIsSubmitting(false);
-        return;
-      }
       toast({
+        description: error.message,
         status: "error",
-        description: "Submission Error. Please try again.",
         variant: toastVariant,
       });
-      setIsSubmitting(false);
       return;
     }
 
@@ -149,9 +106,9 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
       description: "Build submitted! You can see it in your portfolio.",
       variant: toastVariant,
     });
+
     clearForm();
     onClose();
-    setIsSubmitting(false);
   };
 
   return (
@@ -237,7 +194,7 @@ export default function SubmitBuildModal({ isOpen, onClose, userProvider }) {
               )}
             </Box>
           </FormControl>
-          <Button colorScheme="blue" mt={8} px={4} onClick={handleSubmit} isLoading={isSubmitting} isFullWidth>
+          <Button colorScheme="blue" mt={8} px={4} onClick={handleSubmit} isLoading={isLoading} isFullWidth>
             Submit
           </Button>
         </ModalBody>
