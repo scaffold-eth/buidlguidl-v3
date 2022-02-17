@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import { useLookupAddress } from "eth-hooks";
-import { Heading, Box, Image, Center, HStack, VStack, Flex, Text, Link } from "@chakra-ui/react";
+import { Heading, Box, Image, Center, HStack, VStack, Flex, Text, Link, Spacer } from "@chakra-ui/react";
 import QRPunkBlockie from "./QrPunkBlockie";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ellipsizedAddress } from "../helpers/strings";
@@ -14,26 +14,14 @@ const BuildDetailHeader = ({ build }) => {
   const ens = useLookupAddress(mainnetProvider, build.builder);
   const shortAddress = ellipsizedAddress(build.builder);
   const hasEns = !!ens && ens.length !== 0 && !/^0x/.test(ens);
-  console.log("ens", ens);
-  console.log("shortAddress", shortAddress);
-  console.log("hasEns", hasEns);
 
   const { borderColor } = useCustomColorModes();
 
   return (
     <>
-      <Flex
-        borderRadius="lg"
-        borderColor={borderColor}
-        borderWidth={1}
-        justify={{ base: "space-around", xl: "center" }}
-        direction={{ base: "row", xl: "column" }}
-        p={6}
-        maxW={{ base: "full", xl: 60 }}
-        margin="auto"
-      >
-        <Box>
-          <Heading as="h1" size="xl" mt={6} mb={4} pb={2} borderColor={borderColor}>
+      <Flex borderRadius="lg" borderColor={borderColor} borderWidth={1} p={6} margin="auto">
+        <Box maxW="65%">
+          <Heading as="h1" mt={6} mb={4} pb={2} borderColor={borderColor}>
             {build.name}
           </Heading>
           <Text fontSize="xl" mb={4}>
@@ -78,6 +66,7 @@ const BuildDetailHeader = ({ build }) => {
             </HStack>
           </Link>
         </Box>
+        <Spacer />
         <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor} w="40%">
           {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
         </Box>
