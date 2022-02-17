@@ -85,6 +85,10 @@ export default function BaseQRPunkBlockie({
 
   const { style: extraStyle, ...otherProps } = extraProps;
 
+  if (!address) {
+    return null;
+  }
+
   return (
     <Wrapper
       style={{

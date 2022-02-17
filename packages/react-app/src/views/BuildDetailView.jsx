@@ -16,11 +16,13 @@ import ReactMarkdown from "react-markdown";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { chakraMarkdownComponents } from "../helpers/chakraMarkdownTheme";
 import { getBuildById, getGithubBuildReadme } from "../data/api/builds";
+import BuildDetailHeader from "../components/BuildDetailHeader";
 
 export default function BuildDetailView() {
   const [isLoadingBuild, setIsLoadingBuild] = useState(true);
   const [build, setBuild] = useState(null);
   const { buildId } = useParams();
+  const [isReadmeSupported, setIsReadmeSupported] = useState(false);
   const [description, setDescription] = useState(null);
   const history = useHistory();
 
@@ -51,6 +53,7 @@ export default function BuildDetailView() {
       try {
         const readme = await getGithubBuildReadme(build);
         setDescription(readme);
+        setIsReadmeSupported(true);
       } catch (err) {
         console.log(err);
         toast({
@@ -58,11 +61,18 @@ export default function BuildDetailView() {
           status: "error",
           variant: toastVariant,
         });
+        setIsReadmeSupported(false);
       }
     };
-    if (build) {
-      effect();
+    if (!build) {
+      return;
     }
+    if (!/github/.test(build.branch)) {
+      setIsReadmeSupported(false);
+      return;
+    }
+    setIsReadmeSupported(true);
+    effect();
   }, [build]);
 
   if (isLoadingBuild) {
@@ -81,13 +91,18 @@ export default function BuildDetailView() {
 
   return (
     <Container maxW="container.md" mb="100px">
-      <Box textAlign="center" mb={6}>
-        <Heading as="h1" mb={4}>
-          {build.label}
-        </Heading>
-      </Box>
-      <SkeletonText mt="4" noOfLines={4} spacing="4" isLoaded={description} />
-      <ReactMarkdown components={ChakraUIRenderer(chakraMarkdownComponents)}>{description}</ReactMarkdown>
+      <BuildDetailHeader build={build} />
+      {isReadmeSupported && (
+        <>
+          <Box textAlign="center" mb={6}>
+            <Heading as="h1" mb={4}>
+              {build.label}
+            </Heading>
+          </Box>
+          <SkeletonText mt="4" noOfLines={4} spacing="4" isLoaded={description} />
+          <ReactMarkdown components={ChakraUIRenderer(chakraMarkdownComponents)}>{description}</ReactMarkdown>
+        </>
+      )}
       <HStack
         pos="fixed"
         bottom={0}
@@ -109,7 +124,7 @@ export default function BuildDetailView() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          View it on Github <ExternalLinkIcon ml={1} />
+          Fork <ExternalLinkIcon ml={1} />
         </Button>
         {build.demoUrl && (
           <Button
