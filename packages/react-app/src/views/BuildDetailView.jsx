@@ -57,11 +57,6 @@ export default function BuildDetailView() {
         setIsReadmeSupported(true);
       } catch (err) {
         console.log(err);
-        toast({
-          description: "Can't get the build description. Please try again",
-          status: "error",
-          variant: toastVariant,
-        });
         setIsReadmeSupported(false);
       }
     };
