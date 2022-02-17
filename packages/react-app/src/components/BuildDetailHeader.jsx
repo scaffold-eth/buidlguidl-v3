@@ -21,7 +21,7 @@ const BuildDetailHeader = ({ build }) => {
     <>
       <Flex borderRadius="lg" borderColor={borderColor} borderWidth={1} p={6} margin="auto">
         <Box maxW="65%">
-          <Heading as="h1" mt={6} mb={4} pb={2} borderColor={borderColor}>
+          <Heading as="h1" mb={4} pb={2} borderColor={borderColor}>
             {build.name}
           </Heading>
           <Text fontSize="xl" mb={4}>
