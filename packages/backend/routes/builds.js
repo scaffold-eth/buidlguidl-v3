@@ -19,11 +19,21 @@ router.get("/", async (req, res) => {
 });
 
 /**
+ * Get a Build by id.
+ */
+router.get("/:buildId", async (req, res) => {
+  const buildId = req.params.buildId;
+  console.log(`/builds/${buildId}`);
+  const build = await db.findBuildById(buildId);
+  res.json(build);
+});
+
+/**
  * Get all Builds for a given Builder
  */
-router.get("/:builderAddress", async (req, res) => {
+router.get("/builder/:builderAddress", async (req, res) => {
   const builderAddress = req.params.builderAddress;
-  console.log(`/builds/${builderAddress}`);
+  console.log(`/builds/builder/${builderAddress}`);
 
   const builderBuilds = await db.findBuilderBuilds(builderAddress);
   res.json(builderBuilds);

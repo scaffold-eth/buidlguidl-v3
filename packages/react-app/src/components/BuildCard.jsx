@@ -1,18 +1,7 @@
 import React, { useState } from "react";
 import { useUserAddress } from "eth-hooks";
-import {
-  Image,
-  Link,
-  Box,
-  Flex,
-  Button,
-  Center,
-  Text,
-  Spacer,
-  useToast,
-  useColorModeValue,
-  ButtonGroup,
-} from "@chakra-ui/react";
+import { Image, Box, Flex, Button, Center, Text, Spacer, useToast, useColorModeValue } from "@chakra-ui/react";
+import { Link as RouteLink } from "react-router-dom";
 import { DeleteIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
@@ -101,25 +90,22 @@ const BuildCard = ({ build, userProvider, onDelete }) => {
       flexDirection="column"
       pos="relative"
     >
-      <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor}>
-        {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
-      </Box>
+      <RouteLink to={`/build/${build.id}`}>
+        <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor}>
+          {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
+        </Box>
+      </RouteLink>
       <Flex pt={9} pb={4} px={4} direction="column" minH="240px" h="100%">
-        <Text fontWeight="bold">{build.name}</Text>
+        <RouteLink to={`/build/${build.id}`}>
+          <Text fontWeight="bold">{build.name}</Text>
+        </RouteLink>
         <Text color={secondaryFontColor} whiteSpace="pre-wrap">
           {build.desc}
         </Text>
         <Spacer />
-        <ButtonGroup>
-          <Button mt={3} variant="outline" size="sm" as={Link} isExternal href={build.branch} isFullWidth>
-            Fork
-          </Button>
-          {build.demoUrl && (
-            <Button mt={3} variant="outline" size="sm" as={Link} isExternal href={build.demoUrl} isFullWidth>
-              Live Demo
-            </Button>
-          )}
-        </ButtonGroup>
+        <Button mt={3} as={RouteLink} to={`/build/${build.id}`} variant="outline" size="sm" isFullWidth>
+          View
+        </Button>
       </Flex>
       {isMyBuild && (
         <Box pos="absolute" right={0} top={0} p="5px">

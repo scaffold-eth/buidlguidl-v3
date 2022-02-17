@@ -1,3 +1,7 @@
+import React from "react";
+import { Link as RouteLink } from "react-router-dom";
+import { Link } from "@chakra-ui/react";
+
 // TODO PR: how do we keep just one instance of this enum? Like a commons library
 const EVENT_TYPES = {
   CHALLENGE_SUBMIT: "challenge.submit",
@@ -28,7 +32,14 @@ export const eventDisplay = ({ type, payload }) => {
     }
 
     case EVENT_TYPES.BUILD_SUBMIT: {
-      return `just submitted a new build: "${payload.name}"`;
+      return (
+        <>
+          just submitted a new build:{" "}
+          <Link as={RouteLink} to={`/build/${payload.buildId}`} textDecoration="underline">
+            {payload.name}
+          </Link>
+        </>
+      );
     }
 
     case EVENT_TYPES.BUILD_DELETE: {
@@ -36,7 +47,15 @@ export const eventDisplay = ({ type, payload }) => {
     }
 
     case EVENT_TYPES.BUILD_FEATURED: {
-      return `Their build "${payload.name ?? ""}" has been ${payload.featured ? "featured" : "unfeatured"}`;
+      return (
+        <>
+          Their build{" "}
+          <Link as={RouteLink} to={`/build/${payload.buildId}`} textDecoration="underline">
+            {payload.name}
+          </Link>{" "}
+          has been {payload.featured ? "featured" : "unfeatured"}`
+        </>
+      );
     }
 
     case EVENT_TYPES.USER_CREATE: {
