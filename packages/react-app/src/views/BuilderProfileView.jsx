@@ -19,7 +19,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const fetchBuilder = useCallback(async () => {
     setIsLoadingBuilder(true);
     const fetchedBuilder = await axios.get(serverUrl + `/builders/${builderAddress}`);
-    const buildsFromBuilder = await axios.get(serverUrl + `/builds/${builderAddress}`);
+    const buildsFromBuilder = await axios.get(serverUrl + `/builds/builder/${builderAddress}`);
 
     const builderData = {
       ...fetchedBuilder.data,
