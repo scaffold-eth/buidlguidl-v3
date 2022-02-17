@@ -67,8 +67,14 @@ const BuildDetailHeader = ({ build }) => {
           </Link>
         </Box>
         <Spacer />
-        <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor} w="40%">
-          {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
+        <Box border="2px" borderStyle="solid" borderColor={borderColor}>
+          {build.image ? (
+            <Image src={build.image} h="200px" mx="auto" />
+          ) : (
+            <Center h="200px" p={10}>
+              No image
+            </Center>
+          )}
         </Box>
       </Flex>
     </>
