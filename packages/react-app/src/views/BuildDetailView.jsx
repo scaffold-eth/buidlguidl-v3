@@ -46,6 +46,7 @@ export default function BuildDetailView() {
       setIsLoadingBuild(false);
     };
     effect();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -73,6 +74,7 @@ export default function BuildDetailView() {
     }
     setIsReadmeSupported(true);
     effect();
+    // eslint-disable-next-line
   }, [build]);
 
   if (isLoadingBuild) {
