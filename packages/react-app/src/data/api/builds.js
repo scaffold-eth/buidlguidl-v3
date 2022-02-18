@@ -1,6 +1,6 @@
 import axios from "axios";
 import { SERVER_URL as serverUrl } from "../../constants";
-import { getGithubReadmeUrlFromBranchUrl } from "../api";
+import { getGithubApiReadmeFromRepoUrl, getGithubReadmeUrlFromBranchUrl, isGithubBranch } from "../api";
 
 export const postBuildSubmit = async (address, signature, { buildUrl, demoUrl, desc, image, name }) => {
   try {
@@ -43,7 +43,15 @@ export const getBuildById = async buildId => {
 
 export const getGithubBuildReadme = async build => {
   try {
-    const response = await axios.get(getGithubReadmeUrlFromBranchUrl(build.branch));
+    let readmeUrl;
+    if (isGithubBranch(build.branch)) {
+      readmeUrl = getGithubReadmeUrlFromBranchUrl(build.branch);
+    } else {
+      const ghApiResponse = await axios.get(getGithubApiReadmeFromRepoUrl(build.branch));
+      readmeUrl = ghApiResponse.data.download_url;
+    }
+
+    const response = await axios.get(readmeUrl);
     return response.data;
   } catch (err) {
     console.log("error fetching build README", err);
