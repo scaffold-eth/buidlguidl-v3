@@ -8,12 +8,12 @@ require("dotenv").config();
 const fs = require("fs");
 const { getProp } = require("../../utils/object");
 
-console.log("using local db");
-
-const DATABASE_PATH = "./local_database/local_db.json";
-const SEED_PATH = "./local_database/seed.json";
+const DATABASE_PATH = process.env.DATABASE_PATH ? process.env.DATABASE_PATH : "./local_database/local_db.json";
+const SEED_PATH = process.env.SEED_PATH ? process.env.SEED_PATH : "./local_database/seed.json";
 const databaseSeed = JSON.parse(fs.readFileSync(SEED_PATH, "utf8"));
 const emptyTestDatabase = { version: 0, users: {}, builds: {}, events: [] };
+
+console.log(`using local db: ${DATABASE_PATH}`);
 
 if (!fs.existsSync(DATABASE_PATH)) {
   // Seed the local database if empty.
@@ -89,6 +89,11 @@ const findAllUsers = () => {
   return Object.entries(database.users).map(([id, userData]) => ({ id, ...userData }));
 };
 
+// --- Streams
+const findAllStreams = () => {
+  return Object.entries(database.streams).map(([id, streamData]) => ({ id, ...streamData }));
+};
+
 // --- Events
 const createEvent = event => {
   database.events.push(event);
@@ -156,6 +161,8 @@ module.exports = {
   updateUser,
   findAllUsers,
   findUserByAddress,
+
+  findAllStreams,
 
   createEvent,
   findAllEvents,

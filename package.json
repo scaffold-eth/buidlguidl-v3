@@ -27,7 +27,8 @@
     "deploy-and-graph": "yarn deploy && yarn graph-ship-local",
     "theme": "yarn workspace @scaffold-eth/react-app theme",
     "watch-theme": "yarn workspace @scaffold-eth/react-app watch",
-    "backend": "cd packages/backend && nodemon --ignore 'local_database/*.json' index"
+    "backend": "cd packages/backend && nodemon --ignore 'local_database/*.json' index",
+    "stream-indexer": "cd packages/backend/services/stream-indexer && nodemon --ignore 'local_database/*.json' index"
   },
   "workspaces": {
     "packages": [

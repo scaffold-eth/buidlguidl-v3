@@ -48,6 +48,12 @@ const findAllUsers = db.findAllUsers;
  */
 const findUserByAddress = db.findUserByAddress;
 
+// --- Streams
+/**
+ * Returns a list of payment streams.
+ */
+const findAllStreams = db.findAllStreams;
+
 // --- Events
 /**
  *
@@ -133,6 +139,8 @@ module.exports = {
   updateUser,
   findAllUsers,
   findUserByAddress,
+
+  findAllStreams,
 
   createEvent,
   findAllEvents,

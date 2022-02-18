@@ -1,0 +1,6 @@
+# Google app engine deployment
+runtime: nodejs14
+env: standard
+entrypoint: node index.js
+env_variables:
+  RPC_URL=https://mainnet.infura.io/v3/XXX
