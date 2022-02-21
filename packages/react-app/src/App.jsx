@@ -21,6 +21,7 @@ import { USER_ROLES } from "./helpers/constants";
 import { providerPromiseWrapper } from "./helpers/blockchainProviders";
 import BlockchainProvidersContext from "./contexts/blockchainProvidersContext";
 import BuildDetailView from "./views/BuildDetailView";
+import BuildVoteList from "./views/BuildVoteList";
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -199,6 +200,9 @@ function App() {
           </Route>
           <Route path="/build/:buildId" exact>
             <BuildDetailView />
+          </Route>
+          <Route path="/builds/vote" exact>
+            <BuildVoteList />
           </Route>
           <Route path="/admin/add-builder" exact>
             <BuilderCreateView userProvider={userProvider} mainnetProvider={mainnetProvider} />

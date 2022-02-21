@@ -113,6 +113,19 @@ export default function Header({
               Activity
             </NavLink>
           </chakra.li>
+          {[USER_ROLES.admin, USER_ROLES.builder].includes(userRole) && (
+            <chakra.li key="/builds/vote" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+              <NavLink
+                to="/builds/vote"
+                exact
+                activeStyle={{
+                  color: primaryColorString,
+                }}
+              >
+                Vote Builds
+              </NavLink>
+            </chakra.li>
+          )}
           {USER_ROLES.admin === userRole && (
             <Menu isOpen={isOpen}>
               <MenuButton
