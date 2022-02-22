@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import {
@@ -25,8 +25,9 @@ import { SERVER_URL as serverUrl } from "../constants";
 import useSignedRequest from "../hooks/useSignedRequest";
 import useConnectedAddress from "../hooks/useConnectedAddress";
 
-export default function SubmitBuildModal({ isOpen, onClose }) {
+export default function SubmitBuildModal({ isOpen, onClose, build }) {
   const address = useConnectedAddress();
+  const isEditingExistingBuild = !!build;
 
   // Submission state.
   const [buildName, setBuildName] = useState("");
@@ -37,6 +38,7 @@ export default function SubmitBuildModal({ isOpen, onClose }) {
   const [errors, setErrors] = useState({ buildName: false, description: false, buildUrl: false, imageUrl: false });
 
   const { isLoading, makeSignedRequest } = useSignedRequest("buildSubmit", address);
+  const { isLoading: isLoadingEdit, makeSignedRequest: makeSignedRequestEdit } = useSignedRequest("buildEdit", address);
 
   const [isUploadingImg, setIsUploadingImg] = useState(false);
   const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
@@ -71,6 +73,16 @@ export default function SubmitBuildModal({ isOpen, onClose }) {
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
+  useEffect(() => {
+    if (isEditingExistingBuild) {
+      setBuildName(build.name);
+      setDescription(build.desc);
+      setBuildUrl(build.branch);
+      setDemoUrl(build.demoUrl);
+      setImageUrl(build.image);
+    }
+  }, [isEditingExistingBuild, build]);
+
   const clearForm = () => {
     setBuildName("");
     setDescription("");
@@ -94,7 +106,18 @@ export default function SubmitBuildModal({ isOpen, onClose }) {
     }
 
     try {
-      await makeSignedRequest({ buildUrl, demoUrl, desc: description, image: imageUrl, name: buildName });
+      if (isEditingExistingBuild) {
+        await makeSignedRequestEdit({
+          buildId: build.id,
+          buildUrl,
+          demoUrl,
+          desc: description,
+          image: imageUrl,
+          name: buildName,
+        });
+      } else {
+        await makeSignedRequest({ buildUrl, demoUrl, desc: description, image: imageUrl, name: buildName });
+      }
     } catch (error) {
       toast({
         description: error.message,
@@ -118,7 +141,7 @@ export default function SubmitBuildModal({ isOpen, onClose }) {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>New Build</ModalHeader>
+        <ModalHeader>{isEditingExistingBuild ? "Edit" : "New"} Build</ModalHeader>
         <ModalCloseButton />
         <ModalBody px={8} pb={8}>
           <FormControl mb={4} isRequired isInvalid={errors.buildName}>
@@ -209,8 +232,15 @@ export default function SubmitBuildModal({ isOpen, onClose }) {
               )}
             </Box>
           </FormControl>
-          <Button colorScheme="blue" mt={8} px={4} onClick={handleSubmit} isLoading={isLoading} isFullWidth>
-            Submit
+          <Button
+            colorScheme="blue"
+            mt={8}
+            px={4}
+            onClick={handleSubmit}
+            isLoading={isLoading || isLoadingEdit}
+            isFullWidth
+          >
+            {isEditingExistingBuild ? "Update" : "Submit"}
           </Button>
         </ModalBody>
       </ModalContent>
