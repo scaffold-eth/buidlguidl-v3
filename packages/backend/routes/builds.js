@@ -85,6 +85,59 @@ router.post("/", withRole("builder"), async (req, res) => {
 });
 
 /**
+ * Edit a build.
+ */
+router.patch("/:buildId", withRole("builder"), async (req, res) => {
+  const buildId = req.params.buildId;
+  const { buildUrl, demoUrl, desc, image, name, signature } = req.body;
+  console.log("EDIT /builds/", buildId);
+
+  const address = req.address;
+
+  const verifyOptions = {
+    messageId: "buildEdit",
+    address,
+    buildId,
+  };
+
+  if (!verifySignature(signature, verifyOptions)) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  // Make sure build is owned by the user.
+  const build = await db.findBuildById(buildId);
+
+  if (build.builder !== address) {
+    res.status(401).send("Not your build.");
+    return;
+  }
+
+  const buildData = {
+    branch: buildUrl,
+    demoUrl,
+    desc,
+    image,
+    name,
+    // Keep existing build (admin can edit)
+    builder: build.builder,
+  };
+
+  await db.updateBuild(buildId, buildData);
+
+  const eventPayload = {
+    userAddress: address,
+    buildId,
+    name: build.name,
+  };
+
+  const event = createEvent(EVENT_TYPES.BUILD_EDIT, eventPayload, signature);
+  db.createEvent(event); // INFO: async, no await here
+
+  res.sendStatus(200);
+});
+
+/**
  * Delete a build.
  */
 router.delete("/:buildId", withRole("builder"), async (req, res) => {

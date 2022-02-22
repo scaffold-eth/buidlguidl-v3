@@ -78,6 +78,13 @@ const findEventsWhere = db.findEventsWhere;
 const createBuild = db.createBuild;
 
 /**
+ *
+ * @param {string} buildId The build id
+ * @param {object} buildData The build payload
+ */
+const updateBuild = db.updateBuild;
+
+/**
  * @param {string} buildId
  */
 const deleteBuild = db.deleteBuild;
@@ -139,6 +146,7 @@ module.exports = {
   findEventsWhere,
 
   createBuild,
+  updateBuild,
   deleteBuild,
   findBuildById,
   findAllBuilds,
