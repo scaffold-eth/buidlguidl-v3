@@ -43,7 +43,7 @@ export default function HomeView({ userProvider, connectedBuilder }) {
 
       <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
         {builds.map(build => (
-          <BuildCard build={build} key={build.id} userProvider={userProvider} onDelete={updateBuilds} />
+          <BuildCard build={build} key={build.id} userProvider={userProvider} onUpdate={updateBuilds} />
         ))}
       </SimpleGrid>
 

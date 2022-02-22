@@ -19,7 +19,7 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
 import SubmitBuildModal from "./SubmitBuildModal";
 
-const BuildCard = ({ build, userProvider, onDelete }) => {
+const BuildCard = ({ build, userProvider, onUpdate }) => {
   const address = useUserAddress(userProvider);
   const { borderColor, secondaryFontColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -89,8 +89,8 @@ const BuildCard = ({ build, userProvider, onDelete }) => {
     });
     setIsDeletingBuild(false);
 
-    if (typeof onDelete === "function") {
-      onDelete();
+    if (typeof onUpdate === "function") {
+      onUpdate();
     }
   };
 
@@ -135,7 +135,7 @@ const BuildCard = ({ build, userProvider, onDelete }) => {
             </Button>
             <Button variant="outline" colorScheme="blue" size="sm" onClick={onOpen}>
               <EditIcon w={6} color="blue.500" />
-              <SubmitBuildModal isOpen={isOpen} onClose={onClose} build={build} />
+              <SubmitBuildModal isOpen={isOpen} onClose={onClose} build={build} onUpdate={onUpdate} />
             </Button>
           </VStack>
         </Box>

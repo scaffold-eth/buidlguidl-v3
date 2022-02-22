@@ -25,7 +25,7 @@ import { SERVER_URL as serverUrl } from "../constants";
 import useSignedRequest from "../hooks/useSignedRequest";
 import useConnectedAddress from "../hooks/useConnectedAddress";
 
-export default function SubmitBuildModal({ isOpen, onClose, build }) {
+export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
   const address = useConnectedAddress();
   const isEditingExistingBuild = !!build;
 
@@ -135,6 +135,10 @@ export default function SubmitBuildModal({ isOpen, onClose, build }) {
 
     clearForm();
     onClose();
+
+    if (typeof onUpdate === "function") {
+      onUpdate();
+    }
   };
 
   return (
