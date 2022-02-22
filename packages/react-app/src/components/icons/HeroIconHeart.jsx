@@ -8,7 +8,7 @@ const HeroIconHeart = props => (
     {...props}
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
-    fill={props.active ? "red.500" : "none"}
+    fill={props.active ? "red.500" : props.filled ? "currentColor" : "none"}
     stroke={props.active ? "red.500" : "currentColor"}
   >
     <path

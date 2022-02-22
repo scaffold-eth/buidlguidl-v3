@@ -30,6 +30,7 @@ import Address from "../components/Address";
 import { getAllBuilds } from "../data/api";
 import { bySubmittedTimestamp } from "../helpers/sorting";
 import HeroIconHeart from "../components/icons/HeroIconHeart";
+import useConnectedAddress from "../hooks/useConnectedAddress";
 
 const BuildCell = ({ name, buildId }) => {
   return (
@@ -47,11 +48,17 @@ const BuilderAddressCell = ({ builderId }) => {
   );
 };
 
-const BuildLikedCell = ({ isLiked }) => {
-  return <Icon as={HeroIconHeart} w={6} h={6} active={isLiked} />;
+const BuildLikedCell = ({ isLiked, likesAmount }) => {
+  return (
+    <Button variant="outline">
+      <Icon as={HeroIconHeart} w={6} h={6} mr={2} active={isLiked} />
+      <Text fontWeight={400}>{likesAmount}</Text>
+    </Button>
+  );
 };
 
 export default function BuildVoteList() {
+  const address = useConnectedAddress();
   const [builds, setBuilds] = useState([]);
   const [isLoadingBuilds, setIsLoadingBuilds] = useState(false);
   const { secondaryFontColor } = useCustomColorModes();
@@ -80,6 +87,13 @@ export default function BuildVoteList() {
     fetchSubmittedBuilds();
   }, []);
 
+  const sortByLikes = useMemo(
+    () => (rowA, rowB) => {
+      return rowA.values.likes?.length ?? 0 - rowB.values.likes?.length ?? 0;
+    },
+    [],
+  );
+
   const columns = useMemo(
     () => [
       {
@@ -97,14 +111,15 @@ export default function BuildVoteList() {
       {
         Header: "Submitted",
         accessor: "submittedTimestamp",
-        sortDescFirst: true,
+        disableSortBy: true,
         Cell: ({ value }) => <DateWithTooltip timestamp={value} />,
       },
       {
-        Header: "Like",
+        Header: "Likes",
         accessor: "likes",
-        disableSortBy: true,
-        Cell: ({ value }) => <BuildLikedCell isLiked={false} />, // TODO update this when there are likes
+        sortDescFirst: true,
+        sortType: sortByLikes,
+        Cell: ({ value }) => <BuildLikedCell isLiked={value?.includes?.(address)} likesAmount={value?.length ?? 0} />, // TODO update this when there are likes
       },
     ],
     // eslint-disable-next-line
@@ -130,7 +145,7 @@ export default function BuildVoteList() {
     {
       columns,
       data: builds,
-      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "lastActivity", desc: true }], []) },
+      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "likes", desc: true }], []) },
     },
     useSortBy,
     usePagination,
