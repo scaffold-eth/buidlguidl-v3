@@ -109,7 +109,7 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
   const build = await db.findBuildById(buildId);
 
   if (build.builder !== address) {
-    const requestingBuilder = db.findUserByAddress(address);
+    const requestingBuilder = await db.findUserByAddress(address);
 
     if (requestingBuilder?.data?.role !== "admin") {
       // Bypass admins
@@ -167,7 +167,7 @@ router.delete("/:buildId", withRole("builder"), async (req, res) => {
   const build = await db.findBuildById(buildId);
 
   if (build.builder !== address) {
-    const requestingBuilder = db.findUserByAddress(address);
+    const requestingBuilder = await db.findUserByAddress(address);
 
     if (requestingBuilder?.data?.role !== "admin") {
       // Bypass admins
