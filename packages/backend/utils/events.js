@@ -5,6 +5,7 @@ const EVENT_TYPES = {
   BUILD_SUBMIT: "build.submit",
   BUILD_DELETE: "build.delete",
   BUILD_FEATURED: "build.featured",
+  BUILD_LIKED: "build.liked",
   USER_CREATE: "user.create",
   USER_UPDATE: "user.update",
   USER_UPDATE_STATUS: "user.update_status",

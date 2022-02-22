@@ -13,6 +13,8 @@ const getSignMessageForId = (messageId, options) => {
       // One possible solution, use an express boolean parser.
       const featured = typeof options.featured === "boolean" ? options.featured : options.featured === "true";
       return `I want to ${featured ? "feature" : "unfeature"} the build#${options.buildId} as ${options.address}`;
+    case "buildLike":
+      return `I want to like the build build#"${options.buildId}" as ${options.address}`;
     case "builderCreate":
       return `I want to add the builder "${options.builderAddress}" to BuidlGuidl as ${options.address}`;
     case "builderUpdateSocials":

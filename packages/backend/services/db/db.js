@@ -70,12 +70,21 @@ const findAllEvents = db.findAllEvents;
  */
 const findEventsWhere = db.findEventsWhere;
 
+// --- Builds
 /**
  *
  * @param {object} buildData The build payload
  * @returns {object} stored build data, including the id
  */
 const createBuild = db.createBuild;
+
+/**
+ *
+ * @param {string} buildId The build id
+ * @param {object} buildData The build payload. This can be a partial, meaning not sent props won't be affected.
+ * @returns {object} stored build data, including the id
+ */
+const updateBuild = db.updateBuild;
 
 /**
  * @param {string} buildId
@@ -139,6 +148,7 @@ module.exports = {
   findEventsWhere,
 
   createBuild,
+  updateBuild,
   deleteBuild,
   findBuildById,
   findAllBuilds,

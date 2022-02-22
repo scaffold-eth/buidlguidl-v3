@@ -149,6 +149,43 @@ router.post("/upload-img", withRole("builder"), async (req, res) => {
 });
 
 /**
+ * Get all Builds for a given Builder
+ */
+router.post("/like", withRole("builder"), async (req, res) => {
+  const { buildId, signature, userAddress } = req.body;
+  console.log(`POST /builds/like`);
+  const address = req.address;
+
+  const verifyOptions = {
+    messageId: "buildLike",
+    address,
+    buildId,
+  };
+
+  if (!verifySignature(signature, verifyOptions)) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const build = await db.findBuildById(buildId);
+  const currentLikesSet = new Set(build.likes ?? []);
+  currentLikesSet.add(address);
+
+  await db.updateBuild(buildId, { likes: Array.from(currentLikesSet) });
+
+  const eventPayload = {
+    liked: true,
+    userAddress,
+    buildId,
+    name: build.name,
+  };
+  const event = createEvent(EVENT_TYPES.BUILD_LIKED, eventPayload, signature);
+  db.createEvent(event); // INFO: async, no await here
+
+  res.sendStatus(200);
+});
+
+/**
  * Feature / Unfeature a build
  */
 router.patch("/", withRole("admin"), async (req, res) => {
@@ -168,6 +205,7 @@ router.patch("/", withRole("admin"), async (req, res) => {
     return;
   }
 
+  // TODO we can skip this query if the db.featureBuild returns the featured build
   const build = await db.findBuildById(buildId);
   await db.featureBuild(buildId, Boolean(featured));
 

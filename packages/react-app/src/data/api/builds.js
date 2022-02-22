@@ -31,6 +31,32 @@ export const postBuildSubmit = async (address, signature, { buildUrl, demoUrl, d
   }
 };
 
+export const postBuildLike = async (address, signature, { buildId }) => {
+  try {
+    await axios.post(
+      `${serverUrl}/builds/like`,
+      {
+        buildId,
+        userAddress: address,
+        signature,
+      },
+      {
+        headers: {
+          address,
+        },
+      },
+    );
+  } catch (error) {
+    if (error.request?.status === 401) {
+      const WrongRoleError = new Error(`User doesn't have builder role or higher`);
+      WrongRoleError.status = 401;
+      throw WrongRoleError;
+    }
+    console.error(error);
+    throw new Error(`Couldn't save the build like on the server`);
+  }
+};
+
 export const getBuildById = async buildId => {
   try {
     const response = await axios.get(`${serverUrl}/builds/${buildId}`);

@@ -31,6 +31,7 @@ import { getAllBuilds } from "../data/api";
 import { bySubmittedTimestamp } from "../helpers/sorting";
 import HeroIconHeart from "../components/icons/HeroIconHeart";
 import useConnectedAddress from "../hooks/useConnectedAddress";
+import useSignedRequest from "../hooks/useSignedRequest";
 
 const BuildCell = ({ name, buildId }) => {
   return (
@@ -48,9 +49,9 @@ const BuilderAddressCell = ({ builderId }) => {
   );
 };
 
-const BuildLikedCell = ({ isLiked, likesAmount }) => {
+const BuildLikedCell = ({ isLiked, likesAmount, handleLike }) => {
   return (
-    <Button variant="outline">
+    <Button variant="outline" onClick={handleLike}>
       <Icon as={HeroIconHeart} w={6} h={6} mr={2} active={isLiked} />
       <Text fontWeight={400}>{likesAmount}</Text>
     </Button>
@@ -61,6 +62,8 @@ export default function BuildVoteList() {
   const address = useConnectedAddress();
   const [builds, setBuilds] = useState([]);
   const [isLoadingBuilds, setIsLoadingBuilds] = useState(false);
+
+  const { isLoading, makeSignedRequest } = useSignedRequest("buildLike", address);
   const { secondaryFontColor } = useCustomColorModes();
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
@@ -86,6 +89,33 @@ export default function BuildVoteList() {
   useEffect(() => {
     fetchSubmittedBuilds();
   }, []);
+
+  const handleLike = async buildId => {
+    let response;
+    try {
+      response = await makeSignedRequest({ buildId });
+      console.log(response);
+    } catch (error) {
+      toast({
+        description: error.message,
+        status: "error",
+        variant: toastVariant,
+      });
+      return;
+    }
+
+    setBuilds(prevBuilds =>
+      prevBuilds.map(build => {
+        if (build.id === buildId) {
+          if (build.likes === undefined) {
+            build.likes = [];
+          }
+          build.likes.push(address);
+        }
+        return build;
+      }),
+    );
+  };
 
   const sortByLikes = useMemo(
     () => (rowA, rowB) => {
@@ -119,11 +149,17 @@ export default function BuildVoteList() {
         accessor: "likes",
         sortDescFirst: true,
         sortType: sortByLikes,
-        Cell: ({ value }) => <BuildLikedCell isLiked={value?.includes?.(address)} likesAmount={value?.length ?? 0} />, // TODO update this when there are likes
+        Cell: ({ row, value }) => (
+          <BuildLikedCell
+            isLiked={value?.includes?.(address)}
+            likesAmount={value?.length ?? 0}
+            handleLike={() => handleLike(row.original.id)}
+          />
+        ),
       },
     ],
     // eslint-disable-next-line
-    [],
+    [address],
   );
 
   const {
