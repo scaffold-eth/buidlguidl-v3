@@ -46,7 +46,7 @@ export const eventDisplay = ({ type, payload }) => {
     case EVENT_TYPES.BUILD_EDIT: {
       return (
         <>
-          just edited their build:{" "}
+          just edited a build:{" "}
           <Link as={RouteLink} to={`/build/${payload.buildId}`} textDecoration="underline">
             {payload.name}
           </Link>
@@ -55,7 +55,7 @@ export const eventDisplay = ({ type, payload }) => {
     }
 
     case EVENT_TYPES.BUILD_DELETE: {
-      return `just deleted their build "${payload.name}"`;
+      return `just deleted a build: "${payload.name}"`;
     }
 
     case EVENT_TYPES.BUILD_FEATURED: {
