@@ -18,8 +18,9 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
 import SubmitBuildModal from "./SubmitBuildModal";
+import { USER_ROLES } from "../helpers/constants";
 
-const BuildCard = ({ build, userProvider, onUpdate }) => {
+const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
   const address = useUserAddress(userProvider);
   const { borderColor, secondaryFontColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,7 +29,7 @@ const BuildCard = ({ build, userProvider, onUpdate }) => {
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
-  const isMyBuild = address === build.builder;
+  const canEditBuild = address === build.builder || USER_ROLES.admin === userRole;
 
   const handleDeleteBuild = async () => {
     setIsDeletingBuild(true);
@@ -121,7 +122,7 @@ const BuildCard = ({ build, userProvider, onUpdate }) => {
           View
         </Button>
       </Flex>
-      {isMyBuild && (
+      {canEditBuild && (
         <Box pos="absolute" right={0} top={0} p="5px" bgColor="gray.200">
           <VStack spacing={2}>
             <Button

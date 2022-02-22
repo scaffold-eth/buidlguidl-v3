@@ -109,8 +109,13 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
   const build = await db.findBuildById(buildId);
 
   if (build.builder !== address) {
-    res.status(401).send("Not your build.");
-    return;
+    const requestingBuilder = db.findUserByAddress(address);
+
+    if (requestingBuilder?.data?.role !== "admin") {
+      // Bypass admins
+      res.status(401).send("Not your build.");
+      return;
+    }
   }
 
   const buildData = {
@@ -162,8 +167,13 @@ router.delete("/:buildId", withRole("builder"), async (req, res) => {
   const build = await db.findBuildById(buildId);
 
   if (build.builder !== address) {
-    res.status(401).send("Not your build.");
-    return;
+    const requestingBuilder = db.findUserByAddress(address);
+
+    if (requestingBuilder?.data?.role !== "admin") {
+      // Bypass admins
+      res.status(401).send("Not your build.");
+      return;
+    }
   }
 
   await db.deleteBuild(buildId);

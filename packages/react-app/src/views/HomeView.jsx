@@ -5,7 +5,7 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
 
-export default function HomeView({ userProvider, connectedBuilder }) {
+export default function HomeView({ userProvider, connectedBuilder, userRole }) {
   const [builds, setBuilds] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { primaryFontColor } = useCustomColorModes();
@@ -43,7 +43,13 @@ export default function HomeView({ userProvider, connectedBuilder }) {
 
       <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
         {builds.map(build => (
-          <BuildCard build={build} key={build.id} userProvider={userProvider} onUpdate={updateBuilds} />
+          <BuildCard
+            build={build}
+            key={build.id}
+            userProvider={userProvider}
+            onUpdate={updateBuilds}
+            userRole={userRole}
+          />
         ))}
       </SimpleGrid>
 
