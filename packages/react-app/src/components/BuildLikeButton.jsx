@@ -26,7 +26,7 @@ const BuildLikeButton = ({ buildId, isLiked, likesAmount, onLike = () => {} }) =
   };
 
   return (
-    <Button variant="outline" onClick={handleLike} disabled={isLoading}>
+    <Button variant="outline" onClick={handleLike} disabled={isLoading} size="sm">
       <Icon as={HeroIconHeart} w={6} h={6} mr={2} active={isLiked} />
       <Text fontWeight={400} minW="1rem">
         {isLoading ? <Spinner size="sm" speed="1s" /> : likesAmount}

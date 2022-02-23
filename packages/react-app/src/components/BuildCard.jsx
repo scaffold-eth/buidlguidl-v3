@@ -12,6 +12,7 @@ import {
   useColorModeValue,
   VStack,
   useDisclosure,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import { Link as RouteLink } from "react-router-dom";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -19,6 +20,7 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
 import SubmitBuildModal from "./SubmitBuildModal";
 import { USER_ROLES } from "../helpers/constants";
+import BuildLikeButton from "./BuildLikeButton";
 
 const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
   const address = useUserAddress(userProvider);
@@ -118,9 +120,17 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
           {build.desc}
         </Text>
         <Spacer />
-        <Button mt={3} as={RouteLink} to={`/build/${build.id}`} variant="outline" size="sm" isFullWidth>
-          View
-        </Button>
+        <ButtonGroup mt={3}>
+          <Button as={RouteLink} to={`/build/${build.id}`} variant="outline" size="sm" isFullWidth>
+            View
+          </Button>
+          <BuildLikeButton
+            buildId={build.id}
+            isLiked={build?.likes?.includes?.(address)}
+            likesAmount={build?.likes?.length ?? 0}
+            onLike={onUpdate}
+          />
+        </ButtonGroup>
       </Flex>
       {canEditBuild && (
         <Box pos="absolute" right={0} top={0} p="5px" bgColor="gray.200">
