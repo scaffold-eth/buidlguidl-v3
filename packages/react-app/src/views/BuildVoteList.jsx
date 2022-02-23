@@ -75,6 +75,7 @@ export default function BuildVoteList() {
 
   useEffect(() => {
     fetchSubmittedBuilds();
+    // eslint-disable-next-line
   }, []);
 
   const onLike = async (buildId, isLiked) => {
