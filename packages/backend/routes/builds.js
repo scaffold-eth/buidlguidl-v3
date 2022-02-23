@@ -212,7 +212,7 @@ router.post("/upload-img", withRole("builder"), async (req, res) => {
 });
 
 /**
- * Get all Builds for a given Builder
+ * Post a like for a build.
  */
 router.post("/like", withRole("builder"), async (req, res) => {
   const { buildId, signature, userAddress } = req.body;
