@@ -19,7 +19,6 @@ import {
   Select,
   useToast,
   useColorModeValue,
-  Icon,
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
@@ -29,9 +28,8 @@ import DateWithTooltip from "../components/DateWithTooltip";
 import Address from "../components/Address";
 import { getAllBuilds } from "../data/api";
 import { bySubmittedTimestamp } from "../helpers/sorting";
-import HeroIconHeart from "../components/icons/HeroIconHeart";
 import useConnectedAddress from "../hooks/useConnectedAddress";
-import useSignedRequest from "../hooks/useSignedRequest";
+import BuildLikeButton from "../components/BuildLikeButton";
 
 const BuildCell = ({ name, buildId }) => {
   return (
@@ -49,21 +47,10 @@ const BuilderAddressCell = ({ builderId }) => {
   );
 };
 
-const BuildLikedCell = ({ isLiked, likesAmount, handleLike }) => {
-  return (
-    <Button variant="outline" onClick={handleLike}>
-      <Icon as={HeroIconHeart} w={6} h={6} mr={2} active={isLiked} />
-      <Text fontWeight={400}>{likesAmount}</Text>
-    </Button>
-  );
-};
-
 export default function BuildVoteList() {
   const address = useConnectedAddress();
   const [builds, setBuilds] = useState([]);
   const [isLoadingBuilds, setIsLoadingBuilds] = useState(false);
-
-  const { isLoading, makeSignedRequest } = useSignedRequest("buildLike", address);
   const { secondaryFontColor } = useCustomColorModes();
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
@@ -90,27 +77,16 @@ export default function BuildVoteList() {
     fetchSubmittedBuilds();
   }, []);
 
-  const handleLike = async buildId => {
-    let response;
-    try {
-      response = await makeSignedRequest({ buildId });
-      console.log(response);
-    } catch (error) {
-      toast({
-        description: error.message,
-        status: "error",
-        variant: toastVariant,
-      });
-      return;
-    }
-
+  const onLike = async (buildId, isLiked) => {
     setBuilds(prevBuilds =>
       prevBuilds.map(build => {
         if (build.id === buildId) {
           if (build.likes === undefined) {
             build.likes = [];
           }
-          build.likes.push(address);
+          const likesSet = new Set(build.likes);
+          likesSet.add(address);
+          build.likes = Array.from(likesSet);
         }
         return build;
       }),
@@ -150,10 +126,11 @@ export default function BuildVoteList() {
         sortDescFirst: true,
         sortType: sortByLikes,
         Cell: ({ row, value }) => (
-          <BuildLikedCell
+          <BuildLikeButton
+            buildId={row.original.id}
             isLiked={value?.includes?.(address)}
             likesAmount={value?.length ?? 0}
-            handleLike={() => handleLike(row.original.id)}
+            onLike={onLike}
           />
         ),
       },
