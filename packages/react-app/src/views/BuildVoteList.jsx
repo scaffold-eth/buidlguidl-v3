@@ -100,7 +100,7 @@ export default function BuildVoteList() {
 
   const sortByLikes = useMemo(
     () => (rowA, rowB) => {
-      return rowA.values.likes?.length ?? 0 - rowB.values.likes?.length ?? 0;
+      return (rowA.values.likes?.length ?? 0) - (rowB.values.likes?.length ?? 0);
     },
     [],
   );
