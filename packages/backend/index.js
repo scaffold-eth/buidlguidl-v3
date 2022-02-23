@@ -22,12 +22,12 @@ app.use("/builders", buildersRoutes);
 app.use("/builds", buildsRoutes);
 app.use("/events", eventsRoutes);
 
-app.get("/sign-message", (req, res) => {
+app.get("/sign-message", async (req, res) => {
   const messageId = req.query.messageId;
   const options = req.query;
 
   console.log("/sign-message", messageId);
-  res.status(200).send(getSignMessageForId(messageId, options));
+  res.status(200).send(await getSignMessageForId(messageId, options));
 });
 
 // If nothing processed the request, return 404

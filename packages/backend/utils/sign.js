@@ -1,6 +1,7 @@
 const ethers = require("ethers");
+const { findBuildById } = require("../services/db/db");
 
-const getSignMessageForId = (messageId, options) => {
+const getSignMessageForId = async (messageId, options) => {
   switch (messageId) {
     case "buildSubmit":
       return `I want to submit a new build: ${options.buildUrl} as ${options.address}`;
@@ -15,8 +16,10 @@ const getSignMessageForId = (messageId, options) => {
       // One possible solution, use an express boolean parser.
       const featured = typeof options.featured === "boolean" ? options.featured : options.featured === "true";
       return `I want to ${featured ? "feature" : "unfeature"} the build#${options.buildId} as ${options.address}`;
-    case "buildLike":
-      return `Like the build build#"${options.buildId}" as ${options.address}`;
+    case "buildLike": {
+      const build = await findBuildById(options.buildId);
+      return `Like the build "${build.name}" as ${options.address}`;
+    }
     case "builderCreate":
       return `I want to add the builder "${options.builderAddress}" to BuidlGuidl as ${options.address}`;
     case "builderUpdateSocials":
@@ -28,8 +31,8 @@ const getSignMessageForId = (messageId, options) => {
   }
 };
 
-const verifySignature = (signature, verifyOptions) => {
-  const trustedMessage = getSignMessageForId(verifyOptions.messageId, verifyOptions);
+const verifySignature = async (signature, verifyOptions) => {
+  const trustedMessage = await getSignMessageForId(verifyOptions.messageId, verifyOptions);
   const signingAddress = ethers.utils.verifyMessage(trustedMessage, signature);
 
   console.log("trustedMessage", trustedMessage);

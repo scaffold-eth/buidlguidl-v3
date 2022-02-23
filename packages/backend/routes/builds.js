@@ -53,7 +53,8 @@ router.post("/", withRole("builder"), async (req, res) => {
     buildUrl,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -100,7 +101,8 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
     buildId,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -158,7 +160,8 @@ router.delete("/:buildId", withRole("builder"), async (req, res) => {
     buildId,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -225,7 +228,8 @@ router.post("/like", withRole("builder"), async (req, res) => {
     buildId,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -263,7 +267,8 @@ router.patch("/", withRole("admin"), async (req, res) => {
     featured,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
