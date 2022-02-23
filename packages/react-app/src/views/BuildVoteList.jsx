@@ -86,7 +86,11 @@ export default function BuildVoteList() {
             build.likes = [];
           }
           const likesSet = new Set(build.likes);
-          likesSet.add(address);
+          if (isLiked) {
+            likesSet.delete(address);
+          } else {
+            likesSet.add(address);
+          }
           build.likes = Array.from(likesSet);
         }
         return build;

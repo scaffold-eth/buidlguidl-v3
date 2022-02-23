@@ -236,12 +236,18 @@ router.post("/like", withRole("builder"), async (req, res) => {
 
   const build = await db.findBuildById(buildId);
   const currentLikesSet = new Set(build.likes ?? []);
-  currentLikesSet.add(address);
+  const willUnlike = currentLikesSet.has(address);
+
+  if (willUnlike) {
+    currentLikesSet.delete(address);
+  } else {
+    currentLikesSet.add(address);
+  }
 
   await db.updateBuild(buildId, { likes: Array.from(currentLikesSet) });
 
   const eventPayload = {
-    liked: true,
+    liked: !willUnlike,
     userAddress,
     buildId,
     name: build.name,
