@@ -109,9 +109,8 @@ const findEventsWhere = ({ conditions: conditionsArg, limit } = {}) => {
   return allEvents.filter(event => conditions.every(condition => condition(event)));
 };
 
-// --- Build
 const findBuildById = buildId => {
-  return database.builds[buildId];
+  return { id: buildId, ...database.builds[buildId] };
 };
 
 const createBuild = build => {
@@ -122,7 +121,7 @@ const createBuild = build => {
 };
 
 const updateBuild = (buildId, buildData) => {
-  const existingBuildData = findBuildById(buildId);
+  const { id, ...existingBuildData } = findBuildById(buildId);
 
   database.builds[buildId] = {
     ...existingBuildData,
@@ -130,6 +129,7 @@ const updateBuild = (buildId, buildData) => {
   };
 
   persist();
+
   return database.builds[buildId];
 };
 

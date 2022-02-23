@@ -178,7 +178,7 @@ function App() {
         />
         <Switch>
           <Route exact path="/">
-            <HomeView userProvider={userProvider} connectedBuilder={connectedBuilder} />
+            <HomeView userProvider={userProvider} connectedBuilder={connectedBuilder} userRole={userRole} />
           </Route>
           <Route exact path="/portfolio">
             {address && <Redirect to={"/builders/" + address} />}

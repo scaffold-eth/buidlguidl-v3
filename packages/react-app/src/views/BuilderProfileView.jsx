@@ -102,7 +102,13 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               <Box overflowX="auto">
                 <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
                   {builder?.builds.map(build => (
-                    <BuildCard build={build} key={build.id} userProvider={userProvider} onDelete={fetchBuilder} />
+                    <BuildCard
+                      build={build}
+                      key={build.id}
+                      userProvider={userProvider}
+                      onUpdate={fetchBuilder}
+                      userRole={userRole}
+                    />
                   ))}
                 </SimpleGrid>
               </Box>

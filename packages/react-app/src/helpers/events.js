@@ -8,6 +8,7 @@ const EVENT_TYPES = {
   CHALLENGE_REVIEW: "challenge.review",
   CHALLENGE_AUTOGRADE: "challenge.autograde",
   BUILD_SUBMIT: "build.submit",
+  BUILD_EDIT: "build.edit",
   BUILD_DELETE: "build.delete",
   BUILD_FEATURED: "build.featured",
   USER_CREATE: "user.create",
@@ -42,8 +43,19 @@ export const eventDisplay = ({ type, payload }) => {
       );
     }
 
+    case EVENT_TYPES.BUILD_EDIT: {
+      return (
+        <>
+          just edited a build:{" "}
+          <Link as={RouteLink} to={`/build/${payload.buildId}`} textDecoration="underline">
+            {payload.name}
+          </Link>
+        </>
+      );
+    }
+
     case EVENT_TYPES.BUILD_DELETE: {
-      return `just deleted their build "${payload.name}"`;
+      return `just deleted a build: "${payload.name}"`;
     }
 
     case EVENT_TYPES.BUILD_FEATURED: {

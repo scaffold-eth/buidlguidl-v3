@@ -98,6 +98,11 @@ const findEventsWhere = async ({ conditions: conditionsArg, limit } = {}) => {
 const getBuildDoc = id => database.collection("builds").doc(id);
 const getBuildSnapshotById = id => getBuildDoc(id).get();
 
+const findBuildById = async buildId => {
+  const build = await database.collection("builds").doc(buildId).get();
+  return build.data();
+};
+
 const createBuild = build => {
   return database.collection("builds").add(build);
 };
@@ -107,16 +112,11 @@ const updateBuild = async (buildId, buildData) => {
   await buildDoc.update(buildData);
 
   const buildSnapshot = await getBuildSnapshotById(buildId);
-  return buildSnapshot.data();
+  return { id: buildId, ...buildSnapshot.data() };
 };
 
 const deleteBuild = buildId => {
   return database.collection("builds").doc(buildId).delete();
-};
-
-const findBuildById = async buildId => {
-  const build = await database.collection("builds").doc(buildId).get();
-  return build.data();
 };
 
 const findAllBuilds = async (featured = null) => {
@@ -149,14 +149,16 @@ module.exports = {
   updateUser,
   findAllUsers,
   findUserByAddress,
+
   createEvent,
   findAllEvents,
   findEventsWhere,
+
   createBuild,
   updateBuild,
+  deleteBuild,
+  findBuildById,
   findAllBuilds,
   findBuilderBuilds,
   featureBuild,
-  deleteBuild,
-  findBuildById,
 };

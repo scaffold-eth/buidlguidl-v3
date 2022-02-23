@@ -4,6 +4,8 @@ const getSignMessageForId = (messageId, options) => {
   switch (messageId) {
     case "buildSubmit":
       return `I want to submit a new build: ${options.buildUrl} as ${options.address}`;
+    case "buildEdit":
+      return `I want to edit build#${options.buildId} as ${options.address}`;
     case "buildDelete":
       return `I want to delete build#${options.buildId} as ${options.address}`;
     case "buildFeature":
