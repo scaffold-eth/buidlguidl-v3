@@ -74,7 +74,7 @@ export const eventDisplay = ({ type, payload }) => {
     case EVENT_TYPES.BUILD_LIKED: {
       return (
         <>
-          liked the build{" "}
+          {payload.liked ? "liked" : "unliked"} the build{" "}
           <Link as={RouteLink} to={`/build/${payload.buildId}`} textDecoration="underline">
             {payload.name}
           </Link>
