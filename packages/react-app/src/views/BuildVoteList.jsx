@@ -23,7 +23,7 @@ import {
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
-import BuilderListSkeleton from "../components/skeletons/BuilderListSkeleton";
+import BuildsVoteListSkeleton from "../components/skeletons/BuildsVoteListSkeleton";
 import DateWithTooltip from "../components/DateWithTooltip";
 import Address from "../components/Address";
 import { getAllBuilds } from "../data/api";
@@ -180,7 +180,7 @@ export default function BuildVoteList() {
         </Text>
       </Container>
       {isLoadingBuilds ? (
-        <BuilderListSkeleton />
+        <BuildsVoteListSkeleton />
       ) : (
         <Box overflowX="auto" mb={8}>
           <Center mb={5}>

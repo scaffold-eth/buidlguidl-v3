@@ -46,11 +46,11 @@ export default function BuildDetailView() {
       setBuild(null);
     }
     setIsLoadingBuild(false);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     fetchBuild();
-    // eslint-disable-next-line
   }, [fetchBuild]);
 
   useEffect(() => {
