@@ -141,8 +141,6 @@ const deleteBuild = buildId => {
 
 const findAllBuilds = (featured = null) => {
   const allBuilds = database.builds.map((build, index) => ({ id: index.toString(), ...build }));
-  console.log("featured", featured);
-  console.log("featured type", typeof featured === "boolean");
   if (typeof featured === "boolean") {
     return allBuilds.filter(build => build.featured);
   }

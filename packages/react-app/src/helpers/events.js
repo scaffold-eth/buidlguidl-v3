@@ -11,6 +11,7 @@ const EVENT_TYPES = {
   BUILD_EDIT: "build.edit",
   BUILD_DELETE: "build.delete",
   BUILD_FEATURED: "build.featured",
+  BUILD_LIKED: "build.liked",
   USER_CREATE: "user.create",
   USER_UPDATE: "user.update",
   USER_UPDATE_STATUS: "user.update_status",
@@ -66,6 +67,17 @@ export const eventDisplay = ({ type, payload }) => {
             {payload.name}
           </Link>{" "}
           has been {payload.featured ? "featured" : "unfeatured"}`
+        </>
+      );
+    }
+
+    case EVENT_TYPES.BUILD_LIKED: {
+      return (
+        <>
+          {payload.liked ? "liked" : "unliked"} the build{" "}
+          <Link as={RouteLink} to={`/build/${payload.buildId}`} textDecoration="underline">
+            {payload.name}
+          </Link>
         </>
       );
     }

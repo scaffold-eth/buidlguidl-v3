@@ -53,7 +53,8 @@ router.post("/", withRole("builder"), async (req, res) => {
     buildUrl,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -100,7 +101,8 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
     buildId,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -158,7 +160,8 @@ router.delete("/:buildId", withRole("builder"), async (req, res) => {
     buildId,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -212,6 +215,50 @@ router.post("/upload-img", withRole("builder"), async (req, res) => {
 });
 
 /**
+ * Post a like for a build.
+ */
+router.post("/like", withRole("builder"), async (req, res) => {
+  const { buildId, signature, userAddress } = req.body;
+  console.log(`POST /builds/like`);
+  const address = req.address;
+
+  const verifyOptions = {
+    messageId: "buildLike",
+    address,
+    buildId,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const build = await db.findBuildById(buildId);
+  const currentLikesSet = new Set(build.likes ?? []);
+  const willUnlike = currentLikesSet.has(address);
+
+  if (willUnlike) {
+    currentLikesSet.delete(address);
+  } else {
+    currentLikesSet.add(address);
+  }
+
+  await db.updateBuild(buildId, { likes: Array.from(currentLikesSet) });
+
+  const eventPayload = {
+    liked: !willUnlike,
+    userAddress,
+    buildId,
+    name: build.name,
+  };
+  const event = createEvent(EVENT_TYPES.BUILD_LIKED, eventPayload, signature);
+  db.createEvent(event); // INFO: async, no await here
+
+  res.sendStatus(200);
+});
+
+/**
  * Feature / Unfeature a build
  */
 router.patch("/", withRole("admin"), async (req, res) => {
@@ -226,11 +273,13 @@ router.patch("/", withRole("admin"), async (req, res) => {
     featured,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
 
+  // TODO we can skip this query if the db.featureBuild returns the featured build
   const build = await db.findBuildById(buildId);
   await db.featureBuild(buildId, Boolean(featured));
 
