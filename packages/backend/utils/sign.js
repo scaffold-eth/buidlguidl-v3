@@ -19,7 +19,7 @@ const getSignMessageForId = async (messageId, options) => {
     case "buildLike": {
       const build = await findBuildById(options.buildId);
       const isLiked = build?.likes?.includes(options.address);
-      return `${isLiked ? "Un-like" : "Like"} the build "${build.name}" as ${options.address}`;
+      return `${isLiked ? "Unlike" : "Like"} the build "${build.name}" as ${options.address}`;
     }
     case "builderCreate":
       return `I want to add the builder "${options.builderAddress}" to BuidlGuidl as ${options.address}`;
