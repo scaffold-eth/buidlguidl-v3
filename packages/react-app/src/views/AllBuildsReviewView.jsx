@@ -170,8 +170,8 @@ export default function AllBuildsReviewView({ userProvider }) {
                 <Th>Builder</Th>
                 <Th>Build</Th>
                 <Th>Submitted time</Th>
-                <Th>Actions</Th>
                 <Th>Likes</Th>
+                <Th>Actions</Th>
               </Tr>
             </Thead>
             <Tbody>
