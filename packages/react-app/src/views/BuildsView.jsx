@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Container, SimpleGrid, Text, Link, useDisclosure } from "@chakra-ui/react";
+import { Button, Container, SimpleGrid, useDisclosure, Heading } from "@chakra-ui/react";
 import { getAllFeaturedBuilds } from "../data/api";
-import useCustomColorModes from "../hooks/useCustomColorModes";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
 
-export default function HomeView({ userProvider, connectedBuilder, userRole }) {
+export default function BuildsView({ userProvider, connectedBuilder, userRole }) {
   const [builds, setBuilds] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { primaryFontColor } = useCustomColorModes();
 
   const updateBuilds = useCallback(async () => {
     const allBuilds = await getAllFeaturedBuilds();
@@ -22,17 +20,9 @@ export default function HomeView({ userProvider, connectedBuilder, userRole }) {
   return (
     <Container maxW="container.lg" centerContent>
       <Container maxW="container.sm" centerContent>
-        <Text color={primaryFontColor} mb="12" fontSize="xl" textAlign="center">
-          The{" "}
-          <span role="img" aria-label="castle icon">
-            🏰
-          </span>{" "}
-          <strong>BuidlGuidl</strong> is a curated group of Ethereum builders creating products, prototypes, and
-          tutorials with 🏗
-          <Link href="https://github.com/scaffold-eth/scaffold-eth" isExternal>
-            scaffold-eth
-          </Link>
-        </Text>
+        <Heading as="h1" mb="10">
+          Featured Builds
+        </Heading>
       </Container>
 
       {connectedBuilder && (
