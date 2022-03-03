@@ -114,11 +114,14 @@ const featureBuild = db.featureBuild;
 
 /**
  * Return a list of `user.stream` objects, where the stream's `lastUpdatedBlock` is less than `lastBlock`.
+ *
  * @param {{lastBlock: number, limit: number}}
  */
 const findUpdatableStreams = db.findUpdatableStreams;
 
 /**
+ * Given the output of `getStreamEvents`, update the `user.stream` object and store the events in the db.
+ *
  * @param {*} stream A `user.stream` object
  * @param {*} streamUpdate The result of `getStreamEvents` for this `stream`.
  */
