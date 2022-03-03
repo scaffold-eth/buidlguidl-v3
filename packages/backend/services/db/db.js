@@ -110,6 +110,20 @@ const findBuilderBuilds = db.findBuilderBuilds;
  */
 const featureBuild = db.featureBuild;
 
+// --- Streams
+
+/**
+ * Return a list of `user.stream` objects, where the stream's `lastUpdatedBlock` is less than `lastBlock`.
+ * @param {{lastBlock: number, limit: number}}
+ */
+const findUpdatableStreams = db.findUpdatableStreams;
+
+/**
+ * @param {*} stream A `user.stream` object
+ * @param {*} streamUpdate The result of `getStreamEvents` for this `stream`.
+ */
+const updateStreamData = db.updateStreamData;
+
 // Shared by implementations.
 // ToDo: This is very inefficient,´. We fetch the whole database every time we call this.
 // We should create a getChallengesByStatus function that fetches the challenges by status.
@@ -137,6 +151,9 @@ module.exports = {
   createEvent,
   findAllEvents,
   findEventsWhere,
+
+  findUpdatableStreams,
+  updateStreamData,
 
   createBuild,
   deleteBuild,

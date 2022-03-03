@@ -151,6 +151,30 @@ const featureBuild = (buildId, featured) => {
   persist();
 };
 
+// --- Streams
+const findUpdatableStreams = ({ lastBlock, limit }) => {
+  return findAllUsers()
+    .filter(user => user.stream !== undefined && user.stream.lastIndexedBlock < lastBlock)
+    .sort((a, b) => a.stream.lastIndexedBlock - b.stream.lastIndexedBlock)
+    .slice(0, limit)
+    .map(user => {
+      return { ...user.stream, builderAddress: user.id };
+    });
+};
+
+const updateStreamData = (stream, streamUpdate) => {
+  streamUpdate.events.map(createEvent);
+  updateUser(stream.builderAddress, {
+    stream: {
+      ...stream,
+      lastIndexedBlock: streamUpdate.lastBlock,
+      balance: streamUpdate.balance,
+      builderAddress: undefined,
+    },
+  });
+  console.log(`Stream ${stream.streamAddress} updated to ${streamUpdate.lastBlock} balance ${streamUpdate.balance}`);
+};
+
 module.exports = {
   createUser,
   updateUser,
@@ -160,6 +184,9 @@ module.exports = {
   createEvent,
   findAllEvents,
   findEventsWhere,
+
+  findUpdatableStreams,
+  updateStreamData,
 
   createBuild,
   deleteBuild,
