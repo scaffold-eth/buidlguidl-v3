@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
+import { ethers } from "ethers";
 import {
   Box,
   Button,
@@ -22,6 +23,7 @@ import {
   Select,
   Badge,
   Tooltip,
+  Progress,
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
@@ -30,6 +32,7 @@ import BuilderListSkeleton from "../components/skeletons/BuilderListSkeleton";
 import DateWithTooltip from "../components/DateWithTooltip";
 import SocialLink from "../components/SocialLink";
 import Address from "../components/Address";
+import EthIcon from "../components/icons/EthIcon";
 import { bySocialWeight } from "../data/socials";
 import { USER_ROLES } from "../helpers/constants";
 
@@ -82,6 +85,45 @@ const BuilderStatusCell = ({ status }) => {
   );
 };
 
+const secondsPerDay = 24 * 60 * 60;
+const BuilderStreamCell = ({ stream }) => {
+  if (!stream) return <Box>-</Box>;
+
+  const cap = ethers.BigNumber.from(stream.cap);
+  const frequency = stream.frequency;
+  const frequencyDays = frequency / secondsPerDay;
+  const vestedPercentage = (new Date().getTime() / 1000 - stream.last) / frequency;
+  const vestedAmount = cap.mul(Math.round(new Date().getTime() / 1000 - stream.last)).div(frequency);
+  const available = cap.lt(vestedAmount) ? cap : vestedAmount;
+
+  const balanceStr = ethers.utils.formatEther(stream.balance);
+  const capStr = ethers.utils.formatEther(cap);
+  const availableStr = ethers.utils.formatEther(available);
+  return (
+    <Box>
+      <Flex align="center" justify="end">
+        <EthIcon w={4} mr={1} />
+        {balanceStr ?? 0}
+      </Flex>
+      <Flex align="center" justify="end">
+        <EthIcon w={4} mr={1} />
+        {capStr} / {frequencyDays}d
+      </Flex>
+      <Flex align="center" justify="end" direction="column">
+        <Box mb={1}>
+          <Box mb={1}>
+            <EthIcon w={4} mr={1} />
+            {Math.round(availableStr * 1e5) / 1e5}
+          </Box>
+          <Box w="full" pl={1}>
+            <Progress flexShrink={1} size="xs" value={vestedPercentage * 100} colorScheme="green" />
+          </Box>
+        </Box>
+      </Flex>
+    </Box>
+  );
+};
+
 export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
@@ -101,6 +143,12 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         accessor: "status",
         disableSortBy: true,
         Cell: ({ value }) => <BuilderStatusCell status={value} />,
+      },
+      {
+        Header: "Stream",
+        accessor: "stream",
+        disableSortBy: true,
+        Cell: ({ value }) => <BuilderStreamCell stream={value} />,
       },
       {
         Header: "Socials",
@@ -127,6 +175,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       const processedBuilders = fetchedBuilders.data.map(builder => ({
         builder: builder.id,
         status: builder.status,
+        stream: builder.stream,
         socials: builder, // Question shouldn't this be accessing builder.socialLinks?
         lastActivity: builderLastActivity(builder),
       }));
