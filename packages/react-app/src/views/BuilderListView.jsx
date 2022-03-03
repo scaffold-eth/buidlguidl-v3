@@ -166,7 +166,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   return (
     <Container maxW="container.lg">
       <Container maxW="container.md" centerContent>
-        <Heading as="h1" mb="4">
+        {/*<Heading as="h1" mb="4">
           All Builders
         </Heading>
         <Text color={secondaryFontColor} textAlign="center">
@@ -178,7 +178,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         </Text>
         <Text color={secondaryFontColor} mb="10">
           You can fund Eth development sending Eth to any stream.
-        </Text>
+        </Text>*/}
       </Container>
       {isLoadingBuilders ? (
         <BuilderListSkeleton />

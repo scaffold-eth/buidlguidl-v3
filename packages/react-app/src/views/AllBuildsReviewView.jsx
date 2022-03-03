@@ -117,9 +117,9 @@ export default function AllBuildsReviewView({ userProvider }) {
         Builds Review
       </Heading>
       <Box overflowX="auto">
-        <Heading as="h2" size="md" mt={6} mb={4}>
+        {/*<Heading as="h2" size="md" mt={6} mb={4}>
           Featured Builds
-        </Heading>
+        </Heading>*/}
         {isLoadingBuilds ? (
           <BuildsTableSkeleton />
         ) : (

@@ -20,9 +20,9 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
   return (
     <Container maxW="container.lg" centerContent>
       <Container maxW="container.sm" centerContent>
-        <Heading as="h1" mb="10">
+        {/*<Heading as="h1" mb="10">
           Featured Builds
-        </Heading>
+        </Heading>*/}
       </Container>
 
       {connectedBuilder && (

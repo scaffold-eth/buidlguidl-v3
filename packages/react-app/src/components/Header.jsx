@@ -62,9 +62,16 @@ export default function Header({
             <span role="img" aria-label="castle icon">
               🏰️
             </span>{" "}
-            <chakra.strong display={{ base: "none", md: "inline-block" }}>BuidlGuidl v3</chakra.strong>
+            <chakra.strong display={{ base: "none", md: "inline-block" }}>BG</chakra.strong>
             <chakra.strong display={{ base: "inline-block", md: "none" }}>
-              {isSignerProviderConnected ? "BGv3" : "BuidlGuidl v3"}
+              {"BG"}
+            </chakra.strong>
+            <span role="img" aria-label="castle icon" style={{paddingLeft:4}}>
+              🏤
+            </span>{" "}
+            <chakra.strong display={{ base: "none", md: "inline-block" }}>Bazaar</chakra.strong>
+            <chakra.strong display={{ base: "inline-block", md: "none" }}>
+              {"Bazaar"}
             </chakra.strong>
           </NavLink>
         </Flex>

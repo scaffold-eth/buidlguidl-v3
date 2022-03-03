@@ -22,12 +22,12 @@ export default function ActivityView() {
 
   return (
     <Container maxW="container.md" centerContent>
-      <Heading as="h1" mb="4">
+      {/*<Heading as="h1" mb="4">
         Activity feed
       </Heading>
       <Text color={secondaryFontColor} textAlign="center" mb={10}>
         Last 25 things happening at BuidlGuidl's bazaar.
-      </Text>
+      </Text>*/}
       {isLoadingEvents ? (
         <Box w="100%" maxW="500px">
           <SkeletonText mt="4" noOfLines={10} spacing="4" />
