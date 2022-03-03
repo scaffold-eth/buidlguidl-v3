@@ -48,13 +48,13 @@ const builderLastActivity = builder => {
 
 const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
   const socials = Object.entries(builder.socialLinks ?? {}).sort(bySocialWeight);
-  if (!socials.length) return "-";
+  if (!socials.length) return <Box>-</Box>;
 
   return (
     <Flex direction="column">
       <Flex justifyContent="space-evenly" alignItems="center">
         {socials.map(([socialId, socialValue]) => (
-          <SocialLink id={socialId} value={socialValue} />
+          <SocialLink id={socialId} key={socialId} value={socialValue} />
         ))}
       </Flex>
       {isAdmin && builder.reachedOut && (
@@ -127,7 +127,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       const processedBuilders = fetchedBuilders.data.map(builder => ({
         builder: builder.id,
         status: builder.status,
-        socials: builder,
+        socials: builder, // Question shouldn't this be accessing builder.socialLinks?
         lastActivity: builderLastActivity(builder),
       }));
 
