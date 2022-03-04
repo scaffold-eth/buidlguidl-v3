@@ -21,7 +21,7 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
     <Container maxW="container.lg" centerContent>
       {connectedBuilder && (
         <Button colorScheme="blue" mb={8} onClick={onOpen}>
-          Submit new build
+          Submit New Build
         </Button>
       )}
 
