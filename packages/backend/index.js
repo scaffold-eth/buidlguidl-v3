@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/builders", buildersRoutes);
 app.use("/builds", buildsRoutes);
-app.use("/events", eventsRoutes);
+app.use("/latest-events", eventsRoutes);
 
 app.get("/sign-message", async (req, res) => {
   const messageId = req.query.messageId;

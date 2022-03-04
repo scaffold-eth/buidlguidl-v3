@@ -12,7 +12,7 @@ export const isGithubBranch = url => /github\.com\/.*?\/.*?\/tree\/.*/.test(url)
 
 export const getAllEvents = async (limit = null) => {
   try {
-    const response = await axios.get(`${serverUrl}/events?limit=${limit}`);
+    const response = await axios.get(`${serverUrl}/latest-events?limit=${limit}`);
     return response.data;
   } catch (err) {
     console.log("error fetching events", err);
