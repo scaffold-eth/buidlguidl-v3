@@ -8,7 +8,6 @@ import {
   ButtonGroup,
   Center,
   Container,
-  Heading,
   Link,
   Text,
   Table,
@@ -25,7 +24,6 @@ import {
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import useCustomColorModes from "../hooks/useCustomColorModes";
 import BuilderListSkeleton from "../components/skeletons/BuilderListSkeleton";
 import DateWithTooltip from "../components/DateWithTooltip";
 import SocialLink from "../components/SocialLink";
@@ -85,7 +83,6 @@ const BuilderStatusCell = ({ status }) => {
 export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
-  const { secondaryFontColor } = useCustomColorModes();
   const isAdmin = userRole === USER_ROLES.admin;
 
   const columns = useMemo(
@@ -165,21 +162,6 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
 
   return (
     <Container maxW="container.lg">
-      <Container maxW="container.md" centerContent>
-        {/*<Heading as="h1" mb="4">
-          All Builders
-        </Heading>
-        <Text color={secondaryFontColor} textAlign="center">
-          List of Ethereum builders creating products, prototypes, and tutorials with{" "}
-          <Link href="https://github.com/scaffold-eth/scaffold-eth" color="teal.500" isExternal>
-            scaffold-eth
-          </Link>
-          .
-        </Text>
-        <Text color={secondaryFontColor} mb="10">
-          You can fund Eth development sending Eth to any stream.
-        </Text>*/}
-      </Container>
       {isLoadingBuilders ? (
         <BuilderListSkeleton />
       ) : (

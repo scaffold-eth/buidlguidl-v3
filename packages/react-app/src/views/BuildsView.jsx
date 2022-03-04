@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Container, SimpleGrid, useDisclosure, Heading } from "@chakra-ui/react";
+import { Button, Container, SimpleGrid, useDisclosure } from "@chakra-ui/react";
 import { getAllFeaturedBuilds } from "../data/api";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
@@ -19,12 +19,6 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
 
   return (
     <Container maxW="container.lg" centerContent>
-      <Container maxW="container.sm" centerContent>
-        {/*<Heading as="h1" mb="10">
-          Featured Builds
-        </Heading>*/}
-      </Container>
-
       {connectedBuilder && (
         <Button colorScheme="blue" mb={8} onClick={onOpen}>
           Submit new build
