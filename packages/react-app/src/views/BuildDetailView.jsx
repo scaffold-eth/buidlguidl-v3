@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import {
   Box,
@@ -17,8 +17,11 @@ import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { chakraMarkdownComponents } from "../helpers/chakraMarkdownTheme";
 import { getBuildById, getGithubBuildReadme } from "../data/api/builds";
 import BuildDetailHeader from "../components/BuildDetailHeader";
+import BuildLikeButton from "../components/BuildLikeButton";
+import useConnectedAddress from "../hooks/useConnectedAddress";
 
 export default function BuildDetailView() {
+  const address = useConnectedAddress();
   const [isLoadingBuild, setIsLoadingBuild] = useState(true);
   const [build, setBuild] = useState(null);
   const { buildId } = useParams();
@@ -29,25 +32,26 @@ export default function BuildDetailView() {
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
-  useEffect(() => {
-    const effect = async () => {
-      try {
-        const fetchedBuild = await getBuildById(buildId);
-        setBuild(fetchedBuild);
-      } catch (err) {
-        console.log(err);
-        toast({
-          description: "Can't get the build details. Please try again",
-          status: "error",
-          variant: toastVariant,
-        });
-        setBuild(null);
-      }
-      setIsLoadingBuild(false);
-    };
-    effect();
+  const fetchBuild = useCallback(async () => {
+    try {
+      const fetchedBuild = await getBuildById(buildId);
+      setBuild(fetchedBuild);
+    } catch (err) {
+      console.log(err);
+      toast({
+        description: "Can't get the build details. Please try again",
+        status: "error",
+        variant: toastVariant,
+      });
+      setBuild(null);
+    }
+    setIsLoadingBuild(false);
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    fetchBuild();
+  }, [fetchBuild]);
 
   useEffect(() => {
     const effect = async () => {
@@ -137,6 +141,12 @@ export default function BuildDetailView() {
             Live Demo <ExternalLinkIcon ml={1} />
           </Button>
         )}
+        <BuildLikeButton
+          buildId={build.id}
+          isLiked={build.likes?.includes?.(address)}
+          likesAmount={build.likes?.length ?? 0}
+          onLike={fetchBuild}
+        />
       </HStack>
     </Container>
   );

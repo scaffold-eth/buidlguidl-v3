@@ -22,7 +22,7 @@ const router = express.Router();
  * Every query param condition must be met for a event to pass the filter. Each query param acts as an AND.
  */
 router.get("/", async (req, res) => {
-  console.log("/events");
+  console.log("/latest-events");
   const query = req.query;
   const failingQueries = validateEventsQueryParams(query);
   if (failingQueries.length !== 0) {

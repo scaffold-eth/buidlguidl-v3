@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Link as RouteLink } from "react-router-dom";
-import axios from "axios";
-import moment from "moment";
 import {
   Box,
   Button,
   ButtonGroup,
   Center,
   Container,
+  Heading,
   Link,
   Text,
   Table,
@@ -17,123 +16,133 @@ import {
   Th,
   Td,
   chakra,
-  Flex,
   Select,
-  Badge,
-  Tooltip,
+  useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import BuilderListSkeleton from "../components/skeletons/BuilderListSkeleton";
+import useCustomColorModes from "../hooks/useCustomColorModes";
+import BuildsVoteListSkeleton from "../components/skeletons/BuildsVoteListSkeleton";
 import DateWithTooltip from "../components/DateWithTooltip";
-import SocialLink from "../components/SocialLink";
 import Address from "../components/Address";
-import { bySocialWeight } from "../data/socials";
-import { USER_ROLES } from "../helpers/constants";
+import { getAllBuilds } from "../data/api";
+import { bySubmittedTimestamp } from "../helpers/sorting";
+import useConnectedAddress from "../hooks/useConnectedAddress";
+import BuildLikeButton from "../components/BuildLikeButton";
 
-const serverPath = "/builders";
-
-const builderLastActivity = builder => {
-  // ToDo. Builds updated.
-  // const lastChallengeUpdated = Object.values(builder?.challenges ?? {})
-  //   .map(challenge => challenge.submittedTimestamp)
-  //   .sort((t1, t2) => t2 - t1)?.[0];
-
-  const lastStatusUpdated = builder?.status?.timestamp;
-
-  return lastStatusUpdated ?? builder?.creationTimestamp;
-};
-
-const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
-  const socials = Object.entries(builder.socialLinks ?? {}).sort(bySocialWeight);
-  if (!socials.length) return "-";
-
+const BuildCell = ({ name, buildId }) => {
   return (
-    <Flex direction="column">
-      <Flex justifyContent="space-evenly" alignItems="center">
-        {socials.map(([socialId, socialValue]) => (
-          <SocialLink id={socialId} value={socialValue} />
-        ))}
-      </Flex>
-      {isAdmin && builder.reachedOut && (
-        <Badge variant="outline" colorScheme="green" alignSelf="center" mt={2}>
-          Reached Out
-        </Badge>
-      )}
-    </Flex>
-  );
-};
-
-const BuilderAddressCell = ({ builderId, mainnetProvider }) => {
-  return (
-    <Link as={RouteLink} to={`/builders/${builderId}`} pos="relative">
-      <Address address={builderId} ensProvider={mainnetProvider} w="12.5" fontSize="16" />
+    <Link as={RouteLink} to={`/build/${buildId}`} pos="relative">
+      <Text>{name}</Text>
     </Link>
   );
 };
 
-const BuilderStatusCell = ({ status }) => {
+const BuilderAddressCell = ({ builderId }) => {
   return (
-    <Tooltip label={moment(status?.timestamp).fromNow()}>
-      <Text>{status?.text}</Text>
-    </Tooltip>
+    <Link as={RouteLink} to={`/builders/${builderId}`} pos="relative">
+      <Address address={builderId} w="12.5" fontSize="16" />
+    </Link>
   );
 };
 
-export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
-  const [builders, setBuilders] = useState([]);
-  const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
-  const isAdmin = userRole === USER_ROLES.admin;
+export default function BuildVoteList() {
+  const address = useConnectedAddress();
+  const [builds, setBuilds] = useState([]);
+  const [isLoadingBuilds, setIsLoadingBuilds] = useState(false);
+  const { secondaryFontColor } = useCustomColorModes();
+  const toast = useToast({ position: "top", isClosable: true });
+  const toastVariant = useColorModeValue("subtle", "solid");
+
+  const fetchSubmittedBuilds = useCallback(async () => {
+    setIsLoadingBuilds(true);
+    let fetchedBuilds;
+    try {
+      fetchedBuilds = await getAllBuilds();
+    } catch (error) {
+      toast({
+        description: "There was an error getting the builds. Please try again",
+        status: "error",
+        variant: toastVariant,
+      });
+      setIsLoadingBuilds(false);
+      return;
+    }
+    setBuilds(fetchedBuilds.sort(bySubmittedTimestamp));
+    setIsLoadingBuilds(false);
+  }, [toastVariant, toast]);
+
+  useEffect(() => {
+    fetchSubmittedBuilds();
+    // eslint-disable-next-line
+  }, []);
+
+  const onLike = async (buildId, isLiked) => {
+    setBuilds(prevBuilds =>
+      prevBuilds.map(build => {
+        if (build.id === buildId) {
+          if (build.likes === undefined) {
+            build.likes = [];
+          }
+          const likesSet = new Set(build.likes);
+          if (isLiked) {
+            likesSet.delete(address);
+          } else {
+            likesSet.add(address);
+          }
+          build.likes = Array.from(likesSet);
+        }
+        return build;
+      }),
+    );
+  };
+
+  const sortByLikes = useMemo(
+    () => (rowA, rowB) => {
+      return (rowA.values.likes?.length ?? 0) - (rowB.values.likes?.length ?? 0);
+    },
+    [],
+  );
 
   const columns = useMemo(
     () => [
       {
+        Header: "Build",
+        accessor: "name",
+        disableSortBy: true,
+        Cell: ({ row }) => <BuildCell name={row.original.name} buildId={row.original.id} />,
+      },
+      {
         Header: "Builder",
         accessor: "builder",
         disableSortBy: true,
-        Cell: ({ value }) => <BuilderAddressCell builderId={value} mainnetProvider={mainnetProvider} />,
+        Cell: ({ value }) => <BuilderAddressCell builderId={value} />,
       },
       {
-        Header: "Status",
-        accessor: "status",
+        Header: "Submitted",
+        accessor: "submittedTimestamp",
         disableSortBy: true,
-        Cell: ({ value }) => <BuilderStatusCell status={value} />,
-      },
-      {
-        Header: "Socials",
-        accessor: "socials",
-        disableSortBy: true,
-        Cell: ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />,
-      },
-      {
-        Header: "Last Activity",
-        accessor: "lastActivity",
-        sortDescFirst: true,
         Cell: ({ value }) => <DateWithTooltip timestamp={value} />,
+      },
+      {
+        Header: "Likes",
+        accessor: "likes",
+        sortDescFirst: true,
+        sortType: sortByLikes,
+        Cell: ({ row, value }) => (
+          <BuildLikeButton
+            buildId={row.original.id}
+            isLiked={value?.includes?.(address)}
+            likesAmount={value?.length ?? 0}
+            onLike={onLike}
+          />
+        ),
       },
     ],
     // eslint-disable-next-line
-    [userRole],
+    [address],
   );
-
-  useEffect(() => {
-    async function fetchBuilders() {
-      setIsLoadingBuilders(true);
-      const fetchedBuilders = await axios.get(serverUrl + serverPath);
-
-      const processedBuilders = fetchedBuilders.data.map(builder => ({
-        builder: builder.id,
-        status: builder.status,
-        socials: builder,
-        lastActivity: builderLastActivity(builder),
-      }));
-
-      setBuilders(processedBuilders);
-      setIsLoadingBuilders(false);
-    }
-
-    fetchBuilders();
-  }, [serverUrl]);
 
   const {
     getTableProps,
@@ -153,8 +162,8 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   } = useTable(
     {
       columns,
-      data: builders,
-      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "lastActivity", desc: true }], []) },
+      data: builds,
+      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "likes", desc: true }], []) },
     },
     useSortBy,
     usePagination,
@@ -162,12 +171,20 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
 
   return (
     <Container maxW="container.lg">
-      {isLoadingBuilders ? (
-        <BuilderListSkeleton />
+      <Container maxW="container.md" centerContent>
+        <Heading as="h1" mb="4">
+          All Builds
+        </Heading>
+        <Text color={secondaryFontColor} mb="10" textAlign="center">
+          List of builds by builders of the guild. Upvote your favourite builds.
+        </Text>
+      </Container>
+      {isLoadingBuilds ? (
+        <BuildsVoteListSkeleton />
       ) : (
         <Box overflowX="auto" mb={8}>
           <Center mb={5}>
-            <chakra.strong mr={2}>Total builders:</chakra.strong> {builders.length}
+            <chakra.strong mr={2}>Total builds:</chakra.strong> {builds.length}
           </Center>
           <Table {...getTableProps()}>
             <Thead>

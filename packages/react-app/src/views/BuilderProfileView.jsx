@@ -1,16 +1,30 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link as RouteLink, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Box, Button, HStack, Text, Flex, Spacer, Container, SimpleGrid, GridItem, Tag } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  Text,
+  Flex,
+  Spacer,
+  Container,
+  SimpleGrid,
+  GridItem,
+  Tag,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { InfoOutlineIcon } from "@chakra-ui/icons";
 import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
 import { USER_FUNCTIONS } from "../helpers/constants";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import BuildCard from "../components/BuildCard";
+import SubmitBuildModal from "../components/SubmitBuildModal";
 
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
   const { builderAddress } = useParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { secondaryFontColor, borderColor, iconBgColor } = useCustomColorModes();
   const [builder, setBuilder] = useState();
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
@@ -91,8 +105,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
             </Text>
             <Spacer />
             {isMyProfile && (
-              <Button as={RouteLink} colorScheme="blue" to="/">
-                Submit a new Build
+              <Button colorScheme="blue" mb={8} onClick={onOpen}>
+                Submit New Build
               </Button>
             )}
           </Flex>
@@ -102,7 +116,13 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               <Box overflowX="auto">
                 <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
                   {builder?.builds.map(build => (
-                    <BuildCard build={build} key={build.id} userProvider={userProvider} onDelete={fetchBuilder} />
+                    <BuildCard
+                      build={build}
+                      key={build.id}
+                      userProvider={userProvider}
+                      onUpdate={fetchBuilder}
+                      userRole={userRole}
+                    />
                   ))}
                 </SimpleGrid>
               </Box>
@@ -125,6 +145,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
             ))}
         </GridItem>
       </SimpleGrid>
+
+      <SubmitBuildModal isOpen={isOpen} onClose={onClose} onUpdate={fetchBuilder} />
     </Container>
   );
 }

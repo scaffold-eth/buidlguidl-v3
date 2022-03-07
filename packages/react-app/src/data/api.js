@@ -2,14 +2,17 @@ import axios from "axios";
 
 import { SERVER_URL as serverUrl } from "../constants";
 
-// ToDo. This only works for branches (as the function name states), but we
-// also need it to work for full repos. i.e. (https://github.com/scaffold-eth/eth-hooks)
 export const getGithubReadmeUrlFromBranchUrl = branchUrl =>
   branchUrl.replace("github.com", "raw.githubusercontent.com").replace(/\/tree\/(.*)/, "/$1/README.md");
 
+export const getGithubApiReadmeFromRepoUrl = repoUrl =>
+  repoUrl.replace(/github\.com\/(.*?)\/(.*$)/, "api.github.com/repos/$1/$2/readme");
+
+export const isGithubBranch = url => /github\.com\/.*?\/.*?\/tree\/.*/.test(url);
+
 export const getAllEvents = async (limit = null) => {
   try {
-    const response = await axios.get(`${serverUrl}/events?limit=${limit}`);
+    const response = await axios.get(`${serverUrl}/latest-events?limit=${limit}`);
     return response.data;
   } catch (err) {
     console.log("error fetching events", err);

@@ -1,20 +1,37 @@
 import React, { useState } from "react";
 import { useUserAddress } from "eth-hooks";
-import { Image, Box, Flex, Button, Center, Text, Spacer, useToast, useColorModeValue } from "@chakra-ui/react";
+import {
+  Image,
+  Box,
+  Flex,
+  Button,
+  Center,
+  Text,
+  Spacer,
+  useToast,
+  useColorModeValue,
+  VStack,
+  useDisclosure,
+  ButtonGroup,
+} from "@chakra-ui/react";
 import { Link as RouteLink } from "react-router-dom";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
+import SubmitBuildModal from "./SubmitBuildModal";
+import { USER_ROLES } from "../helpers/constants";
+import BuildLikeButton from "./BuildLikeButton";
 
-const BuildCard = ({ build, userProvider, onDelete }) => {
+const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
   const address = useUserAddress(userProvider);
   const { borderColor, secondaryFontColor } = useCustomColorModes();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isDeletingBuild, setIsDeletingBuild] = useState(false);
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
-  const isMyBuild = address === build.builder;
+  const canEditBuild = address === build.builder || USER_ROLES.admin === userRole;
 
   const handleDeleteBuild = async () => {
     setIsDeletingBuild(true);
@@ -75,8 +92,8 @@ const BuildCard = ({ build, userProvider, onDelete }) => {
     });
     setIsDeletingBuild(false);
 
-    if (typeof onDelete === "function") {
-      onDelete();
+    if (typeof onUpdate === "function") {
+      onUpdate();
     }
   };
 
@@ -103,15 +120,35 @@ const BuildCard = ({ build, userProvider, onDelete }) => {
           {build.desc}
         </Text>
         <Spacer />
-        <Button mt={3} as={RouteLink} to={`/build/${build.id}`} variant="outline" size="sm" isFullWidth>
-          View
-        </Button>
-      </Flex>
-      {isMyBuild && (
-        <Box pos="absolute" right={0} top={0} p="5px">
-          <Button variant="outline" colorScheme="red" size="sm" onClick={handleDeleteBuild} isLoading={isDeletingBuild}>
-            <DeleteIcon w={6} color="red.500" />
+        <ButtonGroup mt={3}>
+          <Button as={RouteLink} to={`/build/${build.id}`} variant="outline" size="sm" isFullWidth>
+            View
           </Button>
+          <BuildLikeButton
+            buildId={build.id}
+            isLiked={build?.likes?.includes?.(address)}
+            likesAmount={build?.likes?.length ?? 0}
+            onLike={onUpdate}
+          />
+        </ButtonGroup>
+      </Flex>
+      {canEditBuild && (
+        <Box pos="absolute" right={0} top={0} p="5px" bgColor="gray.200">
+          <VStack spacing={2}>
+            <Button
+              variant="outline"
+              colorScheme="red"
+              size="sm"
+              onClick={handleDeleteBuild}
+              isLoading={isDeletingBuild}
+            >
+              <DeleteIcon w={6} color="red.500" />
+            </Button>
+            <Button variant="outline" colorScheme="blue" size="sm" onClick={onOpen}>
+              <EditIcon w={6} color="blue.500" />
+              <SubmitBuildModal isOpen={isOpen} onClose={onClose} build={build} onUpdate={onUpdate} />
+            </Button>
+          </VStack>
         </Box>
       )}
     </Box>

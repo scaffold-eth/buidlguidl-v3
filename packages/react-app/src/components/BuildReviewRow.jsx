@@ -38,6 +38,7 @@ export default function BuildReviewRow({ build, isLoading, featuredClick, notFea
       <Td>
         <DateWithTooltip timestamp={build.submittedTimestamp} />
       </Td>
+      <Td>{build.likes?.length ?? 0}</Td>
       <Td>
         {build.featured ? (
           <Button

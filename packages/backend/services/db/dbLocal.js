@@ -109,11 +109,28 @@ const findEventsWhere = ({ conditions: conditionsArg, limit } = {}) => {
   return allEvents.filter(event => conditions.every(condition => condition(event)));
 };
 
+const findBuildById = buildId => {
+  return { id: buildId, ...database.builds[buildId] };
+};
+
 const createBuild = build => {
   database.builds.push(build);
 
   persist();
   return { ...build, id: String(database.builds.length - 1) };
+};
+
+const updateBuild = (buildId, buildData) => {
+  const { id, ...existingBuildData } = findBuildById(buildId);
+
+  database.builds[buildId] = {
+    ...existingBuildData,
+    ...buildData,
+  };
+
+  persist();
+
+  return database.builds[buildId];
 };
 
 const deleteBuild = buildId => {
@@ -122,14 +139,8 @@ const deleteBuild = buildId => {
   persist();
 };
 
-const findBuildById = buildId => {
-  return database.builds[buildId];
-};
-
 const findAllBuilds = (featured = null) => {
   const allBuilds = database.builds.map((build, index) => ({ id: index.toString(), ...build }));
-  console.log("featured", featured);
-  console.log("featured type", typeof featured === "boolean");
   if (typeof featured === "boolean") {
     return allBuilds.filter(build => build.featured);
   }
@@ -189,6 +200,7 @@ module.exports = {
   updateStreamData,
 
   createBuild,
+  updateBuild,
   deleteBuild,
   findBuildById,
   findAllBuilds,

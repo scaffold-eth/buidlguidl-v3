@@ -53,7 +53,8 @@ router.post("/", withRole("builder"), async (req, res) => {
     buildUrl,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -85,6 +86,65 @@ router.post("/", withRole("builder"), async (req, res) => {
 });
 
 /**
+ * Edit a build.
+ */
+router.patch("/:buildId", withRole("builder"), async (req, res) => {
+  const buildId = req.params.buildId;
+  const { buildUrl, demoUrl, desc, image, name, signature } = req.body;
+  console.log("EDIT /builds/", buildId);
+
+  const address = req.address;
+
+  const verifyOptions = {
+    messageId: "buildEdit",
+    address,
+    buildId,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  // Make sure build is owned by the user.
+  const build = await db.findBuildById(buildId);
+
+  if (build.builder !== address) {
+    const requestingBuilder = await db.findUserByAddress(address);
+
+    if (requestingBuilder?.data?.role !== "admin") {
+      // Bypass admins
+      res.status(401).send("Not your build.");
+      return;
+    }
+  }
+
+  const buildData = {
+    branch: buildUrl,
+    demoUrl,
+    desc,
+    image,
+    name,
+    // Keep existing build (admin can edit)
+    builder: build.builder,
+  };
+
+  await db.updateBuild(buildId, buildData);
+
+  const eventPayload = {
+    userAddress: address,
+    buildId,
+    name: build.name,
+  };
+
+  const event = createEvent(EVENT_TYPES.BUILD_EDIT, eventPayload, signature);
+  db.createEvent(event); // INFO: async, no await here
+
+  res.sendStatus(200);
+});
+
+/**
  * Delete a build.
  */
 router.delete("/:buildId", withRole("builder"), async (req, res) => {
@@ -100,7 +160,8 @@ router.delete("/:buildId", withRole("builder"), async (req, res) => {
     buildId,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -109,8 +170,13 @@ router.delete("/:buildId", withRole("builder"), async (req, res) => {
   const build = await db.findBuildById(buildId);
 
   if (build.builder !== address) {
-    res.status(401).send("Not your build.");
-    return;
+    const requestingBuilder = await db.findUserByAddress(address);
+
+    if (requestingBuilder?.data?.role !== "admin") {
+      // Bypass admins
+      res.status(401).send("Not your build.");
+      return;
+    }
   }
 
   await db.deleteBuild(buildId);
@@ -149,6 +215,50 @@ router.post("/upload-img", withRole("builder"), async (req, res) => {
 });
 
 /**
+ * Post a like for a build.
+ */
+router.post("/like", withRole("builder"), async (req, res) => {
+  const { buildId, signature, userAddress } = req.body;
+  console.log(`POST /builds/like`);
+  const address = req.address;
+
+  const verifyOptions = {
+    messageId: "buildLike",
+    address,
+    buildId,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const build = await db.findBuildById(buildId);
+  const currentLikesSet = new Set(build.likes ?? []);
+  const willUnlike = currentLikesSet.has(address);
+
+  if (willUnlike) {
+    currentLikesSet.delete(address);
+  } else {
+    currentLikesSet.add(address);
+  }
+
+  await db.updateBuild(buildId, { likes: Array.from(currentLikesSet) });
+
+  const eventPayload = {
+    liked: !willUnlike,
+    userAddress,
+    buildId,
+    name: build.name,
+  };
+  const event = createEvent(EVENT_TYPES.BUILD_LIKED, eventPayload, signature);
+  db.createEvent(event); // INFO: async, no await here
+
+  res.sendStatus(200);
+});
+
+/**
  * Feature / Unfeature a build
  */
 router.patch("/", withRole("admin"), async (req, res) => {
@@ -163,11 +273,13 @@ router.patch("/", withRole("admin"), async (req, res) => {
     featured,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
 
+  // TODO we can skip this query if the db.featureBuild returns the featured build
   const build = await db.findBuildById(buildId);
   await db.featureBuild(buildId, Boolean(featured));
 

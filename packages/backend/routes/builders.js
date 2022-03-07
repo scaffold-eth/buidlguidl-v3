@@ -1,9 +1,9 @@
 const express = require("express");
+const { ethers } = require("ethers");
 const db = require("../services/db/db");
 const { verifySignature } = require("../utils/sign");
 const { withAddress, withRole } = require("../middlewares/auth");
 const { EVENT_TYPES, createEvent } = require("../utils/events");
-const { ethers } = require("ethers");
 
 const router = express.Router();
 
@@ -50,7 +50,8 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderAddress,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -87,7 +88,8 @@ router.post("/update-socials", withAddress, async (req, res) => {
     socialLinks,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
@@ -107,7 +109,8 @@ router.post("/update-status", withAddress, async (req, res) => {
     status,
   };
 
-  if (!verifySignature(signature, verifyOptions)) {
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
     return;
   }
