@@ -2,7 +2,6 @@ const express = require("express");
 const ethers = require("ethers");
 const db = require("../services/db/db");
 const { getStreamEvents } = require("../utils/streams");
-const { updateStreamData } = require("../services/db/db");
 
 const router = express.Router();
 
@@ -23,7 +22,7 @@ router.get("/update", async (req, res) => {
     if (!streamUpdate.events.length) {
       return;
     }
-    updateStreamData(stream, streamUpdate);
+    db.updateStreamData(stream, streamUpdate);
     updated += 1;
   });
 
