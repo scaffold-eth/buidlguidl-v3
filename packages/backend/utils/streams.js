@@ -33,11 +33,12 @@ const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
         type: "stream.withdraw",
         timestamp: block.timestamp,
         payload: {
-          to: data.args.to,
+          userAddress: data.args.to,
           amount: ethers.utils.formatEther(data.args.amount),
           reason: data.args.reason,
           block: log.blockNumber,
           tx: log.transactionHash,
+          streamAddress,
         },
       };
     }),
@@ -50,11 +51,12 @@ const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
         type: "stream.deposit",
         timestamp: block.timestamp,
         payload: {
-          from: data.args.from,
+          userAddress: data.args.from,
           amount: ethers.utils.formatEther(data.args.amount),
           reason: data.args.reason,
           block: log.blockNumber,
           tx: log.transactionHash,
+          streamAddress,
         },
       };
     }),
@@ -83,7 +85,6 @@ const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
 // };
 //
 
-
 module.exports = {
-  getStreamEvents
+  getStreamEvents,
 };

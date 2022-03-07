@@ -7,6 +7,7 @@ const { updateStreamData } = require("../services/db/db");
 const router = express.Router();
 
 router.get("/update", async (req, res) => {
+  console.log("/streams/update");
   if (process.env.NODE_ENV === "production" && req.header("X-Appengine-Cron") !== "true") {
     return res.status(403).send();
   }
