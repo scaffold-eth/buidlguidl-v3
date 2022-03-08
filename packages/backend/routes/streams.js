@@ -13,13 +13,13 @@ router.get("/update", async (req, res) => {
   const maxItems = Number(req.query.max) || 100;
   const provider = new ethers.providers.StaticJsonRpcProvider(process.env.RPC_URL);
   const currentBlock = await provider.getBlockNumber();
-  const streams = db.findUpdatableStreams({ lastBlock: currentBlock, limit: maxItems });
+  const streams = await db.findUpdatableStreams({ lastBlock: currentBlock, limit: maxItems });
   let updated = 0;
 
   const updates = streams.map(async stream => {
     const streamUpdate = await getStreamEvents(provider, stream, stream.lastIndexedBlock, currentBlock);
 
-    db.updateStreamData(stream, streamUpdate);
+    await db.updateStreamData(stream, streamUpdate);
     updated += 1;
   });
 

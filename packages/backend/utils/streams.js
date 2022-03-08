@@ -14,7 +14,7 @@ const SIMPLE_STREAM_ABI = JSON.parse(fs.readFileSync(ABI_PATH, "utf8"));
  * @param toBlock Search up to this block number
  * @return {Promise<{balance: string, streamAddress, events: {type: string, payload: object}[]}>}
  */
-const getStreamEvents = async (provider, stream, fromBlock, toBlock) => {
+const getStreamEvents = async (provider, stream, fromBlock = 0, toBlock) => {
   const streamAddress = stream.streamAddress;
   const streamContract = new ethers.Contract(streamAddress, SIMPLE_STREAM_ABI, provider);
 

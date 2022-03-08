@@ -144,6 +144,36 @@ const featureBuild = (buildId, featured) => {
   return buildRef.update({ featured });
 };
 
+// --- Streams
+const findUpdatableStreams = async ({ limit }) => {
+  let queryChain = database.collection("users").where("stream.streamAddress", "!=", "");
+
+  if (limit) {
+    queryChain = queryChain.limit(Number(limit));
+  }
+
+  const updatableStreamsSnapshot = await queryChain.get();
+
+  return updatableStreamsSnapshot.docs.map(doc => ({ builderAddress: doc.id, ...doc.data().stream }));
+};
+
+const updateStreamData = async (stream, streamUpdate) => {
+  streamUpdate.events.map(createEvent);
+
+  const { builderAddress, ...relevantStream } = stream;
+  await updateUser(stream.builderAddress, {
+    stream: {
+      ...relevantStream,
+      cap: streamUpdate.cap,
+      frequency: streamUpdate.frequency,
+      lastContract: streamUpdate.lastContract ?? 0,
+      lastIndexedBlock: streamUpdate.lastBlock,
+      balance: streamUpdate.balance,
+    },
+  });
+  console.log(`Stream ${stream.streamAddress} updated to ${streamUpdate.lastBlock} balance ${streamUpdate.balance}`);
+};
+
 module.exports = {
   createUser,
   updateUser,
@@ -153,6 +183,9 @@ module.exports = {
   createEvent,
   findAllEvents,
   findEventsWhere,
+
+  findUpdatableStreams,
+  updateStreamData,
 
   createBuild,
   updateBuild,
