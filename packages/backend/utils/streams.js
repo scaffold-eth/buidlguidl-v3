@@ -31,7 +31,7 @@ const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
       const block = await provider.getBlock(log.blockNumber);
       return {
         type: "stream.withdraw",
-        timestamp: block.timestamp,
+        timestamp: block.timestamp * 1000,
         payload: {
           userAddress: data.args.to,
           amount: ethers.utils.formatEther(data.args.amount),
@@ -49,7 +49,7 @@ const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
       const block = await provider.getBlock(log.blockNumber);
       return {
         type: "stream.deposit",
-        timestamp: block.timestamp,
+        timestamp: block.timestamp * 1000,
         payload: {
           userAddress: data.args.from,
           amount: ethers.utils.formatEther(data.args.amount),

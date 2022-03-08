@@ -19,6 +19,8 @@ router.get("/update", async (req, res) => {
   const updates = streams.map(async stream => {
     const streamUpdate = await getStreamEvents(provider, stream.streamAddress, stream.lastIndexedBlock, currentBlock);
 
+    // ToDo. This won't update the lastBlock.
+    //  (Query RPC with wider block range vs Optimize database updates)
     if (!streamUpdate.events.length) {
       return;
     }
