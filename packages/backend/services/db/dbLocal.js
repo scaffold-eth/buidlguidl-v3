@@ -165,7 +165,7 @@ const featureBuild = (buildId, featured) => {
 // --- Streams
 const findUpdatableStreams = ({ lastBlock, limit }) => {
   return findAllUsers()
-    .filter(user => user.stream !== undefined && user.stream.lastIndexedBlock < lastBlock)
+    .filter(user => user.stream !== undefined)
     .sort((a, b) => a.stream.lastIndexedBlock - b.stream.lastIndexedBlock)
     .slice(0, limit)
     .map(user => {
