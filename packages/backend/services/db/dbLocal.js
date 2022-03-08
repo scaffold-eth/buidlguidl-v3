@@ -98,7 +98,7 @@ const createEvent = event => {
 
 const findAllEvents = ({ limit: limitArg } = {}) => {
   const limit = limitArg ?? database.events.length;
-  return database.events.slice(limit * -1).reverse();
+  return database.events.sort((a, b) => b.timestamp - a.timestamp).slice(limit * -1);
 };
 
 const findEventsWhere = ({ conditions: conditionsArg, limit } = {}) => {
@@ -163,7 +163,7 @@ const featureBuild = (buildId, featured) => {
 };
 
 // --- Streams
-const findUpdatableStreams = ({ lastBlock, limit }) => {
+const findUpdatableStreams = ({ limit }) => {
   return findAllUsers()
     .filter(user => user.stream !== undefined)
     .sort((a, b) => a.stream.lastIndexedBlock - b.stream.lastIndexedBlock)
