@@ -14,9 +14,18 @@ const SIMPLE_STREAM_ABI = JSON.parse(fs.readFileSync(ABI_PATH, "utf8"));
  * @param toBlock Search up to this block number
  * @return {Promise<{balance: string, streamAddress, events: {type: string, payload: object}[]}>}
  */
-const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
+const getStreamEvents = async (provider, stream, fromBlock, toBlock) => {
+  const streamAddress = stream.streamAddress;
   const streamContract = new ethers.Contract(streamAddress, SIMPLE_STREAM_ABI, provider);
-  const lastContract = Number(ethers.utils.formatUnits(await streamContract.last(), 0));
+
+  let cap = stream.cap;
+  let frequency = stream.frequency;
+  if (!cap || !frequency) {
+    cap = ethers.utils.formatEther(await streamContract.cap());
+    frequency = Number(ethers.utils.formatUnits(await streamContract.frequency(), 0));
+  }
+
+  // Events
   const withdrawFilter = streamContract.filters.Withdraw();
   withdrawFilter.fromBlock = fromBlock;
   withdrawFilter.toBlock = toBlock;
@@ -45,6 +54,11 @@ const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
     }),
   );
 
+  let lastContract = stream.lastContract;
+  if (withdrawEvents.length) {
+    lastContract = Number(ethers.utils.formatUnits(await streamContract.last(), 0));
+  }
+
   const depositEvents = await Promise.all(
     depositLogs.map(async log => {
       const data = streamContract.interface.parseLog(log);
@@ -67,6 +81,8 @@ const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
   return {
     streamAddress,
     lastContract,
+    cap,
+    frequency,
     lastBlock: toBlock,
     balance: ethers.utils.formatEther(await provider.getBalance(streamAddress)),
     events: [...withdrawEvents, ...depositEvents],

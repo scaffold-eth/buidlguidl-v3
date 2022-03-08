@@ -178,7 +178,9 @@ const updateStreamData = (stream, streamUpdate) => {
   updateUser(stream.builderAddress, {
     stream: {
       ...stream,
-      lastContract: streamUpdate.lastContract ?? stream.lastContract ?? 0,
+      cap: streamUpdate.cap,
+      frequency: streamUpdate.frequency,
+      lastContract: streamUpdate.lastContract ?? 0,
       lastIndexedBlock: streamUpdate.lastBlock,
       balance: streamUpdate.balance,
       builderAddress: undefined,
