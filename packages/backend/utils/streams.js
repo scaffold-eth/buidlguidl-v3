@@ -68,6 +68,7 @@ const getStreamEvents = async (provider, stream, fromBlock = 0, toBlock) => {
         timestamp: block.timestamp * 1000,
         payload: {
           userAddress: data.args.from,
+          builderAddress: stream.builderAddress,
           amount: ethers.utils.formatEther(data.args.amount),
           reason: data.args.reason,
           block: log.blockNumber,
