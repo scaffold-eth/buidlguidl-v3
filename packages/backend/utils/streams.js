@@ -16,6 +16,7 @@ const SIMPLE_STREAM_ABI = JSON.parse(fs.readFileSync(ABI_PATH, "utf8"));
  */
 const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
   const streamContract = new ethers.Contract(streamAddress, SIMPLE_STREAM_ABI, provider);
+  const lastContract = Number(ethers.utils.formatUnits(await streamContract.last(), 0));
   const withdrawFilter = streamContract.filters.Withdraw();
   withdrawFilter.fromBlock = fromBlock;
   withdrawFilter.toBlock = toBlock;
@@ -43,6 +44,7 @@ const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
       };
     }),
   );
+
   const depositEvents = await Promise.all(
     depositLogs.map(async log => {
       const data = streamContract.interface.parseLog(log);
@@ -64,26 +66,12 @@ const getStreamEvents = async (provider, streamAddress, fromBlock, toBlock) => {
 
   return {
     streamAddress,
+    lastContract,
     lastBlock: toBlock,
     balance: ethers.utils.formatEther(await provider.getBalance(streamAddress)),
     events: [...withdrawEvents, ...depositEvents],
   };
 };
-
-// const processStreamEvents = async () => {
-//   const provider = new ethers.providers.StaticJsonRpcProvider(process.env.RPC_URL);
-//   const streams = db.findAllStreams();
-//
-//   const currentBlock = await provider.getBlockNumber();
-//
-//   streams.forEach(stream => {
-//     getStreamEvents(provider, stream.streamAddress, stream.lastIndexedBlock, currentBlock).then(result => {
-//       console.log(JSON.stringify(result, null, 2));
-//       console.log(`Stream ${stream.streamAddress} updated to ${currentBlock}`);
-//     });
-//   });
-// };
-//
 
 module.exports = {
   getStreamEvents,
