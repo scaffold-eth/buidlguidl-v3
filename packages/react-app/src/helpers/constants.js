@@ -5,10 +5,11 @@ export const USER_ROLES = {
 };
 
 export const USER_FUNCTIONS = {
-  frontend: { colorScheme: "orange", label: "Frontend" },
-  backend: { colorScheme: "teal", label: "Backend" },
-  fullstack: { colorScheme: "purple", label: "Fullstack" },
-  designer: { colorScheme: "pink", label: "Designer" },
-  support: { colorScheme: "blue", label: "Support" },
-  mentor: { colorScheme: "yellow", label: "Mentor" },
+  infantry: { label: "Infantry" },
+  pikemen: { label: "Pikemen", graphic: "pikemen_thumb.png" },
+  warlock: { label: "Warlock", graphic: "warlock_thumb.png" },
+  knight: { label: "Knight", graphic: "knight_thumb.png" },
+  monk: { label: "Monk", graphic: "monk_thumb.png" },
+  archer: { label: "Archer", graphic: "archer_thumb.png" },
+  cleric: { label: "Cleric", graphic: "cleric_thumb.png" },
 };
