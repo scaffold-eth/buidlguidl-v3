@@ -12,9 +12,9 @@ import {
   SimpleGrid,
   GridItem,
   Tag,
+  Image,
   useDisclosure,
 } from "@chakra-ui/react";
-import { InfoOutlineIcon } from "@chakra-ui/icons";
 import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
 import { USER_FUNCTIONS } from "../helpers/constants";
@@ -25,7 +25,7 @@ import SubmitBuildModal from "../components/SubmitBuildModal";
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
   const { builderAddress } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { secondaryFontColor, borderColor, iconBgColor } = useCustomColorModes();
+  const { secondaryFontColor, borderColor } = useCustomColorModes();
   const [builder, setBuilder] = useState();
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
   const isMyProfile = builderAddress === address;
@@ -65,40 +65,34 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           />
         </GridItem>
         <GridItem colSpan={{ base: 1, xl: 3 }}>
-          <HStack spacing={4} mb={8}>
-            <Flex borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full" justify="space-between">
-              <Flex bg={iconBgColor} borderRadius="lg" w={12} h={12} justify="center" align="center">
-                <InfoOutlineIcon w={5} h={5} />
-              </Flex>
-              <div>
+          <Flex spacing={4} mb={8}>
+            <Flex mr={2} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full" justify="right">
+              <Box>
                 <Text fontSize="xl" fontWeight="medium" textAlign="right">
                   {builder?.builds.length}
                 </Text>
                 <Text fontSize="sm" color={secondaryFontColor} textAlign="right">
                   builds
                 </Text>
-              </div>
+              </Box>
             </Flex>
-            <Flex borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full" justify="space-between">
-              <Flex bg={iconBgColor} borderRadius="lg" w={12} h={12} justify="center" align="center">
-                <InfoOutlineIcon w={5} h={5} />
-              </Flex>
-              <div>
-                <Text fontSize="xl" fontWeight="medium" textAlign="right">
-                  {builder?.function ? (
-                    <Tag colorScheme={USER_FUNCTIONS[builder?.function].colorScheme} variant="solid">
-                      {USER_FUNCTIONS[builder?.function].label}
+            <Flex ml={2} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={2} w="full" justify="right">
+              <Text fontSize="xl" fontWeight="medium" textAlign="right">
+                {builder?.function ? (
+                  <HStack>
+                    <Tag colorScheme="gray" variant="solid">
+                      {USER_FUNCTIONS[builder?.function]?.label}
                     </Tag>
-                  ) : (
-                    "-"
-                  )}
-                </Text>
-                <Text fontSize="sm" color={secondaryFontColor} textAlign="right">
-                  Role
-                </Text>
-              </div>
+                    {USER_FUNCTIONS[builder?.function]?.graphic && (
+                      <Image src={`/assets/${USER_FUNCTIONS[builder?.function]?.graphic}`} maxW="67px" />
+                    )}
+                  </HStack>
+                ) : (
+                  "-"
+                )}
+              </Text>
             </Flex>
-          </HStack>
+          </Flex>
           <Flex mb={4}>
             <Text fontSize="2xl" fontWeight="bold">
               Builds
