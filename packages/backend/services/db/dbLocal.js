@@ -173,6 +173,22 @@ const findUpdatableStreams = ({ limit }) => {
     });
 };
 
+// --- General config data
+const getConfigData = category => {
+  return database.config[category] ?? {};
+};
+
+const setConfigData = (category, configData) => {
+  database.config[category] = {
+    ...getConfigData(category),
+    ...configData,
+  };
+
+  persist();
+
+  return database.config[category];
+};
+
 const updateStreamData = (stream, streamUpdate) => {
   streamUpdate.events.map(createEvent);
   updateUser(stream.builderAddress, {
@@ -209,6 +225,9 @@ module.exports = {
   findAllBuilds,
   findBuilderBuilds,
   featureBuild,
+
+  getConfigData,
+  setConfigData,
 
   __internal_database: database, // testing only
 };

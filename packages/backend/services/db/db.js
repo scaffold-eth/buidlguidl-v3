@@ -136,6 +136,26 @@ const findUpdatableStreams = db.findUpdatableStreams;
  */
 const updateStreamData = db.updateStreamData;
 
+// --- General config data
+
+/**
+ * Gets the config for a given category
+ *
+ * @param {string} category The category to get the config from
+ * @returns {object} the config data
+ */
+const getConfigData = db.getConfigData;
+
+/**
+ * Gets the config for a given category
+ *
+ * @param {string} category The category to set the config to
+ * @param {object} configData The config data to set
+ *
+ * @returns {object} the updated config data
+ */
+const setConfigData = db.setConfigData;
+
 // Shared by implementations.
 // ToDo: This is very inefficient,´. We fetch the whole database every time we call this.
 // We should create a getChallengesByStatus function that fetches the challenges by status.
@@ -174,6 +194,9 @@ module.exports = {
   findAllBuilds,
   findBuilderBuilds,
   featureBuild,
+
+  getConfigData,
+  setConfigData,
 
   getAllChallenges,
 

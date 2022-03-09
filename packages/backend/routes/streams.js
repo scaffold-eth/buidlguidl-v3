@@ -16,19 +16,28 @@ router.get("/update", async (req, res) => {
   const streams = await db.findUpdatableStreams({ limit: maxItems });
   let updated = 0;
 
+  const lastIndexedBlock = (await db.getConfigData("streams")).lastIndexedBlock ?? 0;
   const updates = streams.map(async stream => {
-    const streamUpdate = await getStreamEvents(provider, stream, stream.lastIndexedBlock, currentBlock);
-
-    await db.updateStreamData(stream, streamUpdate);
-    updated += 1;
+    return [await getStreamEvents(provider, stream, lastIndexedBlock, currentBlock), stream];
   });
 
   Promise.all(updates)
-    .then(() => {
+    .then(async streamsResult => {
+      await Promise.all(
+        streamsResult.map(async ([streamUpdate, stream]) => {
+          if (streamUpdate.events.length) {
+            console.log("Updating stream data for", stream.builderAddress);
+            await db.updateStreamData(stream, streamUpdate);
+            updated += 1;
+          }
+        }),
+      );
+      console.log("Updating stream lastIndexedBlock", currentBlock);
+      await db.setConfigData("streams", { lastIndexedBlock: currentBlock });
       res.status(200).send({ updated });
     })
     .catch(e => {
-      console.error(e);
+      console.error("Error found. Not updating lastIndexedBlock", e);
       res.status(500).send();
     });
 });

@@ -174,6 +174,23 @@ const updateStreamData = async (stream, streamUpdate) => {
   console.log(`Stream ${stream.streamAddress} updated to ${streamUpdate.lastBlock} balance ${streamUpdate.balance}`);
 };
 
+// --- General config data
+const getConfigDoc = id => database.collection("config").doc(id);
+const getUsConfigSnapshotById = id => getConfigDoc(id).get();
+
+const getConfigData = async category => {
+  const config = await database.collection("config").doc(category).get();
+  return config.data();
+};
+
+const setConfigData = async (category, configData) => {
+  const configDoc = getConfigDoc(category);
+  await configDoc.update(configData);
+
+  const configSnapshot = await getUsConfigSnapshotById(category);
+  return configSnapshot.data();
+};
+
 module.exports = {
   createUser,
   updateUser,
@@ -194,4 +211,7 @@ module.exports = {
   findAllBuilds,
   findBuilderBuilds,
   featureBuild,
+
+  getConfigData,
+  setConfigData,
 };
