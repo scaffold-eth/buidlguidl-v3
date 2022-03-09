@@ -144,6 +144,53 @@ const featureBuild = (buildId, featured) => {
   return buildRef.update({ featured });
 };
 
+// --- Streams
+const findUpdatableStreams = async ({ limit }) => {
+  let queryChain = database.collection("users").where("stream.streamAddress", "!=", "");
+
+  if (limit) {
+    queryChain = queryChain.limit(Number(limit));
+  }
+
+  const updatableStreamsSnapshot = await queryChain.get();
+
+  return updatableStreamsSnapshot.docs.map(doc => ({ builderAddress: doc.id, ...doc.data().stream }));
+};
+
+const updateStreamData = async (stream, streamUpdate) => {
+  streamUpdate.events.map(createEvent);
+
+  const { builderAddress, ...relevantStream } = stream;
+  await updateUser(stream.builderAddress, {
+    stream: {
+      ...relevantStream,
+      cap: streamUpdate.cap,
+      frequency: streamUpdate.frequency,
+      lastContract: streamUpdate.lastContract ?? 0,
+      lastIndexedBlock: streamUpdate.lastBlock,
+      balance: streamUpdate.balance,
+    },
+  });
+  console.log(`Stream ${stream.streamAddress} updated to ${streamUpdate.lastBlock} balance ${streamUpdate.balance}`);
+};
+
+// --- General config data
+const getConfigDoc = id => database.collection("config").doc(id);
+const getUsConfigSnapshotById = id => getConfigDoc(id).get();
+
+const getConfigData = async category => {
+  const config = await database.collection("config").doc(category).get();
+  return config.data();
+};
+
+const setConfigData = async (category, configData) => {
+  const configDoc = getConfigDoc(category);
+  await configDoc.update(configData);
+
+  const configSnapshot = await getUsConfigSnapshotById(category);
+  return configSnapshot.data();
+};
+
 module.exports = {
   createUser,
   updateUser,
@@ -154,6 +201,9 @@ module.exports = {
   findAllEvents,
   findEventsWhere,
 
+  findUpdatableStreams,
+  updateStreamData,
+
   createBuild,
   updateBuild,
   deleteBuild,
@@ -161,4 +211,7 @@ module.exports = {
   findAllBuilds,
   findBuilderBuilds,
   featureBuild,
+
+  getConfigData,
+  setConfigData,
 };

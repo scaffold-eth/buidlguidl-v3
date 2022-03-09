@@ -119,6 +119,43 @@ const findBuilderBuilds = db.findBuilderBuilds;
  */
 const featureBuild = db.featureBuild;
 
+// --- Streams
+
+/**
+ * Return a list of `user.stream` objects, where the stream's `lastUpdatedBlock` is less than `lastBlock`.
+ *
+ * @param {{lastBlock: number, limit: number}}
+ */
+const findUpdatableStreams = db.findUpdatableStreams;
+
+/**
+ * Given the output of `getStreamEvents`, update the `user.stream` object and store the events in the db.
+ *
+ * @param {*} stream A `user.stream` object
+ * @param {*} streamUpdate The result of `getStreamEvents` for this `stream`.
+ */
+const updateStreamData = db.updateStreamData;
+
+// --- General config data
+
+/**
+ * Gets the config for a given category
+ *
+ * @param {string} category The category to get the config from
+ * @returns {object} the config data
+ */
+const getConfigData = db.getConfigData;
+
+/**
+ * Gets the config for a given category
+ *
+ * @param {string} category The category to set the config to
+ * @param {object} configData The config data to set
+ *
+ * @returns {object} the updated config data
+ */
+const setConfigData = db.setConfigData;
+
 // Shared by implementations.
 // ToDo: This is very inefficient,´. We fetch the whole database every time we call this.
 // We should create a getChallengesByStatus function that fetches the challenges by status.
@@ -147,6 +184,9 @@ module.exports = {
   findAllEvents,
   findEventsWhere,
 
+  findUpdatableStreams,
+  updateStreamData,
+
   createBuild,
   updateBuild,
   deleteBuild,
@@ -154,6 +194,9 @@ module.exports = {
   findAllBuilds,
   findBuilderBuilds,
   featureBuild,
+
+  getConfigData,
+  setConfigData,
 
   getAllChallenges,
 

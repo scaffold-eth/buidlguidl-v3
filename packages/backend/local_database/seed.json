@@ -11,6 +11,11 @@
       "socialLinks": {
         "telegram": "test",
         "twitter": "test"
+      },
+      "stream": {
+        "streamAddress": "0x86c6C2c9699bE74278E0d73065fF12249221Bd30",
+        "lastIndexedBlock": 0,
+        "balance": "0"
       }
     }
   },
