@@ -5,7 +5,7 @@ export const USER_ROLES = {
 };
 
 export const USER_FUNCTIONS = {
-  infantry: { label: "Infantry" },
+  infantry: { label: "Infantry", graphic: "infantry_thumb.jpeg" },
   pikemen: { label: "Pikemen", graphic: "pikemen_thumb.png" },
   warlock: { label: "Warlock", graphic: "warlock_thumb.png" },
   knight: { label: "Knight", graphic: "knight_thumb.png" },
