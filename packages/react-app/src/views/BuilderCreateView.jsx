@@ -15,10 +15,10 @@ import {
   useColorModeValue,
   FormErrorMessage,
 } from "@chakra-ui/react";
+import { ethers } from "ethers";
 import { USER_FUNCTIONS, USER_ROLES } from "../helpers/constants";
 import { getPostCreateUserSignMessage, postCreateUser } from "../data/api";
 import AddressInput from "../components/AddressInput";
-import { ethers } from "ethers";
 
 const INITIAL_FORM_STATE = { builderRole: USER_ROLES.builder };
 
@@ -37,6 +37,7 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
 
     const nextErrors = {
       builderAddress: !formState.builderAddress || !ethers.utils.isAddress(formState.builderAddress),
+      builderStreamAddress: formState.builderStreamAddress && !ethers.utils.isAddress(formState.builderStreamAddress),
       builderRole: !formState.builderRole,
       builderFunction: !formState.builderFunction,
     };
@@ -78,6 +79,7 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
         builderAddress: formState.builderAddress,
         builderRole: formState.builderRole,
         builderFunction: formState.builderFunction,
+        builderStreamAddress: formState.builderStreamAddress,
       });
     } catch (error) {
       if (error.status === 401) {
@@ -184,6 +186,26 @@ export default function BuilderCreateView({ userProvider, mainnetProvider }) {
             ))}
           </Select>
           <FormErrorMessage>Required</FormErrorMessage>
+        </FormControl>
+
+        <FormControl mb={8} isInvalid={formErrors.builderStreamAddress}>
+          <FormLabel htmlFor="builderStreamAddress">
+            <strong>Stream Address</strong>
+          </FormLabel>
+          <AddressInput
+            autoFocus
+            id="builderStreamAddress"
+            ensProvider={mainnetProvider}
+            placeholder="Builder Stream Address"
+            value={formState.builderStreamAddress || ""}
+            onChange={value =>
+              setFormState(prevFormState => ({
+                ...prevFormState,
+                builderStreamAddress: value,
+              }))
+            }
+          />
+          <FormErrorMessage>Invalid address</FormErrorMessage>
         </FormControl>
 
         <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isSubmitting} isFullWidth>
