@@ -24,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
+import BuilderProfileStreamSkeleton from "../components/skeletons/BuilderProfileStreamSkeleton";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
 import DateWithTooltip from "../components/DateWithTooltip";
@@ -119,9 +120,9 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
         <GridItem colSpan={{ base: 1, xl: 3 }}>
           <Flex spacing={4} mb={8}>
             <Flex mr={2} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full">
-              {!streamDisplay ? (
-                <Text>No stream</Text>
-              ) : (
+              {isLoadingBuilder && <BuilderProfileStreamSkeleton />}
+              {!isLoadingBuilder && !streamDisplay && <Text>No stream</Text>}
+              {!isLoadingBuilder && !!streamDisplay && (
                 <Box w="full">
                   <Flex align="center" justify="space-evenly" w="full">
                     <Flex>
