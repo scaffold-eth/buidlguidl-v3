@@ -90,9 +90,9 @@ const BuilderStreamCell = ({ stream }) => {
   const frequency = stream.frequency;
   const last = stream.lastContract;
   const frequencyDays = frequency / secondsPerDay;
-  const vestedPercentage = (new Date().getTime() / 1000 - last) / frequency;
-  const vestedAmount = cap.mul(Math.round(new Date().getTime() / 1000 - last)).div(frequency);
-  const available = cap.lt(vestedAmount) ? cap : vestedAmount;
+  const unlockedPercentage = (new Date().getTime() / 1000 - last) / frequency;
+  const unlockedAmount = cap.mul(Math.round(new Date().getTime() / 1000 - last)).div(frequency);
+  const available = cap.lt(unlockedAmount) ? cap : unlockedAmount;
 
   const capStr = ethers.utils.formatEther(cap);
   const availableStr = ethers.utils.formatEther(available);
@@ -102,7 +102,7 @@ const BuilderStreamCell = ({ stream }) => {
         Ξ {parseFloat(availableStr).toFixed(4)} / {parseFloat(capStr).toFixed(1)} @ {frequencyDays}d
       </Box>
       <Box w="full" pl={1}>
-        <Progress flexShrink={1} size="xs" value={vestedPercentage * 100} colorScheme="green" />
+        <Progress flexShrink={1} size="xs" value={unlockedPercentage * 100} colorScheme="green" />
       </Box>
     </Flex>
   );

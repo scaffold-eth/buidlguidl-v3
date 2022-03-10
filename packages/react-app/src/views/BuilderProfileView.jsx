@@ -77,9 +77,9 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     const frequency = stream.frequency;
     const last = stream.lastContract;
     const frequencyDays = frequency / secondsPerDay;
-    const vestedPercentage = (new Date().getTime() / 1000 - last) / frequency;
-    const vestedAmount = cap.mul(Math.round(new Date().getTime() / 1000 - last)).div(frequency);
-    const available = cap.lt(vestedAmount) ? cap : vestedAmount;
+    const unlockedPercentage = (new Date().getTime() / 1000 - last) / frequency;
+    const unlockedAmount = cap.mul(Math.round(new Date().getTime() / 1000 - last)).div(frequency);
+    const available = cap.lt(unlockedAmount) ? cap : unlockedAmount;
 
     const capStr = ethers.utils.formatEther(cap);
     const availableStr = ethers.utils.formatEther(available);
@@ -88,7 +88,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
       capStr,
       frequencyDays,
       availableStr,
-      vestedPercentage,
+      unlockedPercentage,
     });
   }, [builder]);
 
@@ -141,7 +141,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                       <Progress
                         flexShrink={1}
                         size="sm"
-                        value={streamDisplay.vestedPercentage * 100}
+                        value={streamDisplay.unlockedPercentage * 100}
                         colorScheme="green"
                       />
                     </Box>
