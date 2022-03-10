@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { ethers } from "ethers";
 import {
   Box,
   Button,
@@ -14,6 +15,7 @@ import {
   Tag,
   Image,
   useDisclosure,
+  Progress,
 } from "@chakra-ui/react";
 import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
@@ -22,12 +24,14 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
 
+const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
   const { builderAddress } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { secondaryFontColor, borderColor } = useCustomColorModes();
-  const [builder, setBuilder] = useState();
+  const [builder, setBuilder] = useState(null);
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
+  const [streamDisplay, setStreamDisplay] = useState(null);
   const isMyProfile = builderAddress === address;
 
   const fetchBuilder = useCallback(async () => {
@@ -51,6 +55,31 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     // eslint-disable-next-line
   }, [builderAddress]);
 
+  useEffect(() => {
+    if (!builder) {
+      return;
+    }
+    const stream = builder.stream;
+
+    const cap = ethers.utils.parseUnits(stream.cap);
+    const frequency = stream.frequency;
+    const last = stream.lastContract;
+    const frequencyDays = frequency / secondsPerDay;
+    const vestedPercentage = (new Date().getTime() / 1000 - last) / frequency;
+    const vestedAmount = cap.mul(Math.round(new Date().getTime() / 1000 - last)).div(frequency);
+    const available = cap.lt(vestedAmount) ? cap : vestedAmount;
+
+    const capStr = ethers.utils.formatEther(cap);
+    const availableStr = ethers.utils.formatEther(available);
+    setStreamDisplay({
+      balance: stream.balance,
+      capStr,
+      frequencyDays,
+      availableStr,
+      vestedPercentage,
+    });
+  }, [builder]);
+
   return (
     <Container maxW="container.xl">
       <SimpleGrid gap={14} columns={{ base: 1, xl: 4 }}>
@@ -66,15 +95,41 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
         </GridItem>
         <GridItem colSpan={{ base: 1, xl: 3 }}>
           <Flex spacing={4} mb={8}>
-            <Flex mr={2} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full" justify="right">
-              <Box>
-                <Text fontSize="xl" fontWeight="medium" textAlign="right">
-                  {builder?.builds.length}
-                </Text>
-                <Text fontSize="sm" color={secondaryFontColor} textAlign="right">
-                  builds
-                </Text>
-              </Box>
+            <Flex mr={2} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full">
+              {!streamDisplay ? (
+                <Text>No stream</Text>
+              ) : (
+                <Box w="full">
+                  <Flex align="center" justify="space-evenly" w="full">
+                    <Flex>
+                      <Text mr={2}>Stream:</Text>
+                      <Flex align="center" justify="end">
+                        Ξ {parseFloat(streamDisplay.capStr).toFixed(2)} / {streamDisplay.frequencyDays}d
+                      </Flex>
+                    </Flex>
+                    <Flex>
+                      <Text mr={2}>Balance:</Text>
+                      <Flex align="center" justify="end">
+                        Ξ {parseFloat(streamDisplay.balance).toFixed(4) ?? 0}
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                  <Flex align="center" justify="center" direction="column" px={4} mt={4}>
+                    <Flex>
+                      <Text mr={2}>Vested:</Text>
+                      <Box mb={1}>Ξ {parseFloat(streamDisplay.availableStr).toFixed(4)}</Box>
+                    </Flex>
+                    <Box w="full" pl={1}>
+                      <Progress
+                        flexShrink={1}
+                        size="sm"
+                        value={streamDisplay.vestedPercentage * 100}
+                        colorScheme="green"
+                      />
+                    </Box>
+                  </Flex>
+                </Box>
+              )}
             </Flex>
             <Flex ml={2} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={2} w="full" justify="right">
               <Text fontSize="xl" fontWeight="medium" textAlign="right">

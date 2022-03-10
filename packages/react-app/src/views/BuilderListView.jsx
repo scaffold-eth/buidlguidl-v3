@@ -98,22 +98,14 @@ const BuilderStreamCell = ({ stream }) => {
   const capStr = ethers.utils.formatEther(cap);
   const availableStr = ethers.utils.formatEther(available);
   return (
-    <Box>
-      <Flex align="center" justify="end">
-        Ξ {parseFloat(stream.balance).toFixed(4) ?? 0}
-      </Flex>
-      <Flex align="center" justify="end">
-        Ξ {parseFloat(capStr).toFixed(2)} / {frequencyDays}d
-      </Flex>
-      <Flex align="center" justify="end" direction="column">
-        <Box mb={1}>
-          <Box mb={1}>Ξ {parseFloat(availableStr).toFixed(4)}</Box>
-          <Box w="full" pl={1}>
-            <Progress flexShrink={1} size="xs" value={vestedPercentage * 100} colorScheme="green" />
-          </Box>
-        </Box>
-      </Flex>
-    </Box>
+    <Flex align="center" justify="center" direction="column" px={4} mt={4}>
+      <Box mb={1}>
+        Ξ {parseFloat(availableStr).toFixed(4)} / {parseFloat(capStr).toFixed(1)} @ {frequencyDays}d
+      </Box>
+      <Box w="full" pl={1}>
+        <Progress flexShrink={1} size="xs" value={vestedPercentage * 100} colorScheme="green" />
+      </Box>
+    </Flex>
   );
 };
 
