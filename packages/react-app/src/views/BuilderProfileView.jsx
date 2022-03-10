@@ -114,13 +114,17 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                 <Box w="full">
                   <Flex align="center" justify="space-evenly" w="full">
                     <Flex>
-                      <Text mr={2}>Stream:</Text>
+                      <Text mr={2} fontWeight="bold">
+                        Stream:
+                      </Text>
                       <Flex align="center" justify="end">
-                        Ξ {parseFloat(streamDisplay.capStr).toFixed(2)} / {streamDisplay.frequencyDays}d
+                        Ξ {parseFloat(streamDisplay.capStr).toFixed(2)} @ {streamDisplay.frequencyDays}d
                       </Flex>
                     </Flex>
                     <Flex>
-                      <Text mr={2}>Balance:</Text>
+                      <Text mr={2} fontWeight="bold">
+                        Balance:
+                      </Text>
                       <Flex align="center" justify="end">
                         Ξ {parseFloat(streamDisplay.balance).toFixed(4) ?? 0}
                       </Flex>
@@ -128,7 +132,9 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                   </Flex>
                   <Flex align="center" justify="center" direction="column" px={4} mt={4}>
                     <Flex>
-                      <Text mr={2}>Vested:</Text>
+                      <Text mr={2} fontWeight="bold">
+                        Unlocked:
+                      </Text>
                       <Box mb={1}>Ξ {parseFloat(streamDisplay.availableStr).toFixed(4)}</Box>
                     </Flex>
                     <Box w="full" pl={1}>
