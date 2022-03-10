@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from "react";
-import { Box, Badge, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { Box, Badge, Input, InputGroup, InputRightElement, InputLeftElement } from "@chakra-ui/react";
 import QrReader from "react-qr-reader";
 import { ethers } from "ethers";
 import { CameraOutlined, QrcodeOutlined } from "@ant-design/icons";
 import { useLookupAddress } from "../hooks";
+import Blockie from "./Blockie";
 
 const isENS = (address = "") => address.endsWith(".eth") || address.endsWith(".xyz");
 
@@ -104,6 +105,11 @@ export default function AddressInput(props) {
         ""
       )}
       <InputGroup>
+        {currentValue && (
+          <InputLeftElement pointerEvents="none">
+            <Blockie address={currentValue} size={8} scale={3} />
+          </InputLeftElement>
+        )}
         <Input
           id={props.id} // name it something other than address for auto fill doxxing
           autoComplete="off"
