@@ -98,7 +98,7 @@ const BuilderStreamCell = ({ stream }) => {
   const availableStr = ethers.utils.formatEther(available);
   return (
     <Flex align="center" justify="center" direction="column" px={4} mt={4}>
-      <Box mb={1}>
+      <Box mb={1} whiteSpace="nowrap">
         Ξ {parseFloat(availableStr).toFixed(4)} / {parseFloat(capStr).toFixed(1)} @ {frequencyDays}d
       </Box>
       <Box w="full" pl={1}>
