@@ -16,13 +16,19 @@ import {
   Image,
   useDisclosure,
   Progress,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Td,
 } from "@chakra-ui/react";
 import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
-import { USER_FUNCTIONS } from "../helpers/constants";
-import useCustomColorModes from "../hooks/useCustomColorModes";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
+import { USER_FUNCTIONS } from "../helpers/constants";
+import useCustomColorModes from "../hooks/useCustomColorModes";
+import { getWithdrawEvents } from "../data/api/streams";
 
 const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
@@ -30,6 +36,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { secondaryFontColor, borderColor } = useCustomColorModes();
   const [builder, setBuilder] = useState(null);
+  const [withdrawEvents, setWithdrawEvents] = useState([]);
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
   const [streamDisplay, setStreamDisplay] = useState(null);
   const isMyProfile = builderAddress === address;
@@ -52,6 +59,11 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
 
   useEffect(() => {
     fetchBuilder();
+    const asyncUpdateEvents = async () => {
+      const res = await getWithdrawEvents(builderAddress);
+      setWithdrawEvents(res);
+    };
+    asyncUpdateEvents();
     // eslint-disable-next-line
   }, [builderAddress]);
 
@@ -162,7 +174,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           {isLoadingBuilder && <BuilderProfileBuildsTableSkeleton />}
           {!isLoadingBuilder &&
             (builder?.builds.length ? (
-              <Box overflowX="auto">
+              <Box overflowX="auto" mb={8}>
                 <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
                   {builder?.builds.map(build => (
                     <BuildCard
@@ -182,7 +194,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                 borderRadius="lg"
                 borderColor={borderColor}
                 borderWidth={1}
-                py={36}
+                py={20}
+                mb={8}
                 w="full"
               >
                 <Box maxW="xs" textAlign="center">
@@ -192,6 +205,27 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                 </Box>
               </Flex>
             ))}
+          {!isLoadingBuilder && withdrawEvents.length && (
+            <Box mb={4}>
+              <Text fontSize="2xl" fontWeight="bold">
+                Stream withdraws
+              </Text>
+              <Table variant="simple" overflowY="auto">
+                <Thead>
+                  <Tr>
+                    <Th>Amount</Th>
+                    <Th>Reason</Th>
+                  </Tr>
+                </Thead>
+                {withdrawEvents.map(({ payload }) => (
+                  <Tr>
+                    <Td>Ξ {payload.amount}</Td>
+                    <Td>{payload.reason}</Td>
+                  </Tr>
+                ))}
+              </Table>
+            </Box>
+          )}
         </GridItem>
       </SimpleGrid>
 
