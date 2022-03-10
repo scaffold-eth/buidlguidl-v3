@@ -74,6 +74,10 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     }
     const stream = builder.stream;
 
+    if (!stream) {
+      return;
+    }
+
     const cap = ethers.utils.parseUnits(stream.cap);
     const frequency = stream.frequency;
     const last = stream.lastContract;
