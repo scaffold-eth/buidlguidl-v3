@@ -30,7 +30,6 @@ import BuilderListSkeleton from "../components/skeletons/BuilderListSkeleton";
 import DateWithTooltip from "../components/DateWithTooltip";
 import SocialLink from "../components/SocialLink";
 import Address from "../components/Address";
-import EthIcon from "../components/icons/EthIcon";
 import { bySocialWeight } from "../data/socials";
 import { USER_ROLES } from "../helpers/constants";
 
