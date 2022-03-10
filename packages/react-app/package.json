@@ -42,7 +42,7 @@
     "eth-hooks": "^1.1.2",
     "ethers": "^5.0.31",
     "framer-motion": "^4",
-    "graphiql": "^1.0.5",
+    "graphiql": "^1.4.7",
     "graphql": "^15.3.0",
     "isomorphic-fetch": "^3.0.0",
     "moment": "^2.29.1",

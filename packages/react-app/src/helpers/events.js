@@ -1,6 +1,7 @@
 import React from "react";
 import { Link as RouteLink } from "react-router-dom";
-import { Link } from "@chakra-ui/react";
+import { Link, Text } from "@chakra-ui/react";
+import Address from "../components/Address";
 
 // TODO PR: how do we keep just one instance of this enum? Like a commons library
 const EVENT_TYPES = {
@@ -15,6 +16,8 @@ const EVENT_TYPES = {
   USER_CREATE: "user.create",
   USER_UPDATE: "user.update",
   USER_UPDATE_STATUS: "user.update_status",
+  STREAM_WITHDRAW: "stream.withdraw",
+  STREAM_DEPOSIT: "stream.deposit",
 };
 
 export const eventDisplay = ({ type, payload }) => {
@@ -88,6 +91,30 @@ export const eventDisplay = ({ type, payload }) => {
 
     case EVENT_TYPES.USER_UPDATE_STATUS: {
       return `updated their status: "${payload.text}"`;
+    }
+
+    case EVENT_TYPES.STREAM_WITHDRAW: {
+      return (
+        <>
+          <Text>withdrew Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
+          <Text fontStyle="italic" mt={2}>
+            "{payload.reason}"
+          </Text>
+        </>
+      );
+    }
+
+    case EVENT_TYPES.STREAM_DEPOSIT: {
+      return (
+        <>
+          <Text>funded with Ξ {parseFloat(payload.amount).toFixed(4)} to </Text>
+          <Text mt={2}>
+            <Link as={RouteLink} to={`/builders/${payload.builderAddress}`} pos="relative">
+              <Address address={payload.builderAddress} w="10" fontSize="16" />
+            </Link>
+          </Text>
+        </>
+      );
     }
 
     // ToDo. Build events. Wait until we tackled issue #134

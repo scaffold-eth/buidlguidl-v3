@@ -9,6 +9,7 @@ const { getSignMessageForId } = require("./utils/sign");
 const buildersRoutes = require("./routes/builders");
 const buildsRoutes = require("./routes/builds");
 const eventsRoutes = require("./routes/events");
+const streamsRoutes = require("./routes/streams");
 
 const app = express();
 
@@ -20,7 +21,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/builders", buildersRoutes);
 app.use("/builds", buildsRoutes);
-app.use("/events", eventsRoutes);
+app.use("/latest-events", eventsRoutes);
+app.use("/streams", streamsRoutes);
 
 app.get("/sign-message", async (req, res) => {
   const messageId = req.query.messageId;

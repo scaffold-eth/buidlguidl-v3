@@ -1,5 +1,5 @@
 {
-  "version": "1.0.4",
+  "version": "1.0.5",
   "users": {
     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266": {
       "creationTimestamp": 1633088553221,
@@ -11,6 +11,11 @@
       "socialLinks": {
         "telegram": "test",
         "twitter": "test"
+      },
+      "stream": {
+        "streamAddress": "0x86c6C2c9699bE74278E0d73065fF12249221Bd30",
+        "lastIndexedBlock": 0,
+        "balance": "0"
       }
     }
   },
@@ -46,5 +51,10 @@
       "featured": false
     }
   ],
-  "events": []
+  "events": [],
+  "config": {
+    "streams": {
+      "lastIndexedBlock": 0
+    }
+  }
 }

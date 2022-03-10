@@ -62,9 +62,16 @@ export default function Header({
             <span role="img" aria-label="castle icon">
               🏰️
             </span>{" "}
-            <chakra.strong display={{ base: "none", md: "inline-block" }}>BuidlGuidl v3</chakra.strong>
+            <chakra.strong display={{ base: "none", md: "inline-block" }}>BG</chakra.strong>
             <chakra.strong display={{ base: "inline-block", md: "none" }}>
-              {isSignerProviderConnected ? "BGv3" : "BuidlGuidl v3"}
+              {"BG"}
+            </chakra.strong>
+            <span role="img" aria-label="castle icon" style={{paddingLeft:4}}>
+              🏤
+            </span>{" "}
+            <chakra.strong display={{ base: "none", md: "inline-block" }}>Bazaar</chakra.strong>
+            <chakra.strong display={{ base: "inline-block", md: "none" }}>
+              {"Bazaar"}
             </chakra.strong>
           </NavLink>
         </Flex>
@@ -75,7 +82,7 @@ export default function Header({
           spacing={{ base: 6, lg: 9 }}
           pos={{ base: "absolute", lg: "static" }}
           justifyContent={{ base: "center", lg: "left" }}
-          top="80px"
+          top="85px"
           left={0}
         >
           {userRole && USER_ROLES.anonymous !== userRole && (
@@ -91,6 +98,17 @@ export default function Header({
               </NavLink>
             </chakra.li>
           )}
+          <chakra.li key="/builds" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <NavLink
+              to="/builds"
+              exact
+              activeStyle={{
+                color: primaryColorString,
+              }}
+            >
+              Builds
+            </NavLink>
+          </chakra.li>
           <chakra.li key="/builders" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
             <NavLink
               to="/builders"
@@ -100,17 +118,6 @@ export default function Header({
               }}
             >
               Builders
-            </NavLink>
-          </chakra.li>
-          <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-            <NavLink
-              to="/activity"
-              exact
-              activeStyle={{
-                color: primaryColorString,
-              }}
-            >
-              Activity
             </NavLink>
           </chakra.li>
           {[USER_ROLES.admin, USER_ROLES.builder].includes(userRole) && (

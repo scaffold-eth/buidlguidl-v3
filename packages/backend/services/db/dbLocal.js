@@ -98,7 +98,7 @@ const createEvent = event => {
 
 const findAllEvents = ({ limit: limitArg } = {}) => {
   const limit = limitArg ?? database.events.length;
-  return database.events.slice(limit * -1).reverse();
+  return database.events.sort((a, b) => b.timestamp - a.timestamp).slice(limit * -1);
 };
 
 const findEventsWhere = ({ conditions: conditionsArg, limit } = {}) => {
@@ -162,6 +162,49 @@ const featureBuild = (buildId, featured) => {
   persist();
 };
 
+// --- Streams
+const findUpdatableStreams = ({ limit }) => {
+  return findAllUsers()
+    .filter(user => user.stream !== undefined)
+    .sort((a, b) => a.stream.lastIndexedBlock - b.stream.lastIndexedBlock)
+    .slice(0, limit)
+    .map(user => {
+      return { ...user.stream, builderAddress: user.id };
+    });
+};
+
+// --- General config data
+const getConfigData = category => {
+  return database.config[category] ?? {};
+};
+
+const setConfigData = (category, configData) => {
+  database.config[category] = {
+    ...getConfigData(category),
+    ...configData,
+  };
+
+  persist();
+
+  return database.config[category];
+};
+
+const updateStreamData = (stream, streamUpdate) => {
+  streamUpdate.events.map(createEvent);
+  updateUser(stream.builderAddress, {
+    stream: {
+      ...stream,
+      cap: streamUpdate.cap,
+      frequency: streamUpdate.frequency,
+      lastContract: streamUpdate.lastContract ?? 0,
+      lastIndexedBlock: streamUpdate.lastBlock,
+      balance: streamUpdate.balance,
+      builderAddress: undefined,
+    },
+  });
+  console.log(`Stream ${stream.streamAddress} updated to ${streamUpdate.lastBlock} balance ${streamUpdate.balance}`);
+};
+
 module.exports = {
   createUser,
   updateUser,
@@ -172,6 +215,9 @@ module.exports = {
   findAllEvents,
   findEventsWhere,
 
+  findUpdatableStreams,
+  updateStreamData,
+
   createBuild,
   updateBuild,
   deleteBuild,
@@ -179,6 +225,9 @@ module.exports = {
   findAllBuilds,
   findBuilderBuilds,
   featureBuild,
+
+  getConfigData,
+  setConfigData,
 
   __internal_database: database, // testing only
 };
