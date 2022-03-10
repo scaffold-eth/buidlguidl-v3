@@ -35,7 +35,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
   }
 
   // ToDo. Param validation.
-  const { builderAddress, builderFunction, builderRole, signature } = req.body;
+  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress } = req.body;
   const address = req.address;
   console.log("POST /builders/create", address, builderAddress);
 
@@ -63,12 +63,20 @@ router.post("/create", withRole("admin"), async (req, res) => {
     return;
   }
 
-  // Create user.
-  await db.createUser(builderAddress, {
+  const builderData = {
     creationTimestamp: new Date().getTime(),
     role: builderRole,
     function: builderFunction,
-  });
+  };
+
+  if (builderStreamAddress) {
+    builderData.stream = {
+      streamAddress: builderStreamAddress,
+    };
+  }
+
+  // Create user.
+  await db.createUser(builderAddress, builderData);
   user = await db.findUserByAddress(builderAddress);
   console.log("New user created: ", builderAddress);
   const event = createEvent(EVENT_TYPES.USER_CREATE, { userAddress: builderAddress }, signature);
