@@ -84,7 +84,7 @@ const BuilderStatusCell = ({ status }) => {
 
 const secondsPerDay = 24 * 60 * 60;
 const BuilderStreamCell = ({ stream }) => {
-  if (!stream) return <Box>-</Box>;
+  if (!stream || !stream?.cap) return <Box>-</Box>;
 
   const cap = ethers.utils.parseUnits(stream.cap);
   const frequency = stream.frequency;

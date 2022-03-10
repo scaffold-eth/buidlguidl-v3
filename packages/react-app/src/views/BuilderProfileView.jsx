@@ -75,6 +75,12 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     const stream = builder.stream;
 
     if (!stream) {
+      // user without stream
+      return;
+    }
+
+    if (!stream.cap) {
+      // user with stream, but indexer hasn't processed it yet
       return;
     }
 
