@@ -26,6 +26,7 @@ import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
+import DateWithTooltip from "../components/DateWithTooltip";
 import { USER_FUNCTIONS } from "../helpers/constants";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getWithdrawEvents } from "../data/api/streams";
@@ -219,12 +220,16 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               <Table variant="simple" overflowY="auto">
                 <Thead>
                   <Tr>
+                    <Th>Time</Th>
                     <Th>Amount</Th>
                     <Th>Reason</Th>
                   </Tr>
                 </Thead>
-                {withdrawEvents.map(({ payload }) => (
+                {withdrawEvents.map(({ timestamp, payload }) => (
                   <Tr>
+                    <Td whiteSpace="nowrap">
+                      <DateWithTooltip timestamp={timestamp} />{" "}
+                    </Td>
                     <Td>Ξ {payload.amount}</Td>
                     <Td>{payload.reason}</Td>
                   </Tr>
