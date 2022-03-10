@@ -87,23 +87,23 @@ const secondsPerDay = 24 * 60 * 60;
 const BuilderStreamCell = ({ stream }) => {
   if (!stream) return <Box>-</Box>;
 
-  const cap = ethers.BigNumber.from(stream.cap);
+  const cap = ethers.utils.parseUnits(stream.cap);
   const frequency = stream.frequency;
+  const last = stream.lastContract;
   const frequencyDays = frequency / secondsPerDay;
-  const vestedPercentage = (new Date().getTime() / 1000 - stream.last) / frequency;
-  const vestedAmount = cap.mul(Math.round(new Date().getTime() / 1000 - stream.last)).div(frequency);
+  const vestedPercentage = (new Date().getTime() / 1000 - last) / frequency;
+  const vestedAmount = cap.mul(Math.round(new Date().getTime() / 1000 - last)).div(frequency);
   const available = cap.lt(vestedAmount) ? cap : vestedAmount;
 
-  const balanceStr = ethers.utils.formatEther(stream.balance);
   const capStr = ethers.utils.formatEther(cap);
   const availableStr = ethers.utils.formatEther(available);
   return (
     <Box>
       <Flex align="center" justify="end">
-        Ξ {balanceStr ?? 0}
+        Ξ {parseFloat(stream.balance).toFixed(4) ?? 0}
       </Flex>
       <Flex align="center" justify="end">
-        Ξ {capStr} / {frequencyDays}d
+        Ξ {parseFloat(capStr).toFixed(2)} / {frequencyDays}d
       </Flex>
       <Flex align="center" justify="end" direction="column">
         <Box mb={1}>
