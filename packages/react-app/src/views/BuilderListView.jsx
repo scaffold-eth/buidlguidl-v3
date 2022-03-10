@@ -102,19 +102,14 @@ const BuilderStreamCell = ({ stream }) => {
   return (
     <Box>
       <Flex align="center" justify="end">
-        <EthIcon w={4} mr={1} />
-        {balanceStr ?? 0}
+        Ξ {balanceStr ?? 0}
       </Flex>
       <Flex align="center" justify="end">
-        <EthIcon w={4} mr={1} />
-        {capStr} / {frequencyDays}d
+        Ξ {capStr} / {frequencyDays}d
       </Flex>
       <Flex align="center" justify="end" direction="column">
         <Box mb={1}>
-          <Box mb={1}>
-            <EthIcon w={4} mr={1} />
-            {Math.round(availableStr * 1e5) / 1e5}
-          </Box>
+          <Box mb={1}>Ξ {parseFloat(availableStr).toFixed(4)}</Box>
           <Box w="full" pl={1}>
             <Progress flexShrink={1} size="xs" value={vestedPercentage * 100} colorScheme="green" />
           </Box>
