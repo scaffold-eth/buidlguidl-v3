@@ -212,7 +212,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                 </Box>
               </Flex>
             ))}
-          {!isLoadingBuilder && withdrawEvents.length && (
+          {!isLoadingBuilder && withdrawEvents.length !== 0 && (
             <Box mb={4}>
               <Text fontSize="2xl" fontWeight="bold">
                 Stream withdraws
