@@ -159,7 +159,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         builder: builder.id,
         status: builder.status,
         stream: builder.stream,
-        socials: builder, // Question shouldn't this be accessing builder.socialLinks?
+        socials: builder,
         lastActivity: builderLastActivity(builder),
       }));
 
