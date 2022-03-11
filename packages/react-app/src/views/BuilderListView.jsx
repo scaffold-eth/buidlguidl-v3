@@ -23,6 +23,7 @@ import {
   Badge,
   Tooltip,
   Progress,
+  HStack,
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
@@ -52,11 +53,11 @@ const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
 
   return (
     <Flex direction="column">
-      <Flex justifyContent="space-evenly" alignItems="center">
+      <HStack spacing={1} alignItems="center">
         {socials.map(([socialId, socialValue]) => (
           <SocialLink id={socialId} key={socialId} value={socialValue} />
         ))}
-      </Flex>
+      </HStack>
       {isAdmin && builder.reachedOut && (
         <Badge variant="outline" colorScheme="green" alignSelf="center" mt={2}>
           Reached Out
@@ -143,7 +144,11 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         Header: "Last Activity",
         accessor: "lastActivity",
         sortDescFirst: true,
-        Cell: ({ value }) => <DateWithTooltip timestamp={value} />,
+        Cell: ({ value }) => (
+          <Text whiteSpace="nowrap">
+            <DateWithTooltip timestamp={value} />
+          </Text>
+        ),
       },
     ],
     // eslint-disable-next-line
