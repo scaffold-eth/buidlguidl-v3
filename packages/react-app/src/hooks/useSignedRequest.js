@@ -3,10 +3,11 @@ import { getSignMessage } from "../data/api/signature";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { postStatusUpdate } from "../data/api/status";
 import { postBuildSubmit, postBuildLike, patchBuildEdit } from "../data/api/builds";
-import { postCreateUser } from "../data/api/builder";
+import { postCreateUser, patchEditUser } from "../data/api/builder";
 
 const actionIdToRequest = {
   builderCreate: postCreateUser,
+  builderEdit: patchEditUser,
   builderUpdateStatus: postStatusUpdate,
   buildSubmit: postBuildSubmit,
   buildLike: postBuildLike,

@@ -22,10 +22,11 @@ import { ethers } from "ethers";
 import { USER_FUNCTIONS, USER_ROLES } from "../helpers/constants";
 import AddressInput from "./AddressInput";
 import useSignedRequest from "../hooks/useSignedRequest";
+import useConnectedAddress from "../hooks/useConnectedAddress";
 
 const INITIAL_FORM_STATE = { builderRole: USER_ROLES.builder };
 
-export function BuilderCrudFormModal({ userProvider, mainnetProvider, builder, isOpen, onClose, onUpdate }) {
+export function BuilderCrudFormModal({ mainnetProvider, builder, isOpen, onClose, onUpdate }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -33,15 +34,15 @@ export function BuilderCrudFormModal({ userProvider, mainnetProvider, builder, i
         <ModalHeader>Edit Builder</ModalHeader>
         <ModalCloseButton />
         <ModalBody p={6}>
-          <BuilderCrudForm builder={builder} userProvider={userProvider} mainnetProvider={mainnetProvider} />
+          <BuilderCrudForm builder={builder} mainnetProvider={mainnetProvider} />
         </ModalBody>
       </ModalContent>
     </Modal>
   );
 }
 
-export function BuilderCrudForm({ userProvider, mainnetProvider, builder }) {
-  const address = useUserAddress(userProvider);
+export function BuilderCrudForm({ mainnetProvider, builder }) {
+  const address = useConnectedAddress();
   const isEditingBuilder = !!builder;
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
@@ -51,6 +52,10 @@ export function BuilderCrudForm({ userProvider, mainnetProvider, builder }) {
   const toastVariant = useColorModeValue("subtle", "solid");
 
   const { isLoading, makeSignedRequest } = useSignedRequest("builderCreate", address);
+  const { isLoading: isLoadingEdit, makeSignedRequest: makeSignedRequestEdit } = useSignedRequest(
+    "builderEdit",
+    address,
+  );
 
   useEffect(() => {
     if (isEditingBuilder) {
@@ -77,12 +82,18 @@ export function BuilderCrudForm({ userProvider, mainnetProvider, builder }) {
     }
 
     try {
-      await makeSignedRequest({
+      const requestPayload = {
         builderAddress: formState.builderAddress,
         builderRole: formState.builderRole,
         builderFunction: formState.builderFunction,
         builderStreamAddress: formState.builderStreamAddress,
-      });
+      };
+
+      if (isEditingBuilder) {
+        await makeSignedRequestEdit(requestPayload);
+      } else {
+        await makeSignedRequest(requestPayload);
+      }
     } catch (error) {
       toast({
         description: error.message,
@@ -117,7 +128,7 @@ export function BuilderCrudForm({ userProvider, mainnetProvider, builder }) {
 
   return (
     <>
-      <FormControl mb={8} isRequired isInvalid={formErrors.builderAddress}>
+      <FormControl mb={8} isRequired isInvalid={formErrors.builderAddress} isDisabled={isEditingBuilder}>
         <FormLabel htmlFor="builderAddress">
           <strong>Builder Address</strong>
         </FormLabel>
@@ -197,7 +208,7 @@ export function BuilderCrudForm({ userProvider, mainnetProvider, builder }) {
         <FormErrorMessage>Invalid address</FormErrorMessage>
       </FormControl>
 
-      <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isLoading} isFullWidth>
+      <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isLoading || isLoadingEdit} isFullWidth>
         Add Builder
       </Button>
     </>

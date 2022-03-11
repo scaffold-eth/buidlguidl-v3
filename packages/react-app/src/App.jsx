@@ -205,7 +205,7 @@ function App() {
             <BuildVoteList />
           </Route>
           <Route path="/admin/add-builder" exact>
-            <BuilderCreateView userProvider={userProvider} mainnetProvider={mainnetProvider} />
+            <BuilderCreateView mainnetProvider={mainnetProvider} />
           </Route>
           <Route path="/admin/builds-review" exact>
             <AllBuildsReviewView userProvider={userProvider} mainnetProvider={mainnetProvider} />

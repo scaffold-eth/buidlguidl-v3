@@ -21,3 +21,24 @@ export const postCreateUser = async (
     throw new Error(error);
   }
 };
+
+export const patchEditUser = async (
+  address,
+  signature,
+  { builderAddress, builderRole, builderFunction, builderStreamAddress },
+) => {
+  try {
+    await axios.patch(
+      `${serverUrl}/builders/update`,
+      { builderAddress, builderRole, builderFunction, signature, builderStreamAddress },
+      {
+        headers: {
+          address,
+        },
+      },
+    );
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+};
