@@ -169,7 +169,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                       {USER_FUNCTIONS[builder?.function]?.label}
                     </Tag>
                     {USER_FUNCTIONS[builder?.function]?.graphic && (
-                      <Image src={`/assets/${USER_FUNCTIONS[builder?.function]?.graphic}`} maxW="67px" />
+                      <Image src={`/assets/${USER_FUNCTIONS[builder?.function]?.graphic}`} maxW="92px" />
                     )}
                   </HStack>
                 ) : (
