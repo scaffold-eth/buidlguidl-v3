@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUserAddress } from "eth-hooks";
 import {
   FormControl,
@@ -11,6 +11,12 @@ import {
   useToast,
   useColorModeValue,
   FormErrorMessage,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  Modal,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { USER_FUNCTIONS, USER_ROLES } from "../helpers/constants";
@@ -19,8 +25,24 @@ import AddressInput from "./AddressInput";
 
 const INITIAL_FORM_STATE = { builderRole: USER_ROLES.builder };
 
-export default function BuilderCrudForm({ userProvider, mainnetProvider }) {
+export function BuilderCrudFormModal({ userProvider, mainnetProvider, builder, isOpen, onClose, onUpdate }) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Edit Builder</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody p={6}>
+          <BuilderCrudForm builder={builder} userProvider={userProvider} mainnetProvider={mainnetProvider} />
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
+
+export function BuilderCrudForm({ userProvider, mainnetProvider, builder }) {
   const address = useUserAddress(userProvider);
+  const isEditingBuilder = !!builder;
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [formErrors, setFormErrors] = useState({});
@@ -28,6 +50,17 @@ export default function BuilderCrudForm({ userProvider, mainnetProvider }) {
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
+
+  useEffect(() => {
+    if (isEditingBuilder) {
+      setFormState({
+        builderAddress: builder.id,
+        builderStreamAddress: builder.stream?.streamAddress,
+        builderRole: builder.role,
+        builderFunction: builder.function,
+      });
+    }
+  }, [isEditingBuilder, builder]);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);

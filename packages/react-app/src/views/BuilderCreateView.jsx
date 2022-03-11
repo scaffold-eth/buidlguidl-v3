@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Heading, Container } from "@chakra-ui/react";
-import BuilderCrudForm from "../components/BuilderCrudForm";
+import { BuilderCrudForm } from "../components/BuilderCrudForm";
 
 export default function BuilderCreateView({ userProvider, mainnetProvider }) {
   return (
