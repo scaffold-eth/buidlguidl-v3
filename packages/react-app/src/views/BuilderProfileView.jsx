@@ -121,7 +121,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           <Flex spacing={4} mb={8}>
             <Flex mr={2} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full">
               {isLoadingBuilder && <BuilderProfileStreamSkeleton />}
-              {!isLoadingBuilder && !streamDisplay && <Text>No stream</Text>}
+              {!isLoadingBuilder && !streamDisplay && <Text>-</Text>}
               {!isLoadingBuilder && !!streamDisplay && (
                 <Box w="full">
                   <Flex align="center" justify="space-evenly" w="full">
@@ -241,7 +241,9 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                     <Td whiteSpace="nowrap">
                       <DateWithTooltip timestamp={timestamp} />{" "}
                     </Td>
-                    <Td>Ξ {payload.amount}</Td>
+                    <Td>
+                      <Text whiteSpace="nowrap">Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
+                    </Td>
                     <Td>{payload.reason}</Td>
                   </Tr>
                 ))}
