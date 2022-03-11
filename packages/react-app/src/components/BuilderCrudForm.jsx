@@ -34,14 +34,23 @@ export function BuilderCrudFormModal({ mainnetProvider, builder, isOpen, onClose
         <ModalHeader>Edit Builder</ModalHeader>
         <ModalCloseButton />
         <ModalBody p={6}>
-          <BuilderCrudForm builder={builder} mainnetProvider={mainnetProvider} />
+          <BuilderCrudForm
+            builder={builder}
+            mainnetProvider={mainnetProvider}
+            onUpdate={() => {
+              onClose();
+              if (typeof onUpdate === "function") {
+                onUpdate();
+              }
+            }}
+          />
         </ModalBody>
       </ModalContent>
     </Modal>
   );
 }
 
-export function BuilderCrudForm({ mainnetProvider, builder }) {
+export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
   const address = useConnectedAddress();
   const isEditingBuilder = !!builder;
 
@@ -109,8 +118,10 @@ export function BuilderCrudForm({ mainnetProvider, builder }) {
       variant: toastVariant,
     });
 
-    // ToDo. Only if no editing
     setFormState(INITIAL_FORM_STATE);
+    if (typeof onUpdate === "function") {
+      onUpdate();
+    }
   };
 
   const handleInputChange = event => {

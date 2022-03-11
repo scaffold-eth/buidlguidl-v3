@@ -41,7 +41,15 @@ const BuilderProfileCardSkeleton = ({ isLoaded, children }) => (
   <Skeleton isLoaded={isLoaded}>{isLoaded ? children() : <SkeletonText mt="4" noOfLines={4} spacing="4" />}</Skeleton>
 );
 
-const BuilderProfileCard = ({ builder, mainnetProvider, isMyProfile, userProvider, fetchBuilder, userRole }) => {
+const BuilderProfileCard = ({
+  builder,
+  mainnetProvider,
+  isMyProfile,
+  userProvider,
+  fetchBuilder,
+  userRole,
+  onUpdate,
+}) => {
   const address = useUserAddress(userProvider);
   const ens = useDisplayAddress(mainnetProvider, builder?.id);
   const [updatedSocials, setUpdatedSocials] = useState({});
@@ -166,7 +174,7 @@ const BuilderProfileCard = ({ builder, mainnetProvider, isMyProfile, userProvide
                   isOpen={isOpenEditBuilder}
                   onClose={onCloseEditBuilder}
                   builder={builder}
-                  onUpdate={() => {}}
+                  onUpdate={onUpdate}
                 />
               </Button>
             )}
