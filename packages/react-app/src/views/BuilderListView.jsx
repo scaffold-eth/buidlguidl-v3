@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
+import { ethers } from "ethers";
 import {
   Box,
   Button,
@@ -21,6 +22,8 @@ import {
   Select,
   Badge,
   Tooltip,
+  Progress,
+  HStack,
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
@@ -46,15 +49,15 @@ const builderLastActivity = builder => {
 
 const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
   const socials = Object.entries(builder.socialLinks ?? {}).sort(bySocialWeight);
-  if (!socials.length) return "-";
+  if (!socials.length) return <Box>-</Box>;
 
   return (
     <Flex direction="column">
-      <Flex justifyContent="space-evenly" alignItems="center">
+      <HStack spacing={1} alignItems="center">
         {socials.map(([socialId, socialValue]) => (
-          <SocialLink id={socialId} value={socialValue} />
+          <SocialLink id={socialId} key={socialId} value={socialValue} />
         ))}
-      </Flex>
+      </HStack>
       {isAdmin && builder.reachedOut && (
         <Badge variant="outline" colorScheme="green" alignSelf="center" mt={2}>
           Reached Out
@@ -80,6 +83,32 @@ const BuilderStatusCell = ({ status }) => {
   );
 };
 
+const secondsPerDay = 24 * 60 * 60;
+const BuilderStreamCell = ({ stream }) => {
+  if (!stream || !stream?.cap) return <Box>-</Box>;
+
+  const cap = ethers.utils.parseUnits(stream.cap);
+  const frequency = stream.frequency;
+  const last = stream.lastContract;
+  const frequencyDays = frequency / secondsPerDay;
+  const unlockedPercentage = (new Date().getTime() / 1000 - last) / frequency;
+  const unlockedAmount = cap.mul(Math.round(new Date().getTime() / 1000 - last)).div(frequency);
+  const available = cap.lt(unlockedAmount) ? cap : unlockedAmount;
+
+  const capStr = ethers.utils.formatEther(cap);
+  const availableStr = ethers.utils.formatEther(available);
+  return (
+    <Flex align="center" justify="center" direction="column" px={4} mt={4}>
+      <Box mb={1} whiteSpace="nowrap">
+        Ξ {parseFloat(availableStr).toFixed(4)} / {parseFloat(capStr).toFixed(1)} @ {frequencyDays}d
+      </Box>
+      <Box w="full" pl={1}>
+        <Progress flexShrink={1} size="xs" value={unlockedPercentage * 100} colorScheme="green" />
+      </Box>
+    </Flex>
+  );
+};
+
 export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
@@ -100,6 +129,12 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         Cell: ({ value }) => <BuilderStatusCell status={value} />,
       },
       {
+        Header: "Stream",
+        accessor: "stream",
+        disableSortBy: true,
+        Cell: ({ value }) => <BuilderStreamCell stream={value} />,
+      },
+      {
         Header: "Socials",
         accessor: "socials",
         disableSortBy: true,
@@ -109,7 +144,11 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         Header: "Last Activity",
         accessor: "lastActivity",
         sortDescFirst: true,
-        Cell: ({ value }) => <DateWithTooltip timestamp={value} />,
+        Cell: ({ value }) => (
+          <Text whiteSpace="nowrap">
+            <DateWithTooltip timestamp={value} />
+          </Text>
+        ),
       },
     ],
     // eslint-disable-next-line
@@ -124,6 +163,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       const processedBuilders = fetchedBuilders.data.map(builder => ({
         builder: builder.id,
         status: builder.status,
+        stream: builder.stream,
         socials: builder,
         lastActivity: builderLastActivity(builder),
       }));
