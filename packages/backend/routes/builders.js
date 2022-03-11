@@ -121,7 +121,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     function: builderFunction,
   };
 
-  if (builderStreamAddress !== user.stream?.streamAddress) {
+  if (builderStreamAddress !== user.data.stream?.streamAddress) {
     builderData.stream = {
       streamAddress: builderStreamAddress,
     };
