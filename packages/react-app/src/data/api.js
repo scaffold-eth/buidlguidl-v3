@@ -131,44 +131,6 @@ export const getDraftBuilds = async address => {
   }
 };
 
-export const getPostCreateUserSignMessage = async (address, builderAddress) => {
-  try {
-    const signMessageResponse = await axios.get(`${serverUrl}/sign-message`, {
-      params: {
-        messageId: "builderCreate",
-        address,
-        builderAddress,
-      },
-    });
-
-    return signMessageResponse.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error(`Couldn't get the signature message`);
-  }
-};
-
-export const postCreateUser = async (
-  address,
-  signature,
-  { builderAddress, builderRole, builderFunction, builderStreamAddress },
-) => {
-  try {
-    await axios.post(
-      `${serverUrl}/builders/create`,
-      { builderAddress, builderRole, builderFunction, signature, builderStreamAddress },
-      {
-        headers: {
-          address,
-        },
-      },
-    );
-  } catch (error) {
-    console.error(error);
-    throw new Error(error);
-  }
-};
-
 export const getUpdateSocialsSignMessage = async userAddress => {
   try {
     const signMessageResponse = await axios.get(`${serverUrl}/sign-message`, {

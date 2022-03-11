@@ -20,8 +20,8 @@ import {
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { USER_FUNCTIONS, USER_ROLES } from "../helpers/constants";
-import { getPostCreateUserSignMessage, postCreateUser } from "../data/api";
 import AddressInput from "./AddressInput";
+import useSignedRequest from "../hooks/useSignedRequest";
 
 const INITIAL_FORM_STATE = { builderRole: USER_ROLES.builder };
 
@@ -46,10 +46,11 @@ export function BuilderCrudForm({ userProvider, mainnetProvider, builder }) {
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [formErrors, setFormErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
+
+  const { isLoading, makeSignedRequest } = useSignedRequest("builderCreate", address);
 
   useEffect(() => {
     if (isEditingBuilder) {
@@ -63,8 +64,6 @@ export function BuilderCrudForm({ userProvider, mainnetProvider, builder }) {
   }, [isEditingBuilder, builder]);
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
-
     const nextErrors = {
       builderAddress: !formState.builderAddress || !ethers.utils.isAddress(formState.builderAddress),
       builderStreamAddress: formState.builderStreamAddress && !ethers.utils.isAddress(formState.builderStreamAddress),
@@ -74,71 +73,33 @@ export function BuilderCrudForm({ userProvider, mainnetProvider, builder }) {
 
     setFormErrors(nextErrors);
     if (Object.values(nextErrors).some(hasError => hasError)) {
-      setIsSubmitting(false);
-      return;
-    }
-
-    let signMessage;
-    try {
-      signMessage = await getPostCreateUserSignMessage(address, formState.builderAddress);
-    } catch (error) {
-      toast({
-        description: "Can't get the message to sign. Please try again",
-        status: "error",
-        variant: toastVariant,
-      });
-      setIsSubmitting(false);
-      return;
-    }
-
-    let signature;
-    try {
-      signature = await userProvider.send("personal_sign", [signMessage, address]);
-    } catch (error) {
-      toast({
-        status: "error",
-        description: "The signature was cancelled",
-        variant: toastVariant,
-      });
-      setIsSubmitting(false);
       return;
     }
 
     try {
-      await postCreateUser(address, signature, {
+      await makeSignedRequest({
         builderAddress: formState.builderAddress,
         builderRole: formState.builderRole,
         builderFunction: formState.builderFunction,
         builderStreamAddress: formState.builderStreamAddress,
       });
     } catch (error) {
-      if (error.status === 401) {
-        toast({
-          status: "error",
-          description: "Submission Error. You don't have the required role.",
-          variant: toastVariant,
-        });
-        setIsSubmitting(false);
-        return;
-      }
-      // ToDo. Data not comming back from the server.
       toast({
+        description: error.message,
         status: "error",
-        description: error.response?.data || "Submission Error. Please try again.",
         variant: toastVariant,
       });
-      setIsSubmitting(false);
       return;
     }
 
     toast({
       status: "success",
-      description: "Builder added!",
+      description: "Builder saved successfully!",
       variant: toastVariant,
     });
 
+    // ToDo. Only if no editing
     setFormState(INITIAL_FORM_STATE);
-    setIsSubmitting(false);
   };
 
   const handleInputChange = event => {
@@ -236,7 +197,7 @@ export function BuilderCrudForm({ userProvider, mainnetProvider, builder }) {
         <FormErrorMessage>Invalid address</FormErrorMessage>
       </FormControl>
 
-      <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isSubmitting} isFullWidth>
+      <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isLoading} isFullWidth>
         Add Builder
       </Button>
     </>
