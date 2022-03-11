@@ -23,6 +23,8 @@ const getSignMessageForId = async (messageId, options) => {
     }
     case "builderCreate":
       return `I want to add the builder "${options.builderAddress}" to BuidlGuidl as ${options.address}`;
+    case "builderEdit":
+      return `I want to edit the builder "${options.builderAddress}" as ${options.address}`;
     case "builderUpdateSocials":
       return `I want to update my social links as ${options.address}`;
     case "builderUpdateStatus":

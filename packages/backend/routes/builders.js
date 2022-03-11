@@ -85,6 +85,56 @@ router.post("/create", withRole("admin"), async (req, res) => {
   res.json(user.data);
 });
 
+router.patch("/update", withRole("admin"), async (req, res) => {
+  const neededBodyProps = ["builderAddress", "builderFunction", "builderRole", "signature"];
+  if (neededBodyProps.some(prop => req.body[prop] === undefined)) {
+    res.status(400).send(`Missing required body property. Required: ${neededBodyProps.join(", ")}`);
+    return;
+  }
+
+  // ToDo. Param validation.
+  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress } = req.body;
+  const address = req.address;
+  console.log("PATCH /builders/update", address, builderAddress);
+
+  const verifyOptions = {
+    messageId: "builderEdit",
+    address,
+    builderAddress,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  let user = await db.findUserByAddress(builderAddress);
+
+  if (!user.exists) {
+    res.status(400).send("The builder doesn't exist");
+    return;
+  }
+
+  const builderData = {
+    role: builderRole,
+    function: builderFunction,
+  };
+
+  if (builderStreamAddress !== user.stream?.streamAddress) {
+    builderData.stream = {
+      streamAddress: builderStreamAddress,
+    };
+  }
+
+  // Update user.
+  await db.updateUser(builderAddress, builderData);
+  user = await db.findUserByAddress(builderAddress);
+  console.log("User updated: ", builderAddress);
+
+  res.json(user.data);
+});
+
 router.post("/update-socials", withAddress, async (req, res) => {
   const { socialLinks, signature } = req.body;
   const address = req.address;
