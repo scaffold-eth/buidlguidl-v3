@@ -24,6 +24,7 @@ import {
   useColorModeValue,
   Tooltip,
   useClipboard,
+  VStack,
 } from "@chakra-ui/react";
 import { CopyIcon, EditIcon } from "@chakra-ui/icons";
 import QRPunkBlockie from "./QrPunkBlockie";
@@ -157,27 +158,29 @@ const BuilderProfileCard = ({
             maxW={{ base: "full", lg: "50%", xl: 60 }}
             margin="auto"
           >
-            <Link as={RouteLink} to={`/builders/${builder.id}`}>
-              <QRPunkBlockie
-                withQr={false}
-                address={builder.id?.toLowerCase()}
-                w={52}
-                borderRadius="lg"
-                margin="auto"
-              />
-            </Link>
-            {canEditBuilder && (
-              <Button variant="outline" colorScheme="blue" size="sm" onClick={onOpenEditBuilder} mt={2}>
-                <EditIcon w={6} color="blue.500" />
-                Edit Builder
-                <BuilderCrudFormModal
-                  isOpen={isOpenEditBuilder}
-                  onClose={onCloseEditBuilder}
-                  builder={builder}
-                  onUpdate={onUpdate}
+            <VStack>
+              <Link as={RouteLink} to={`/builders/${builder.id}`}>
+                <QRPunkBlockie
+                  withQr={false}
+                  address={builder.id?.toLowerCase()}
+                  w={52}
+                  borderRadius="lg"
+                  margin="auto"
                 />
-              </Button>
-            )}
+              </Link>
+              {canEditBuilder && (
+                <Button variant="outline" colorScheme="blue" size="sm" onClick={onOpenEditBuilder} mt={2}>
+                  <EditIcon w={6} color="blue.500" />
+                  Edit Builder
+                  <BuilderCrudFormModal
+                    isOpen={isOpenEditBuilder}
+                    onClose={onCloseEditBuilder}
+                    builder={builder}
+                    onUpdate={onUpdate}
+                  />
+                </Button>
+              )}
+            </VStack>
             <Flex alignContent="center" direction="column" mt={4}>
               {hasEns ? (
                 <>
