@@ -24,8 +24,9 @@ import {
   useColorModeValue,
   Tooltip,
   useClipboard,
+  VStack,
 } from "@chakra-ui/react";
-import { CopyIcon } from "@chakra-ui/icons";
+import { CopyIcon, EditIcon } from "@chakra-ui/icons";
 import QRPunkBlockie from "./QrPunkBlockie";
 import SocialLink from "./SocialLink";
 import useDisplayAddress from "../hooks/useDisplayAddress";
@@ -34,17 +35,28 @@ import { ellipsizedAddress } from "../helpers/strings";
 import { getUpdateSocialsSignMessage, postUpdateSocials } from "../data/api";
 import { bySocialWeight, socials } from "../data/socials";
 import BuilderStatus from "./BuilderStatus";
+import { USER_ROLES } from "../helpers/constants";
+import { BuilderCrudFormModal } from "./BuilderCrudForm";
 
 const BuilderProfileCardSkeleton = ({ isLoaded, children }) => (
   <Skeleton isLoaded={isLoaded}>{isLoaded ? children() : <SkeletonText mt="4" noOfLines={4} spacing="4" />}</Skeleton>
 );
 
-const BuilderProfileCard = ({ builder, mainnetProvider, isMyProfile, userProvider, fetchBuilder }) => {
+const BuilderProfileCard = ({
+  builder,
+  mainnetProvider,
+  isMyProfile,
+  userProvider,
+  fetchBuilder,
+  userRole,
+  onUpdate,
+}) => {
   const address = useUserAddress(userProvider);
   const ens = useDisplayAddress(mainnetProvider, builder?.id);
   const [updatedSocials, setUpdatedSocials] = useState({});
   const [isUpdatingSocials, setIsUpdatingSocials] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenEditBuilder, onOpen: onOpenEditBuilder, onClose: onCloseEditBuilder } = useDisclosure();
   const { hasCopied, onCopy } = useClipboard(builder?.id);
   const { borderColor, secondaryFontColor } = useCustomColorModes();
   const shortAddress = ellipsizedAddress(builder?.id);
@@ -55,6 +67,8 @@ const BuilderProfileCard = ({ builder, mainnetProvider, isMyProfile, userProvide
 
   const joinedDate = new Date(builder?.creationTimestamp);
   const joinedDateDisplay = joinedDate.toLocaleString("default", { month: "long" }) + " " + joinedDate.getFullYear();
+
+  const canEditBuilder = USER_ROLES.admin === userRole;
 
   // INFO: conditional chaining and coalescing didn't work when also checking the length
   const hasProfileLinks = builder?.socialLinks ? Object.keys(builder.socialLinks).length !== 0 : false;
@@ -144,15 +158,29 @@ const BuilderProfileCard = ({ builder, mainnetProvider, isMyProfile, userProvide
             maxW={{ base: "full", lg: "50%", xl: 60 }}
             margin="auto"
           >
-            <Link as={RouteLink} to={`/builders/${builder.id}`}>
-              <QRPunkBlockie
-                withQr={false}
-                address={builder.id?.toLowerCase()}
-                w={52}
-                borderRadius="lg"
-                margin="auto"
-              />
-            </Link>
+            <VStack>
+              <Link as={RouteLink} to={`/builders/${builder.id}`}>
+                <QRPunkBlockie
+                  withQr={false}
+                  address={builder.id?.toLowerCase()}
+                  w={52}
+                  borderRadius="lg"
+                  margin="auto"
+                />
+              </Link>
+              {canEditBuilder && (
+                <Button variant="outline" colorScheme="blue" size="sm" onClick={onOpenEditBuilder} mt={2}>
+                  <EditIcon w={6} color="blue.500" />
+                  Edit Builder
+                  <BuilderCrudFormModal
+                    isOpen={isOpenEditBuilder}
+                    onClose={onCloseEditBuilder}
+                    builder={builder}
+                    onUpdate={onUpdate}
+                  />
+                </Button>
+              )}
+            </VStack>
             <Flex alignContent="center" direction="column" mt={4}>
               {hasEns ? (
                 <>

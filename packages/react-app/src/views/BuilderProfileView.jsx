@@ -62,6 +62,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
             userProvider={userProvider}
             fetchBuilder={fetchBuilder}
             userRole={userRole}
+            onUpdate={fetchBuilder}
           />
         </GridItem>
         <GridItem colSpan={{ base: 1, xl: 3 }}>
