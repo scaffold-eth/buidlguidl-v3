@@ -2,11 +2,12 @@ const express = require("express");
 const { ethers } = require("ethers");
 const db = require("../services/db/db");
 const { createEvent, EVENT_TYPES } = require("../utils/events");
+const { withApiKey } = require("../middlewares/auth");
 
 const router = express.Router();
 
 // ToDo. Api Auth Middleware
-router.post("/builders/create", async (req, res) => {
+router.post("/builders/create", withApiKey, async (req, res) => {
   const { builderAddress } = req.body;
   if (builderAddress === undefined) {
     res.status(400).send(`Missing required "builderAddress" body property`);
