@@ -5,9 +5,6 @@ import Address from "../components/Address";
 
 // TODO PR: how do we keep just one instance of this enum? Like a commons library
 const EVENT_TYPES = {
-  CHALLENGE_SUBMIT: "challenge.submit",
-  CHALLENGE_REVIEW: "challenge.review",
-  CHALLENGE_AUTOGRADE: "challenge.autograde",
   BUILD_SUBMIT: "build.submit",
   BUILD_EDIT: "build.edit",
   BUILD_DELETE: "build.delete",
@@ -22,20 +19,6 @@ const EVENT_TYPES = {
 
 export const eventDisplay = ({ type, payload }) => {
   switch (type) {
-    case EVENT_TYPES.CHALLENGE_SUBMIT: {
-      return `submitted a solution for ${payload.challengeId}`;
-    }
-
-    case EVENT_TYPES.CHALLENGE_REVIEW: {
-      return `The submitted ${payload.challengeId} challenge has been ${payload.reviewAction.toLowerCase()}`;
-    }
-
-    case EVENT_TYPES.CHALLENGE_AUTOGRADE: {
-      return `The submitted "${
-        payload.challengeId
-      }" challenge has been ${payload.reviewAction.toLowerCase()} (autograded)`;
-    }
-
     case EVENT_TYPES.BUILD_SUBMIT: {
       return (
         <>
