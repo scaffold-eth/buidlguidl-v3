@@ -69,7 +69,7 @@ export const eventDisplay = ({ type, payload }) => {
     }
 
     case EVENT_TYPES.USER_CREATE: {
-      return `just created a builder account. Welcome!`;
+      return `is a new builder on BuidlGuidl. Welcome! ${payload.fromApiCall ? "(from SRE)" : ""}`;
     }
 
     case EVENT_TYPES.USER_UPDATE_STATUS: {
