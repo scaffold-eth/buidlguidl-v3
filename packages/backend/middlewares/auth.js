@@ -1,3 +1,4 @@
+require("dotenv").config();
 const db = require("../services/db/db");
 
 /**
@@ -34,7 +35,25 @@ const withRole = role => {
   };
 };
 
+/**
+ * Middleware to validate API requests with API keys.
+ *
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @param {Express.NextFunction} next
+ */
+const withApiKey = (req, res, next) => {
+  const { apikey } = req.headers;
+
+  if (apikey !== process.env.API_KEY) {
+    return res.status(401).send("Wrong API KEY");
+  }
+
+  next();
+};
+
 module.exports = {
   withAddress,
   withRole,
+  withApiKey,
 };
