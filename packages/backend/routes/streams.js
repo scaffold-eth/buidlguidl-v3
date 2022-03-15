@@ -18,7 +18,9 @@ router.get("/update", async (req, res) => {
 
   const lastIndexedBlock = (await db.getConfigData("streams")).lastIndexedBlock ?? 0;
   const updates = streams.map(async stream => {
-    return [await getStreamEvents(provider, stream, lastIndexedBlock, currentBlock), stream];
+    const fromBlock = stream.lastIndexedBlock ? lastIndexedBlock : 0;
+
+    return [await getStreamEvents(provider, stream, fromBlock, currentBlock), stream];
   });
 
   Promise.all(updates)
