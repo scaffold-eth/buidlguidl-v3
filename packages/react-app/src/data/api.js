@@ -10,9 +10,11 @@ export const getGithubApiReadmeFromRepoUrl = repoUrl =>
 
 export const isGithubBranch = url => /github\.com\/.*?\/.*?\/tree\/.*/.test(url);
 
-export const getAllEvents = async (limit = null) => {
+export const getAllEvents = async (type = null, limit = null) => {
   try {
-    const response = await axios.get(`${serverUrl}/latest-events?limit=${limit}`);
+    const response = await axios.get(
+      `${serverUrl}/latest-events?${type ? `type=${type}&` : ""}${limit ? `limit=${limit}` : ""}`,
+    );
     return response.data;
   } catch (err) {
     console.log("error fetching events", err);

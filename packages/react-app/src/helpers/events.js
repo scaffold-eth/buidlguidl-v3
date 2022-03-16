@@ -4,14 +4,13 @@ import { Link, Text } from "@chakra-ui/react";
 import Address from "../components/Address";
 
 // TODO PR: how do we keep just one instance of this enum? Like a commons library
-const EVENT_TYPES = {
+export const EVENT_TYPES = {
   BUILD_SUBMIT: "build.submit",
   BUILD_EDIT: "build.edit",
   BUILD_DELETE: "build.delete",
   BUILD_FEATURED: "build.featured",
   BUILD_LIKED: "build.liked",
   USER_CREATE: "user.create",
-  USER_UPDATE: "user.update",
   USER_UPDATE_STATUS: "user.update_status",
   STREAM_WITHDRAW: "stream.withdraw",
   STREAM_DEPOSIT: "stream.deposit",
@@ -80,7 +79,7 @@ export const eventDisplay = ({ type, payload }) => {
       return (
         <>
           <Text>withdrew Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
-          <Text fontStyle="italic" mt={2}>
+          <Text fontStyle="italic" mt={2} wordBreak="break-all">
             "{payload.reason}"
           </Text>
         </>
