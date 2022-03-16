@@ -5,7 +5,6 @@ const EVENT_TYPES = {
   BUILD_FEATURED: "build.featured",
   BUILD_LIKED: "build.liked",
   USER_CREATE: "user.create",
-  USER_UPDATE: "user.update",
   USER_UPDATE_STATUS: "user.update_status",
   STREAM_WITHDRAW: "stream.withdraw",
 };
