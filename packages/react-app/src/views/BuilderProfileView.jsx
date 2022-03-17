@@ -31,6 +31,8 @@ import DateWithTooltip from "../components/DateWithTooltip";
 import { USER_FUNCTIONS } from "../helpers/constants";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getWithdrawEvents } from "../data/api/streams";
+import { getSreBuilder } from "../data/api/sre";
+import BuilderChallengesTable from "../components/BuilderChallengesTable";
 
 const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
@@ -40,6 +42,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const [builder, setBuilder] = useState(null);
   const [withdrawEvents, setWithdrawEvents] = useState([]);
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
+  const [builderChallenges, setBuilderChallenges] = useState([]);
+  const [isLoadingBuilderChallenges, setIsLoadingBuilderChallenges] = useState(false);
   const [streamDisplay, setStreamDisplay] = useState(null);
   const isMyProfile = builderAddress === address;
 
@@ -59,8 +63,21 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     setIsLoadingBuilder(false);
   }, [builderAddress, serverUrl]);
 
+  const fetchBuilderChallenges = useCallback(async () => {
+    setIsLoadingBuilderChallenges(true);
+    const challengesFromBuilder = await getSreBuilder(builderAddress);
+
+    const builderChallengesData = Object.entries(challengesFromBuilder.challenges ?? {});
+
+    console.log(builderChallengesData);
+
+    setBuilderChallenges(builderChallengesData);
+    setIsLoadingBuilderChallenges(false);
+  }, [builderAddress]);
+
   useEffect(() => {
     fetchBuilder();
+    fetchBuilderChallenges();
     const asyncUpdateEvents = async () => {
       const res = await getWithdrawEvents(builderAddress);
       setWithdrawEvents(res);
@@ -105,7 +122,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   }, [builder]);
 
   return (
-    <Container maxW="container.xl">
+    <Container maxW="container.xl" mb="50px">
       <SimpleGrid gap={14} columns={{ base: 1, xl: 4 }}>
         <GridItem colSpan={1}>
           <BuilderProfileCard
@@ -194,7 +211,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           {!isLoadingBuilder &&
             (builder?.builds.length ? (
               <Box overflowX="auto" mb={8}>
-                <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
+                <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={5}>
                   {builder?.builds.map(build => (
                     <BuildCard
                       build={build}
@@ -224,6 +241,9 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                 </Box>
               </Flex>
             ))}
+          {!isLoadingBuilderChallenges && Object.keys(builderChallenges).length !== 0 && (
+            <BuilderChallengesTable challenges={builderChallenges} />
+          )}
           {!isLoadingBuilder && withdrawEvents.length !== 0 && (
             <Box mb={4}>
               <Text fontSize="2xl" fontWeight="bold">

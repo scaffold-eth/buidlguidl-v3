@@ -1,3 +1,9 @@
+export const SRE_CHALLENGE_SUBMISSION_STATUS = {
+  ACCEPTED: "ACCEPTED",
+  REJECTED: "REJECTED",
+  SUBMITTED: "SUBMITTED",
+};
+
 export const USER_ROLES = {
   anonymous: "anonymous",
   builder: "builder",
