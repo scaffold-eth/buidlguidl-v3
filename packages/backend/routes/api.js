@@ -8,12 +8,12 @@ const router = express.Router();
 
 // ToDo. Api Auth Middleware
 router.post("/builders/create", withApiKey, async (req, res) => {
-  const { builderAddress } = req.body;
+  const { builderAddress, existingBuilderData } = req.body;
   if (builderAddress === undefined) {
     res.status(400).send(`Missing required "builderAddress" body property`);
     return;
   }
-  console.log("API POST /api/builders/create", builderAddress);
+  console.log("API POST /api/builders/create", builderAddress, existingBuilderData);
 
   if (!ethers.utils.isAddress(builderAddress)) {
     res.status(400).send("Invalid address");
@@ -31,6 +31,7 @@ router.post("/builders/create", withApiKey, async (req, res) => {
     creationTimestamp: new Date().getTime(),
     role: "builder",
     function: "cadets",
+    ...existingBuilderData,
   };
 
   // Create user.
