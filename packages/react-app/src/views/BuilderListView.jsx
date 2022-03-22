@@ -37,14 +37,14 @@ import { USER_ROLES } from "../helpers/constants";
 const serverPath = "/builders";
 
 const builderLastActivity = builder => {
-  // ToDo. Builds updated.
-  // const lastChallengeUpdated = Object.values(builder?.challenges ?? {})
-  //   .map(challenge => challenge.submittedTimestamp)
-  //   .sort((t1, t2) => t2 - t1)?.[0];
+  const lastBuildSubmission =
+    builder?.builds?.reduce((prevValue, currentValue) => {
+      return Math.max(prevValue.submittedTimestamp, currentValue.submittedTimestamp);
+    }) || 0;
 
-  const lastStatusUpdated = builder?.status?.timestamp;
+  const lastStatusUpdated = builder?.status?.timestamp || 0;
 
-  return lastStatusUpdated ?? builder?.creationTimestamp;
+  return Math.max(builder?.creationTimestamp || 0, lastBuildSubmission, lastStatusUpdated);
 };
 
 const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
