@@ -6,6 +6,7 @@
  */
 require("dotenv").config();
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 const { getProp } = require("../../utils/object");
 
 console.log("using local db");
@@ -113,18 +114,13 @@ const findBuildById = buildId => {
   return { id: buildId, ...database.builds[buildId] };
 };
 
-// ToDo. Some inconsistent behaviour with users.builds references
-// because we are using the builds array lengt as the buildId.
-// When removing builds, the references become obsolete.
-// We should use a uuid. But not a big deal for now since
-// this is a local/dev implementation.
 const createBuild = build => {
   const userId = build.builder;
-  const newBuildId = String(database.builds.length);
+  const newBuildId = uuidv4();
   const { id, ...existingUserData } = findUserByAddress(userId).data;
 
   // Save build
-  database.builds.push(build);
+  database.builds[newBuildId] = build;
 
   // Save build reference on user.
   const buildsData = existingUserData.builds || [];
@@ -160,7 +156,7 @@ const deleteBuild = buildId => {
   const { id, ...existingBuildData } = findBuildById(buildId);
   const { id: userId, ...existingUserData } = findUserByAddress(existingBuildData.builder).data;
 
-  database.builds.splice(buildId, 1);
+  delete database.builds[buildId];
 
   // Save build reference on user.
   const newBuildsData = existingUserData.builds.filter(buildReference => buildReference.id !== buildId);
@@ -174,7 +170,8 @@ const deleteBuild = buildId => {
 };
 
 const findAllBuilds = (featured = null) => {
-  const allBuilds = database.builds.map((build, index) => ({ id: index.toString(), ...build }));
+  const allBuilds = Object.entries(database.builds).map(([buildId, buildData]) => ({ id: buildId, ...buildData }));
+
   if (typeof featured === "boolean") {
     return allBuilds.filter(build => build.featured);
   }
@@ -183,9 +180,7 @@ const findAllBuilds = (featured = null) => {
 };
 
 const findBuilderBuilds = builderAddress => {
-  return database.builds
-    .map((build, index) => ({ id: index.toString(), ...build }))
-    .filter(build => build.builder === builderAddress);
+  return findAllBuilds().filter(build => build.builder === builderAddress);
 };
 
 const featureBuild = (buildId, featured) => {
