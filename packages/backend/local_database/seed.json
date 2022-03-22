@@ -6,11 +6,11 @@
       "role": "admin",
       "builds": [
         {
-          "id": 0,
+          "id": "0",
           "submittedTimestamp": 1633088553221
         },
         {
-          "id": 1,
+          "id": "1",
           "submittedTimestamp": 1633088553222
         }
       ]

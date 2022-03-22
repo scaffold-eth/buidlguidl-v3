@@ -113,11 +113,34 @@ const findBuildById = buildId => {
   return { id: buildId, ...database.builds[buildId] };
 };
 
+// ToDo. Some inconsistent behaviour with users.builds references
+// because we are using the builds array lengt as the buildId.
+// When removing builds, the references become obsolete.
+// We should use a uuid. But not a big deal for now since
+// this is a local/dev implementation.
 const createBuild = build => {
+  const userId = build.builder;
+  const newBuildId = String(database.builds.length);
+  const { id, ...existingUserData } = findUserByAddress(userId).data;
+
+  // Save build
   database.builds.push(build);
 
+  // Save build reference on user.
+  const buildsData = existingUserData.builds || [];
+
+  buildsData.push({
+    id: newBuildId,
+    submittedTimestamp: build.submittedTimestamp,
+  });
+
+  database.users[userId] = {
+    ...existingUserData,
+    builds: buildsData,
+  };
+
   persist();
-  return { ...build, id: String(database.builds.length - 1) };
+  return { ...build, id: newBuildId };
 };
 
 const updateBuild = (buildId, buildData) => {
@@ -134,7 +157,18 @@ const updateBuild = (buildId, buildData) => {
 };
 
 const deleteBuild = buildId => {
+  const { id, ...existingBuildData } = findBuildById(buildId);
+  const { id: userId, ...existingUserData } = findUserByAddress(existingBuildData.builder).data;
+
   database.builds.splice(buildId, 1);
+
+  // Save build reference on user.
+  const newBuildsData = existingUserData.builds.filter(buildReference => buildReference.id !== buildId);
+
+  database.users[userId] = {
+    ...existingUserData,
+    builds: newBuildsData,
+  };
 
   persist();
 };
