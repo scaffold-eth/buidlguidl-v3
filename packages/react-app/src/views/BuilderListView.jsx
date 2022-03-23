@@ -37,14 +37,17 @@ import { USER_ROLES } from "../helpers/constants";
 const serverPath = "/builders";
 
 const builderLastActivity = builder => {
-  const lastBuildSubmission =
-    builder?.builds?.reduce((prevValue, currentValue) => {
-      return Math.max(prevValue.submittedTimestamp, currentValue.submittedTimestamp);
-    }) || 0;
+  const lastBuildSubmission = builder?.builds?.reduce(
+    (prevValue, currentValue) => {
+      return { submittedTimestamp: Math.max(prevValue.submittedTimestamp, currentValue.submittedTimestamp) };
+    },
+    { submittedTimestamp: 0 },
+  );
+  const lastBuildSubmissionTimestamp = lastBuildSubmission?.submittedTimestamp || 0;
 
   const lastStatusUpdated = builder?.status?.timestamp || 0;
 
-  return Math.max(builder?.creationTimestamp || 0, lastBuildSubmission, lastStatusUpdated);
+  return Math.max(builder?.creationTimestamp || 0, lastBuildSubmissionTimestamp, lastStatusUpdated);
 };
 
 const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
@@ -211,7 +214,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   );
 
   return (
-    <Container maxW="container.lg">
+    <Container maxW="container.xl">
       {isLoadingBuilders ? (
         <BuilderListSkeleton />
       ) : (
