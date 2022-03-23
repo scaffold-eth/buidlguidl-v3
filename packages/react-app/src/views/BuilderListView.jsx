@@ -86,8 +86,8 @@ const BuilderStatusCell = ({ status }) => {
   );
 };
 
-const BuilderBuildsCell = ({ builds }) => {
-  return <Text>{builds?.length || 0}</Text>;
+const BuilderBuildsCell = ({ buildCount }) => {
+  return <Text>{buildCount}</Text>;
 };
 
 const secondsPerDay = 24 * 60 * 60;
@@ -138,7 +138,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       {
         Header: "Builds",
         accessor: "builds",
-        Cell: ({ value }) => <BuilderBuildsCell builds={value} />,
+        Cell: ({ value }) => <BuilderBuildsCell buildCount={value} />,
       },
       {
         Header: "Stream",
@@ -176,7 +176,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         builder: builder.id,
         status: builder.status,
         stream: builder.stream,
-        builds: builder.builds,
+        builds: builder.builds?.length || 0,
         socials: builder,
         lastActivity: builderLastActivity(builder),
       }));
