@@ -37,14 +37,17 @@ import { USER_ROLES } from "../helpers/constants";
 const serverPath = "/builders";
 
 const builderLastActivity = builder => {
-  // ToDo. Builds updated.
-  // const lastChallengeUpdated = Object.values(builder?.challenges ?? {})
-  //   .map(challenge => challenge.submittedTimestamp)
-  //   .sort((t1, t2) => t2 - t1)?.[0];
+  const lastBuildSubmission = builder?.builds?.reduce(
+    (prevValue, currentValue) => {
+      return { submittedTimestamp: Math.max(prevValue.submittedTimestamp, currentValue.submittedTimestamp) };
+    },
+    { submittedTimestamp: 0 },
+  );
+  const lastBuildSubmissionTimestamp = lastBuildSubmission?.submittedTimestamp || 0;
 
-  const lastStatusUpdated = builder?.status?.timestamp;
+  const lastStatusUpdated = builder?.status?.timestamp || 0;
 
-  return lastStatusUpdated ?? builder?.creationTimestamp;
+  return Math.max(builder?.creationTimestamp || 0, lastBuildSubmissionTimestamp, lastStatusUpdated);
 };
 
 const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
@@ -81,6 +84,10 @@ const BuilderStatusCell = ({ status }) => {
       <Text>{status?.text}</Text>
     </Tooltip>
   );
+};
+
+const BuilderBuildsCell = ({ buildCount }) => {
+  return <Text>{buildCount}</Text>;
 };
 
 const secondsPerDay = 24 * 60 * 60;
@@ -129,6 +136,11 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         Cell: ({ value }) => <BuilderStatusCell status={value} />,
       },
       {
+        Header: "Builds",
+        accessor: "builds",
+        Cell: ({ value }) => <BuilderBuildsCell buildCount={value} />,
+      },
+      {
         Header: "Stream",
         accessor: "stream",
         disableSortBy: true,
@@ -164,6 +176,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         builder: builder.id,
         status: builder.status,
         stream: builder.stream,
+        builds: builder.builds?.length || 0,
         socials: builder,
         lastActivity: builderLastActivity(builder),
       }));
@@ -201,7 +214,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   );
 
   return (
-    <Container maxW="container.lg">
+    <Container maxW="container.xl">
       {isLoadingBuilders ? (
         <BuilderListSkeleton />
       ) : (

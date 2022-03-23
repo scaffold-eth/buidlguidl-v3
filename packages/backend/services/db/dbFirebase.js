@@ -106,8 +106,24 @@ const findBuildById = async buildId => {
   return build.data();
 };
 
-const createBuild = build => {
-  return database.collection("builds").add(build);
+const createBuild = async build => {
+  // Save build.
+  const newBuild = await database.collection("builds").add(build);
+
+  // Save build reference on user.
+  const builderId = build.builder;
+  const builderData = (await getUserSnapshotById(builderId)).data();
+
+  const buildsData = builderData.builds || [];
+
+  buildsData.push({
+    id: newBuild.id,
+    submittedTimestamp: build.submittedTimestamp,
+  });
+
+  await updateUser(builderId, { builds: buildsData });
+
+  return newBuild;
 };
 
 const updateBuild = async (buildId, buildData) => {
@@ -118,7 +134,15 @@ const updateBuild = async (buildId, buildData) => {
   return { id: buildId, ...buildSnapshot.data() };
 };
 
-const deleteBuild = buildId => {
+const deleteBuild = async buildId => {
+  const build = (await getBuildSnapshotById(buildId)).data();
+  const { id: builderId, ...existingUserData } = (await findUserByAddress(build.builder)).data;
+
+  // Delete build reference on user.
+  const newBuildsReferences = existingUserData.builds.filter(buildRef => buildRef.id !== buildId);
+  await updateUser(builderId, { builds: newBuildsReferences });
+
+  // Delete Build
   return database.collection("builds").doc(buildId).delete();
 };
 
@@ -136,7 +160,6 @@ const findAllBuilds = async (featured = null) => {
 };
 
 const findBuilderBuilds = async builderAddress => {
-  // ToDo. Use subcollections?
   const buildsSnapshot = await database.collection("builds").where("builder", "==", builderAddress).get();
 
   return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
