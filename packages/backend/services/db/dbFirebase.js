@@ -160,7 +160,6 @@ const findAllBuilds = async (featured = null) => {
 };
 
 const findBuilderBuilds = async builderAddress => {
-  // ToDo. Use subcollections?
   const buildsSnapshot = await database.collection("builds").where("builder", "==", builderAddress).get();
 
   return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
