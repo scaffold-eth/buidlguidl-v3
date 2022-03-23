@@ -138,12 +138,15 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       {
         Header: "Builds",
         accessor: "builds",
+        sortDescFirst: true,
         Cell: ({ value }) => <BuilderBuildsCell buildCount={value} />,
       },
       {
         Header: "Stream",
         accessor: "stream",
-        disableSortBy: true,
+        // Sorting by stream cap for now.
+        sortType: (rowA, rowB) =>
+          Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
         Cell: ({ value }) => <BuilderStreamCell stream={value} />,
       },
       {

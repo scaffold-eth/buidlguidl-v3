@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Link, Spacer, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Link, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { SreChallengeInfo } from "../data/SreChallenges";
 import ChallengeStatusTag from "./ChallengeStatusTag";
 
@@ -9,12 +9,9 @@ export default function BuilderChallengesTable({ challenges }) {
   return (
     challenges && (
       <Box overflowX="auto" mb={10}>
-        <Flex mb={4}>
-          <Text fontSize="2xl" fontWeight="bold">
-            Challenges
-          </Text>
-          <Spacer />
-        </Flex>
+        <Text fontSize="2xl" fontWeight="bold">
+          Challenges
+        </Text>
         <Table>
           <Thead>
             <Tr>
