@@ -8,7 +8,7 @@ const SRE_FRONTEND = "https://speedrunethereum.com";
 export default function BuilderChallengesTable({ challenges }) {
   return (
     challenges && (
-      <Box overflowX="auto">
+      <Box overflowX="auto" mb={10}>
         <Flex mb={4}>
           <Text fontSize="2xl" fontWeight="bold">
             Challenges
