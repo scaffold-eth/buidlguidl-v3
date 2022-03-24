@@ -5,9 +5,16 @@ import Address from "./Address";
 import { eventDisplay } from "../helpers/events";
 import DateWithTooltip from "./DateWithTooltip";
 
+const fundersAddresses = ["0xef6784161dc2eAB0A2c385DEf264DaF2F52Df970"];
+const buidlGuidlAddress = "0x97843608a00e2bbc75ab0c1911387e002565dede";
+
 const EventRow = ({ event }) => {
-  // ToDo. Fix this.
-  const userAddress = event.payload.userAddress;
+  let userAddress = event.payload.userAddress;
+
+  if (fundersAddresses.includes(userAddress)) {
+    // We always want to show the BuidlGuidl address as the funder account.
+    userAddress = buidlGuidlAddress;
+  }
 
   return (
     <Tr>
