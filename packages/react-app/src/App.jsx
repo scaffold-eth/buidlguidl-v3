@@ -4,6 +4,7 @@ import { Web3Provider, StaticJsonRpcProvider, InfuraProvider } from "@ethersproj
 import "./App.css";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { Center, Text } from "@chakra-ui/react";
 import { useUserAddress } from "eth-hooks";
 import axios from "axios";
 import { useUserProvider } from "./hooks";
@@ -209,6 +210,11 @@ function App() {
           </Route>
           <Route path="/admin/builds-review" exact>
             <AllBuildsReviewView userProvider={userProvider} mainnetProvider={mainnetProvider} />
+          </Route>
+          <Route exact path="/404">
+            <Center>
+              <Text fontSize="xl">Not found :(</Text>
+            </Center>
           </Route>
         </Switch>
         <ColorModeSwitcher />

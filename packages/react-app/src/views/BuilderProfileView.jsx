@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import { ethers } from "ethers";
 import {
@@ -37,6 +37,7 @@ import BuilderChallengesTable from "../components/BuilderChallengesTable";
 const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
   const { builderAddress } = useParams();
+  const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { secondaryFontColor, borderColor } = useCustomColorModes();
   const [builder, setBuilder] = useState(null);
@@ -49,7 +50,17 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
 
   const fetchBuilder = useCallback(async () => {
     setIsLoadingBuilder(true);
-    const fetchedBuilder = await axios.get(serverUrl + `/builders/${builderAddress}`);
+    let fetchedBuilder;
+    try {
+      fetchedBuilder = await axios.get(serverUrl + `/builders/${builderAddress}`);
+    } catch (e) {
+      // User not found
+      if (axios.isAxiosError(e) && e?.response?.status === 404) {
+        history.push("/404");
+        return;
+      }
+    }
+
     const buildsFromBuilder = await axios.get(serverUrl + `/builds/builder/${builderAddress}`);
 
     const builderData = {
@@ -61,7 +72,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
 
     setBuilder(builderData);
     setIsLoadingBuilder(false);
-  }, [builderAddress, serverUrl]);
+  }, [builderAddress, serverUrl, history]);
 
   const fetchBuilderChallenges = useCallback(async () => {
     setIsLoadingBuilderChallenges(true);
