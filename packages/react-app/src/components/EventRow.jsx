@@ -5,7 +5,7 @@ import Address from "./Address";
 import { eventDisplay } from "../helpers/events";
 import DateWithTooltip from "./DateWithTooltip";
 
-const fundersAddresses = ["0xef6784161dc2eAB0A2c385DEf264DaF2F52Df970"];
+const fundersAddresses = ["0xef6784161dc2eAB0A2c385DEf264DaF2F52Df970", "0x60775dCC868EcE33B6AC45A1Dd5D448aea3B7a71"];
 const buidlGuidlAddress = "0x97843608a00e2bbc75ab0c1911387e002565dede";
 
 const EventRow = ({ event }) => {
