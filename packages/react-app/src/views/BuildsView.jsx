@@ -1,16 +1,27 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Button, Container, SimpleGrid, useDisclosure } from "@chakra-ui/react";
-import { getAllFeaturedBuilds } from "../data/api";
+import { getAllBuilds } from "../data/api";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
+
+// The number of likes required for the build to be shown in the list.
+const MIN_LIKES = 1;
 
 export default function BuildsView({ userProvider, connectedBuilder, userRole }) {
   const [builds, setBuilds] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const updateBuilds = useCallback(async () => {
-    const allBuilds = await getAllFeaturedBuilds();
-    setBuilds(allBuilds.filter(build => !build.isDraft));
+    // We used to retrieve only the featured builds.
+    // Now we only show builds with like
+    // Fetching all for now (and filtering them in the front)
+    // but we could implement getAllLikedBuilds(minNumber)
+    const allBuilds = await getAllBuilds();
+
+    const sortedBuilds = allBuilds
+      .filter(build => !build.isDraft && build.likes?.length >= MIN_LIKES)
+      .sort((a, b) => b.likes.length - a.likes.length);
+    setBuilds(sortedBuilds);
   }, []);
 
   useEffect(() => {
