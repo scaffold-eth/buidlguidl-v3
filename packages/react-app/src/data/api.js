@@ -22,6 +22,7 @@ export const getAllEvents = async (type = null, limit = null) => {
   }
 };
 
+// ToDo. Featured not used now, but keeping it for now.
 export const getAllBuilds = async (featured = null) => {
   try {
     const response = await axios.get(`${serverUrl}/builds`, {

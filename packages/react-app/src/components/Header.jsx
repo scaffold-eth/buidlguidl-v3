@@ -63,16 +63,12 @@ export default function Header({
               🏰️
             </span>{" "}
             <chakra.strong display={{ base: "none", md: "inline-block" }}>BG</chakra.strong>
-            <chakra.strong display={{ base: "inline-block", md: "none" }}>
-              {"BG"}
-            </chakra.strong>
-            <span role="img" aria-label="castle icon" style={{paddingLeft:4}}>
+            <chakra.strong display={{ base: "inline-block", md: "none" }}>{"BG"}</chakra.strong>
+            <span role="img" aria-label="castle icon" style={{ paddingLeft: 4 }}>
               🏤
             </span>{" "}
             <chakra.strong display={{ base: "none", md: "inline-block" }}>Bazaar</chakra.strong>
-            <chakra.strong display={{ base: "inline-block", md: "none" }}>
-              {"Bazaar"}
-            </chakra.strong>
+            <chakra.strong display={{ base: "inline-block", md: "none" }}>{"Bazaar"}</chakra.strong>
           </NavLink>
         </Flex>
         <HStack
@@ -156,17 +152,6 @@ export default function Header({
                     }}
                   >
                     Add Builder
-                  </NavLink>
-                </MenuItem>
-                <MenuItem>
-                  <NavLink
-                    to="/admin/builds-review"
-                    exact
-                    activeStyle={{
-                      color: primaryColorString,
-                    }}
-                  >
-                    Review Builds
                   </NavLink>
                 </MenuItem>
               </MenuList>
