@@ -136,15 +136,17 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     <Container maxW="container.xl" mb="50px">
       <SimpleGrid gap={14} columns={{ base: 1, xl: 4 }}>
         <GridItem colSpan={1}>
-          <BuilderProfileCard
-            builder={builder}
-            mainnetProvider={mainnetProvider}
-            isMyProfile={isMyProfile}
-            userProvider={userProvider}
-            fetchBuilder={fetchBuilder}
-            userRole={userRole}
-            onUpdate={fetchBuilder}
-          />
+          {builder && (
+            <BuilderProfileCard
+              builder={builder}
+              mainnetProvider={mainnetProvider}
+              isMyProfile={isMyProfile}
+              userProvider={userProvider}
+              fetchBuilder={fetchBuilder}
+              userRole={userRole}
+              onUpdate={fetchBuilder}
+            />
+          )}
         </GridItem>
         <GridItem colSpan={{ base: 1, xl: 3 }}>
           <Flex spacing={4} mb={8}>

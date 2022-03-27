@@ -28,13 +28,13 @@ import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 */
 
 // INFO: Address used to have ensProvider as prop. That's no longer needed.
-export default function Address({ value, address: sentAddress, size, w, fontSize }) {
+export default function Address({ value, address: sentAddress, size, w, fontSize, cachedEns }) {
   const address = value || sentAddress;
 
   const mainnetProviderData = useContext(BlockchainProvidersContext).mainnet;
   const mainnetProvider = mainnetProviderData.provider;
 
-  const ens = useLookupAddress(mainnetProvider, address);
+  const ens = cachedEns ?? useLookupAddress(mainnetProvider, address);
 
   if (!address) {
     return <span>Loading...</span>;
@@ -42,7 +42,7 @@ export default function Address({ value, address: sentAddress, size, w, fontSize
 
   let displayAddress = address.substr(0, 6);
 
-  if (ens && ens.indexOf("0x") < 0) {
+  if ((ens && ens.indexOf("0x") < 0) || cachedEns) {
     displayAddress = ens;
   } else if (size === "short") {
     displayAddress += "..." + address.substr(-4);

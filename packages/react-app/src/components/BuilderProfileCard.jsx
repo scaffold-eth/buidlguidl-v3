@@ -52,7 +52,7 @@ const BuilderProfileCard = ({
   onUpdate,
 }) => {
   const address = useUserAddress(userProvider);
-  const ens = useDisplayAddress(mainnetProvider, builder?.id);
+  const ens = useDisplayAddress(mainnetProvider, builder?.id, builder?.ens);
   const [updatedSocials, setUpdatedSocials] = useState({});
   const [isUpdatingSocials, setIsUpdatingSocials] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
