@@ -37,10 +37,15 @@ const lookupAddress = async (provider, address) => {
   return 0;
 };
 
-const useLookupAddress = (provider, address) => {
+const useLookupAddress = (provider, address, cachedEns = null) => {
   const [ensName, setEnsName] = useState(address);
 
   useEffect(() => {
+    if (cachedEns) {
+      setEnsName(cachedEns);
+      return;
+    }
+
     let cache = window.localStorage.getItem("ensCache_" + address);
     cache = cache && JSON.parse(cache);
 
@@ -60,7 +65,7 @@ const useLookupAddress = (provider, address) => {
         }
       });
     }
-  }, [provider, address, setEnsName]);
+  }, [provider, address, setEnsName, cachedEns]);
 
   return ensName;
 };
