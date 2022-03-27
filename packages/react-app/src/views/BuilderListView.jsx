@@ -70,10 +70,10 @@ const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
   );
 };
 
-const BuilderAddressCell = ({ builderId, mainnetProvider }) => {
+const BuilderAddressCell = ({ builder, mainnetProvider }) => {
   return (
-    <Link as={RouteLink} to={`/builders/${builderId}`} pos="relative">
-      <Address address={builderId} ensProvider={mainnetProvider} w="12.5" fontSize="16" />
+    <Link as={RouteLink} to={`/builders/${builder.id}`} pos="relative">
+      <Address address={builder.id} ensProvider={mainnetProvider} w="12.5" fontSize="16" cachedEns={builder.ens} />
     </Link>
   );
 };
@@ -127,7 +127,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         Header: "Builder",
         accessor: "builder",
         disableSortBy: true,
-        Cell: ({ value }) => <BuilderAddressCell builderId={value} mainnetProvider={mainnetProvider} />,
+        Cell: ({ value }) => <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />,
       },
       {
         Header: "Status",
@@ -176,7 +176,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       const fetchedBuilders = await axios.get(serverUrl + serverPath);
 
       const processedBuilders = fetchedBuilders.data.map(builder => ({
-        builder: builder.id,
+        builder: builder,
         status: builder.status,
         stream: builder.stream,
         builds: builder.builds?.length || 0,
