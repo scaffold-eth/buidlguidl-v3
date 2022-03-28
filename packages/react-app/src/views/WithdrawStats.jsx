@@ -25,12 +25,12 @@ import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { ethers } from "ethers";
 import useCustomColorModes from "../hooks/useCustomColorModes";
-import BuildsVoteListSkeleton from "../components/skeletons/BuildsVoteListSkeleton";
 import DateWithTooltip from "../components/DateWithTooltip";
 import Address from "../components/Address";
 import { getWithdrawEvents } from "../data/api/streams";
 import { eventDisplay } from "../helpers/events";
 import { byBigNumber, byTimestamp } from "../helpers/sorting";
+import WithdrawStatsSkeleton from "../components/skeletons/WithdrawStatsSkeleton";
 
 const BuilderAddressCell = ({ builderId }) => {
   return (
@@ -48,7 +48,7 @@ const columns = [
     Cell: ({ value }) => <BuilderAddressCell builderId={value} />,
   },
   {
-    Header: () => <Flex>Total withdrawn</Flex>,
+    Header: "Total withdrawn",
     accessor: "total",
     sortType: (rowA, rowB) => {
       const totalA = rowA.values?.total ?? ethers.BigNumber.from(0);
@@ -58,7 +58,7 @@ const columns = [
     Cell: ({ value }) => <Box>{parseFloat(ethers.utils.formatEther(value)).toFixed(4)}</Box>,
   },
   {
-    Header: "Last 30",
+    Header: () => <Box whiteSpace="nowrap">Last 30</Box>,
     accessor: "last30",
     sortType: (rowA, rowB) => {
       const last30A = rowA.values?.last30 ?? ethers.BigNumber.from(0);
@@ -174,11 +174,11 @@ export default function WithdrawStats() {
         </Text>
       </Container>
       {isLoadingEvents ? (
-        <BuildsVoteListSkeleton />
+        <WithdrawStatsSkeleton />
       ) : (
         <Box overflowX="auto" mb={8}>
           <Center mb={5}>
-            <chakra.strong mr={2}>Total builds:</chakra.strong> {events.length}
+            <chakra.strong mr={2}>Total builders:</chakra.strong> {events.length}
           </Center>
           <Table {...getTableProps()}>
             <Thead>
