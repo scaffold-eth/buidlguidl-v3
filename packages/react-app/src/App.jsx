@@ -17,6 +17,7 @@ import {
   AllBuildsReviewView,
   BuildsView,
   ActivityView,
+  WithdrawStats,
 } from "./views";
 import { USER_ROLES } from "./helpers/constants";
 import { providerPromiseWrapper } from "./helpers/blockchainProviders";
@@ -207,6 +208,9 @@ function App() {
           </Route>
           <Route path="/admin/add-builder" exact>
             <BuilderCreateView mainnetProvider={mainnetProvider} />
+          </Route>
+          <Route path="/admin/withdraw-stats" exact>
+            <WithdrawStats />
           </Route>
           <Route path="/admin/builds-review" exact>
             <AllBuildsReviewView userProvider={userProvider} mainnetProvider={mainnetProvider} />
