@@ -61,7 +61,12 @@ const columns = [
     Header: "Last withdraw",
     accessor: "lastEvent",
     disableSortBy: true,
-    Cell: ({ value }) => <Box>{eventDisplay(value)}</Box>,
+    Cell: ({ value }) => (
+      <Box>
+        <DateWithTooltip mb={2} timestamp={value.timestamp} />
+        {eventDisplay(value)}
+      </Box>
+    ),
   },
 ];
 
