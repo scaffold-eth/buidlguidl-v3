@@ -49,13 +49,13 @@ const columns = [
     Header: "Total withdrawn",
     accessor: "total",
     disableSortBy: true,
-    Cell: ({ value }) => <Box>{ethers.utils.formatEther(value)}</Box>,
+    Cell: ({ value }) => <Box>{parseFloat(ethers.utils.formatEther(value)).toFixed(4)}</Box>,
   },
   {
     Header: "Last 30",
     accessor: "last30",
     disableSortBy: true,
-    Cell: ({ value }) => <Box>{ethers.utils.formatEther(value)}</Box>,
+    Cell: ({ value }) => <Box>{parseFloat(ethers.utils.formatEther(value)).toFixed(4)}</Box>,
   },
   {
     Header: "Last withdraw",
