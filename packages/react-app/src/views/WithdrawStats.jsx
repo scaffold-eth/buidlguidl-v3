@@ -6,6 +6,7 @@ import {
   ButtonGroup,
   Center,
   Container,
+  Flex,
   Heading,
   Link,
   Text,
@@ -29,6 +30,7 @@ import DateWithTooltip from "../components/DateWithTooltip";
 import Address from "../components/Address";
 import { getWithdrawEvents } from "../data/api/streams";
 import { eventDisplay } from "../helpers/events";
+import { byBigNumber, byTimestamp } from "../helpers/sorting";
 
 const BuilderAddressCell = ({ builderId }) => {
   return (
@@ -46,21 +48,34 @@ const columns = [
     Cell: ({ value }) => <BuilderAddressCell builderId={value} />,
   },
   {
-    Header: "Total withdrawn",
+    Header: () => <Flex>Total withdrawn</Flex>,
     accessor: "total",
-    disableSortBy: true,
+    sortType: (rowA, rowB) => {
+      const totalA = rowA.values?.total ?? ethers.BigNumber.from(0);
+      const totalB = rowB.values?.total ?? ethers.BigNumber.from(0);
+      return byBigNumber(totalA, totalB);
+    },
     Cell: ({ value }) => <Box>{parseFloat(ethers.utils.formatEther(value)).toFixed(4)}</Box>,
   },
   {
     Header: "Last 30",
     accessor: "last30",
-    disableSortBy: true,
+    sortType: (rowA, rowB) => {
+      const last30A = rowA.values?.last30 ?? ethers.BigNumber.from(0);
+      const last30B = rowB.values?.last30 ?? ethers.BigNumber.from(0);
+      return byBigNumber(last30A, last30B);
+    },
     Cell: ({ value }) => <Box>{parseFloat(ethers.utils.formatEther(value)).toFixed(4)}</Box>,
   },
   {
     Header: "Last withdraw",
     accessor: "lastEvent",
-    disableSortBy: true,
+    sortDescFirst: true,
+    sortType: (rowA, rowB) => {
+      const timeA = rowA.values?.lastEvent ?? { timestamp: 0 };
+      const timeB = rowB.values?.lastEvent ?? { timestamp: 0 };
+      return byTimestamp(timeA, timeB);
+    },
     Cell: ({ value }) => (
       <Box>
         <DateWithTooltip mb={2} timestamp={value.timestamp} />
@@ -142,7 +157,7 @@ export default function WithdrawStats() {
     {
       columns,
       data: events,
-      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "likes", desc: true }], []) },
+      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "lastEvent", desc: true }], []) },
     },
     useSortBy,
     usePagination,
@@ -169,20 +184,25 @@ export default function WithdrawStats() {
             <Thead>
               {headerGroups.map(headerGroup => (
                 <Tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => (
-                    <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                      {column.render("Header")}
-                      <chakra.span pl="4">
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <TriangleDownIcon aria-label="sorted descending" />
-                          ) : (
-                            <TriangleUpIcon aria-label="sorted ascending" />
-                          )
-                        ) : null}
-                      </chakra.span>
-                    </Th>
-                  ))}
+                  {headerGroup.headers.map(column => {
+                    console.log(column);
+                    return (
+                      <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                        <Flex>
+                          {column.render("Header")}
+                          <chakra.span pl="4">
+                            {column.isSorted ? (
+                              column.isSortedDesc ? (
+                                <TriangleDownIcon aria-label="sorted descending" />
+                              ) : (
+                                <TriangleUpIcon aria-label="sorted ascending" />
+                              )
+                            ) : null}
+                          </chakra.span>
+                        </Flex>
+                      </Th>
+                    );
+                  })}
                 </Tr>
               ))}
             </Thead>
