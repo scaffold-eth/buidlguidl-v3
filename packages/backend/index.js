@@ -10,6 +10,7 @@ const buildersRoutes = require("./routes/builders");
 const buildsRoutes = require("./routes/builds");
 const eventsRoutes = require("./routes/events");
 const streamsRoutes = require("./routes/streams");
+const ensRoutes = require("./routes/ens");
 const apiRoutes = require("./routes/api");
 
 const app = express();
@@ -24,6 +25,7 @@ app.use("/builders", buildersRoutes);
 app.use("/builds", buildsRoutes);
 app.use("/latest-events", eventsRoutes);
 app.use("/streams", streamsRoutes);
+app.use("/ens", ensRoutes);
 app.use("/api", apiRoutes);
 
 app.get("/sign-message", async (req, res) => {

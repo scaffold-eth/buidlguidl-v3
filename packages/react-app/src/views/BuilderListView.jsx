@@ -24,9 +24,12 @@ import {
   Tooltip,
   Progress,
   HStack,
+  Input,
+  InputRightElement,
+  InputGroup,
 } from "@chakra-ui/react";
-import { useTable, usePagination, useSortBy } from "react-table";
-import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { useTable, usePagination, useSortBy, useFilters } from "react-table";
+import { SearchIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import BuilderListSkeleton from "../components/skeletons/BuilderListSkeleton";
 import DateWithTooltip from "../components/DateWithTooltip";
 import SocialLink from "../components/SocialLink";
@@ -71,10 +74,10 @@ const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
   );
 };
 
-const BuilderAddressCell = ({ builderId, mainnetProvider }) => {
+const BuilderAddressCell = ({ builder, mainnetProvider }) => {
   return (
-    <Link as={RouteLink} to={`/builders/${builderId}`} pos="relative">
-      <Address address={builderId} ensProvider={mainnetProvider} w="12.5" fontSize="16" />
+    <Link as={RouteLink} to={`/builders/${builder.id}`} pos="relative">
+      <Address address={builder.id} ensProvider={mainnetProvider} w="12.5" fontSize="16" cachedEns={builder.ens} />
     </Link>
   );
 };
@@ -91,10 +94,36 @@ const BuilderBuildsCell = ({ buildCount }) => {
   return <Text>{buildCount}</Text>;
 };
 
+const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
+  return (
+    <Input
+      type="text"
+      value={filterValue || ""}
+      onChange={e => {
+        setFilter(e.target.value || undefined);
+      }}
+      placeholder="Search builder (ENS)"
+    />
+  );
+};
+
 export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
   const isAdmin = userRole === USER_ROLES.admin;
+
+  const ensFiltering = (rows, id, filterValue) => {
+    if (filterValue.length < 2) {
+      return rows;
+    }
+
+    return rows.filter(row => {
+      const rowValue = row.values[id];
+      return rowValue !== undefined
+        ? String(rowValue.ens).toLowerCase().includes(String(filterValue).toLowerCase())
+        : true;
+    });
+  };
 
   const columns = useMemo(
     () => [
@@ -102,23 +131,29 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         Header: "Builder",
         accessor: "builder",
         disableSortBy: true,
-        Cell: ({ value }) => <BuilderAddressCell builderId={value} mainnetProvider={mainnetProvider} />,
+        canFilter: true,
+        Filter: EnsColumnFilter,
+        filter: ensFiltering,
+        Cell: ({ value }) => <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />,
       },
       {
         Header: "Status",
         accessor: "status",
         disableSortBy: true,
+        disableFilters: true,
         Cell: ({ value }) => <BuilderStatusCell status={value} />,
       },
       {
         Header: "Builds",
         accessor: "builds",
         sortDescFirst: true,
+        disableFilters: true,
         Cell: ({ value }) => <BuilderBuildsCell buildCount={value} />,
       },
       {
         Header: "Stream",
         accessor: "stream",
+        disableFilters: true,
         // Sorting by stream cap for now.
         sortType: (rowA, rowB) =>
           Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
@@ -128,12 +163,14 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         Header: "Socials",
         accessor: "socials",
         disableSortBy: true,
+        disableFilters: true,
         Cell: ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />,
       },
       {
         Header: "Last Activity",
         accessor: "lastActivity",
         sortDescFirst: true,
+        disableFilters: true,
         Cell: ({ value }) => (
           <Text whiteSpace="nowrap">
             <DateWithTooltip timestamp={value} />
@@ -151,7 +188,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       const fetchedBuilders = await axios.get(serverUrl + serverPath);
 
       const processedBuilders = fetchedBuilders.data.map(builder => ({
-        builder: builder.id,
+        builder,
         status: builder.status,
         stream: builder.stream,
         builds: builder.builds?.length || 0,
@@ -187,18 +224,29 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       data: builders,
       initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "lastActivity", desc: true }], []) },
     },
+    useFilters,
     useSortBy,
     usePagination,
   );
+
+  const ensFilter = headerGroups[0].headers[0];
 
   return (
     <Container maxW="container.xl">
       {isLoadingBuilders ? (
         <BuilderListSkeleton />
       ) : (
-        <Box overflowX="auto" mb={8}>
-          <Center mb={5}>
-            <chakra.strong mr={2}>Total builders:</chakra.strong> {builders.length}
+        <Box mb={8}>
+          <Center mb={5} flexDir="column">
+            <Box mb={2}>
+              <chakra.strong mr={2}>Total builders:</chakra.strong> {builders.length}
+            </Box>
+            <Box>
+              <InputGroup>
+                {ensFilter.render("Filter")}
+                <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
+              </InputGroup>
+            </Box>
           </Center>
           <Table {...getTableProps()}>
             <Thead>
