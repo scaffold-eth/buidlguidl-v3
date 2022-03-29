@@ -184,25 +184,22 @@ export default function WithdrawStats() {
             <Thead>
               {headerGroups.map(headerGroup => (
                 <Tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => {
-                    console.log(column);
-                    return (
-                      <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                        <Flex>
-                          {column.render("Header")}
-                          <chakra.span pl="4">
-                            {column.isSorted ? (
-                              column.isSortedDesc ? (
-                                <TriangleDownIcon aria-label="sorted descending" />
-                              ) : (
-                                <TriangleUpIcon aria-label="sorted ascending" />
-                              )
-                            ) : null}
-                          </chakra.span>
-                        </Flex>
-                      </Th>
-                    );
-                  })}
+                  {headerGroup.headers.map(column => (
+                    <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                      <Flex>
+                        {column.render("Header")}
+                        <chakra.span pl="4">
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <TriangleDownIcon aria-label="sorted descending" />
+                            ) : (
+                              <TriangleUpIcon aria-label="sorted ascending" />
+                            )
+                          ) : null}
+                        </chakra.span>
+                      </Flex>
+                    </Th>
+                  ))}
                 </Tr>
               ))}
             </Thead>
