@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { ethers } from "ethers";
 import {
   Box,
   Button,
@@ -22,7 +21,6 @@ import {
   Select,
   Badge,
   Tooltip,
-  Progress,
   HStack,
   Input,
   InputRightElement,
@@ -36,6 +34,7 @@ import SocialLink from "../components/SocialLink";
 import Address from "../components/Address";
 import { bySocialWeight } from "../data/socials";
 import { USER_ROLES } from "../helpers/constants";
+import StreamTableCell from "../components/StreamTableCell";
 
 const serverPath = "/builders";
 
@@ -106,32 +105,6 @@ const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
   );
 };
 
-const secondsPerDay = 24 * 60 * 60;
-const BuilderStreamCell = ({ stream }) => {
-  if (!stream || !stream?.cap) return <Box>-</Box>;
-
-  const cap = ethers.utils.parseUnits(stream.cap);
-  const frequency = stream.frequency;
-  const last = stream.lastContract;
-  const frequencyDays = frequency / secondsPerDay;
-  const unlockedPercentage = (new Date().getTime() / 1000 - last) / frequency;
-  const unlockedAmount = cap.mul(Math.round(new Date().getTime() / 1000 - last)).div(frequency);
-  const available = cap.lt(unlockedAmount) ? cap : unlockedAmount;
-
-  const capStr = ethers.utils.formatEther(cap);
-  const availableStr = ethers.utils.formatEther(available);
-  return (
-    <Flex align="center" justify="center" direction="column" px={4} mt={4}>
-      <Box mb={1} whiteSpace="nowrap">
-        Ξ {parseFloat(availableStr).toFixed(4)} / {parseFloat(capStr).toFixed(1)} @ {frequencyDays}d
-      </Box>
-      <Box w="full" pl={1}>
-        <Progress flexShrink={1} size="xs" value={unlockedPercentage * 100} colorScheme="green" />
-      </Box>
-    </Flex>
-  );
-};
-
 export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
@@ -182,7 +155,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         // Sorting by stream cap for now.
         sortType: (rowA, rowB) =>
           Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
-        Cell: ({ value }) => <BuilderStreamCell stream={value} />,
+        Cell: ({ value }) => <StreamTableCell stream={value} />,
       },
       {
         Header: "Socials",
