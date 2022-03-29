@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { ethers } from "ethers";
 import {
   Box,
   Button,
@@ -22,7 +21,6 @@ import {
   Select,
   Badge,
   Tooltip,
-  Progress,
   HStack,
   Input,
   InputRightElement,
