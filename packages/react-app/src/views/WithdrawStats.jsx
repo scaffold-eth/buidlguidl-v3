@@ -32,6 +32,8 @@ import { eventDisplay } from "../helpers/events";
 import { byBigNumber, byTimestamp } from "../helpers/sorting";
 import WithdrawStatsSkeleton from "../components/skeletons/WithdrawStatsSkeleton";
 import { getAllBuilders } from "../data/api/builder";
+import StreamTableCell from "../components/StreamTableCell";
+import StreamRunway from "../components/StreamRunway";
 
 const BuilderAddressCell = ({ builderId }) => {
   return (
@@ -49,6 +51,26 @@ const columns = [
     Cell: ({ value }) => <BuilderAddressCell builderId={value} />,
   },
   {
+    Header: "Stream",
+    accessor: "stream",
+    // Sorting by stream cap for now.
+    sortType: (rowA, rowB) => {
+      const balanceA = parseFloat(rowA.values?.stream?.balance);
+      const balanceB = parseFloat(rowB.values?.stream?.balance);
+      const capA = parseFloat(rowA.values?.stream?.cap);
+      const capB = parseFloat(rowB.values?.stream?.cap);
+      const gapA = balanceA - capA;
+      const gapB = balanceB - capB;
+      return gapA - gapB;
+    },
+    Cell: ({ value }) => (
+      <Box>
+        <StreamRunway stream={value} />
+        <StreamTableCell stream={value} />
+      </Box>
+    ),
+  },
+  {
     Header: "Total withdrawn",
     accessor: "total",
     sortType: (rowA, rowB) => {
@@ -59,7 +81,7 @@ const columns = [
     Cell: ({ value }) => <Box>{parseFloat(ethers.utils.formatEther(value)).toFixed(4)}</Box>,
   },
   {
-    Header: () => <Box whiteSpace="nowrap">Last 30</Box>,
+    Header: () => <Box whiteSpace="nowrap">Last 30d</Box>,
     accessor: "last30",
     sortType: (rowA, rowB) => {
       const last30A = rowA.values?.last30 ?? ethers.BigNumber.from(0);
@@ -211,7 +233,7 @@ export default function WithdrawStats() {
   );
 
   return (
-    <Container maxW="container.lg">
+    <Container maxW="container.xl">
       <Container maxW="container.md" centerContent>
         <Heading as="h1" mb="4">
           Withdraw Stats
