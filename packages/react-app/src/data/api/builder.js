@@ -42,3 +42,13 @@ export const patchEditUser = async (
     throw new Error(error);
   }
 };
+
+export const getAllBuilders = async () => {
+  try {
+    const response = await axios.get(`${serverUrl}/builders`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+};

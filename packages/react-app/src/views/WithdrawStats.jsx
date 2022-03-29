@@ -31,6 +31,7 @@ import { getWithdrawEvents } from "../data/api/streams";
 import { eventDisplay } from "../helpers/events";
 import { byBigNumber, byTimestamp } from "../helpers/sorting";
 import WithdrawStatsSkeleton from "../components/skeletons/WithdrawStatsSkeleton";
+import { getAllBuilders } from "../data/api/builder";
 
 const BuilderAddressCell = ({ builderId }) => {
   return (
@@ -78,8 +79,14 @@ const columns = [
     },
     Cell: ({ value }) => (
       <Box>
-        <DateWithTooltip mb={2} timestamp={value.timestamp} />
-        {eventDisplay(value)}
+        {!value ? (
+          "-"
+        ) : (
+          <>
+            <DateWithTooltip mb={2} timestamp={value.timestamp} />
+            {eventDisplay(value)}
+          </>
+        )}
       </Box>
     ),
   },
@@ -89,9 +96,14 @@ const milisIn30Days = 30 * 24 * 60 * 60 * 1000;
 export default function WithdrawStats() {
   const [events, setEvents] = useState([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
+  const [buildersWithStream, setBuildersWithStream] = useState([]);
+  const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
+  const [builderData, setBuilderData] = useState([]);
   const { secondaryFontColor } = useCustomColorModes();
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
+
+  const isLoading = isLoadingEvents || isLoadingBuilders;
 
   useEffect(() => {
     const fetchWithdrawEvents = async () => {
@@ -108,35 +120,70 @@ export default function WithdrawStats() {
         setIsLoadingEvents(false);
         return;
       }
-      const eventsByBuilder = {};
-      fetchedEvents.forEach(event => {
-        const builderAddress = event.payload.userAddress;
-        if (!eventsByBuilder.hasOwnProperty(builderAddress)) {
-          eventsByBuilder[builderAddress] = {
-            builder: builderAddress,
-            total: ethers.BigNumber.from(0),
-            last30: ethers.BigNumber.from(0),
-            lastEvent: { timestamp: 0 },
-          };
-        }
-        const amount = ethers.utils.parseUnits(event.payload.amount);
-        eventsByBuilder[builderAddress].total = eventsByBuilder[builderAddress].total.add(amount);
-        const isWithin30Days = new Date().getTime() - event.timestamp < milisIn30Days;
-        if (isWithin30Days) {
-          eventsByBuilder[builderAddress].last30 = eventsByBuilder[builderAddress].last30.add(amount);
-        }
-        if (eventsByBuilder[builderAddress].lastEvent.timestamp < event.timestamp) {
-          eventsByBuilder[builderAddress].lastEvent = event;
-        }
-      });
-      setEvents(Object.values(eventsByBuilder));
-      console.log(eventsByBuilder);
+      setEvents(Object.values(fetchedEvents));
       setIsLoadingEvents(false);
     };
 
+    async function fetchBuilders() {
+      setIsLoadingBuilders(true);
+      const fetchedBuilders = await getAllBuilders();
+
+      const processedBuilders = fetchedBuilders
+        .map(builder => ({
+          builder: builder.id,
+          stream: builder.stream,
+        }))
+        .filter(({ stream }) => stream !== undefined);
+
+      setBuildersWithStream(processedBuilders);
+      setIsLoadingBuilders(false);
+    }
+
     fetchWithdrawEvents();
+    fetchBuilders();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (buildersWithStream.length === 0 || events.length === 0) {
+      return;
+    }
+
+    const builderStreamDict = {};
+
+    Object.values(buildersWithStream).forEach(({ builder, stream }) => {
+      builderStreamDict[builder] = {
+        builder,
+        stream,
+        total: ethers.BigNumber.from(0),
+        last30: ethers.BigNumber.from(0),
+        lastEvent: null,
+      };
+    });
+
+    events.forEach(event => {
+      const builderAddress = event.payload.userAddress;
+      if (!builderStreamDict.hasOwnProperty(builderAddress)) {
+        // info: All events should be from registered builders. Skip unregistered builders.
+        console.warn(`Found event from a registered builder. This shouldn't happen`);
+        return;
+      }
+      const amount = ethers.utils.parseUnits(event.payload.amount);
+      const isWithin30Days = new Date().getTime() - event.timestamp < milisIn30Days;
+      builderStreamDict[builderAddress].total = builderStreamDict[builderAddress].total.add(amount);
+      if (isWithin30Days) {
+        builderStreamDict[builderAddress].last30 = builderStreamDict[builderAddress].last30.add(amount);
+      }
+      if (
+        !builderStreamDict[builderAddress].lastEvent ||
+        builderStreamDict[builderAddress].lastEvent.timestamp < event.timestamp
+      ) {
+        builderStreamDict[builderAddress].lastEvent = event;
+      }
+    });
+
+    setBuilderData(Object.values(builderStreamDict));
+  }, [buildersWithStream, events]);
 
   const {
     getTableProps,
@@ -156,7 +203,7 @@ export default function WithdrawStats() {
   } = useTable(
     {
       columns,
-      data: events,
+      data: builderData,
       initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "lastEvent", desc: true }], []) },
     },
     useSortBy,
@@ -173,12 +220,12 @@ export default function WithdrawStats() {
           These are all the builders that have withdrawn funds from their streams
         </Text>
       </Container>
-      {isLoadingEvents ? (
+      {isLoading ? (
         <WithdrawStatsSkeleton />
       ) : (
         <Box overflowX="auto" mb={8}>
           <Center mb={5}>
-            <chakra.strong mr={2}>Total builders:</chakra.strong> {events.length}
+            <chakra.strong mr={2}>Total builders with stream:</chakra.strong> {buildersWithStream.length}
           </Center>
           <Table {...getTableProps()}>
             <Thead>
