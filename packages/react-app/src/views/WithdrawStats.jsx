@@ -35,10 +35,10 @@ import { getAllBuilders } from "../data/api/builder";
 import StreamTableCell from "../components/StreamTableCell";
 import StreamRunway from "../components/StreamRunway";
 
-const BuilderAddressCell = ({ builderId }) => {
+const BuilderAddressCell = ({ builder }) => {
   return (
-    <Link as={RouteLink} to={`/builders/${builderId}`} pos="relative">
-      <Address address={builderId} w="12.5" fontSize="16" />
+    <Link as={RouteLink} to={`/builders/${builder.address}`} pos="relative">
+      <Address address={builder.address} w="12.5" fontSize="16" cachedEns={builder.ens} />
     </Link>
   );
 };
@@ -48,7 +48,7 @@ const columns = [
     Header: "Builder",
     accessor: "builder",
     disableSortBy: true,
-    Cell: ({ value }) => <BuilderAddressCell builderId={value} />,
+    Cell: ({ value }) => <BuilderAddressCell builder={value} />,
   },
   {
     Header: "Stream",
@@ -153,6 +153,7 @@ export default function WithdrawStats() {
       const processedBuilders = fetchedBuilders
         .map(builder => ({
           builder: builder.id,
+          ens: builder.ens,
           stream: builder.stream,
         }))
         .filter(({ stream }) => stream !== undefined);
@@ -173,9 +174,9 @@ export default function WithdrawStats() {
 
     const builderStreamDict = {};
 
-    Object.values(buildersWithStream).forEach(({ builder, stream }) => {
+    Object.values(buildersWithStream).forEach(({ builder, stream, ens }) => {
       builderStreamDict[builder] = {
-        builder,
+        builder: { address: builder, ens },
         stream,
         total: ethers.BigNumber.from(0),
         last30: ethers.BigNumber.from(0),
