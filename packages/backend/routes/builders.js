@@ -4,6 +4,7 @@ const db = require("../services/db/db");
 const { verifySignature } = require("../utils/sign");
 const { withAddress, withRole } = require("../middlewares/auth");
 const { EVENT_TYPES, createEvent } = require("../utils/events");
+const { getEnsFromAddress } = require("../utils/ens");
 
 const router = express.Router();
 
@@ -73,6 +74,11 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderData.stream = {
       streamAddress: builderStreamAddress,
     };
+  }
+
+  const ens = await getEnsFromAddress(builderAddress);
+  if (ens) {
+    builderData.ens = ens;
   }
 
   // Create user.

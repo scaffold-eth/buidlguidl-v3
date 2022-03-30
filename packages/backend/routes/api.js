@@ -3,6 +3,7 @@ const { ethers } = require("ethers");
 const db = require("../services/db/db");
 const { createEvent, EVENT_TYPES } = require("../utils/events");
 const { withApiKey } = require("../middlewares/auth");
+const { getEnsFromAddress } = require("../utils/ens");
 
 const router = express.Router();
 
@@ -33,6 +34,11 @@ router.post("/builders/create", withApiKey, async (req, res) => {
     function: "cadets",
     ...existingBuilderData,
   };
+
+  const ens = await getEnsFromAddress(builderAddress);
+  if (ens) {
+    builderData.ens = ens;
+  }
 
   // Create user.
   await db.createUser(builderAddress, builderData);
