@@ -94,6 +94,7 @@ const columns = [
     Header: "Last withdraw",
     accessor: "lastEvent",
     sortDescFirst: true,
+    minWidth: 350,
     sortType: (rowA, rowB) => {
       const timeA = rowA.values?.lastEvent ?? { timestamp: 0 };
       const timeB = rowB.values?.lastEvent ?? { timestamp: 0 };
@@ -279,7 +280,17 @@ export default function WithdrawStats() {
                 return (
                   <Tr {...row.getRowProps()}>
                     {row.cells.map(cell => (
-                      <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                      <Td {...cell.getCellProps()}>
+                        <Box
+                          {...cell.getCellProps({
+                            style: {
+                              minWidth: cell.column.minWidth ?? "auto",
+                            },
+                          })}
+                        >
+                          {cell.render("Cell")}
+                        </Box>
+                      </Td>
                     ))}
                   </Tr>
                 );

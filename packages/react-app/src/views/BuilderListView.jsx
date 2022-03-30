@@ -234,7 +234,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       {isLoadingBuilders ? (
         <BuilderListSkeleton />
       ) : (
-        <Box mb={8}>
+        <Box overflowX="auto" mb={8}>
           <Center mb={5} flexDir="column">
             <Box mb={2}>
               <chakra.strong mr={2}>Total builders:</chakra.strong> {builders.length}
