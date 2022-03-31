@@ -1,7 +1,7 @@
 const express = require("express");
 const db = require("../services/db/db");
 const { getEnsFromAddress } = require("../utils/ens");
-const { withAddress } = require("../middlewares/auth");
+const { withAddress, withRole } = require("../middlewares/auth");
 const { verifySignature } = require("../utils/sign");
 
 const router = express.Router();
@@ -63,6 +63,34 @@ router.post("/claim", withAddress, async (req, res) => {
   const ensClaimData = {
     submittedTimestamp: new Date().getTime(),
     provided: false,
+  };
+
+  const updatedUser = await db.updateUser(address, { ensClaimData });
+  res.status(200).json(updatedUser);
+});
+
+// Mark as ENS provided for builder.
+router.patch("/claim", withRole("admin"), async (req, res) => {
+  const { builderAddress, signature } = req.body;
+  const address = req.address;
+  console.log("PATCH /ens/claim", builderAddress);
+
+  const verifyOptions = {
+    messageId: "builderProvideEns",
+    address,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const builder = await db.findUserByAddress(address);
+
+  const ensClaimData = {
+    ...builder.data.ensClaimData,
+    provided: true,
   };
 
   const updatedUser = await db.updateUser(address, { ensClaimData });
