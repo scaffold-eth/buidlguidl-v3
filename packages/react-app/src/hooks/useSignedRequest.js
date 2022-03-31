@@ -28,7 +28,6 @@ const useSignedRequest = (actionId, address) => {
    */
   const makeSignedRequest = async options => {
     setIsLoading(true);
-    console.log("getsig", actionId, address, options);
 
     let signMessage;
     try {
