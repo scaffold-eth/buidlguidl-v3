@@ -4,6 +4,7 @@ import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { postStatusUpdate } from "../data/api/status";
 import { postBuildSubmit, postBuildLike, patchBuildEdit } from "../data/api/builds";
 import { postCreateUser, patchEditUser } from "../data/api/builder";
+import { postClaimEns } from "../data/api/ens";
 
 const actionIdToRequest = {
   builderCreate: postCreateUser,
@@ -12,6 +13,7 @@ const actionIdToRequest = {
   buildSubmit: postBuildSubmit,
   buildLike: postBuildLike,
   buildEdit: patchBuildEdit,
+  builderClaimEns: postClaimEns,
 };
 
 const useSignedRequest = (actionId, address) => {

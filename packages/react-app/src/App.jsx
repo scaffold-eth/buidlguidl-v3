@@ -24,6 +24,7 @@ import { providerPromiseWrapper } from "./helpers/blockchainProviders";
 import BlockchainProvidersContext from "./contexts/blockchainProvidersContext";
 import BuildDetailView from "./views/BuildDetailView";
 import BuildVoteList from "./views/BuildVoteList";
+import EnsClaim from "./components/EnsClaim";
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -147,22 +148,22 @@ function App() {
   const [userRole, setUserRole] = useState(null);
   const [connectedBuilder, setConnectedBuilder] = useState(null);
 
-  useEffect(() => {
-    async function fetchUserData() {
-      console.log("getting user data");
-      try {
-        const fetchedUserObject = await axios.get(serverUrl + `/builders/${address}`);
-        setUserRole(USER_ROLES[fetchedUserObject.data.role] ?? USER_ROLES.anonymous);
-        setConnectedBuilder(fetchedUserObject.data);
-      } catch (e) {
-        setUserRole(USER_ROLES.anonymous);
-      }
+  const fetchUserData = useCallback(async () => {
+    console.log("getting user data");
+    try {
+      const fetchedUserObject = await axios.get(serverUrl + `/builders/${address}`);
+      setUserRole(USER_ROLES[fetchedUserObject.data.role] ?? USER_ROLES.anonymous);
+      setConnectedBuilder(fetchedUserObject.data);
+    } catch (e) {
+      setUserRole(USER_ROLES.anonymous);
     }
+  }, [address]);
 
+  useEffect(() => {
     if (address) {
       fetchUserData();
     }
-  }, [address]);
+  }, [address, fetchUserData]);
 
   return (
     <BlockchainProvidersContext.Provider value={providers}>
@@ -178,6 +179,7 @@ function App() {
           logoutOfWeb3Modal={logoutOfWeb3Modal}
           setUserRole={setUserRole}
         />
+        <EnsClaim connectedBuilder={connectedBuilder} address={address} onClaim={fetchUserData} />
         <Switch>
           <Route exact path="/">
             <ActivityView />
