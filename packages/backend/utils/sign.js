@@ -29,6 +29,10 @@ const getSignMessageForId = async (messageId, options) => {
       return `I want to update my social links as ${options.address}`;
     case "builderUpdateStatus":
       return `I want to update my status "${options.status}" as ${options.address}`;
+    case "builderClaimEns":
+      return `I want to claim an ENS as ${options.address}`;
+    case "builderProvideEns":
+      return `I want to mark as ENS provided to builder ${options.builderAddress} as ${options.address}`;
     default:
       return "Invalid signing option";
   }

@@ -54,6 +54,12 @@ const findUserByAddress = async builderAddress => {
   return { exists: true, data: { id: builderSnapshot.id, ...builderSnapshot.data() } };
 };
 
+const getBuildersWithPendingEnsClaims = async () => {
+  const usersEnsPendingSnapshot = await database.collection("users").where("ensClaimData.provided", "==", false).get();
+
+  return usersEnsPendingSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
 // --- Events
 const createEvent = event => {
   return database.collection("events").add(event);
@@ -226,6 +232,7 @@ module.exports = {
   createEvent,
   findAllEvents,
   findEventsWhere,
+  getBuildersWithPendingEnsClaims,
 
   findUpdatableStreams,
   updateStreamData,

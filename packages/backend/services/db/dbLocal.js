@@ -90,6 +90,10 @@ const findAllUsers = () => {
   return Object.entries(database.users).map(([id, userData]) => ({ id, ...userData }));
 };
 
+const getBuildersWithPendingEnsClaims = () => {
+  return findAllUsers().filter(builder => builder.ensClaimData?.provided === false);
+};
+
 // --- Events
 const createEvent = event => {
   database.events.push(event);
@@ -239,6 +243,7 @@ module.exports = {
   updateUser,
   findAllUsers,
   findUserByAddress,
+  getBuildersWithPendingEnsClaims,
 
   createEvent,
   findAllEvents,
