@@ -23,7 +23,6 @@ import {
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import useCustomColorModes from "../hooks/useCustomColorModes";
 import DateWithTooltip from "../components/DateWithTooltip";
 import Address from "../components/Address";
 import WithdrawStatsSkeleton from "../components/skeletons/WithdrawStatsSkeleton";
@@ -45,7 +44,6 @@ export default function EnsClaimsView({ mainnetProvider }) {
   const [isLoadingClaims, setIsLoadingClaims] = useState(false);
   const { isLoading, makeSignedRequest } = useSignedRequest("builderProvideEns", address);
 
-  const { secondaryFontColor } = useCustomColorModes();
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
@@ -155,11 +153,8 @@ export default function EnsClaimsView({ mainnetProvider }) {
     <Container maxW="container.md">
       <Container maxW="container.md" centerContent>
         <Heading as="h1" mb="4">
-          Withdraw Stats
-        </Heading>
-        <Text color={secondaryFontColor} mb="10" textAlign="center">
           ENS Claims
-        </Text>
+        </Heading>
       </Container>
       {isLoadingClaims ? (
         <WithdrawStatsSkeleton />
