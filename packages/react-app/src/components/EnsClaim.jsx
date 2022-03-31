@@ -75,7 +75,7 @@ export default function EnsClaim({ connectedBuilder, address, onClaim }) {
           <ModalHeader>ENS Claim</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text mb={2}>We provide ENS sponsorship for BuildGuidl members.</Text>
+            <Text mb={2}>We provide ENS sponsorships for BuildGuidl members.</Text>
             <Text>
               Claim yours and we will send you the require ETH to register an ENS domain. (Don't forget to set the ENS
               reverse record!)
