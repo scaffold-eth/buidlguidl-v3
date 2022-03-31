@@ -37,11 +37,20 @@ router.get("/update", async (req, res) => {
   return res.status(200).send({ updated });
 });
 
+// Get all pending ENS claims
+router.get("/claims", async (req, res) => {
+  console.log("GET /ens/claims");
+
+  const buildersWithPendingEnsClaims = await db.getBuildersWithPendingEnsClaims();
+
+  res.status(200).json(buildersWithPendingEnsClaims);
+});
+
 // Claim ENS
-router.post("/claim", withAddress, async (req, res) => {
+router.post("/claims", withAddress, async (req, res) => {
   const { signature } = req.body;
   const address = req.address;
-  console.log("POST /ens/claim", address);
+  console.log("POST /ens/claims", address);
 
   const verifyOptions = {
     messageId: "builderClaimEns",
@@ -70,14 +79,15 @@ router.post("/claim", withAddress, async (req, res) => {
 });
 
 // Mark as ENS provided for builder.
-router.patch("/claim", withRole("admin"), async (req, res) => {
+router.patch("/claims", withRole("admin"), async (req, res) => {
   const { builderAddress, signature } = req.body;
   const address = req.address;
-  console.log("PATCH /ens/claim", builderAddress);
+  console.log("PATCH /ens/claims", builderAddress);
 
   const verifyOptions = {
     messageId: "builderProvideEns",
     address,
+    builderAddress,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -86,14 +96,14 @@ router.patch("/claim", withRole("admin"), async (req, res) => {
     return;
   }
 
-  const builder = await db.findUserByAddress(address);
+  const builder = await db.findUserByAddress(builderAddress);
 
   const ensClaimData = {
     ...builder.data.ensClaimData,
     provided: true,
   };
 
-  const updatedUser = await db.updateUser(address, { ensClaimData });
+  const updatedUser = await db.updateUser(builderAddress, { ensClaimData });
   res.status(200).json(updatedUser);
 });
 

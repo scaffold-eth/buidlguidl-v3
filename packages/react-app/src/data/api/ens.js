@@ -4,7 +4,7 @@ import { SERVER_URL as serverUrl } from "../../constants";
 export const postClaimEns = async (address, signature) => {
   try {
     await axios.post(
-      `${serverUrl}/ens/claim`,
+      `${serverUrl}/ens/claims`,
       { signature },
       {
         headers: {
@@ -12,6 +12,33 @@ export const postClaimEns = async (address, signature) => {
         },
       },
     );
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+};
+
+export const patchProvideEns = async (address, signature, { builderAddress }) => {
+  try {
+    await axios.patch(
+      `${serverUrl}/ens/claims`,
+      { builderAddress, signature },
+      {
+        headers: {
+          address,
+        },
+      },
+    );
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+};
+
+export const getEnsClaims = async () => {
+  try {
+    const response = await axios.get(`${serverUrl}/ens/claims`);
+    return response.data;
   } catch (error) {
     console.error(error);
     throw new Error(error);

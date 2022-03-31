@@ -156,6 +156,17 @@ export default function Header({
                 </MenuItem>
                 <MenuItem>
                   <NavLink
+                    to="/admin/ens-claims"
+                    exact
+                    activeStyle={{
+                      color: primaryColorString,
+                    }}
+                  >
+                    ENS claims
+                  </NavLink>
+                </MenuItem>
+                <MenuItem>
+                  <NavLink
                     to="/admin/withdraw-stats"
                     exact
                     activeStyle={{

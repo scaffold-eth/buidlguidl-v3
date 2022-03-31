@@ -4,7 +4,7 @@ import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { postStatusUpdate } from "../data/api/status";
 import { postBuildSubmit, postBuildLike, patchBuildEdit } from "../data/api/builds";
 import { postCreateUser, patchEditUser } from "../data/api/builder";
-import { postClaimEns } from "../data/api/ens";
+import { patchProvideEns, postClaimEns } from "../data/api/ens";
 
 const actionIdToRequest = {
   builderCreate: postCreateUser,
@@ -14,6 +14,7 @@ const actionIdToRequest = {
   buildLike: postBuildLike,
   buildEdit: patchBuildEdit,
   builderClaimEns: postClaimEns,
+  builderProvideEns: patchProvideEns,
 };
 
 const useSignedRequest = (actionId, address) => {
@@ -27,6 +28,7 @@ const useSignedRequest = (actionId, address) => {
    */
   const makeSignedRequest = async options => {
     setIsLoading(true);
+    console.log("getsig", actionId, address, options);
 
     let signMessage;
     try {

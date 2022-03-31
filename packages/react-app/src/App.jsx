@@ -18,6 +18,7 @@ import {
   BuildsView,
   ActivityView,
   WithdrawStats,
+  EnsClaimsView,
 } from "./views";
 import { USER_ROLES } from "./helpers/constants";
 import { providerPromiseWrapper } from "./helpers/blockchainProviders";
@@ -210,6 +211,9 @@ function App() {
           </Route>
           <Route path="/admin/add-builder" exact>
             <BuilderCreateView mainnetProvider={mainnetProvider} />
+          </Route>
+          <Route path="/admin/ens-claims" exact>
+            <EnsClaimsView />
           </Route>
           <Route path="/admin/withdraw-stats" exact>
             <WithdrawStats />
