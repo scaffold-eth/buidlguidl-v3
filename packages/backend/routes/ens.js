@@ -1,6 +1,8 @@
 const express = require("express");
 const db = require("../services/db/db");
 const { getEnsFromAddress } = require("../utils/ens");
+const { withAddress } = require("../middlewares/auth");
+const { verifySignature } = require("../utils/sign");
 
 const router = express.Router();
 
@@ -33,6 +35,38 @@ router.get("/update", async (req, res) => {
 
   const updated = updates.filter(result => !!result).length;
   return res.status(200).send({ updated });
+});
+
+// Claim ENS
+router.post("/claim", withAddress, async (req, res) => {
+  const { signature } = req.body;
+  const address = req.address;
+  console.log("POST /ens/claim", address);
+
+  const verifyOptions = {
+    messageId: "builderClaimEns",
+    address,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const builder = await db.findUserByAddress(address);
+  if (!builder.exists || builder.data.ens) {
+    res.status(401).send(" 🚫 Can't claim an ENS");
+    return;
+  }
+
+  const ensClaimData = {
+    submittedTimestamp: new Date().getTime(),
+    provided: false,
+  };
+
+  const updatedUser = await db.updateUser(address, { ensClaimData });
+  res.status(200).json(updatedUser);
 });
 
 module.exports = router;
