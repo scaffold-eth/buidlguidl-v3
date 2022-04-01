@@ -53,7 +53,7 @@ export default function EnsClaimsView({ mainnetProvider }) {
 
     const processedEnsClaims = claims.map(builder => ({
       builder,
-      requested: builder.ensClaim?.submittedTimestamp,
+      requested: builder.ensClaimData?.submittedTimestamp,
     }));
 
     setEnsClaims(processedEnsClaims);
