@@ -25,7 +25,6 @@ import { providerPromiseWrapper } from "./helpers/blockchainProviders";
 import BlockchainProvidersContext from "./contexts/blockchainProvidersContext";
 import BuildDetailView from "./views/BuildDetailView";
 import BuildVoteList from "./views/BuildVoteList";
-import EnsClaim from "./components/EnsClaim";
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -180,7 +179,6 @@ function App() {
           logoutOfWeb3Modal={logoutOfWeb3Modal}
           setUserRole={setUserRole}
         />
-        <EnsClaim connectedBuilder={connectedBuilder} address={address} onClaim={fetchUserData} />
         <Switch>
           <Route exact path="/">
             <ActivityView />
