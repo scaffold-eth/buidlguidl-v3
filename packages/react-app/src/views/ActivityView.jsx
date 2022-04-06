@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Box,
   Container,
@@ -15,13 +16,33 @@ import {
 import { getAllEvents } from "../data/api";
 import EventRow from "../components/EventRow";
 import { EVENT_TYPES } from "../helpers/events";
+import useQuery from "../hooks/useQuery";
 
 export default function ActivityView() {
   const [eventsFeed, setEventFeeds] = useState([]);
   const [eventTypeFilter, setEventTypeFilter] = useState("");
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
 
+  const history = useHistory();
+  const query = useQuery();
+
   useEffect(() => {
+    const filter = query.get("filter");
+    if (!filter) return;
+
+    const isValidFilter = Object.entries(EVENT_TYPES).some(([id, value]) => value === filter);
+    if (isValidFilter) {
+      setEventTypeFilter(filter);
+    } else {
+      setEventTypeFilter("");
+      history.push({ search: null });
+    }
+  }, [query, history]);
+
+  useEffect(() => {
+    // Avoid the initial extra request when we have a filter.
+    if (query.get("filter") && !eventTypeFilter) return;
+
     const updateEvents = async () => {
       setIsLoadingEvents(true);
       const events = await getAllEvents(eventTypeFilter, 25);
@@ -30,7 +51,13 @@ export default function ActivityView() {
     };
 
     updateEvents();
-  }, [eventTypeFilter]);
+  }, [eventTypeFilter, query]);
+
+  const handleFilterChange = e => {
+    const filter = e.target.value;
+    setEventTypeFilter(filter);
+    history.push({ search: `filter=${filter}` });
+  };
 
   return (
     <Container maxW="container.md" centerContent>
@@ -41,7 +68,7 @@ export default function ActivityView() {
       ) : (
         <>
           <Flex mb={4} justify="right">
-            <Select placeholder="- All -" onChange={e => setEventTypeFilter(e.target.value)} value={eventTypeFilter}>
+            <Select placeholder="- All -" onChange={handleFilterChange} value={eventTypeFilter}>
               {Object.entries(EVENT_TYPES).map(([id, value]) => (
                 <option value={value} key={value}>
                   {id}
