@@ -33,6 +33,7 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import { getWithdrawEvents } from "../data/api/streams";
 import { getSreBuilder } from "../data/api/sre";
 import BuilderChallengesTable from "../components/BuilderChallengesTable";
+import StreamWithdrawButton from "../components/StreamWithdrawButton";
 
 const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
@@ -189,6 +190,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                       />
                     </Box>
                   </Flex>
+                  {isMyProfile && <StreamWithdrawButton streamAddress={builder.stream?.streamAddress} />}
                 </Box>
               )}
             </Flex>
