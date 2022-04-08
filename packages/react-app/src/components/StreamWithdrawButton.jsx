@@ -66,7 +66,7 @@ export default function StreamWithdrawButton({ streamAddress }) {
   const handleAmountChange = evt => {
     const value = evt.target.value;
     setAmountDisplay(value);
-    setAmount(mode === "ETH" ? Number(value) : Number(value) * etherPrice);
+    setAmount(mode === "ETH" ? Number(value) : Number(value) / etherPrice);
   };
 
   const handleWithdraw = async () => {
