@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Switch, Redirect, Route } from "react-router-dom";
 import { Web3Provider, StaticJsonRpcProvider, InfuraProvider } from "@ethersproject/providers";
 import "./App.css";

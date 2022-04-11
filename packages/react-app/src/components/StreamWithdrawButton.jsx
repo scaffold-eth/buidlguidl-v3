@@ -53,6 +53,7 @@ export default function StreamWithdrawButton({ streamAddress }) {
       setStreamContract(new Contract(streamAddress, simpleStreamAbi, userProviderData.provider.getSigner()));
     };
     waitForSigner();
+    // eslint-disable-next-line
   }, []);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
