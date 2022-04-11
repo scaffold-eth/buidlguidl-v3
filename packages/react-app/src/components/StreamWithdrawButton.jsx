@@ -116,7 +116,15 @@ export default function StreamWithdrawButton({ streamAddress }) {
       });
       onClose();
       setIsProcessingWithdraw(false);
+      return;
     }
+
+    toast({
+      status: "success",
+      title: "Transaction sent successfully!",
+      description: "Your stream data will update once the transaction is confirmed and the stream indexer runs.",
+      variant: toastVariant,
+    });
 
     onClose();
     setIsProcessingWithdraw(false);
