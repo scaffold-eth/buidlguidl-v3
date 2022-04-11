@@ -52,11 +52,34 @@ const logoutOfWeb3Modal = async () => {
   }, 1);
 };
 
+const providerPromiseResolvers = {
+  mainnet: {
+    resolve: () => {},
+    reject: () => {},
+  },
+  user: {
+    resolve: () => {},
+    reject: () => {},
+  },
+};
+
 function App() {
   const [providers, setProviders] = useState({
-    mainnet: { provider: null, isReady: false },
+    mainnet: {
+      provider: null,
+      isReady: false,
+      providerPromise: new Promise((resolve, reject) => {
+        providerPromiseResolvers.mainnet = { resolve, reject };
+      }),
+    },
     local: { provider: null, isReady: false },
-    user: { provider: null, isReady: false },
+    user: {
+      provider: null,
+      isReady: false,
+      providerPromise: new Promise((resolve, reject) => {
+        providerPromiseResolvers.user = { resolve, reject };
+      }),
+    },
   });
 
   useEffect(() => {
@@ -87,6 +110,7 @@ function App() {
     scaffoldEthProviderPromise
       .then(provider => {
         if (DEBUG) console.log("📡 Connected to Mainnet Ethereum using the scaffold eth provider");
+        providerPromiseResolvers.mainnet.resolve(provider);
         setProviders(prevProviders => ({ ...prevProviders, mainnet: { provider, isReady: true } }));
       })
       .catch(() => {
@@ -95,11 +119,15 @@ function App() {
         mainnetInfuraProviderPromise
           .then(provider => {
             if (DEBUG) console.log("📡 Connected to Mainnet Ethereum using the infura provider as callback");
+            providerPromiseResolvers.mainnet.resolve(provider);
             setProviders(prevProviders => ({ ...prevProviders, mainnet: { provider, isReady: true } }));
           })
           .catch(() => {
             if (DEBUG) console.log("❌ 📡 Connection to Mainnet Ethereum using the infura provider as fallback failed");
             // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID)
+            providerPromiseResolvers.mainnet.reject(
+              "❌ 📡 Connection to Mainnet Ethereum using the infura provider as fallback failed",
+            );
           });
       });
   }, []);
@@ -112,6 +140,10 @@ function App() {
   const userProvider = useUserProvider(injectedProvider);
 
   useEffect(() => {
+    if (!userProvider) {
+      return;
+    }
+    providerPromiseResolvers.user.resolve(userProvider);
     setProviders(prevProviders => ({ ...prevProviders, user: { provider: userProvider, isReady: true } }));
   }, [setProviders, userProvider]);
 
