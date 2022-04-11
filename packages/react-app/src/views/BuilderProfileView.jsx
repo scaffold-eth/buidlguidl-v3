@@ -190,7 +190,9 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                       />
                     </Box>
                   </Flex>
-                  {isMyProfile && <StreamWithdrawButton streamAddress={builder.stream?.streamAddress} />}
+                  {isMyProfile && builder.stream?.streamAddress && (
+                    <StreamWithdrawButton streamAddress={builder.stream?.streamAddress} />
+                  )}
                 </Box>
               )}
             </Flex>
