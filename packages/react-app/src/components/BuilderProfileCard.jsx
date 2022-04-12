@@ -101,7 +101,7 @@ const BuilderProfileCard = ({
 
     let signMessage;
     try {
-      signMessage = await getUpdateSocialsSignMessage(address);
+      signMessage = await getUpdateSocialsSignMessage(address, socialLinkCleaned);
     } catch (error) {
       toast({
         description: " Sorry, the server is overloaded. 🧯🚒🔥",
