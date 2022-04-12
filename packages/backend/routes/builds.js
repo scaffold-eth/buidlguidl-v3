@@ -52,6 +52,10 @@ router.post("/", withRole("builder"), async (req, res) => {
     messageId: "buildSubmit",
     address,
     buildUrl,
+    demoUrl,
+    desc,
+    name,
+    image,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -100,6 +104,11 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
     messageId: "buildEdit",
     address,
     buildId,
+    buildUrl,
+    demoUrl,
+    desc,
+    name,
+    image,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);

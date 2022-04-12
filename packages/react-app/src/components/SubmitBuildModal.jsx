@@ -205,7 +205,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
                     variant="link"
                     size="sm"
                     onClick={() => {
-                      setImageUrl(null);
+                      setImageUrl("");
                     }}
                   >
                     ( Remove
