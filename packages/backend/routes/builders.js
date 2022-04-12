@@ -49,6 +49,9 @@ router.post("/create", withRole("admin"), async (req, res) => {
     messageId: "builderCreate",
     address,
     builderAddress,
+    builderFunction,
+    builderRole,
+    builderStreamAddress,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -107,6 +110,9 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     messageId: "builderEdit",
     address,
     builderAddress,
+    builderFunction,
+    builderRole,
+    builderStreamAddress,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);

@@ -134,12 +134,13 @@ export const getDraftBuilds = async address => {
   }
 };
 
-export const getUpdateSocialsSignMessage = async userAddress => {
+export const getUpdateSocialsSignMessage = async (userAddress, socialLinks) => {
   try {
     const signMessageResponse = await axios.get(`${serverUrl}/sign-message`, {
       params: {
         messageId: "builderUpdateSocials",
         address: userAddress,
+        socialLinks,
       },
     });
 

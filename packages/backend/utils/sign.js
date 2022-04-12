@@ -43,16 +43,38 @@ const getSignMessageForId = async (messageId, options) => {
       return `${isLiked ? "Unlike" : "Like"} the build "${build.name}" as ${options.address}`;
 
     case "builderCreate":
-      return `I want to add the builder "${options.builderAddress}" to BuidlGuidl as ${options.address}`;
+      data = {
+        builderAddress: options.builderAddress,
+        builderFunction: options.builderFunction,
+        builderRole: options.builderRole,
+        builderStreamAddress: options.builderStreamAddress,
+      };
+      return `I want to add a builder to BuidlGuidl as ${options.address}:\n\n${JSON.stringify(data, null, 2)}`;
 
     case "builderEdit":
-      return `I want to edit the builder "${options.builderAddress}" as ${options.address}`;
+      data = {
+        builderAddress: options.builderAddress,
+        builderFunction: options.builderFunction,
+        builderRole: options.builderRole,
+        builderStreamAddress: options.builderStreamAddress,
+      };
+      return `I want to edit the builder "${options.builderAddress}" as ${options.address}:\n\n${JSON.stringify(
+        data,
+        null,
+        2,
+      )}`;
 
     case "builderUpdateSocials":
-      return `I want to update my social links as ${options.address}`;
+      // We do this because of the way GET params work (can't send JS objects as in POST requests)
+      if (typeof options.socialLinks === "string") {
+        data = options.socialLinks;
+      } else {
+        data = JSON.stringify(options.socialLinks);
+      }
+      return `I want to update my social links as ${options.address}:\n\n${data}`;
 
     case "builderUpdateStatus":
-      return `I want to update my status "${options.status}" as ${options.address}`;
+      return `I want to update my status as ${options.address}:\n\n"${options.status}"`;
 
     case "builderClaimEns":
       return `I want to claim an ENS as ${options.address}`;
