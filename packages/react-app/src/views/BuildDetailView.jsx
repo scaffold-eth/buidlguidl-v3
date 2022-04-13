@@ -119,7 +119,7 @@ export default function BuildDetailView() {
         </Button>
       )}
       <BuildLikeButton
-        buildId={build.id}
+        buildId={buildId}
         isLiked={build.likes?.includes?.(address)}
         likesAmount={build.likes?.length ?? 0}
         onLike={fetchBuild}
