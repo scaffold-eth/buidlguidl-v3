@@ -52,7 +52,7 @@ export default function HomepageView() {
         </Box>
 
         <Box w="50%">
-          <Image src="assets/bg_castle.png" w="100%" />
+          <Image src="assets/bg_castle.png" p="80px" m="auto" />
         </Box>
       </HStack>
 
