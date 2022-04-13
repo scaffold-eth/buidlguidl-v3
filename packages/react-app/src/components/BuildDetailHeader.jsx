@@ -7,7 +7,7 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ellipsizedAddress } from "../helpers/strings";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 
-const BuildDetailHeader = ({ build }) => {
+const BuildDetailHeader = ({ build, actionButtons }) => {
   const mainnetProviderData = useContext(BlockchainProvidersContext).mainnet;
   const mainnetProvider = mainnetProviderData.provider;
 
@@ -24,6 +24,7 @@ const BuildDetailHeader = ({ build }) => {
           <Heading as="h1" mb={4} pb={2} borderColor={borderColor}>
             {build.name}
           </Heading>
+          <HStack mb={3}>{actionButtons}</HStack>
           <Text fontSize="xl" mb={4}>
             {build.desc}
           </Text>

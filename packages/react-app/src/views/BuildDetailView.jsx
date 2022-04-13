@@ -90,9 +90,46 @@ export default function BuildDetailView() {
     history.push("/404");
   }
 
+  const actionButtons = (
+    <>
+      <Button
+        as="a"
+        colorScheme="gray"
+        variant="solid"
+        border="1px solid"
+        boxShadow="2xl"
+        href={build.branch}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Code <ExternalLinkIcon ml={1} />
+      </Button>
+      {build.demoUrl && (
+        <Button
+          as="a"
+          colorScheme="gray"
+          variant="solid"
+          border="1px solid"
+          boxShadow="2xl"
+          href={build.demoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Live Demo <ExternalLinkIcon ml={1} />
+        </Button>
+      )}
+      <BuildLikeButton
+        buildId={build.id}
+        isLiked={build.likes?.includes?.(address)}
+        likesAmount={build.likes?.length ?? 0}
+        onLike={fetchBuild}
+      />
+    </>
+  );
+
   return (
     <Container maxW="container.md" mb="100px">
-      <BuildDetailHeader build={build} />
+      <BuildDetailHeader build={build} actionButtons={actionButtons} />
       {isReadmeSupported && (
         <>
           <Box textAlign="center" mb={6}>
@@ -115,38 +152,7 @@ export default function BuildDetailView() {
         justifyContent="center"
         spacing={6}
       >
-        <Button
-          as="a"
-          colorScheme="gray"
-          variant="solid"
-          border="1px solid"
-          boxShadow="2xl"
-          href={build.branch}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Fork <ExternalLinkIcon ml={1} />
-        </Button>
-        {build.demoUrl && (
-          <Button
-            as="a"
-            colorScheme="gray"
-            variant="solid"
-            border="1px solid"
-            boxShadow="2xl"
-            href={build.demoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Live Demo <ExternalLinkIcon ml={1} />
-          </Button>
-        )}
-        <BuildLikeButton
-          buildId={build.id}
-          isLiked={build.likes?.includes?.(address)}
-          likesAmount={build.likes?.length ?? 0}
-          onLike={fetchBuild}
-        />
+        {actionButtons}
       </HStack>
     </Container>
   );
