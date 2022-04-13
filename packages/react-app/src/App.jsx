@@ -19,6 +19,7 @@ import {
   ActivityView,
   WithdrawStats,
   EnsClaimsView,
+  HomepageView,
 } from "./views";
 import { USER_ROLES } from "./helpers/constants";
 import { providerPromiseWrapper } from "./helpers/blockchainProviders";
@@ -213,6 +214,9 @@ function App() {
         />
         <Switch>
           <Route exact path="/">
+            <HomepageView />
+          </Route>
+          <Route exact path="/activity">
             <ActivityView />
           </Route>
           <Route path="/builds" exact>

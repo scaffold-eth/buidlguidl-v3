@@ -94,6 +94,17 @@ export default function Header({
               </NavLink>
             </chakra.li>
           )}
+          <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <NavLink
+              to="/activity"
+              exact
+              activeStyle={{
+                color: primaryColorString,
+              }}
+            >
+              Activity
+            </NavLink>
+          </chakra.li>
           <chakra.li key="/builds" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
             <NavLink
               to="/builds"

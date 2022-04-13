@@ -4,5 +4,6 @@ export { default as BuilderProfileView } from "./BuilderProfileView";
 export { default as BuilderCreateView } from "./BuilderCreateView";
 export { default as AllBuildsReviewView } from "./AllBuildsReviewView";
 export { default as ActivityView } from "./ActivityView";
+export { default as HomepageView } from "./HomepageView";
 export { default as WithdrawStats } from "./WithdrawStats";
 export { default as EnsClaimsView } from "./EnsClaimsView";
