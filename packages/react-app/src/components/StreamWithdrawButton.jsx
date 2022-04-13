@@ -23,6 +23,9 @@ import { useExchangePrice } from "../hooks";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { NETWORKS } from "../constants";
 import simpleStreamAbi from "../contracts/simpleStreamAbi.json";
+import { Transactor } from "../helpers";
+
+let tx;
 
 export default function StreamWithdrawButton({ streamAddress }) {
   const [isProcessingWithdraw, setIsProcessingWithdraw] = useState(false);
@@ -51,6 +54,7 @@ export default function StreamWithdrawButton({ streamAddress }) {
     const waitForSigner = async () => {
       await userProviderData.providerPromise;
       setStreamContract(new Contract(streamAddress, simpleStreamAbi, userProviderData.provider.getSigner()));
+      tx = Transactor({ providerOrSigner: userProviderData.provider, toast, toastVariant });
     };
     waitForSigner();
     // eslint-disable-next-line
@@ -81,49 +85,20 @@ export default function StreamWithdrawButton({ streamAddress }) {
     }
 
     setIsProcessingWithdraw(true);
-    try {
-      await streamContract.streamWithdraw(ethers.utils.parseEther(amount.toString()), reason);
-    } catch (err) {
-      console.log(err);
-      if (err.code === 4001) {
-        toast({
-          description: "Transaction rejected by user",
-          status: "warning",
-          variant: toastVariant,
-        });
-        onClose();
-        setIsProcessingWithdraw(false);
-        return;
-      }
 
-      const originalMessage = err.message.match(/"message":"(.*?)"/)?.[1];
-      if (originalMessage) {
-        toast({
-          title: "Transaction reverted",
-          description: originalMessage,
-          status: "error",
-          variant: toastVariant,
-        });
-        onClose();
-        setIsProcessingWithdraw(false);
-        return;
-      }
-
-      toast({
-        description: "There was an error withdrawing from the stream",
-        status: "error",
-        variant: toastVariant,
-      });
+    await tx(streamContract.streamWithdraw(ethers.utils.parseEther(amount.toString()), reason), update => {
+      if (!update) return;
+      console.log("📡 Transaction Update:", update);
       onClose();
       setIsProcessingWithdraw(false);
-      return;
-    }
-
-    toast({
-      status: "success",
-      title: "Transaction sent successfully!",
-      description: "Your stream data will update once the transaction is confirmed and the stream indexer runs.",
-      variant: toastVariant,
+      if (update.status === "confirmed" || update.status === 1) {
+        console.log(" 🍾 Transaction " + update.hash + " finished!");
+        toast({
+          status: "success",
+          description: "Your stream data will update once the stream indexer runs.",
+          variant: toastVariant,
+        });
+      }
     });
 
     onClose();
