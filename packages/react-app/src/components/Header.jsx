@@ -42,7 +42,6 @@ export default function Header({
     <Box
       borderBottom="1px"
       borderColor={borderColor}
-      mb={10}
       px={{ base: 4, lg: 8 }}
       h={{ base: userIsRegistered ? "120px" : "80px", lg: "80px" }}
     >
