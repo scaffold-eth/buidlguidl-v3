@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import axios from "axios";
-import { Box, HStack, Heading, Text, Link, Image, chakra, Container, Button } from "@chakra-ui/react";
+import { Box, HStack, Heading, Text, Link, Image, chakra, Container, Button, Spinner, Flex } from "@chakra-ui/react";
 import BuilderFunctionList from "../components/BuilderFunctionList";
 import { SERVER_URL } from "../constants";
 import { USER_FUNCTIONS } from "../helpers/constants";
@@ -150,7 +150,13 @@ export default function HomepageView() {
               <Image src={`/assets/${USER_FUNCTIONS[builderFunction]?.graphic}`} />
               <Heading as="h3">{USER_FUNCTIONS[builderFunction]?.pluralLabel}</Heading>
             </HStack>
-            <BuilderFunctionList builders={builders.filter(builder => builder.function === builderFunction)} />
+            {isLoadingBuilders ? (
+              <Flex justifyContent="center">
+                <Spinner />
+              </Flex>
+            ) : (
+              <BuilderFunctionList builders={builders.filter(builder => builder.function === builderFunction)} />
+            )}
           </Box>
         ))}
 
