@@ -1,15 +1,17 @@
 import { hexlify } from "@ethersproject/bytes";
 import { parseUnits } from "@ethersproject/units";
-import { notification } from "antd";
-import { BLOCKNATIVE_DAPPID, } from "../constants";
-
 import Notify from "bnc-notify";
+import { useColorModeValue, useToast } from "@chakra-ui/react";
+import { BLOCKNATIVE_DAPPID } from "../constants";
 
 // this should probably just be renamed to "notifier"
 // it is basically just a wrapper around BlockNative's wonderful Notify.js
 // https://docs.blocknative.com/notify
 
 export default function Transactor(provider, gasPrice, etherscan) {
+  const toast = useToast({ position: "top", isClosable: true });
+  const toastVariant = useColorModeValue("subtle", "solid");
+
   if (typeof provider !== "undefined") {
     // eslint-disable-next-line consistent-return
     return async tx => {
@@ -64,10 +66,12 @@ export default function Transactor(provider, gasPrice, etherscan) {
             };
           });
         } else {
-          notification.info({
-            message: "Local Transaction Sent",
+          toast({
+            title: "Local Transaction Sent",
             description: result.hash,
-            placement: "bottomRight",
+            position: "bottom-right",
+            status: "info",
+            variant: toastVariant,
           });
         }
 
@@ -75,9 +79,12 @@ export default function Transactor(provider, gasPrice, etherscan) {
       } catch (e) {
         console.log(e);
         console.log("Transaction Error:", e.message);
-        notification.error({
-          message: "Transaction Error",
+        toast({
+          title: "Transaction Error",
           description: e.message,
+          position: "bottom-right",
+          status: "error",
+          variant: toastVariant,
         });
       }
     };
