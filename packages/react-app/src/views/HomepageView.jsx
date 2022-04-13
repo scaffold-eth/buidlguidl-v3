@@ -1,10 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouteLink } from "react-router-dom";
-import { Box, HStack, Heading, Text, Link, Image, chakra, Container } from "@chakra-ui/react";
+import axios from "axios";
+import { Box, HStack, Heading, Text, Link, Image, chakra, Container, Button } from "@chakra-ui/react";
+import BuilderFunctionList from "../components/BuilderFunctionList";
+import { SERVER_URL } from "../constants";
 import { USER_FUNCTIONS } from "../helpers/constants";
+
+const buildersToShow = ["pikemen", "archer", "knight", "cleric", "warlock", "monk"];
 
 /* eslint-disable jsx-a11y/accessible-emoji */
 export default function HomepageView() {
+  const [builders, setBuilders] = useState([]);
+  const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
+
+  useEffect(() => {
+    async function fetchBuilders() {
+      setIsLoadingBuilders(true);
+      const fetchedBuilders = await axios.get(`${SERVER_URL}/builders`);
+
+      setBuilders(fetchedBuilders.data);
+      setIsLoadingBuilders(false);
+    }
+
+    fetchBuilders();
+  }, []);
+
   return (
     <>
       <HStack bgColor="#FCFBF8">
@@ -123,6 +143,29 @@ export default function HomepageView() {
         <Heading as="h2" size="lg" mt="128px" mb="64px">
           Active 🏰 BuidlGuidl members
         </Heading>
+
+        {buildersToShow.map(builderFunction => (
+          <Box mb="128px">
+            <HStack justifyContent="center" mb="20px">
+              <Image src={`/assets/${USER_FUNCTIONS[builderFunction]?.graphic}`} />
+              <Heading as="h3">{USER_FUNCTIONS[builderFunction]?.pluralLabel}</Heading>
+            </HStack>
+            <BuilderFunctionList builders={builders.filter(builder => builder.function === builderFunction)} />
+          </Box>
+        ))}
+
+        <Box>
+          <Button as={RouteLink} to="/builders" colorScheme="blue">
+            View all Builders
+          </Button>
+        </Box>
+
+        <Box mt="128px" mb="25px">
+          🏰<b>BuidlGuidl</b> is a registered 🤠{" "}
+          <Link href="https://dao.buidlguidl.com/" fontWeight="700" color="teal.500" isExternal>
+            Wyoming DAO LLC
+          </Link>
+        </Box>
       </Container>
     </>
   );
