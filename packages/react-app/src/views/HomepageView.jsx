@@ -27,9 +27,9 @@ export default function HomepageView() {
 
   return (
     <>
-      <HStack bgColor="#FCFBF8">
-        <Box w="50%" pl="15%" pr="50px">
-          <Box maxW="470px">
+      <Flex bgColor="#FCFBF8" alignItems="center" direction={{ base: "column-reverse", lg: "row" }}>
+        <Box w={{ base: "100%", lg: "50%" }} pl={{ base: "50px", lg: "15%" }} pr="50px" py="50px">
+          <Box maxW="470px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
             <Heading as="h1" size="sm" mb="10px">
               BuidlGuidl <chakra.span color="#CBD5E0">v3</chakra.span>
             </Heading>
@@ -51,10 +51,15 @@ export default function HomepageView() {
           </Box>
         </Box>
 
-        <Box w="50%">
-          <Image src="assets/bg_castle.png" p="80px" m="auto" />
+        <Box w={{ base: "100%", lg: "50%" }} mt={{ base: "50px", lg: "0" }}>
+          <Image
+            src="assets/bg_castle.png"
+            p={{ base: "0", lg: "80px" }}
+            m="auto"
+            maxW={{ base: "200px", lg: "100%" }}
+          />
         </Box>
-      </HStack>
+      </Flex>
 
       <Container maxW="container.md" centerContent>
         <Box textAlign="center" mt="128px">
@@ -140,15 +145,17 @@ export default function HomepageView() {
           </Text>
         </Box>
 
-        <Heading as="h2" size="lg" mt="128px" mb="64px">
-          Active 🏰 BuidlGuidl members
+        <Heading as="h2" size="md" mt="128px" mb="64px" color="gray.500">
+          Active 🏰 BuidlGuidl members:
         </Heading>
 
         {buildersToShow.map(builderFunction => (
-          <Box mb="128px">
-            <HStack justifyContent="center" mb="20px">
-              <Image src={`/assets/${USER_FUNCTIONS[builderFunction]?.graphic}`} />
-              <Heading as="h3">{USER_FUNCTIONS[builderFunction]?.pluralLabel}</Heading>
+          <Box mb="144px">
+            <HStack justifyContent="center" mb="25px" spacing="24px">
+              <Image src={`/assets/${USER_FUNCTIONS[builderFunction]?.graphic}`} boxSize="200px" />
+              <Heading as="h3" color="gray.500">
+                {USER_FUNCTIONS[builderFunction]?.pluralLabel}
+              </Heading>
             </HStack>
             {isLoadingBuilders ? (
               <Flex justifyContent="center">
