@@ -24,10 +24,11 @@ import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { NETWORKS } from "../constants";
 import simpleStreamAbi from "../contracts/simpleStreamAbi.json";
 import { Transactor } from "../helpers";
+import { updateStreamIndexerFor } from "../data/api/streams";
 
 let tx;
 
-export default function StreamWithdrawButton({ streamAddress }) {
+export default function StreamWithdrawButton({ streamAddress, builderAddress, onUpdate }) {
   const [isProcessingWithdraw, setIsProcessingWithdraw] = useState(false);
   const [amount, setAmount] = useState(0);
   const [amountDisplay, setAmountDisplay] = useState(0);
@@ -85,30 +86,41 @@ export default function StreamWithdrawButton({ streamAddress }) {
     }
 
     setIsProcessingWithdraw(true);
-
-    await tx(streamContract.streamWithdraw(ethers.utils.parseEther(amount.toString()), reason), update => {
+    await tx(streamContract.streamWithdraw(ethers.utils.parseEther(amount.toString()), reason), async update => {
       if (!update) return;
       console.log("📡 Transaction Update:", update);
       onClose();
-      setIsProcessingWithdraw(false);
       if (update.status === "confirmed" || update.status === 1) {
         console.log(" 🍾 Transaction " + update.hash + " finished!");
         toast({
-          status: "success",
-          description: "Your stream data will update once the stream indexer runs.",
+          status: "info",
+          description: "TX completed. Updating stream indexer...",
           variant: toastVariant,
         });
+
+        // Tx completed
+        // Update stream indexer so it shows the new stream data right away.
+        onClose();
+
+        try {
+          await updateStreamIndexerFor(builderAddress);
+        } catch (e) {
+          console.log("Couldn't update the stream indexer", e);
+        }
+
+        if (typeof onUpdate === "function") {
+          await onUpdate();
+        }
+        setIsProcessingWithdraw(false);
       }
     });
-
-    onClose();
     setIsProcessingWithdraw(false);
   };
 
   return (
     <>
       <Center>
-        <Button onClick={onOpen} colorScheme="blue" mt={4} px={4}>
+        <Button onClick={onOpen} colorScheme="blue" mt={4} px={4} isLoading={isProcessingWithdraw}>
           Withdraw
         </Button>
       </Center>

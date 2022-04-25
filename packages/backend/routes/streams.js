@@ -67,7 +67,6 @@ router.post("/update-single", withRole("builder"), async (req, res) => {
 
   try {
     const result = await getStreamEvents(provider, stream, fromBlock, currentBlock);
-    console.log("result", result);
     if (result.events.length) {
       console.log("Updating stream data for", address);
       await db.updateStreamData({ ...stream, builderAddress: address }, result);

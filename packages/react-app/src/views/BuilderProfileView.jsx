@@ -191,7 +191,15 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                     </Box>
                   </Flex>
                   {isMyProfile && builder.stream?.streamAddress && (
-                    <StreamWithdrawButton streamAddress={builder.stream?.streamAddress} />
+                    <StreamWithdrawButton
+                      streamAddress={builder.stream?.streamAddress}
+                      builderAddress={builderAddress}
+                      onUpdate={async () => {
+                        await fetchBuilder();
+                        const res = await getWithdrawEvents(builderAddress);
+                        setWithdrawEvents(res);
+                      }}
+                    />
                   )}
                 </Box>
               )}
