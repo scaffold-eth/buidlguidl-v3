@@ -20,9 +20,8 @@ router.get("/update", async (req, res) => {
   const streams = await db.findUpdatableStreams({ limit: maxItems });
   let updated = 0;
 
-  const lastIndexedBlock = (await db.getConfigData("streams")).lastIndexedBlock ?? 0;
   const updates = streams.map(async stream => {
-    const fromBlock = stream.lastIndexedBlock ? lastIndexedBlock : 0;
+    const fromBlock = stream.lastIndexedBlock ?? 0;
 
     return [await getStreamEvents(provider, stream, fromBlock, currentBlock), stream];
   });
@@ -38,6 +37,7 @@ router.get("/update", async (req, res) => {
           }
         }),
       );
+      // Not using it right now, but keeping it up to date.
       console.log("Updating stream lastIndexedBlock", currentBlock);
       await db.setConfigData("streams", { lastIndexedBlock: currentBlock });
       res.status(200).send({ updated });
