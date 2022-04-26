@@ -185,14 +185,16 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       setIsLoadingBuilders(true);
       const fetchedBuilders = await axios.get(serverUrl + serverPath);
 
-      const processedBuilders = fetchedBuilders.data.map(builder => ({
-        builder,
-        status: builder.status,
-        stream: builder.stream,
-        builds: builder.builds?.length || 0,
-        socials: builder,
-        lastActivity: builderLastActivity(builder),
-      }));
+      const processedBuilders = fetchedBuilders.data
+        .filter(builder => builder.ens !== "austingriffith.eth")
+        .map(builder => ({
+          builder,
+          status: builder.status,
+          stream: builder.stream,
+          builds: builder.builds?.length || 0,
+          socials: builder,
+          lastActivity: builderLastActivity(builder),
+        }));
 
       setBuilders(processedBuilders);
       setIsLoadingBuilders(false);
