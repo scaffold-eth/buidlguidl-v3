@@ -43,7 +43,7 @@ export default function Header({
     <Box
       borderBottom="1px"
       borderColor={borderColor}
-      mb={location.pathname !== "/" ? 10 : 0}
+      mb={10}
       px={{ base: 4, lg: 8 }}
       h={{ base: userIsRegistered ? "120px" : "80px", lg: "80px" }}
     >
@@ -95,17 +95,6 @@ export default function Header({
               </NavLink>
             </chakra.li>
           )}
-          <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-            <NavLink
-              to="/activity"
-              exact
-              activeStyle={{
-                color: primaryColorString,
-              }}
-            >
-              Activity
-            </NavLink>
-          </chakra.li>
           <chakra.li key="/builds" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
             <NavLink
               to="/builds"
