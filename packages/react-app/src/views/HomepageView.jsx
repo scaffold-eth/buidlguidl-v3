@@ -40,14 +40,14 @@ export default function HomepageView() {
               A curated group of <strong>Ethereum</strong> builders creating products, prototypes, and tutorials to
               enrich the web3 ecosytem.
             </Text>
-            <Text mb="20px">
+            <Text mb="25px">
               🔧 We actively maintain{" "}
               <Link href="https://github.com/scaffold-eth" fontWeight="700" color="teal.500" isExternal>
                 🏗 scaffold-eth
               </Link>{" "}
               and it's our tool of choice.
             </Text>
-            <Text>❤️ We are an Ethereum public good.</Text>
+            <Text mb="10px">❤️ We are an Ethereum public good.</Text>
           </Box>
         </Box>
 
@@ -145,7 +145,39 @@ export default function HomepageView() {
           </Text>
         </Box>
 
-        <Heading as="h2" size="md" mt="128px" mb="64px" color="gray.500">
+        <Box textAlign="center" mt="64px">
+          <Text>-</Text>
+        </Box>
+
+        <Box textAlign="center" mt="64px">
+          <Text mb="25px">
+            💰 a{" "}
+            <Link href="https://fund.buidlguidl.com/funding" fontWeight="700" color="teal.500" isExternal>
+              yolo
+            </Link>{" "}
+            to 🏰BuidlGuidl.eth is a{" "}
+            <Link href="https://fund.buidlguidl.com/funding" fontWeight="700" color="teal.500" isExternal>
+              yolo
+            </Link>{" "}
+            to high leverage web3 devs.
+          </Text>
+        </Box>
+        <Box textAlign="center" mt="64px">
+          <Text>
+            🔮 Will the retroactive gods favor{" "}
+            <Link href="https://fund.buidlguidl.com/funders" fontWeight="700" color="teal.500" isExternal>
+              yolo
+            </Link>{" "}
+            of the 🏰BuidlGuidl?
+          </Text>
+          <Text mt="18px">🧙‍♂️ Only time will tell...</Text>
+        </Box>
+
+        <Box textAlign="center" mt="64px">
+          <Text>-</Text>
+        </Box>
+
+        <Heading as="h2" size="md" my="64px" color="gray.500">
           Active 🏰 BuidlGuidl members:
         </Heading>
 
