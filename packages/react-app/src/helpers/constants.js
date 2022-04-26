@@ -11,12 +11,12 @@ export const USER_ROLES = {
 };
 
 export const USER_FUNCTIONS = {
-  cadets: { label: "Cadets", graphic: "cadets_thumb.jpeg" },
+  cadets: { label: "Cadets", graphic: "cadets_thumb.jpeg", pluralLabel: "Cadets" },
   infantry: { label: "Infantry", graphic: "infantry_thumb.jpeg" },
-  pikemen: { label: "Pikemen", graphic: "pikemen_thumb.png" },
-  warlock: { label: "Warlock", graphic: "warlock_thumb.png" },
-  knight: { label: "Knight", graphic: "knight_thumb.png" },
-  monk: { label: "Monk", graphic: "monk_thumb.png" },
-  archer: { label: "Archer", graphic: "archer_thumb.png" },
-  cleric: { label: "Cleric", graphic: "cleric_thumb.png" },
+  pikemen: { label: "Pikemen", graphic: "pikemen_thumb.png", pluralLabel: "Pikemen" },
+  warlock: { label: "Warlock", graphic: "warlock_thumb.png", pluralLabel: "Warlocks" },
+  knight: { label: "Knight", graphic: "knight_thumb.png", pluralLabel: "Knights" },
+  monk: { label: "Monk", graphic: "monk_thumb.png", pluralLabel: "Monks" },
+  archer: { label: "Archer", graphic: "archer_thumb.png", pluralLabel: "Archers" },
+  cleric: { label: "Cleric", graphic: "cleric_thumb.png", pluralLabel: "Clerics" },
 };
