@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   chakra,
   useColorModeValue,
@@ -32,7 +32,6 @@ export default function Header({
 }) {
   const { secondaryFontColor, borderColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const location = useLocation();
   const primaryColorString = useColorModeValue("gray.700", "gray.200");
   const envMarkerBgColor = useColorModeValue("yellow.200", "yellow.800");
   const isSignerProviderConnected =
