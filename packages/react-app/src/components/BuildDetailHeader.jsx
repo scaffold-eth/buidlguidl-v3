@@ -1,13 +1,15 @@
 import React, { useContext } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import { useLookupAddress } from "eth-hooks";
-import { Heading, Box, Image, Center, HStack, VStack, Flex, Text, Link, Spacer } from "@chakra-ui/react";
+import { Heading, Box, Image, HStack, VStack, Flex, Text, Link, Spacer, useDisclosure } from "@chakra-ui/react";
 import QRPunkBlockie from "./QrPunkBlockie";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ellipsizedAddress } from "../helpers/strings";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
+import ImageModal from "./ImageModal";
 
 const BuildDetailHeader = ({ build, actionButtons }) => {
+  const { isOpen: isOpenImageModal, onOpen: onOpenImageModal, onClose: onCloseImageModal } = useDisclosure();
   const mainnetProviderData = useContext(BlockchainProvidersContext).mainnet;
   const mainnetProvider = mainnetProviderData.provider;
 
@@ -20,7 +22,7 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
   return (
     <>
       <Flex borderRadius="lg" borderColor={borderColor} borderWidth={1} p={6} margin="auto">
-        <Box maxW="65%">
+        <Box maxW={build.image ? "65%" : "none"}>
           <Heading as="h1" mb={4} pb={2} borderColor={borderColor}>
             {build.name}
           </Heading>
@@ -67,16 +69,15 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
             </HStack>
           </Link>
         </Box>
-        <Spacer />
-        <Box border="2px" borderStyle="solid" borderColor={borderColor}>
-          {build.image ? (
-            <Image src={build.image} h="200px" mx="auto" />
-          ) : (
-            <Center h="200px" p={10}>
-              No image
-            </Center>
-          )}
-        </Box>
+        <Spacer p="5px" />
+        {build.image && (
+          <Box>
+            <Box border="2px" borderStyle="solid" borderColor={borderColor}>
+              <Image src={build.image} h="200px" mx="auto" onClick={onOpenImageModal} cursor="pointer" />
+              <ImageModal image={build.image} onClose={onCloseImageModal} isOpen={isOpenImageModal} />
+            </Box>
+          </Box>
+        )}
       </Flex>
     </>
   );
