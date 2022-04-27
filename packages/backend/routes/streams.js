@@ -23,7 +23,7 @@ router.get("/update", async (req, res) => {
   const updates = streams.map(async stream => {
     const fromBlock = stream.lastIndexedBlock ?? 0;
 
-    return [await getStreamEvents(provider, stream, fromBlock, currentBlock), stream];
+    return [await getStreamEvents(provider, stream, fromBlock + 1, currentBlock), stream];
   });
 
   Promise.all(updates)
@@ -66,7 +66,7 @@ router.post("/update-single", withRole("builder"), async (req, res) => {
   let updated = 0;
 
   try {
-    const result = await getStreamEvents(provider, stream, fromBlock, currentBlock);
+    const result = await getStreamEvents(provider, stream, fromBlock + 1, currentBlock);
     if (result.events.length) {
       console.log("Updating stream data for", address);
       await db.updateStreamData({ ...stream, builderAddress: address }, result);
