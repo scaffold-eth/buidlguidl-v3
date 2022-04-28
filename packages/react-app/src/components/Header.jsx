@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { useLocation, NavLink } from "react-router-dom";
 import {
   chakra,
   useColorModeValue,
@@ -32,6 +32,7 @@ export default function Header({
 }) {
   const { secondaryFontColor, borderColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const location = useLocation();
   const primaryColorString = useColorModeValue("gray.700", "gray.200");
   const envMarkerBgColor = useColorModeValue("yellow.200", "yellow.800");
   const isSignerProviderConnected =
@@ -42,7 +43,7 @@ export default function Header({
     <Box
       borderBottom="1px"
       borderColor={borderColor}
-      mb={10}
+      mb={location.pathname !== "/" ? 10 : 0}
       px={{ base: 4, lg: 8 }}
       h={{ base: userIsRegistered ? "120px" : "80px", lg: "80px" }}
     >
@@ -94,6 +95,17 @@ export default function Header({
               </NavLink>
             </chakra.li>
           )}
+          <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <NavLink
+              to="/activity"
+              exact
+              activeStyle={{
+                color: primaryColorString,
+              }}
+            >
+              Activity
+            </NavLink>
+          </chakra.li>
           <chakra.li key="/builds" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
             <NavLink
               to="/builds"

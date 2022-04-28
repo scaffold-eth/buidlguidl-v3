@@ -214,10 +214,10 @@ function App() {
         />
         <Switch>
           <Route exact path="/">
-            <ActivityView />
-          </Route>
-          <Route exact path="/new">
             <HomepageView />
+          </Route>
+          <Route exact path="/activity">
+            <ActivityView />
           </Route>
           <Route path="/builds" exact>
             <BuildsView userProvider={userProvider} connectedBuilder={connectedBuilder} userRole={userRole} />

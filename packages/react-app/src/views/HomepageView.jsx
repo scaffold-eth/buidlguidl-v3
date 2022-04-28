@@ -162,16 +162,6 @@ export default function HomepageView() {
             to high leverage web3 devs.
           </Text>
         </Box>
-        <Box textAlign="center" mt="64px">
-          <Text>
-            🔮 Will the retroactive gods favor{" "}
-            <Link href="https://fund.buidlguidl.com/funders" fontWeight="700" color="teal.500" isExternal>
-              yolo
-            </Link>{" "}
-            of the 🏰BuidlGuidl?
-          </Text>
-          <Text mt="18px">🧙‍♂️ Only time will tell...</Text>
-        </Box>
 
         <Box textAlign="center" mt="64px">
           <Text>-</Text>
