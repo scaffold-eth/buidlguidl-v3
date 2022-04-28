@@ -42,7 +42,7 @@ export default function HomepageView() {
             </Text>
             <Text mb="25px">
               🔧 We actively maintain{" "}
-              <Link href="https://github.com/scaffold-eth" fontWeight="700" color="teal.500" isExternal>
+              <Link href="https://github.com/scaffold-eth/scaffold-eth" fontWeight="700" color="teal.500" isExternal>
                 🏗 scaffold-eth
               </Link>{" "}
               and it's our tool of choice.
