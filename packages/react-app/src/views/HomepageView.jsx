@@ -6,7 +6,7 @@ import BuilderFunctionList from "../components/BuilderFunctionList";
 import { SERVER_URL } from "../constants";
 import { USER_FUNCTIONS } from "../helpers/constants";
 
-const buildersToShow = ["pikemen", "archer", "knight", "cleric", "warlock", "monk"];
+const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 /* eslint-disable jsx-a11y/accessible-emoji */
 export default function HomepageView() {
@@ -175,7 +175,7 @@ export default function HomepageView() {
           <Box mb="144px">
             <HStack justifyContent="center" mb="25px" spacing="24px">
               <Image src={`/assets/${USER_FUNCTIONS[builderFunction]?.graphic}`} boxSize="200px" />
-              <Heading as="h3" color="gray.500">
+              <Heading as="h3" color="gray.500" w="160px">
                 {USER_FUNCTIONS[builderFunction]?.pluralLabel}
               </Heading>
             </HStack>
