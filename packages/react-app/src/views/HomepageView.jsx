@@ -30,11 +30,8 @@ export default function HomepageView() {
       <Flex bgColor="#FCFBF8" alignItems="center" direction={{ base: "column-reverse", lg: "row" }}>
         <Box w={{ base: "100%", lg: "50%" }} pl={{ base: "50px", lg: "15%" }} pr="50px" py="50px">
           <Box maxW="470px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
-            <Heading as="h1" size="sm" mb="10px">
+            <Heading as="h1" mb="10px">
               BuidlGuidl <chakra.span color="#CBD5E0">v3</chakra.span>
-            </Heading>
-            <Heading as="h2" fontSize="60px" lineHeight="1" mb="20px">
-              Building the future of Web3.
             </Heading>
             <Text mb="10px">
               A curated group of <strong>Ethereum</strong> builders creating products, prototypes, and tutorials to
