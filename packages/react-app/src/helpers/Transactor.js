@@ -153,6 +153,7 @@ export default function Transactor({ providerOrSigner, gasPrice, etherscan, toas
         if (callback && typeof callback === "function") {
           callback(e);
         }
+        throw new Error(message);
       }
     };
   }

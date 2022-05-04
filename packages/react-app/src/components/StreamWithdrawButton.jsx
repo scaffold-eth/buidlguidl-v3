@@ -86,34 +86,42 @@ export default function StreamWithdrawButton({ streamAddress, builderAddress, on
     }
 
     setIsProcessingWithdraw(true);
-    await tx(streamContract.streamWithdraw(ethers.utils.parseEther(amount.toString()), reason), async update => {
-      if (!update) return;
-      console.log("📡 Transaction Update:", update);
-      onClose();
-      if (update.status === "confirmed" || update.status === 1) {
-        console.log(" 🍾 Transaction " + update.hash + " finished!");
-        toast({
-          status: "info",
-          description: "TX completed. Updating stream indexer...",
-          variant: toastVariant,
-        });
-
-        // Tx completed
-        // Update stream indexer so it shows the new stream data right away.
+    try {
+      await tx(streamContract.streamWithdraw(ethers.utils.parseEther(amount.toString()), reason), async update => {
+        if (!update) return;
+        console.log("📡 Transaction Update:", update);
         onClose();
-
-        try {
-          await updateStreamIndexerFor(builderAddress);
-        } catch (e) {
-          console.log("Couldn't update the stream indexer", e);
+        if (update.status === "confirmed" || update.status === 1) {
+          console.log(" 🍾 Transaction " + update.hash + " sent!");
         }
+      });
+    } catch (e) {
+      onClose();
+      setIsProcessingWithdraw(false);
+      console.log(e);
+      return;
+    }
 
-        if (typeof onUpdate === "function") {
-          await onUpdate();
-        }
-        setIsProcessingWithdraw(false);
-      }
+    toast({
+      status: "info",
+      description: "TX completed. Updating stream indexer...",
+      variant: toastVariant,
     });
+
+    // Tx completed
+    // Update stream indexer so it shows the new stream data right away.
+    onClose();
+
+    try {
+      await updateStreamIndexerFor(builderAddress);
+    } catch (e) {
+      console.log("Couldn't update the stream indexer", e);
+    }
+
+    if (typeof onUpdate === "function") {
+      await onUpdate();
+    }
+
     setIsProcessingWithdraw(false);
   };
 
