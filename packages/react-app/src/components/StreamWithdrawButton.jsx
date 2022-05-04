@@ -18,6 +18,8 @@ import {
   InputLeftElement,
   InputRightAddon,
   Center,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { useExchangePrice } from "../hooks";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
@@ -40,6 +42,8 @@ export default function StreamWithdrawButton({ streamAddress, builderAddress, on
   const providersData = useContext(BlockchainProvidersContext);
   const mainnetProviderData = providersData.mainnet;
   const userProviderData = providersData.user;
+
+  const userSelectedNetwork = userProviderData?.provider?._network;
   const etherPrice = useExchangePrice(NETWORKS.mainnet, mainnetProviderData);
 
   const toast = useToast({ position: "top", isClosable: true });
@@ -138,6 +142,12 @@ export default function StreamWithdrawButton({ streamAddress, builderAddress, on
           <ModalHeader>Withdraw</ModalHeader>
           <ModalCloseButton />
           <ModalBody px={8} pb={8}>
+            {userSelectedNetwork?.chainId !== 1 && (
+              <Alert status="warning" mb={4}>
+                <AlertIcon />
+                You are in the wrong network ({userSelectedNetwork?.name}). Please switch to Mainnet.
+              </Alert>
+            )}
             <InputGroup mb={4}>
               <Input onChange={evt => setReason(evt.target.value)} value={reason} placeholder="reason / work / link" />
             </InputGroup>
