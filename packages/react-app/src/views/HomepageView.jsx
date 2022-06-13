@@ -33,16 +33,9 @@ export default function HomepageView() {
             <Heading as="h1" mb="10px">
               BuidlGuidl <chakra.span color="#CBD5E0">v3</chakra.span>
             </Heading>
-            <Text mb="10px">
+            <Text mb="25px">
               A curated group of <strong>Ethereum</strong> builders creating products, prototypes, and tutorials to
               enrich the web3 ecosytem.
-            </Text>
-            <Text mb="25px">
-              🔧 We actively maintain{" "}
-              <Link href="https://github.com/scaffold-eth/scaffold-eth" fontWeight="700" color="teal.500" isExternal>
-                🏗 scaffold-eth
-              </Link>{" "}
-              and it's our tool of choice.
             </Text>
             <Text mb="10px">❤️ We are an Ethereum public good.</Text>
           </Box>
@@ -57,6 +50,28 @@ export default function HomepageView() {
           />
         </Box>
       </Flex>
+
+      <Box bgColor="#fbf7f6" p="45px 0">
+        <Container maxW="container.md" centerContent>
+          <Flex bgColor="#fbf7f6" alignItems="center" flexDirection={{ base: "column", lg: "row" }}>
+            <Image src="assets/scaffold-eth.jpeg" pb={{ base: "25px", lg: "0" }} m="auto" maxW="200px" />
+            <Box pl={{ base: "0", lg: "80px" }}>
+              <Text fontSize={{ base: "xl", lg: "2xl" }} fontWeight="bold">
+                <Link href="https://github.com/scaffold-eth/scaffold-eth" fontWeight="700" color="teal.500" isExternal>
+                  🏗 scaffold-eth
+                </Link>{" "}
+                is our tool of choice.
+              </Text>
+              <Text fontSize={{ base: "md", lg: "lg" }} mt="8px">
+                🚀 Everything you need to build on Ethereum!
+              </Text>
+              <Text fontSize={{ base: "md", lg: "lg" }} mt="8px">
+                🔧 We actively maintain it and build with it.
+              </Text>
+            </Box>
+          </Flex>
+        </Container>
+      </Box>
 
       <Container maxW="container.md" centerContent>
         <Box textAlign="center" mt="128px">
