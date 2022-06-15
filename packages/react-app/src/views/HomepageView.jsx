@@ -1,7 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import axios from "axios";
-import { Box, HStack, Heading, Text, Link, Image, chakra, Container, Button, Spinner, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Heading,
+  Text,
+  Link,
+  Image,
+  chakra,
+  Container,
+  Button,
+  Spinner,
+  Flex,
+  useColorModeValue,
+  useColorMode,
+} from "@chakra-ui/react";
 import BuilderFunctionList from "../components/BuilderFunctionList";
 import { SERVER_URL } from "../constants";
 import { USER_FUNCTIONS } from "../helpers/constants";
@@ -12,6 +26,11 @@ const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "art
 export default function HomepageView() {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
+
+  const { colorMode } = useColorMode();
+  const isDarkMode = colorMode === "dark";
+  const heroBg = useColorModeValue("#FCFBF8", "gray.800");
+  const scaffoldEthBg = useColorModeValue("#fbf7f6", "whiteAlpha.300");
 
   useEffect(() => {
     async function fetchBuilders() {
@@ -27,7 +46,7 @@ export default function HomepageView() {
 
   return (
     <>
-      <Flex bgColor="#FCFBF8" alignItems="center" direction={{ base: "column-reverse", lg: "row" }}>
+      <Flex bgColor={heroBg} alignItems="center" direction={{ base: "column-reverse", lg: "row" }}>
         <Box w={{ base: "100%", lg: "50%" }} pl={{ base: "50px", lg: "15%" }} pr="50px" py="50px">
           <Box maxW="470px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
             <Heading as="h1" mb="10px">
@@ -51,10 +70,16 @@ export default function HomepageView() {
         </Box>
       </Flex>
 
-      <Box bgColor="#fbf7f6" p="45px 0">
+      <Box bgColor={scaffoldEthBg} p="45px 0">
         <Container maxW="container.md" centerContent>
-          <Flex bgColor="#fbf7f6" alignItems="center" flexDirection={{ base: "column", lg: "row" }}>
-            <Image src="assets/scaffold-eth.jpeg" pb={{ base: "25px", lg: "0" }} m="auto" maxW="200px" />
+          <Flex alignItems="center" flexDirection={{ base: "column", lg: "row" }}>
+            <Image
+              src="assets/scaffold-eth.jpeg"
+              pb={{ base: "25px", lg: "0" }}
+              m="auto"
+              maxW="200px"
+              filter={isDarkMode ? "grayscale(1)" : "auto"}
+            />
             <Box pl={{ base: "0", lg: "80px" }}>
               <Text fontSize={{ base: "xl", lg: "2xl" }} fontWeight="bold">
                 <Link href="https://github.com/scaffold-eth/scaffold-eth" fontWeight="700" color="teal.500" isExternal>
