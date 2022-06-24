@@ -21,6 +21,8 @@ import {
   Tr,
   Th,
   Td,
+  Tooltip,
+  useClipboard,
 } from "@chakra-ui/react";
 import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
@@ -34,6 +36,7 @@ import { getWithdrawEvents } from "../data/api/streams";
 import { getSreBuilder } from "../data/api/sre";
 import BuilderChallengesTable from "../components/BuilderChallengesTable";
 import StreamWithdrawButton from "../components/StreamWithdrawButton";
+import { CopyIcon } from "@chakra-ui/icons";
 
 const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
@@ -42,6 +45,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { secondaryFontColor, borderColor } = useCustomColorModes();
   const [builder, setBuilder] = useState(null);
+  const { hasCopied, onCopy } = useClipboard(builder?.stream?.streamAddress);
   const [withdrawEvents, setWithdrawEvents] = useState([]);
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
   const [builderChallenges, setBuilderChallenges] = useState([]);
@@ -159,10 +163,19 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                   <Flex align="center" justify="space-evenly" w="full">
                     <Flex>
                       <Text mr={2} fontWeight="bold">
-                        Stream:
+                        <Tooltip label={builder?.stream?.streamAddress} closeOnClick={false}>
+                          Stream:
+                        </Tooltip>
                       </Text>
                       <Flex align="center" justify="end">
-                        Ξ {parseFloat(streamDisplay.capStr).toFixed(2)} @ {streamDisplay.frequencyDays}d
+                        <HStack>
+                          <Box>
+                            Ξ {parseFloat(streamDisplay.capStr).toFixed(2)} @ {streamDisplay.frequencyDays}d
+                          </Box>
+                          <Tooltip label={hasCopied ? "Copied!" : "Copy Stream Address"} closeOnClick={false}>
+                            <CopyIcon cursor="pointer" onClick={onCopy} />
+                          </Tooltip>
+                        </HStack>
                       </Flex>
                     </Flex>
                     <Flex>
