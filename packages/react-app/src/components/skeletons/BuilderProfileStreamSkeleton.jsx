@@ -6,7 +6,7 @@ const BuilderProfileStreamSkeleton = () => (
     <Flex align="center" justify="space-evenly" w="full">
       <Flex>
         <Text mr={2} fontWeight="bold">
-          Stream:
+          Stream
         </Text>
         <Flex align="center" justify="end">
           Ξ <Skeleton h={4} w={6} py={2} display="inline" /> @ <Skeleton h={4} w={6} py={2} display="inline" />d
@@ -14,7 +14,7 @@ const BuilderProfileStreamSkeleton = () => (
       </Flex>
       <Flex>
         <Text mr={2} fontWeight="bold">
-          Balance:
+          Balance
         </Text>
         <Flex align="center" justify="end">
           Ξ <Skeleton h={4} w={6} py={2} />
@@ -24,7 +24,7 @@ const BuilderProfileStreamSkeleton = () => (
     <Flex align="center" justify="center" direction="column" px={4} mt={4}>
       <Flex align="center" justify="center">
         <Text mr={2} fontWeight="bold">
-          Unlocked:
+          Unlocked
         </Text>
         <Flex mb={1} align="center" justify="center">
           Ξ <Skeleton h={4} w={12} py={2} display="inline" />

@@ -23,7 +23,9 @@ import {
   Td,
   Tooltip,
   useClipboard,
+  Link,
 } from "@chakra-ui/react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import BuilderProfileCard from "../components/BuilderProfileCard";
 import BuilderProfileBuildsTableSkeleton from "../components/skeletons/BuilderProfileChallengesTableSkeleton";
 import BuilderProfileStreamSkeleton from "../components/skeletons/BuilderProfileStreamSkeleton";
@@ -36,7 +38,6 @@ import { getWithdrawEvents } from "../data/api/streams";
 import { getSreBuilder } from "../data/api/sre";
 import BuilderChallengesTable from "../components/BuilderChallengesTable";
 import StreamWithdrawButton from "../components/StreamWithdrawButton";
-import { CopyIcon } from "@chakra-ui/icons";
 
 const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
@@ -163,8 +164,10 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                   <Flex align="center" justify="space-evenly" w="full">
                     <Flex>
                       <Text mr={2} fontWeight="bold">
-                        <Tooltip label={builder?.stream?.streamAddress} closeOnClick={false}>
-                          Stream:
+                        <Tooltip label={hasCopied ? "Copied!" : "Copy Stream Address"} closeOnClick={false}>
+                          <Text onClick={onCopy} cursor="pointer">
+                            Stream
+                          </Text>
                         </Tooltip>
                       </Text>
                       <Flex align="center" justify="end">
@@ -172,15 +175,15 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                           <Box>
                             Ξ {parseFloat(streamDisplay.capStr).toFixed(2)} @ {streamDisplay.frequencyDays}d
                           </Box>
-                          <Tooltip label={hasCopied ? "Copied!" : "Copy Stream Address"} closeOnClick={false}>
-                            <CopyIcon cursor="pointer" onClick={onCopy} />
-                          </Tooltip>
+                          <Link href={`https://etherscan.io/address/${builder.stream?.streamAddress}`} isExternal>
+                            <ExternalLinkIcon d="block" />
+                          </Link>
                         </HStack>
                       </Flex>
                     </Flex>
                     <Flex>
                       <Text mr={2} fontWeight="bold">
-                        Balance:
+                        Balance
                       </Text>
                       <Flex align="center" justify="end">
                         Ξ {parseFloat(streamDisplay.balance).toFixed(4) ?? 0}
@@ -190,7 +193,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                   <Flex align="center" justify="center" direction="column" px={4} mt={4}>
                     <Flex>
                       <Text mr={2} fontWeight="bold">
-                        Unlocked:
+                        Unlocked
                       </Text>
                       <Box mb={1}>Ξ {parseFloat(streamDisplay.availableStr).toFixed(4)}</Box>
                     </Flex>
