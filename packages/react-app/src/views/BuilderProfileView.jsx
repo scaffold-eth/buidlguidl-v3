@@ -154,8 +154,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           )}
         </GridItem>
         <GridItem colSpan={{ base: 1, xl: 3 }}>
-          <Flex spacing={4} mb={8}>
-            <Flex mr={2} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full">
+          <Flex spacing={4} mb={8} direction={{ base: "column-reverse", md: "row" }}>
+            <Flex mr={{ base: 0, md: 2 }} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full">
               {isLoadingBuilder && <BuilderProfileStreamSkeleton />}
               {!isLoadingBuilder && !streamDisplay && <Text>-</Text>}
               {!isLoadingBuilder && !!streamDisplay && (
@@ -217,7 +217,16 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                 </Box>
               )}
             </Flex>
-            <Flex ml={2} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={2} w="full" justify="right">
+            <Flex
+              ml={{ base: 0, md: 2 }}
+              mb={{ base: 2, md: 0 }}
+              borderRadius="lg"
+              borderColor={borderColor}
+              borderWidth={1}
+              p={2}
+              w="full"
+              justify="right"
+            >
               <Text fontSize="xl" fontWeight="medium" textAlign="right">
                 {builder?.function ? (
                   <HStack>
