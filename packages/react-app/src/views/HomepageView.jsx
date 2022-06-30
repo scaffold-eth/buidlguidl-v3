@@ -54,7 +54,7 @@ export default function HomepageView() {
             </Heading>
             <Text mb="25px">
               A curated group of <strong>Ethereum</strong> builders creating products, prototypes, and tutorials to
-              enrich the web3 ecosytem.
+              enrich the web3 ecosystem.
             </Text>
             <Text mb="10px">❤️ We are an Ethereum public good.</Text>
           </Box>
