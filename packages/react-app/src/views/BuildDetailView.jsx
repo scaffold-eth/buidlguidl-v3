@@ -10,6 +10,7 @@ import {
   useToast,
   useColorModeValue,
   HStack,
+  Center,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import ReactMarkdown from "react-markdown";
@@ -19,6 +20,7 @@ import { getBuildById, getGithubBuildReadme } from "../data/api/builds";
 import BuildDetailHeader from "../components/BuildDetailHeader";
 import BuildLikeButton from "../components/BuildLikeButton";
 import useConnectedAddress from "../hooks/useConnectedAddress";
+import { getYoutubeVideoId } from "../helpers/strings";
 
 export default function BuildDetailView() {
   const address = useConnectedAddress();
@@ -130,6 +132,19 @@ export default function BuildDetailView() {
   return (
     <Container maxW="container.md" mb="100px">
       <BuildDetailHeader build={build} actionButtons={actionButtons} />
+      {build.videoUrl && (
+        <Center my="24px">
+          <iframe
+            width="560"
+            height="315"
+            src={`https://www.youtube.com/embed/${getYoutubeVideoId(build.videoUrl)}`}
+            title={build.name}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </Center>
+      )}
       {isReadmeSupported && (
         <>
           <Box textAlign="center" mb={6}>
