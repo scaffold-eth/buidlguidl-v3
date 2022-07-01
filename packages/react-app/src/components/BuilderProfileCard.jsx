@@ -26,7 +26,7 @@ import {
   useClipboard,
   VStack,
 } from "@chakra-ui/react";
-import { CopyIcon, EditIcon } from "@chakra-ui/icons";
+import { CopyIcon, EditIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import QRPunkBlockie from "./QrPunkBlockie";
 import SocialLink from "./SocialLink";
 import useDisplayAddress from "../hooks/useDisplayAddress";
@@ -230,7 +230,12 @@ const BuilderProfileCard = ({
               ) : (
                 isMyProfile && (
                   <Alert mb={3} status="warning">
-                    <Text fontSize="xs">You haven't set your socials yet</Text>
+                    <Text style={{ fontSize: 11 }}>
+                      You haven't set your socials{" "}
+                      <Tooltip label="It's our way of reaching out to you. We could sponsor you an ENS, offer to be part of a build or set up an ETH stream for you.">
+                        <QuestionOutlineIcon />
+                      </Tooltip>
+                    </Text>
                   </Alert>
                 )
               )}
