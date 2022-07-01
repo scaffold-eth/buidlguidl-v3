@@ -9,6 +9,7 @@ const getSignMessageForId = async (messageId, options) => {
         name: options.name,
         buildUrl: options.buildUrl,
         demoUrl: options.demoUrl,
+        videoUrl: options.videoUrl,
         desc: options.desc,
         image: options.image,
       };
@@ -19,6 +20,7 @@ const getSignMessageForId = async (messageId, options) => {
         name: options.name,
         buildUrl: options.buildUrl,
         demoUrl: options.demoUrl,
+        videoUrl: options.videoUrl,
         desc: options.desc,
         image: options.image,
       };

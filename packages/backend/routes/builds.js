@@ -45,13 +45,14 @@ router.get("/builder/:builderAddress", async (req, res) => {
  */
 router.post("/", withRole("builder"), async (req, res) => {
   console.log("POST /builds");
-  const { buildUrl, demoUrl, desc, image, name, signature } = req.body;
+  const { buildUrl, videoUrl, demoUrl, desc, image, name, signature } = req.body;
   const address = req.address;
 
   const verifyOptions = {
     messageId: "buildSubmit",
     address,
     buildUrl,
+    videoUrl,
     demoUrl,
     desc,
     name,
@@ -67,6 +68,7 @@ router.post("/", withRole("builder"), async (req, res) => {
   const buildData = {
     branch: buildUrl,
     demoUrl,
+    videoUrl,
     desc,
     image,
     name,
@@ -95,7 +97,7 @@ router.post("/", withRole("builder"), async (req, res) => {
  */
 router.patch("/:buildId", withRole("builder"), async (req, res) => {
   const buildId = req.params.buildId;
-  const { buildUrl, demoUrl, desc, image, name, signature } = req.body;
+  const { buildUrl, demoUrl, videoUrl, desc, image, name, signature } = req.body;
   console.log("EDIT /builds/", buildId);
 
   const address = req.address;
@@ -106,6 +108,7 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
     buildId,
     buildUrl,
     demoUrl,
+    videoUrl,
     desc,
     name,
     image,
@@ -133,10 +136,11 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
   const buildData = {
     branch: buildUrl,
     demoUrl,
+    videoUrl,
     desc,
     image,
     name,
-    // Keep existing build (admin can edit)
+    // Keep existing builder (admin can edit)
     builder: build.builder,
   };
 

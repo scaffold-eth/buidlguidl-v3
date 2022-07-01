@@ -102,6 +102,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
       demoUrl: false,
       imageUrl: false,
       videoUrl:
+        videoUrl.length > 0 &&
         videoUrl.match(
           /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/g,
         ) === null,
