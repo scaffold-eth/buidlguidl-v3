@@ -35,6 +35,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
   const [demoUrl, setDemoUrl] = useState("");
   const [buildUrl, setBuildUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
   const [errors, setErrors] = useState({ buildName: false, description: false, buildUrl: false, imageUrl: false });
 
   const { isLoading, makeSignedRequest } = useSignedRequest("buildSubmit", address);
@@ -80,6 +81,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
       setBuildUrl(build.branch);
       setDemoUrl(build.demoUrl);
       setImageUrl(build.image);
+      setVideoUrl(build.videoUrl);
     }
   }, [isEditingExistingBuild, build]);
 
@@ -89,6 +91,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
     setBuildUrl("");
     setDemoUrl("");
     setImageUrl("");
+    setVideoUrl("");
   };
 
   const handleSubmit = async () => {
@@ -98,6 +101,10 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
       buildUrl: !buildUrl,
       demoUrl: false,
       imageUrl: false,
+      videoUrl:
+        videoUrl.match(
+          /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/g,
+        ) === null,
     };
 
     setErrors(nextErrors);
@@ -111,12 +118,13 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
           buildId: build.id,
           buildUrl,
           demoUrl,
+          videoUrl,
           desc: description,
           image: imageUrl,
           name: buildName,
         });
       } else {
-        await makeSignedRequest({ buildUrl, demoUrl, desc: description, image: imageUrl, name: buildName });
+        await makeSignedRequest({ buildUrl, videoUrl, demoUrl, desc: description, image: imageUrl, name: buildName });
       }
     } catch (error) {
       toast({
@@ -195,6 +203,18 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
               onChange={evt => setDemoUrl(evt.target.value)}
             />
             <FormErrorMessage>This field is required</FormErrorMessage>
+          </FormControl>
+          <FormControl mb={4} isInvalid={errors.videoUrl}>
+            <FormLabel htmlFor="videoUrl">
+              <strong>YouTube URL</strong>
+            </FormLabel>
+            <Input
+              id="videoUrl"
+              placeholder="https://..."
+              value={videoUrl}
+              onChange={evt => setVideoUrl(evt.target.value)}
+            />
+            <FormErrorMessage>Invalid YouTube URL</FormErrorMessage>
           </FormControl>
           <FormControl mb={4} isInvalid={errors.imageUrl}>
             <FormLabel htmlFor="imageUrl">
