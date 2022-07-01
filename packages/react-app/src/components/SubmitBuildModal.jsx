@@ -76,12 +76,12 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
 
   useEffect(() => {
     if (isEditingExistingBuild) {
-      setBuildName(build.name);
-      setDescription(build.desc);
-      setBuildUrl(build.branch);
-      setDemoUrl(build.demoUrl);
-      setImageUrl(build.image);
-      setVideoUrl(build.videoUrl);
+      setBuildName(build.name ?? "");
+      setDescription(build.desc ?? "");
+      setBuildUrl(build.branch ?? "");
+      setDemoUrl(build.demoUrl ?? "");
+      setImageUrl(build.image ?? "");
+      setVideoUrl(build.videoUrl ?? "");
     }
   }, [isEditingExistingBuild, build]);
 
