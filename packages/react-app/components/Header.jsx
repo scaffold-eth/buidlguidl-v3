@@ -1,4 +1,5 @@
 import React from "react";
+import NextLink from "next/link";
 import {
   chakra,
   useColorModeValue,
@@ -12,6 +13,7 @@ import {
   MenuList,
   MenuItem,
   useDisclosure,
+  Link,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Account } from "./index";
@@ -59,12 +61,14 @@ export default function Header({
         pos="relative"
       >
         <Flex shrink={0} mr={9} mt={{ base: userIsRegistered ? 5 : 0, lg: 0 }}>
-          <a href="/" exact>
-            <span role="img" aria-label="castle icon">
-              🏰️
-            </span>{" "}
-            <chakra.strong>BuidlGuidl</chakra.strong>
-          </a>
+          <NextLink href="/" passHref>
+            <Link>
+              <span role="img" aria-label="castle icon">
+                🏰️
+              </span>{" "}
+              <chakra.strong>BuidlGuidl</chakra.strong>
+            </Link>
+          </NextLink>
         </Flex>
         <HStack
           as="ul"
@@ -78,61 +82,56 @@ export default function Header({
         >
           {userRole && USER_ROLES.anonymous !== userRole && (
             <chakra.li key="/portfolio" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-              <a
+              <NextLink
                 href={`/builders/${address}`}
-                isActive={(match, location) => location.pathname.includes("/builders/")}
                 activeStyle={{
                   color: primaryColorString,
                 }}
               >
                 Portfolio
-              </a>
+              </NextLink>
             </chakra.li>
           )}
           <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-            <a
+            <NextLink
               href="/activity"
-              exact
               activeStyle={{
                 color: primaryColorString,
               }}
             >
               Activity
-            </a>
+            </NextLink>
           </chakra.li>
           <chakra.li key="/builds" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-            <a
+            <NextLink
               href="/builds"
-              exact
               activeStyle={{
                 color: primaryColorString,
               }}
             >
               Builds
-            </a>
+            </NextLink>
           </chakra.li>
           <chakra.li key="/builders" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-            <a
+            <NextLink
               href="/builders"
-              exact
               activeStyle={{
                 color: primaryColorString,
               }}
             >
               Builders
-            </a>
+            </NextLink>
           </chakra.li>
           {[USER_ROLES.admin, USER_ROLES.builder].includes(userRole) && (
             <chakra.li key="/builds/vote" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-              <a
+              <NextLink
                 href="/builds/vote"
-                exact
                 activeStyle={{
                   color: primaryColorString,
                 }}
               >
                 Vote Builds
-              </a>
+              </NextLink>
             </chakra.li>
           )}
           {USER_ROLES.admin === userRole && (
@@ -150,29 +149,27 @@ export default function Header({
               </MenuButton>
               <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>
                 <MenuItem>
-                  <a
+                  <NextLink
                     href="/admin/add-builder"
-                    exact
                     activeStyle={{
                       color: primaryColorString,
                     }}
                   >
                     Add Builder
-                  </a>
+                  </NextLink>
                 </MenuItem>
                 <MenuItem>
-                  <a
+                  <NextLink
                     href="/admin/ens-claims"
-                    exact
                     activeStyle={{
                       color: primaryColorString,
                     }}
                   >
                     ENS claims
-                  </a>
+                  </NextLink>
                 </MenuItem>
                 <MenuItem>
-                  <a
+                  <NextLink
                     href="/admin/withdraw-stats"
                     exact
                     activeStyle={{
@@ -180,7 +177,7 @@ export default function Header({
                     }}
                   >
                     Withdraw stats
-                  </a>
+                  </NextLink>
                 </MenuItem>
               </MenuList>
             </Menu>
