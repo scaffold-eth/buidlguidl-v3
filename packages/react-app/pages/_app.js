@@ -202,6 +202,7 @@ function MyApp({ Component, pageProps }) {
             address={address}
             userProvider={userProvider}
             userRole={userRole}
+            connectedBuilder={connectedBuilder}
           />
           <ColorModeSwitcher />
         </div>
