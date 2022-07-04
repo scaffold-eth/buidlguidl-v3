@@ -58,135 +58,134 @@ export default function Header({
         fontWeight="semibold"
         pos="relative"
       >
-        MENU
-        {/*<Flex shrink={0} mr={9} mt={{ base: userIsRegistered ? 5 : 0, lg: 0 }}>*/}
-        {/*  <NavLink to="/" exact>*/}
-        {/*    <span role="img" aria-label="castle icon">*/}
-        {/*      🏰️*/}
-        {/*    </span>{" "}*/}
-        {/*    <chakra.strong>BuidlGuidl</chakra.strong>*/}
-        {/*  </NavLink>*/}
-        {/*</Flex>*/}
-        {/*<HStack*/}
-        {/*  as="ul"*/}
-        {/*  mr={{ base: 0, lg: 6 }}*/}
-        {/*  style={{ listStyle: "none" }}*/}
-        {/*  spacing={{ base: 6, lg: 9 }}*/}
-        {/*  pos={{ base: "absolute", lg: "static" }}*/}
-        {/*  justifyContent={{ base: "center", lg: "left" }}*/}
-        {/*  top="85px"*/}
-        {/*  left={0}*/}
-        {/*>*/}
-        {/*  {userRole && USER_ROLES.anonymous !== userRole && (*/}
-        {/*    <chakra.li key="/portfolio" color={secondaryFontColor} _hover={{ color: primaryColorString }}>*/}
-        {/*      <NavLink*/}
-        {/*        to="/portfolio"*/}
-        {/*        isActive={(match, location) => location.pathname.includes("/builders/")}*/}
-        {/*        activeStyle={{*/}
-        {/*          color: primaryColorString,*/}
-        {/*        }}*/}
-        {/*      >*/}
-        {/*        Portfolio*/}
-        {/*      </NavLink>*/}
-        {/*    </chakra.li>*/}
-        {/*  )}*/}
-        {/*  <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>*/}
-        {/*    <NavLink*/}
-        {/*      to="/activity"*/}
-        {/*      exact*/}
-        {/*      activeStyle={{*/}
-        {/*        color: primaryColorString,*/}
-        {/*      }}*/}
-        {/*    >*/}
-        {/*      Activity*/}
-        {/*    </NavLink>*/}
-        {/*  </chakra.li>*/}
-        {/*  <chakra.li key="/builds" color={secondaryFontColor} _hover={{ color: primaryColorString }}>*/}
-        {/*    <NavLink*/}
-        {/*      to="/builds"*/}
-        {/*      exact*/}
-        {/*      activeStyle={{*/}
-        {/*        color: primaryColorString,*/}
-        {/*      }}*/}
-        {/*    >*/}
-        {/*      Builds*/}
-        {/*    </NavLink>*/}
-        {/*  </chakra.li>*/}
-        {/*  <chakra.li key="/builders" color={secondaryFontColor} _hover={{ color: primaryColorString }}>*/}
-        {/*    <NavLink*/}
-        {/*      to="/builders"*/}
-        {/*      exact*/}
-        {/*      activeStyle={{*/}
-        {/*        color: primaryColorString,*/}
-        {/*      }}*/}
-        {/*    >*/}
-        {/*      Builders*/}
-        {/*    </NavLink>*/}
-        {/*  </chakra.li>*/}
-        {/*  {[USER_ROLES.admin, USER_ROLES.builder].includes(userRole) && (*/}
-        {/*    <chakra.li key="/builds/vote" color={secondaryFontColor} _hover={{ color: primaryColorString }}>*/}
-        {/*      <NavLink*/}
-        {/*        to="/builds/vote"*/}
-        {/*        exact*/}
-        {/*        activeStyle={{*/}
-        {/*          color: primaryColorString,*/}
-        {/*        }}*/}
-        {/*      >*/}
-        {/*        Vote Builds*/}
-        {/*      </NavLink>*/}
-        {/*    </chakra.li>*/}
-        {/*  )}*/}
-        {/*  {USER_ROLES.admin === userRole && (*/}
-        {/*    <Menu isOpen={isOpen}>*/}
-        {/*      <MenuButton*/}
-        {/*        as={Button}*/}
-        {/*        variant="link"*/}
-        {/*        color={secondaryFontColor}*/}
-        {/*        _hover={{ color: primaryColorString }}*/}
-        {/*        rightIcon={<ChevronDownIcon />}*/}
-        {/*        onMouseEnter={onOpen}*/}
-        {/*        onMouseLeave={onClose}*/}
-        {/*      >*/}
-        {/*        Admin*/}
-        {/*      </MenuButton>*/}
-        {/*      <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>*/}
-        {/*        <MenuItem>*/}
-        {/*          <NavLink*/}
-        {/*            to="/admin/add-builder"*/}
-        {/*            exact*/}
-        {/*            activeStyle={{*/}
-        {/*              color: primaryColorString,*/}
-        {/*            }}*/}
-        {/*          >*/}
-        {/*            Add Builder*/}
-        {/*          </NavLink>*/}
-        {/*        </MenuItem>*/}
-        {/*        <MenuItem>*/}
-        {/*          <NavLink*/}
-        {/*            to="/admin/ens-claims"*/}
-        {/*            exact*/}
-        {/*            activeStyle={{*/}
-        {/*              color: primaryColorString,*/}
-        {/*            }}*/}
-        {/*          >*/}
-        {/*            ENS claims*/}
-        {/*          </NavLink>*/}
-        {/*        </MenuItem>*/}
-        {/*        <MenuItem>*/}
-        {/*          <NavLink*/}
-        {/*            to="/admin/withdraw-stats"*/}
-        {/*            exact*/}
-        {/*            activeStyle={{*/}
-        {/*              color: primaryColorString,*/}
-        {/*            }}*/}
-        {/*          >*/}
-        {/*            Withdraw stats*/}
-        {/*          </NavLink>*/}
-        {/*        </MenuItem>*/}
-        {/*      </MenuList>*/}
-        {/*    </Menu>*/}
-        {/*  )}*/}
-        {/*</HStack>*/}
+        <Flex shrink={0} mr={9} mt={{ base: userIsRegistered ? 5 : 0, lg: 0 }}>
+          <a href="/" exact>
+            <span role="img" aria-label="castle icon">
+              🏰️
+            </span>{" "}
+            <chakra.strong>BuidlGuidl</chakra.strong>
+          </a>
+        </Flex>
+        <HStack
+          as="ul"
+          mr={{ base: 0, lg: 6 }}
+          style={{ listStyle: "none" }}
+          spacing={{ base: 6, lg: 9 }}
+          pos={{ base: "absolute", lg: "static" }}
+          justifyContent={{ base: "center", lg: "left" }}
+          top="85px"
+          left={0}
+        >
+          {userRole && USER_ROLES.anonymous !== userRole && (
+            <chakra.li key="/portfolio" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+              <a
+                href={`/builders/${address}`}
+                isActive={(match, location) => location.pathname.includes("/builders/")}
+                activeStyle={{
+                  color: primaryColorString,
+                }}
+              >
+                Portfolio
+              </a>
+            </chakra.li>
+          )}
+          <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <a
+              href="/activity"
+              exact
+              activeStyle={{
+                color: primaryColorString,
+              }}
+            >
+              Activity
+            </a>
+          </chakra.li>
+          <chakra.li key="/builds" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <a
+              href="/builds"
+              exact
+              activeStyle={{
+                color: primaryColorString,
+              }}
+            >
+              Builds
+            </a>
+          </chakra.li>
+          <chakra.li key="/builders" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <a
+              href="/builders"
+              exact
+              activeStyle={{
+                color: primaryColorString,
+              }}
+            >
+              Builders
+            </a>
+          </chakra.li>
+          {[USER_ROLES.admin, USER_ROLES.builder].includes(userRole) && (
+            <chakra.li key="/builds/vote" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+              <a
+                href="/builds/vote"
+                exact
+                activeStyle={{
+                  color: primaryColorString,
+                }}
+              >
+                Vote Builds
+              </a>
+            </chakra.li>
+          )}
+          {USER_ROLES.admin === userRole && (
+            <Menu isOpen={isOpen}>
+              <MenuButton
+                as={Button}
+                variant="link"
+                color={secondaryFontColor}
+                _hover={{ color: primaryColorString }}
+                rightIcon={<ChevronDownIcon />}
+                onMouseEnter={onOpen}
+                onMouseLeave={onClose}
+              >
+                Admin
+              </MenuButton>
+              <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>
+                <MenuItem>
+                  <a
+                    href="/admin/add-builder"
+                    exact
+                    activeStyle={{
+                      color: primaryColorString,
+                    }}
+                  >
+                    Add Builder
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <a
+                    href="/admin/ens-claims"
+                    exact
+                    activeStyle={{
+                      color: primaryColorString,
+                    }}
+                  >
+                    ENS claims
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <a
+                    href="/admin/withdraw-stats"
+                    exact
+                    activeStyle={{
+                      color: primaryColorString,
+                    }}
+                  >
+                    Withdraw stats
+                  </a>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          )}
+        </HStack>
         <Spacer />
         <Box mt={{ base: userIsRegistered ? 3 : 0, lg: 0 }}>
           <Account

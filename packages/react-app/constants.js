@@ -1,5 +1,5 @@
 // MY INFURA_ID, SWAP IN YOURS FROM https://infura.io/dashboard/ethereum
-export const INFURA_ID = process.env.REACT_APP_INFURA_PROJECT_ID ?? "b83784c3e679479a867520aa047f1532";
+export const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_PROJECT_ID ?? "b83784c3e679479a867520aa047f1532";
 
 // MY ETHERSCAN_ID, SWAP IN YOURS FROM https://etherscan.io/myapikey
 export const ETHERSCAN_KEY = "PSW8C433Q667DVEX5BCRMGNAH9FSGFZ7Q8";
@@ -299,7 +299,7 @@ export const NETWORK = chainId => {
 // export const SERVER_URL = "https://backend.ether.delivery:49832"
 export const SERVER_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:49832";
 export const SRE_SERVER_URL = process.env.NEXT_PUBLIC_SRE_BACKEND_URL ?? "http://localhost:49832";
-export const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT ?? "development";
+export const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT ?? "development";
 
 export const NETWORKS = {
   localhost: {
