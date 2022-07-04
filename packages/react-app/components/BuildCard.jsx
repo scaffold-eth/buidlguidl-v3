@@ -16,7 +16,6 @@ import {
   Link,
   Tooltip,
 } from "@chakra-ui/react";
-import { Link as RouteLink } from "react-router-dom";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { YoutubeFilled } from "@ant-design/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
@@ -110,11 +109,11 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
       flexDirection="column"
       pos="relative"
     >
-      <RouteLink to={`/build/${build.id}`}>
+      <Link href={`/build/${build.id}`}>
         <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor}>
           {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
         </Box>
-      </RouteLink>
+      </Link>
       <Flex pt={9} pb={4} px={4} direction="column" minH="240px" h="100%" pos="relative">
         {build.videoUrl && (
           <Box pos="absolute" right={0} top={0} pt="6px" pr="12px">
@@ -125,15 +124,15 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
             </Link>
           </Box>
         )}
-        <RouteLink to={`/build/${build.id}`}>
+        <Link href={`/build/${build.id}`}>
           <Text fontWeight="bold">{build.name}</Text>
-        </RouteLink>
+        </Link>
         <Text color={secondaryFontColor} whiteSpace="pre-wrap">
           {build.desc}
         </Text>
         <Spacer />
         <ButtonGroup mt={3}>
-          <Button as={RouteLink} to={`/build/${build.id}`} variant="outline" size="sm" isFullWidth>
+          <Button as="a" href={`/build/${build.id}`} variant="outline" size="sm" isFullWidth>
             View
           </Button>
           <BuildLikeButton

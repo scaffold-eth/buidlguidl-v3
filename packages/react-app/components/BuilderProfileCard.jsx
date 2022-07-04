@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link as RouteLink } from "react-router-dom";
 import { useUserAddress } from "eth-hooks";
 import {
   Button,
@@ -173,7 +172,7 @@ const BuilderProfileCard = ({
             margin="auto"
           >
             <VStack>
-              <Link as={RouteLink} to={`/builders/${builder.id}`}>
+              <Link as="a" href={`/builders/${builder.id}`}>
                 <QRPunkBlockie
                   withQr={false}
                   address={builder.id?.toLowerCase()}

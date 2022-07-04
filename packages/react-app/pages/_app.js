@@ -195,7 +195,14 @@ function MyApp({ Component, pageProps }) {
             setUserRole={setUserRole}
           />
           <TelegramJoin connectedBuilder={connectedBuilder} />
-          <Component {...pageProps} />
+          <Component
+            {...pageProps}
+            serverUrl={serverUrl}
+            mainnetProvider={mainnetProvider}
+            address={address}
+            userProvider={userProvider}
+            userRole={userRole}
+          />
           <ColorModeSwitcher />
         </div>
       </BlockchainProvidersContext.Provider>
