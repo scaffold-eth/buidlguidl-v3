@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Link as RouteLink } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
+import NextLink from "next/link";
 import {
   Box,
   Button,
@@ -74,9 +74,11 @@ const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
 
 const BuilderAddressCell = ({ builder, mainnetProvider }) => {
   return (
-    <Link as={RouteLink} to={`/builders/${builder.id}`} pos="relative">
-      <Address address={builder.id} ensProvider={mainnetProvider} w="12.5" fontSize="16" cachedEns={builder.ens} />
-    </Link>
+    <NextLink href={`/builders/${builder.id}`} passHref>
+      <Link pos="relative">
+        <Address address={builder.id} ensProvider={mainnetProvider} w="12.5" fontSize="16" cachedEns={builder.ens} />
+      </Link>
+    </NextLink>
   );
 };
 
