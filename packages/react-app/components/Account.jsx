@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
 import {
   AvatarBadge,
   Badge,
@@ -111,7 +110,7 @@ export default function Account({
   const accountMenu = address && (
     <LinkBox>
       <Flex align="center">
-        <LinkOverlay as={NavLink} to="/portfolio">
+        <LinkOverlay as="a" href="/portfolio">
           <QRPunkBlockie withQr={false} address={address.toLowerCase()} w={9} borderRadius={6} />
         </LinkOverlay>
         <Box ml={4}>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link as RouteLink } from "react-router-dom";
 import axios from "axios";
 import {
   Box,
@@ -163,8 +162,8 @@ export default function HomepageView() {
           </Text>
           <Text mt="18px">
             ⚖️ Shill your wares at the{" "}
-            <Link as={RouteLink} color="teal.500" to="/builds">
-              🏰 BuidlGuidl 🏤 Bazaar
+            <Link color="teal.500" href="/builds">
+              🏰 BuidlGuidl
             </Link>
           </Text>
         </Box>
@@ -227,7 +226,7 @@ export default function HomepageView() {
         ))}
 
         <Box>
-          <Button as={RouteLink} to="/builders" colorScheme="blue">
+          <Button as="a" href="/builders" colorScheme="blue">
             View all Builders
           </Button>
         </Box>

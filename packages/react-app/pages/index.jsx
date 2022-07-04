@@ -223,6 +223,7 @@ function Index() {
           setUserRole={setUserRole}
         />
         <TelegramJoin connectedBuilder={connectedBuilder} />
+        <HomepageView />
         {/*<Switch>*/}
         {/*  <Route exact path="/">*/}
         {/*    <HomepageView />*/}
