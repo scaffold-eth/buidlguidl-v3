@@ -297,8 +297,8 @@ export const NETWORK = chainId => {
 };
 
 // export const SERVER_URL = "https://backend.ether.delivery:49832"
-export const SERVER_URL = process.env.REACT_APP_BACKEND_URL ?? "http://localhost:49832";
-export const SRE_SERVER_URL = process.env.REACT_APP_SRE_BACKEND_URL ?? "http://localhost:49832";
+export const SERVER_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:49832";
+export const SRE_SERVER_URL = process.env.NEXT_PUBLIC_SRE_BACKEND_URL ?? "http://localhost:49832";
 export const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT ?? "development";
 
 export const NETWORKS = {
@@ -307,7 +307,7 @@ export const NETWORKS = {
     color: "#666666",
     chainId: 31337,
     blockExplorer: "",
-    rpcUrl: "http://" + window.location.hostname + ":8545",
+    rpcUrl: "http://" + (global.window ? window.location.hostname : "localhost") + ":8545",
   },
   mainnet: {
     name: "mainnet",

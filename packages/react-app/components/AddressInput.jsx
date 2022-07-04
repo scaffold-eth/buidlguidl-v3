@@ -1,10 +1,13 @@
 import React, { useCallback, useState } from "react";
 import { Box, Badge, Input, InputGroup, InputRightElement, InputLeftElement } from "@chakra-ui/react";
-import QrReader from "react-qr-reader";
 import { ethers } from "ethers";
 import { CameraOutlined, QrcodeOutlined } from "@ant-design/icons";
+import dynamic from "next/dynamic";
+
 import { useLookupAddress } from "../hooks";
 import Blockie from "./Blockie";
+
+const QrReader = dynamic(() => import("react-qr-reader"), { ssr: false });
 
 const isENS = (address = "") => address.endsWith(".eth") || address.endsWith(".xyz");
 

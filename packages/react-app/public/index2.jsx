@@ -1,15 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Switch, Redirect, Route } from "react-router-dom";
 import { Web3Provider, StaticJsonRpcProvider, InfuraProvider } from "@ethersproject/providers";
-import "./App.css";
-import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { Center, Text } from "@chakra-ui/react";
 import { useUserAddress } from "eth-hooks";
 import axios from "axios";
-import { useUserProvider } from "./hooks";
-import { Header, ColorModeSwitcher } from "./components";
-import { INFURA_ID, SERVER_URL as serverUrl } from "./constants";
+import { useUserProvider } from "../hooks";
+import { Header, ColorModeSwitcher } from "../components";
+import { INFURA_ID, SERVER_URL as serverUrl } from "../constants";
 import {
   BuilderListView,
   BuilderProfileView,
@@ -20,13 +18,16 @@ import {
   WithdrawStats,
   EnsClaimsView,
   HomepageView,
-} from "./views";
-import { USER_ROLES } from "./helpers/constants";
-import { providerPromiseWrapper } from "./helpers/blockchainProviders";
-import BlockchainProvidersContext from "./contexts/blockchainProvidersContext";
-import BuildDetailView from "./views/BuildDetailView";
-import BuildVoteList from "./views/BuildVoteList";
-import TelegramJoin from "./components/TelegramJoin";
+} from "../views";
+import { USER_ROLES } from "../helpers/constants";
+import { providerPromiseWrapper } from "../helpers/blockchainProviders";
+import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
+import BuildDetailView from "../views/BuildDetailView";
+import BuildVoteList from "../views/BuildVoteList";
+import TelegramJoin from "../components/TelegramJoin";
+
+import dynamic from "next/dynamic";
+const Web3Modal = dynamic(() => import("web3modal"), { ssr: false });
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -34,7 +35,7 @@ const DEBUG = true;
 /*
   Web3 modal helps us "connect" external wallets:
 */
-const web3Modal = new Web3Modal({
+const web3Modal = Web3Modal({
   // network: "mainnet", // optional
   cacheProvider: true, // optional
   providerOptions: {
@@ -58,7 +59,7 @@ const providerPromiseResolvers = {
   },
 };
 
-function App() {
+function Index2() {
   const [providers, setProviders] = useState({
     mainnet: {
       provider: null,
@@ -272,7 +273,7 @@ function App() {
   );
 }
 
-if (window.ethereum) {
+if (typeof window !== "undefined" && window.ethereum) {
   window.ethereum.on("chainChanged", () => {
     if (web3Modal.cachedProvider) {
       setTimeout(() => {
@@ -290,4 +291,4 @@ if (window.ethereum) {
   });
 }
 
-export default App;
+export default Index2;
