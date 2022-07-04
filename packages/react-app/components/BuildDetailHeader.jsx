@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import NextLink from "next/link";
 import { useLookupAddress } from "eth-hooks";
 import { Heading, Box, Image, HStack, VStack, Flex, Text, Link, Spacer, useDisclosure } from "@chakra-ui/react";
 import QRPunkBlockie from "./QrPunkBlockie";
@@ -29,13 +30,33 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
           <Text fontSize="xl" mb={4}>
             {build.desc}
           </Text>
-          <Link as="a" href={`/builders/${build.builder}`}>
-            <HStack spacing="20px">
-              <span style={{ verticalAlign: "middle" }}>
-                <QRPunkBlockie withQr={false} address={build.builder?.toLowerCase()} w={12.5} borderRadius="md" />
-              </span>
-              {hasEns ? (
-                <VStack spacing={0} alignItems="start">
+          <NextLink href={`/builders/${build.builder}`} passHref>
+            <Link as={Link}>
+              <HStack spacing="20px">
+                <span style={{ verticalAlign: "middle" }}>
+                  <QRPunkBlockie withQr={false} address={build.builder?.toLowerCase()} w={12.5} borderRadius="md" />
+                </span>
+                {hasEns ? (
+                  <VStack spacing={0} alignItems="start">
+                    <span
+                      style={{
+                        verticalAlign: "middle",
+                        fontSize: 24,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {ens}
+                    </span>
+                    <span
+                      style={{
+                        verticalAlign: "middle",
+                        fontSize: 16,
+                      }}
+                    >
+                      {shortAddress}
+                    </span>
+                  </VStack>
+                ) : (
                   <span
                     style={{
                       verticalAlign: "middle",
@@ -43,30 +64,12 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
                       fontWeight: "bold",
                     }}
                   >
-                    {ens}
-                  </span>
-                  <span
-                    style={{
-                      verticalAlign: "middle",
-                      fontSize: 16,
-                    }}
-                  >
                     {shortAddress}
                   </span>
-                </VStack>
-              ) : (
-                <span
-                  style={{
-                    verticalAlign: "middle",
-                    fontSize: 24,
-                    fontWeight: "bold",
-                  }}
-                >
-                  {shortAddress}
-                </span>
-              )}
-            </HStack>
-          </Link>
+                )}
+              </HStack>
+            </Link>
+          </NextLink>
         </Box>
         <Spacer p="5px" />
         {build.image && (

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import NextLink from "next/link";
 import {
   AvatarBadge,
   Badge,
@@ -110,9 +111,11 @@ export default function Account({
   const accountMenu = address && (
     <LinkBox>
       <Flex align="center">
-        <LinkOverlay as="a" href="/portfolio">
-          <QRPunkBlockie withQr={false} address={address.toLowerCase()} w={9} borderRadius={6} />
-        </LinkOverlay>
+        <NextLink href={`/builders/${address}`} passHref>
+          <LinkOverlay as={Link}>
+            <QRPunkBlockie withQr={false} address={address.toLowerCase()} w={9} borderRadius={6} />
+          </LinkOverlay>
+        </NextLink>
         <Box ml={4}>
           {/* ToDo. Move to Utils */}
           <UserDisplayName textAlign="left" />

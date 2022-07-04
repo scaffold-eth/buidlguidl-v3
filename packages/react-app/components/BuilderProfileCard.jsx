@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import NextLink from "next/link";
 import { useUserAddress } from "eth-hooks";
 import {
   Button,
@@ -172,15 +173,18 @@ const BuilderProfileCard = ({
             margin="auto"
           >
             <VStack>
-              <Link as="a" href={`/builders/${builder.id}`}>
-                <QRPunkBlockie
-                  withQr={false}
-                  address={builder.id?.toLowerCase()}
-                  w={52}
-                  borderRadius="lg"
-                  margin="auto"
-                />
-              </Link>
+              <NextLink href={`/builders/${builder.id}`} passHref>
+                <Link>
+                  <QRPunkBlockie
+                    withQr={false}
+                    address={builder.id?.toLowerCase()}
+                    w={52}
+                    borderRadius="lg"
+                    margin="auto"
+                  />
+                </Link>
+              </NextLink>
+
               {canEditBuilder && (
                 <Button variant="outline" colorScheme="blue" size="sm" onClick={onOpenEditBuilder} mt={2}>
                   <EditIcon w={6} color="blue.500" />

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import NextLink from "next/link";
 import { useUserAddress } from "eth-hooks";
 import {
   Image,
@@ -132,9 +133,11 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
         </Text>
         <Spacer />
         <ButtonGroup mt={3}>
-          <Button as="a" href={`/build/${build.id}`} variant="outline" size="sm" isFullWidth>
-            View
-          </Button>
+          <NextLink href={`/builders/${build.id}`} passHref>
+            <Button as={Link} variant="outline" size="sm" isFullWidth>
+              View
+            </Button>
+          </NextLink>
           <BuildLikeButton
             buildId={build.id}
             isLiked={build?.likes?.includes?.(address)}

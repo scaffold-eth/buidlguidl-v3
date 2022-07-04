@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import NextLink from "next/link";
 import {
   Box,
   HStack,
@@ -226,9 +227,11 @@ export default function Index() {
         ))}
 
         <Box>
-          <Button as="a" href="/builders" colorScheme="blue">
-            View all Builders
-          </Button>
+          <NextLink href="/builders" passHref>
+            <Button as={Link} colorScheme="blue">
+              View all Builders
+            </Button>
+          </NextLink>
         </Box>
 
         <Box mt="128px" mb="25px">
