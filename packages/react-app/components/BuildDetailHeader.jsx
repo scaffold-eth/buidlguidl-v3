@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { Link as RouteLink } from "react-router-dom";
 import { useLookupAddress } from "eth-hooks";
 import { Heading, Box, Image, HStack, VStack, Flex, Text, Link, Spacer, useDisclosure } from "@chakra-ui/react";
 import QRPunkBlockie from "./QrPunkBlockie";
@@ -30,7 +29,7 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
           <Text fontSize="xl" mb={4}>
             {build.desc}
           </Text>
-          <Link as={RouteLink} to={`/builders/${build.builder}`}>
+          <Link as="a" href={`/builders/${build.builder}`}>
             <HStack spacing="20px">
               <span style={{ verticalAlign: "middle" }}>
                 <QRPunkBlockie withQr={false} address={build.builder?.toLowerCase()} w={12.5} borderRadius="md" />
