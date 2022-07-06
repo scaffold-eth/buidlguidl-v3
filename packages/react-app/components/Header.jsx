@@ -92,16 +92,16 @@ export default function Header({
               </NextLink>
             </chakra.li>
           )}
-          <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-            <NextLink
-              href="/activity"
-              activeStyle={{
-                color: primaryColorString,
-              }}
-            >
-              Activity
-            </NextLink>
-          </chakra.li>
+          {/*<chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>*/}
+          {/*  <NextLink*/}
+          {/*    href="/activity"*/}
+          {/*    activeStyle={{*/}
+          {/*      color: primaryColorString,*/}
+          {/*    }}*/}
+          {/*  >*/}
+          {/*    Activity*/}
+          {/*  </NextLink>*/}
+          {/*</chakra.li>*/}
           <chakra.li key="/builds" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
             <NextLink
               href="/builds"
