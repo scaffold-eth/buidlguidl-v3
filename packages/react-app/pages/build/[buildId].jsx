@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import Head from "next/head";
 import { useHistory } from "react-router-dom";
 import {
   Box,
@@ -136,6 +137,18 @@ export default function BuildDetailView() {
 
   return (
     <Container maxW="container.md" mb="100px">
+      <Head>
+        <meta name="description" content={build.desc} />
+        <meta property="og:title" content={`${build.name} | BuidlGuidl`} />
+        <meta property="og:image" content={build.image} />
+        <meta property="og:description" content={build.desc} />
+
+        <meta property="twitter:title" content={`${build.name} | BuidlGuidl`} />
+        <meta property="twitter:description" content={build.desc} />
+        <meta name="twitter:card" content="summary_large_image" />
+
+        <meta name="twitter:image" content={build.image} />
+      </Head>
       <BuildDetailHeader build={build} actionButtons={actionButtons} />
       {build.videoUrl && (
         <Center my="24px">
