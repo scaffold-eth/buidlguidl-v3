@@ -24,10 +24,8 @@ import useConnectedAddress from "../../hooks/useConnectedAddress";
 import { getYoutubeVideoId } from "../../helpers/strings";
 import { useRouter } from "next/router";
 
-export default function BuildDetailView() {
+export default function BuildDetailView({ build }) {
   const address = useConnectedAddress();
-  const [isLoadingBuild, setIsLoadingBuild] = useState(true);
-  const [build, setBuild] = useState(null);
 
   const router = useRouter();
   const { buildId } = router.query;
@@ -35,31 +33,6 @@ export default function BuildDetailView() {
   const [isReadmeSupported, setIsReadmeSupported] = useState(false);
   const [description, setDescription] = useState(null);
   const history = useHistory();
-
-  const toast = useToast({ position: "top", isClosable: true });
-  const toastVariant = useColorModeValue("subtle", "solid");
-
-  const fetchBuild = useCallback(async () => {
-    if (!buildId) return;
-    try {
-      const fetchedBuild = await getBuildById(buildId);
-      setBuild(fetchedBuild);
-    } catch (err) {
-      console.log(err);
-      toast({
-        description: "Can't get the build details. Please try again",
-        status: "error",
-        variant: toastVariant,
-      });
-      setBuild(null);
-    }
-    setIsLoadingBuild(false);
-    // eslint-disable-next-line
-  }, [buildId]);
-
-  useEffect(() => {
-    fetchBuild();
-  }, [fetchBuild]);
 
   useEffect(() => {
     const effect = async () => {
@@ -72,6 +45,7 @@ export default function BuildDetailView() {
         setIsReadmeSupported(false);
       }
     };
+
     if (!build) {
       return;
     }
@@ -84,13 +58,13 @@ export default function BuildDetailView() {
     // eslint-disable-next-line
   }, [build]);
 
-  if (isLoadingBuild) {
-    return (
-      <Box h="full" w="full" display="flex" justifyContent="center" alignItems="center">
-        <Spinner />
-      </Box>
-    );
-  }
+  // if (isLoadingBuild) {
+  //   return (
+  //     <Box h="full" w="full" display="flex" justifyContent="center" alignItems="center">
+  //       <Spinner />
+  //     </Box>
+  //   );
+  // }
 
   if (!build) {
     // TODO implement a 404 page
@@ -130,7 +104,7 @@ export default function BuildDetailView() {
         buildId={buildId}
         isLiked={build.likes?.includes?.(address)}
         likesAmount={build.likes?.length ?? 0}
-        onLike={fetchBuild}
+        // onLike={fetchBuild}
       />
     </>
   );
@@ -138,6 +112,7 @@ export default function BuildDetailView() {
   return (
     <Container maxW="container.md" mb="100px">
       <Head>
+        <title>{`${build.name} | BuidlGuidl`}</title>
         <meta name="description" content={build.desc} />
         <meta property="og:title" content={`${build.name} | BuidlGuidl`} />
         <meta property="og:image" content={build.image} />
@@ -189,4 +164,20 @@ export default function BuildDetailView() {
       </HStack>
     </Container>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { buildId } = context.params;
+
+  if (!buildId) return;
+  let fetchedBuild;
+  try {
+    fetchedBuild = await getBuildById(buildId);
+  } catch (err) {
+    console.log(err);
+    fetchedBuild = null;
+  }
+  return {
+    props: { build: fetchedBuild }, // will be passed to the page component as props
+  };
 }
