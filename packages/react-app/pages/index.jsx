@@ -209,7 +209,7 @@ export default function Index() {
         </Heading>
 
         {buildersToShow.map(builderFunction => (
-          <Box mb="144px">
+          <Box mb="144px" key={builderFunction}>
             <HStack justifyContent="center" mb="25px" spacing="24px">
               <Image src={`/assets/${USER_FUNCTIONS[builderFunction]?.graphic}`} boxSize="200px" />
               <Heading as="h3" color="gray.500" w="160px">

@@ -252,10 +252,10 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           </Center>
           <Table {...getTableProps()}>
             <Thead>
-              {headerGroups.map(headerGroup => (
-                <Tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroups.map((headerGroup, index) => (
+                <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                   {headerGroup.headers.map(column => (
-                    <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
                       {column.render("Header")}
                       <chakra.span pl="4">
                         {column.isSorted ? (
@@ -275,9 +275,13 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
               {page.map(row => {
                 prepareRow(row);
                 return (
-                  <Tr {...row.getRowProps()}>
+                  <Tr {...row.getRowProps()} key={row.id}>
                     {row.cells.map(cell => (
-                      <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                      <>
+                        <Td {...cell.getCellProps()} key={cell.column.id}>
+                          {cell.render("Cell")}
+                        </Td>
+                      </>
                     ))}
                   </Tr>
                 );

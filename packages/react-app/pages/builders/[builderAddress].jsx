@@ -313,7 +313,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                   </Tr>
                 </Thead>
                 {withdrawEvents.map(({ timestamp, payload }) => (
-                  <Tr>
+                  <Tr key={timestamp}>
                     <Td whiteSpace="nowrap">
                       <DateWithTooltip timestamp={timestamp} />{" "}
                     </Td>

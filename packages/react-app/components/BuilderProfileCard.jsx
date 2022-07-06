@@ -227,7 +227,7 @@ const BuilderProfileCard = ({
                   {Object.entries(builder.socialLinks)
                     .sort(bySocialWeight)
                     .map(([socialId, socialValue]) => (
-                      <SocialLink id={socialId} value={socialValue} />
+                      <SocialLink key={socialId} id={socialId} value={socialValue} />
                     ))}
                 </Flex>
               ) : (

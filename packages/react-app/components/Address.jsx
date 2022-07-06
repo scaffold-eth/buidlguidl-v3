@@ -34,7 +34,7 @@ export default function Address({ value, address: sentAddress, size, w, fontSize
   const mainnetProviderData = useContext(BlockchainProvidersContext).mainnet;
   const mainnetProvider = mainnetProviderData.provider;
 
-  const ens = cachedEns ?? useLookupAddress(mainnetProvider, address);
+  const ens = useLookupAddress(mainnetProvider, address, cachedEns);
 
   if (!address) {
     return <span>Loading...</span>;

@@ -10,7 +10,7 @@ const BuilderFunctionList = ({ builders }) => {
       <Tbody>
         {builders.map(builder => {
           return (
-            <Tr>
+            <Tr key={builder.id}>
               <Td>
                 <NextLink href={`/builders/${builder.id}`} passHref>
                   <Link as={Link} pos="relative">
