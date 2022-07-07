@@ -123,9 +123,9 @@ export default function Header({
             </NextLink>
           </chakra.li>
           {[USER_ROLES.admin, USER_ROLES.builder].includes(userRole) && (
-            <chakra.li key="/builds/vote" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <chakra.li key="/build/vote" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
               <NextLink
-                href="/builds/vote"
+                href="/build/vote"
                 activeStyle={{
                   color: primaryColorString,
                 }}

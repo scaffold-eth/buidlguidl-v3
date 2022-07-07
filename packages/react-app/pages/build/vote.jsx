@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Link as RouteLink } from "react-router-dom";
+import NextLink from "next/link";
 import {
   Box,
   Button,
@@ -22,28 +23,32 @@ import {
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import useCustomColorModes from "../hooks/useCustomColorModes";
-import BuildsVoteListSkeleton from "../components/skeletons/BuildsVoteListSkeleton";
-import DateWithTooltip from "../components/DateWithTooltip";
-import Address from "../components/Address";
-import { getAllBuilds } from "../data/api";
-import { bySubmittedTimestamp } from "../helpers/sorting";
-import useConnectedAddress from "../hooks/useConnectedAddress";
-import BuildLikeButton from "../components/BuildLikeButton";
+import useCustomColorModes from "../../hooks/useCustomColorModes";
+import BuildsVoteListSkeleton from "../../components/skeletons/BuildsVoteListSkeleton";
+import DateWithTooltip from "../../components/DateWithTooltip";
+import Address from "../../components/Address";
+import { getAllBuilds } from "../../data/api";
+import { bySubmittedTimestamp } from "../../helpers/sorting";
+import useConnectedAddress from "../../hooks/useConnectedAddress";
+import BuildLikeButton from "../../components/BuildLikeButton";
 
 const BuildCell = ({ name, buildId }) => {
   return (
-    <Link as={RouteLink} to={`/build/${buildId}`} pos="relative">
-      <Text>{name}</Text>
-    </Link>
+    <NextLink href={`/build/${buildId}`} passHref>
+      <Link pos="relative">
+        <Text>{name}</Text>
+      </Link>
+    </NextLink>
   );
 };
 
 const BuilderAddressCell = ({ builderId }) => {
   return (
-    <Link as={RouteLink} to={`/builders/${builderId}`} pos="relative">
-      <Address address={builderId} w="12.5" fontSize="16" />
-    </Link>
+    <NextLink href={`/builders/${builderId}`} passHref>
+      <Link pos="relative">
+        <Address address={builderId} w="12.5" fontSize="16" />
+      </Link>
+    </NextLink>
   );
 };
 
