@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Heading, Container } from "@chakra-ui/react";
-import { BuilderCrudForm } from "../components/BuilderCrudForm";
+import { BuilderCrudForm } from "../../components/BuilderCrudForm";
 
-export default function BuilderCreateView({ mainnetProvider }) {
+export default function AddBuilderView({ mainnetProvider }) {
   return (
     <Container maxW="container.sm" centerContent>
       <Heading as="h1">Add Builder</Heading>
