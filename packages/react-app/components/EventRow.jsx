@@ -1,5 +1,5 @@
 import React from "react";
-import { Link as RouteLink } from "react-router-dom";
+import NextLink from "next/link";
 import { Tr, Td, Link } from "@chakra-ui/react";
 import Address from "./Address";
 import { eventDisplay } from "../helpers/events";
@@ -19,9 +19,11 @@ const EventRow = ({ event }) => {
   return (
     <Tr>
       <Td>
-        <Link as={RouteLink} to={`/builders/${userAddress}`} pos="relative">
-          <Address address={userAddress} w="12.5" fontSize="16" />
-        </Link>
+        <NextLink href={`/builders/${userAddress}`} passHref>
+          <Link pos="relative">
+            <Address address={userAddress} w="12.5" fontSize="16" />
+          </Link>
+        </NextLink>
       </Td>
       <Td whiteSpace="nowrap">
         <DateWithTooltip timestamp={event.timestamp} />

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link as RouteLink } from "react-router-dom";
+import NextLink from "next/link";
 import { Link, Text } from "@chakra-ui/react";
 import Address from "../components/Address";
 
@@ -22,9 +22,9 @@ export const eventDisplay = ({ type, payload }) => {
       return (
         <>
           just submitted a new build:{" "}
-          <Link as={RouteLink} to={`/build/${payload.buildId}`} textDecoration="underline">
-            {payload.name}
-          </Link>
+          <NextLink href={`/build/${payload.buildId}`} passHref>
+            <Link textDecoration="underline">{payload.name}</Link>
+          </NextLink>
         </>
       );
     }
@@ -33,9 +33,9 @@ export const eventDisplay = ({ type, payload }) => {
       return (
         <>
           just edited a build:{" "}
-          <Link as={RouteLink} to={`/build/${payload.buildId}`} textDecoration="underline">
-            {payload.name}
-          </Link>
+          <NextLink href={`/build/${payload.buildId}`} passHref>
+            <Link textDecoration="underline">{payload.name}</Link>
+          </NextLink>
         </>
       );
     }
@@ -48,9 +48,9 @@ export const eventDisplay = ({ type, payload }) => {
       return (
         <>
           Their build{" "}
-          <Link as={RouteLink} to={`/build/${payload.buildId}`} textDecoration="underline">
-            {payload.name}
-          </Link>{" "}
+          <NextLink href={`/build/${payload.buildId}`} passHref>
+            <Link textDecoration="underline">{payload.name}</Link>
+          </NextLink>{" "}
           has been {payload.featured ? "featured" : "unfeatured"}`
         </>
       );
@@ -60,9 +60,9 @@ export const eventDisplay = ({ type, payload }) => {
       return (
         <>
           {payload.liked ? "liked" : "unliked"} the build{" "}
-          <Link as={RouteLink} to={`/build/${payload.buildId}`} textDecoration="underline">
-            {payload.name}
-          </Link>
+          <NextLink href={`/build/${payload.buildId}`} passHref>
+            <Link textDecoration="underline">{payload.name}</Link>
+          </NextLink>
         </>
       );
     }
@@ -91,16 +91,15 @@ export const eventDisplay = ({ type, payload }) => {
         <>
           <Text>funded with Ξ {parseFloat(payload.amount).toFixed(4)} to </Text>
           <Text mt={2}>
-            <Link as={RouteLink} to={`/builders/${payload.builderAddress}`} pos="relative">
-              <Address address={payload.builderAddress} w="10" fontSize="16" />
-            </Link>
+            <NextLink href={`/builders/${payload.builderAddress}`} passHref>
+              <Link pos="relative">
+                <Address address={payload.builderAddress} w="10" fontSize="16" />
+              </Link>
+            </NextLink>
           </Text>
         </>
       );
     }
-
-    // ToDo. Build events. Wait until we tackled issue #134
-    // https://github.com/moonshotcollective/scaffold-directory/issues/134
 
     default:
       // do nothing

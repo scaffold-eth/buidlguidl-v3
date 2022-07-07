@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 import { Box, Container, SkeletonText, Table, Thead, Tbody, Tr, Th, Select, Flex, Center } from "@chakra-ui/react";
 import { getAllEvents } from "../data/api";
 import EventRow from "../components/EventRow";
 import { EVENT_TYPES } from "../helpers/events";
-import useQuery from "../hooks/useQuery";
 
 const countEventValues = [25, 50, 100];
 
@@ -14,12 +13,11 @@ export default function ActivityView() {
   const [eventTypeFilter, setEventTypeFilter] = useState("");
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
 
-  const history = useHistory();
-  const query = useQuery();
+  const router = useRouter();
+  console.log("router", router);
 
   useEffect(() => {
-    const filter = query.get("filter");
-    const count = query.get("count");
+    const { filter, count } = router.query;
     if (!filter && !count) return;
 
     if (filter) {
@@ -42,12 +40,13 @@ export default function ActivityView() {
     }
     // URL Param loading, only want to run on init.
     // eslint-disable-next-line
-  }, []);
+  }, [router]);
 
   useEffect(() => {
+    const { filter } = router.query;
+
     // Avoid the initial extra request when we have a filter.
-    if (query.get("filter") && !eventTypeFilter) return;
-    // if (query.get("count") && eventCount === 25) return;
+    if (filter && !eventTypeFilter) return;
 
     const updateEvents = async () => {
       setIsLoadingEvents(true);
@@ -57,10 +56,10 @@ export default function ActivityView() {
     };
 
     updateEvents();
-  }, [eventCount, eventTypeFilter, query]);
+  }, [eventCount, eventTypeFilter, router]);
 
   const addToSearch = (name, value) => {
-    const existingSearch = history.location.search;
+    const existingSearch = router.query;
     const existingParams = new URLSearchParams(existingSearch);
 
     if (value) {
@@ -75,7 +74,7 @@ export default function ActivityView() {
   const handleFilterChange = e => {
     const filter = e.target.value;
     setEventTypeFilter(filter);
-    history.push({ search: addToSearch("filter", filter) });
+    router.push({ search: addToSearch("filter", filter) });
   };
 
   return (
