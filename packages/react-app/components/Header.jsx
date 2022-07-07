@@ -1,5 +1,6 @@
 import React from "react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import {
   chakra,
   useColorModeValue,
@@ -33,8 +34,9 @@ export default function Header({
 }) {
   const { secondaryFontColor, borderColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const location = useLocation();
-  const location = null;
+
+  const router = useRouter();
+
   const primaryColorString = useColorModeValue("gray.700", "gray.200");
   const envMarkerBgColor = useColorModeValue("yellow.200", "yellow.800");
   const isSignerProviderConnected =
@@ -45,7 +47,7 @@ export default function Header({
     <Box
       borderBottom="1px"
       borderColor={borderColor}
-      mb={location?.pathname !== "/" ? 10 : 0}
+      mb={router.asPath !== "/" ? 10 : 0}
       px={{ base: 4, lg: 8 }}
       h={{ base: userIsRegistered ? "120px" : "80px", lg: "80px" }}
     >
