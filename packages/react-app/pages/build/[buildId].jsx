@@ -1,17 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Container,
-  Heading,
-  SkeletonText,
-  Spinner,
-  useToast,
-  useColorModeValue,
-  HStack,
-  Center,
-} from "@chakra-ui/react";
+import { Box, Button, Container, Heading, SkeletonText, HStack, Center } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import ReactMarkdown from "react-markdown";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
@@ -29,6 +18,7 @@ export default function BuildDetailView({ build }) {
 
   const router = useRouter();
   const { buildId } = router.query;
+  const refreshData = () => router.replace(router.asPath);
 
   const [isReadmeSupported, setIsReadmeSupported] = useState(false);
   const [description, setDescription] = useState(null);
@@ -57,14 +47,6 @@ export default function BuildDetailView({ build }) {
     effect();
     // eslint-disable-next-line
   }, [build]);
-
-  // if (isLoadingBuild) {
-  //   return (
-  //     <Box h="full" w="full" display="flex" justifyContent="center" alignItems="center">
-  //       <Spinner />
-  //     </Box>
-  //   );
-  // }
 
   if (!build) {
     // TODO implement a 404 page
@@ -106,7 +88,7 @@ export default function BuildDetailView({ build }) {
         buildId={buildId}
         isLiked={build.likes?.includes?.(address)}
         likesAmount={build.likes?.length ?? 0}
-        // onLike={fetchBuild}
+        onLike={refreshData}
       />
     </>
   );
