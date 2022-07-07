@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Head from "next/head";
 import { useHistory } from "react-router-dom";
 import {
   Box,
@@ -23,6 +22,7 @@ import BuildLikeButton from "../../components/BuildLikeButton";
 import useConnectedAddress from "../../hooks/useConnectedAddress";
 import { getYoutubeVideoId } from "../../helpers/strings";
 import { useRouter } from "next/router";
+import MetaSeo from "../../components/MetaSeo";
 
 export default function BuildDetailView({ build }) {
   const address = useConnectedAddress();
@@ -76,6 +76,7 @@ export default function BuildDetailView({ build }) {
     <>
       <Button
         as="a"
+        size="sm"
         colorScheme="gray"
         variant="solid"
         border="1px solid"
@@ -89,6 +90,7 @@ export default function BuildDetailView({ build }) {
       {build.demoUrl && (
         <Button
           as="a"
+          size="sm"
           colorScheme="gray"
           variant="solid"
           border="1px solid"
@@ -111,19 +113,7 @@ export default function BuildDetailView({ build }) {
 
   return (
     <Container maxW="container.md" mb="100px">
-      <Head>
-        <title>{`${build.name} | BuidlGuidl`}</title>
-        <meta name="description" content={build.desc} />
-        <meta property="og:title" content={`${build.name} | BuidlGuidl`} />
-        <meta property="og:image" content={build.image} />
-        <meta property="og:description" content={build.desc} />
-
-        <meta property="twitter:title" content={`${build.name} | BuidlGuidl`} />
-        <meta property="twitter:description" content={build.desc} />
-        <meta name="twitter:card" content="summary_large_image" />
-
-        <meta name="twitter:image" content={build.image} />
-      </Head>
+      <MetaSeo title={build?.name} description={build?.desc} image={build?.image ?? null} />
       <BuildDetailHeader build={build} actionButtons={actionButtons} />
       {build.videoUrl && (
         <Center my="24px">
@@ -158,7 +148,7 @@ export default function BuildDetailView({ build }) {
         w="full"
         display="flex"
         justifyContent="center"
-        spacing={6}
+        spacing={4}
       >
         {actionButtons}
       </HStack>

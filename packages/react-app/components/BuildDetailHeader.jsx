@@ -23,25 +23,25 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
     <>
       <Flex borderRadius="lg" borderColor={borderColor} borderWidth={1} p={6} margin="auto">
         <Box maxW={build.image ? "65%" : "none"}>
-          <Heading as="h1" mb={4} pb={2} borderColor={borderColor}>
+          <Heading as="h1" mb={4} pb={2} borderColor={borderColor} size="md">
             {build.name}
           </Heading>
-          <HStack mb={3}>{actionButtons}</HStack>
-          <Text fontSize="xl" mb={4}>
+          <HStack mb={6}>{actionButtons}</HStack>
+          <Text fontSize="lg" mb={6}>
             {build.desc}
           </Text>
           <NextLink href={`/builders/${build.builder}`} passHref>
             <Link as={Link}>
               <HStack spacing="20px">
                 <span style={{ verticalAlign: "middle" }}>
-                  <QRPunkBlockie withQr={false} address={build.builder?.toLowerCase()} w={12.5} borderRadius="md" />
+                  <QRPunkBlockie withQr={false} address={build.builder?.toLowerCase()} w={10} borderRadius="md" />
                 </span>
                 {hasEns ? (
                   <VStack spacing={0} alignItems="start">
                     <span
                       style={{
                         verticalAlign: "middle",
-                        fontSize: 24,
+                        fontSize: 18,
                         fontWeight: "bold",
                       }}
                     >
