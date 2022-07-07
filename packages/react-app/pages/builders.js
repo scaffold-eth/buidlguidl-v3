@@ -35,6 +35,7 @@ import Address from "../components/Address";
 import { bySocialWeight } from "../data/socials";
 import { USER_ROLES } from "../helpers/constants";
 import StreamTableCell from "../components/StreamTableCell";
+import MetaSeo from "../components/MetaSeo";
 
 const serverPath = "/builders";
 
@@ -235,6 +236,11 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
 
   return (
     <Container maxW="container.xl">
+      <MetaSeo
+        title="All Builders"
+        description="These are all the builder that are part of the BuidlGuidl"
+        image="/assets/infantry_thumb.jpeg"
+      />
       {isLoadingBuilders ? (
         <BuilderListSkeleton />
       ) : (

@@ -16,6 +16,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { getAllBuilds } from "../data/api";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
+import MetaSeo from "../components/MetaSeo";
 
 // The number of likes required for the build to be shown in the list.
 const MIN_LIKES = 1;
@@ -62,6 +63,7 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
 
   return (
     <Container maxW="container.lg" centerContent>
+      <MetaSeo title="Builds" description="Checkout the builds from the BuidlGuidl" image="/assets/bg_teaser.png" />
       {connectedBuilder && (
         <Button colorScheme="blue" mb={6} onClick={onOpen}>
           Submit New Build
