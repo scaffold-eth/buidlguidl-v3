@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Link as RouteLink } from "react-router-dom";
+import NextLink from "next/link";
 import {
   Box,
   Button,
@@ -24,22 +24,24 @@ import {
 import { useTable, usePagination, useSortBy } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { ethers } from "ethers";
-import useCustomColorModes from "../hooks/useCustomColorModes";
-import DateWithTooltip from "../components/DateWithTooltip";
-import Address from "../components/Address";
-import { getWithdrawEvents } from "../data/api/streams";
-import { eventDisplay } from "../helpers/events";
-import { byBigNumber, byTimestamp } from "../helpers/sorting";
-import WithdrawStatsSkeleton from "../components/skeletons/WithdrawStatsSkeleton";
-import { getAllBuilders } from "../data/api/builder";
-import StreamTableCell from "../components/StreamTableCell";
-import StreamRunway from "../components/StreamRunway";
+import useCustomColorModes from "../../hooks/useCustomColorModes";
+import DateWithTooltip from "../../components/DateWithTooltip";
+import Address from "../../components/Address";
+import { getWithdrawEvents } from "../../data/api/streams";
+import { eventDisplay } from "../../helpers/events";
+import { byBigNumber, byTimestamp } from "../../helpers/sorting";
+import WithdrawStatsSkeleton from "../../components/skeletons/WithdrawStatsSkeleton";
+import { getAllBuilders } from "../../data/api/builder";
+import StreamTableCell from "../../components/StreamTableCell";
+import StreamRunway from "../../components/StreamRunway";
 
 const BuilderAddressCell = ({ builder }) => {
   return (
-    <Link as={RouteLink} to={`/builders/${builder.address}`} pos="relative">
-      <Address address={builder.address} w="12.5" fontSize="16" cachedEns={builder.ens} />
-    </Link>
+    <NextLink href={`/builders/${builder.address}`} passHref>
+      <Link pos="relative">
+        <Address address={builder.address} w="12.5" fontSize="16" cachedEns={builder.ens} />
+      </Link>
+    </NextLink>
   );
 };
 
