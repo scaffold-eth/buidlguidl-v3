@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import Head from "next/head";
 import "../index.css";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import { InfuraProvider, StaticJsonRpcProvider, Web3Provider } from "@ethersproject/providers";
@@ -184,6 +185,11 @@ function MyApp({ Component, pageProps }) {
       <BlockchainProvidersContext.Provider value={providers}>
         <div className="App">
           {/* ✏️ Edit the header and change the title to your project name */}
+          <Head>
+            <link rel="icon" href="/favicon.ico" />
+            <meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=1.0, user-scalable=0" />
+            <meta name="theme-color" content="#000000" />
+          </Head>
           <Header
             injectedProvider={injectedProvider}
             userRole={userRole}

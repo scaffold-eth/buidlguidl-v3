@@ -19,6 +19,7 @@ import {
 import BuilderFunctionList from "../components/BuilderFunctionList";
 import { SERVER_URL } from "../constants";
 import { USER_FUNCTIONS } from "../helpers/constants";
+import MetaSeo from "../components/MetaSeo";
 
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
@@ -46,6 +47,11 @@ export default function Index() {
 
   return (
     <>
+      <MetaSeo
+        title="BuidlGuidl v3"
+        description="A curated group of Ethereum builders creating products, prototypes, and tutorials to enrich the web3 ecosytem."
+        image="/assets/bg_teaser.png"
+      />
       <Flex bgColor={heroBg} alignItems="center" direction={{ base: "column-reverse", lg: "row" }}>
         <Box w={{ base: "100%", lg: "50%" }} pl={{ base: "50px", lg: "15%" }} pr="50px" py="50px">
           <Box maxW="470px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
