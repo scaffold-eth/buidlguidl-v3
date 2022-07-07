@@ -34,13 +34,3 @@ export const patchProvideEns = async (address, signature, { builderAddress }) =>
     throw new Error(error);
   }
 };
-
-export const getEnsClaims = async () => {
-  try {
-    const response = await axios.get(`${serverUrl}/ens/claims`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error(error);
-  }
-};

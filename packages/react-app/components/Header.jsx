@@ -160,16 +160,6 @@ export default function Header({
                 </MenuItem>
                 <MenuItem>
                   <NextLink
-                    href="/admin/ens-claims"
-                    activeStyle={{
-                      color: primaryColorString,
-                    }}
-                  >
-                    ENS claims
-                  </NextLink>
-                </MenuItem>
-                <MenuItem>
-                  <NextLink
                     href="/admin/withdraw-stats"
                     exact
                     activeStyle={{
