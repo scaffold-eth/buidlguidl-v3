@@ -39,16 +39,18 @@ import { getWithdrawEvents } from "../../data/api/streams";
 import { getSreBuilder } from "../../data/api/sre";
 import BuilderChallengesTable from "../../components/BuilderChallengesTable";
 import StreamWithdrawButton from "../../components/StreamWithdrawButton";
+import { SERVER_URL as serverUrl } from "../../constants";
+import MetaSeo from "../../components/MetaSeo";
 
 const secondsPerDay = 24 * 60 * 60;
-export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole }) {
+export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole, builder }) {
   const router = useRouter();
   const { builderAddress } = router.query;
 
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { secondaryFontColor, borderColor } = useCustomColorModes();
-  const [builder, setBuilder] = useState(null);
+  const [builderBuilds, setBuilderBuilds] = useState(null);
   const { hasCopied, onCopy } = useClipboard(builder?.stream?.streamAddress);
   const [withdrawEvents, setWithdrawEvents] = useState([]);
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
@@ -58,30 +60,10 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const isMyProfile = builderAddress === address;
 
   const fetchBuilder = useCallback(async () => {
-    if (!builderAddress) return;
-
     setIsLoadingBuilder(true);
-    let fetchedBuilder;
-    try {
-      fetchedBuilder = await axios.get(serverUrl + `/builders/${builderAddress}`);
-    } catch (e) {
-      // User not found
-      if (axios.isAxiosError(e) && e?.response?.status === 404) {
-        history.push("/404");
-        return;
-      }
-    }
-
     const buildsFromBuilder = await axios.get(serverUrl + `/builds/builder/${builderAddress}`);
 
-    const builderData = {
-      ...fetchedBuilder.data,
-      builds: buildsFromBuilder.data,
-    };
-
-    console.log(builderData);
-
-    setBuilder(builderData);
+    setBuilderBuilds(buildsFromBuilder.data);
     setIsLoadingBuilder(false);
   }, [builderAddress, serverUrl, history]);
 
@@ -145,6 +127,11 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
 
   return (
     <Container maxW="container.xl" mb="50px">
+      <MetaSeo
+        title={builder?.ens ?? builder.id}
+        description={`${builder?.status?.text ?? ""} - Total builds: ${builder?.builds?.length ?? 0}`}
+        image="/assets/bg_teaser.png"
+      />
       <SimpleGrid gap={14} columns={{ base: 1, xl: 4 }}>
         <GridItem colSpan={1}>
           {builder && (
@@ -264,10 +251,10 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           </Flex>
           {isLoadingBuilder && <BuilderProfileBuildsTableSkeleton />}
           {!isLoadingBuilder &&
-            (builder?.builds.length ? (
+            (builderBuilds?.length ? (
               <Box overflowX="auto" mb={8}>
                 <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={5}>
-                  {builder?.builds.map(build => (
+                  {builderBuilds.map(build => (
                     <BuildCard
                       build={build}
                       key={build.id}
@@ -332,4 +319,21 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
       <SubmitBuildModal isOpen={isOpen} onClose={onClose} onUpdate={fetchBuilder} />
     </Container>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { builderAddress } = context.params;
+  if (!builderAddress) return;
+
+  let fetchedBuilder;
+  try {
+    fetchedBuilder = await axios.get(serverUrl + `/builders/${builderAddress}`);
+  } catch (e) {
+    console.log(e);
+    fetchedBuilder = null;
+  }
+
+  return {
+    props: { builder: fetchedBuilder?.data },
+  };
 }
