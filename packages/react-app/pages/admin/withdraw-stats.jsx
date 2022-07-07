@@ -255,10 +255,10 @@ export default function WithdrawStats() {
           </Center>
           <Table {...getTableProps()}>
             <Thead>
-              {headerGroups.map(headerGroup => (
-                <Tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroups.map((headerGroup, index) => (
+                <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                   {headerGroup.headers.map(column => (
-                    <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
                       <Flex>
                         {column.render("Header")}
                         <chakra.span pl="4">
@@ -280,9 +280,9 @@ export default function WithdrawStats() {
               {page.map(row => {
                 prepareRow(row);
                 return (
-                  <Tr {...row.getRowProps()}>
+                  <Tr {...row.getRowProps()} key={row.id}>
                     {row.cells.map(cell => (
-                      <Td {...cell.getCellProps()}>
+                      <Td {...cell.getCellProps()} key={cell.column.id}>
                         <Box
                           {...cell.getCellProps({
                             style: {
