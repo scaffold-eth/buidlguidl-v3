@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
@@ -48,7 +47,6 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const { builderAddress } = router.query;
   const refreshData = () => router.replace(router.asPath);
 
-  const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { secondaryFontColor, borderColor } = useCustomColorModes();
   const [builderBuilds, setBuilderBuilds] = useState(null);
@@ -66,15 +64,13 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
 
     setBuilderBuilds(buildsFromBuilder.data);
     setIsLoadingBuilder(false);
-  }, [builderAddress, serverUrl, history]);
+  }, [builderAddress, serverUrl]);
 
   const fetchBuilderChallenges = useCallback(async () => {
     setIsLoadingBuilderChallenges(true);
     const challengesFromBuilder = await getSreBuilder(builderAddress);
 
     const builderChallengesData = Object.entries(challengesFromBuilder.challenges ?? {});
-
-    console.log(builderChallengesData);
 
     setBuilderChallenges(builderChallengesData);
     setIsLoadingBuilderChallenges(false);
@@ -327,7 +323,9 @@ export async function getServerSideProps(context) {
     fetchedBuilder = await axios.get(serverUrl + `/builders/${builderAddress}`);
   } catch (e) {
     console.log(e);
-    fetchedBuilder = null;
+    return {
+      notFound: true,
+    };
   }
 
   return {

@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Container, Heading, SkeletonText, HStack, Center } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import ReactMarkdown from "react-markdown";
@@ -22,7 +21,6 @@ export default function BuildDetailView({ build }) {
 
   const [isReadmeSupported, setIsReadmeSupported] = useState(false);
   const [description, setDescription] = useState(null);
-  const history = useHistory();
 
   useEffect(() => {
     const effect = async () => {
@@ -47,12 +45,6 @@ export default function BuildDetailView({ build }) {
     effect();
     // eslint-disable-next-line
   }, [build]);
-
-  if (!build) {
-    // TODO implement a 404 page
-    // this looks good: https://ant.design/components/result/#components-result-demo-404
-    history.push("/404");
-  }
 
   const actionButtons = (
     <>
@@ -147,9 +139,18 @@ export async function getServerSideProps(context) {
     fetchedBuild = await getBuildById(buildId);
   } catch (err) {
     console.log(err);
-    fetchedBuild = null;
+    return {
+      notFound: true,
+    };
   }
+
+  if (!fetchedBuild) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
-    props: { build: fetchedBuild }, // will be passed to the page component as props
+    props: { build: fetchedBuild },
   };
 }
