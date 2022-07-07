@@ -219,7 +219,7 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
       </FormControl>
 
       <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isLoading || isLoadingEdit} isFullWidth>
-        Add Builder
+        {isEditingBuilder ? "Update Builder" : "Add Builder"}
       </Button>
     </>
   );

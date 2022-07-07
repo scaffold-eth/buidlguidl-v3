@@ -46,6 +46,7 @@ const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole, builder }) {
   const router = useRouter();
   const { builderAddress } = router.query;
+  const refreshData = () => router.replace(router.asPath);
 
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -142,7 +143,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               userProvider={userProvider}
               fetchBuilder={fetchBuilder}
               userRole={userRole}
-              onUpdate={fetchBuilder}
+              onUpdate={refreshData}
             />
           )}
         </GridItem>
@@ -202,11 +203,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                     <StreamWithdrawButton
                       streamAddress={builder.stream?.streamAddress}
                       builderAddress={builderAddress}
-                      onUpdate={async () => {
-                        await fetchBuilder();
-                        const res = await getWithdrawEvents(builderAddress);
-                        setWithdrawEvents(res);
-                      }}
+                      onUpdate={refreshData}
                     />
                   )}
                 </Box>
