@@ -25,6 +25,24 @@ import { getAllBuilds } from "../data/api";
 
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
+const StatBox = ({ value, title }) => (
+  <Flex
+    border="1px solid"
+    borderColor="gray.300"
+    p="20px"
+    direction="column"
+    justify="center"
+    align="center"
+    minW="120px"
+    minH="120px"
+  >
+    <Text fontSize="2xl" fontWeight="bold">
+      {value}
+    </Text>
+    <Text color="gray.400">{title}</Text>
+  </Flex>
+);
+
 /* eslint-disable jsx-a11y/accessible-emoji */
 export default function Index({ bgStats }) {
   const [builders, setBuilders] = useState([]);
@@ -65,10 +83,12 @@ export default function Index({ bgStats }) {
               enrich the web3 ecosystem.
             </Text>
             <Text mb="10px">❤️ We are an Ethereum public good.</Text>
-            {/*Builds / Builders / ETH distributed*/}
-            <Text>Builders: {bgStats.builderCount}</Text>
-            <Text>Builds: {bgStats.buildCount}</Text>
-            <Text>Streamed ETH: {bgStats.streamedEth}</Text>
+            {/*Builds / Builders / ETH distributed Ξ*/}
+            <HStack mt="50px" justifyContent={{ base: "center", lg: "initial" }}>
+              <StatBox value={bgStats.builderCount} title="builders" />
+              <StatBox value={bgStats.buildCount} title="builds" />
+              <StatBox value={`Ξ ${bgStats.streamedEth}`} title="streamed" />
+            </HStack>
           </Box>
         </Box>
 
