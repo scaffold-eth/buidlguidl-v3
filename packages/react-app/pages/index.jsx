@@ -20,11 +20,13 @@ import BuilderFunctionList from "../components/BuilderFunctionList";
 import { SERVER_URL } from "../constants";
 import { USER_FUNCTIONS } from "../helpers/constants";
 import MetaSeo from "../components/MetaSeo";
+import { getAllBuilders } from "../data/api/builder";
+import { getAllBuilds } from "../data/api";
 
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 /* eslint-disable jsx-a11y/accessible-emoji */
-export default function Index() {
+export default function Index({ bgStats }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
 
@@ -63,6 +65,10 @@ export default function Index() {
               enrich the web3 ecosystem.
             </Text>
             <Text mb="10px">❤️ We are an Ethereum public good.</Text>
+            {/*Builds / Builders / ETH distributed*/}
+            <Text>Builders: {bgStats.builderCount}</Text>
+            <Text>Builds: {bgStats.buildCount}</Text>
+            <Text>Streamed ETH: {bgStats.streamedEth}</Text>
           </Box>
         </Box>
 
@@ -249,4 +255,25 @@ export default function Index() {
       </Container>
     </>
   );
+}
+
+export async function getStaticProps() {
+  const builders = await getAllBuilders();
+  const builds = await getAllBuilds();
+
+  const streamedEth = builders.reduce((prevValue, currentValue) => {
+    return prevValue + parseFloat(currentValue?.stream?.cap ?? 0.0);
+  }, 0.0);
+
+  return {
+    props: {
+      bgStats: {
+        builderCount: builders.length,
+        buildCount: builds.length,
+        streamedEth,
+      },
+    },
+    // 6 hours refresh.
+    revalidate: 21600,
+  };
 }
