@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import NextLink from "next/link";
 import {
@@ -15,6 +15,8 @@ import {
   Flex,
   useColorModeValue,
   useColorMode,
+  LinkOverlay,
+  LinkBox,
 } from "@chakra-ui/react";
 import BuilderFunctionList from "../components/BuilderFunctionList";
 import { SERVER_URL } from "../constants";
@@ -25,7 +27,7 @@ import { getAllBuilds } from "../data/api";
 
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
-const StatBox = ({ value, title }) => (
+const StatBox = ({ value, title, link }) => (
   <Flex
     border="1px solid"
     borderColor="gray.300"
@@ -37,7 +39,13 @@ const StatBox = ({ value, title }) => (
     minH="120px"
   >
     <Text fontSize="2xl" fontWeight="bold">
-      {value}
+      {link ? (
+        <NextLink href={link} passHref>
+          <LinkOverlay>{value}</LinkOverlay>
+        </NextLink>
+      ) : (
+        <>{value}</>
+      )}
     </Text>
     <Text color="gray.400">{title}</Text>
   </Flex>
@@ -47,6 +55,8 @@ const StatBox = ({ value, title }) => (
 export default function Index({ bgStats }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
+
+  const streamSection = useRef(null);
 
   const { colorMode } = useColorMode();
   const isDarkMode = colorMode === "dark";
@@ -64,6 +74,10 @@ export default function Index({ bgStats }) {
 
     fetchBuilders();
   }, []);
+
+  const smoothScroll = ref => {
+    ref.current.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <>
@@ -85,9 +99,15 @@ export default function Index({ bgStats }) {
             <Text mb="10px">❤️ We are an Ethereum public good.</Text>
             {/*Builds / Builders / ETH distributed Ξ*/}
             <HStack mt="50px" justifyContent={{ base: "center", lg: "initial" }}>
-              <StatBox value={bgStats.builderCount} title="builders" />
-              <StatBox value={bgStats.buildCount} title="builds" />
-              <StatBox value={`Ξ ${bgStats.streamedEth}`} title="streamed" />
+              <LinkBox>
+                <StatBox value={bgStats.builderCount} title="builders" link="/builders" />
+              </LinkBox>
+              <LinkBox>
+                <StatBox value={bgStats.buildCount} title="builds" link="/builds" />
+              </LinkBox>
+              <LinkBox onClick={() => smoothScroll(streamSection)} cursor="pointer">
+                <StatBox value={`Ξ ${bgStats.streamedEth}`} title="streamed" />
+              </LinkBox>
             </HStack>
           </Box>
         </Box>
@@ -236,7 +256,7 @@ export default function Index({ bgStats }) {
           <Text>-</Text>
         </Box>
 
-        <Heading as="h2" size="md" my="64px" color="gray.500">
+        <Heading as="h2" size="md" my="64px" color="gray.500" ref={streamSection}>
           Active 🏰 BuidlGuidl members:
         </Heading>
 
