@@ -133,7 +133,7 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
         </Text>
         <Spacer />
         <ButtonGroup mt={3}>
-          <NextLink href={`/builders/${build.id}`} passHref>
+          <NextLink href={`/build/${build.id}`} passHref>
             <Button as={Link} variant="outline" size="sm" isFullWidth>
               View
             </Button>
