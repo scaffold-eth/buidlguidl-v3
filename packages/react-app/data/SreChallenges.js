@@ -29,10 +29,20 @@ export const SreChallengeInfo = {
     previewImage: "assets/2.png",
     dependencies: [],
   },
-  "minimum-viable-exchange": {
+  "dice-game": {
     id: 3,
+    branchName: "challenge-3-dice-game",
+    label: "🚩 Challenge 3: 🎲 Dice Game",
+    disabled: false,
+    description:
+      "🎰 Randomness is tricky on a public deterministic blockchain. The block hash is the result proof-of-work (for now) and some builders use this as a weak form of randomness.  In this challenge you will take advantage of a Dice Game contract by predicting the randomness in order to only roll winning dice!",
+    previewImage: "assets/dice.png",
+    dependencies: ["simple-nft-example", "decentralized-staking", "token-vendor"],
+  },
+  "minimum-viable-exchange": {
+    id: 4,
     branchName: "",
-    label: "🚩 Challenge 3: ⚖️ Build a DEX",
+    label: "🚩 Challenge 4: ⚖️ Build a DEX",
     disabled: false,
     description:
       "💵 Build an exchange that swaps ETH to tokens and tokens to ETH. 💰 This is possible because the smart contract holds reserves of both assets and has a price function based on the ratio of the reserves. Liquidity providers are issued a token that represents their share of the reserves and fees...",
@@ -44,21 +54,23 @@ export const SreChallengeInfo = {
     },
   },
   "buidl-guidl": {
-    id: 4,
+    id: 5,
     branchName: "",
-    label: "🚩 Challenge 4: 🏰️ BG 🏤 Bazaar",
+    label: "Eligible to join 🏰️ BuidlGuidl",
+    // Not a challenge, just a checkpoint in the Challenge timeline.
+    checkpoint: true,
     disabled: false,
     description:
-      "Now you are a member of BuidlGuidl Bazaar!!! – The Bazaar is a place to show off your builds and meet other builders. Start crafting your Web3 portfolio by submitting your DEX build.",
+      "The BuidlGuidl is a curated group of Ethereum builders creating products, prototypes, and tutorials to enrich the web3 ecosystem. A place to show off your builds and meet other builders. Start crafting your Web3 portfolio by submitting your DEX build.",
     previewImage: "assets/bg.png",
     dependencies: ["simple-nft-example", "decentralized-staking", "token-vendor"],
     externalLink: {
-      link: "https://bazaar.buidlguidl.com/",
-      claim: "Join the 🏰️ BG 🏤 Bazaar",
+      link: "https://buidlguidl.com/",
+      claim: "Visit the 🏰️ BuidlGuidl",
     },
   },
   "learn-multisig": {
-    id: 5,
+    id: 6,
     branchName: "challenge-3-multi-sig",
     label: "🚩 Challenge 5: 👛 Multisig Wallet",
     disabled: false,
@@ -77,7 +89,7 @@ export const SreChallengeInfo = {
     },
   },
   "nft-cohort": {
-    id: 6,
+    id: 7,
     branchName: "challenge-5-svg-nft-cohort",
     label: "🚩 Challenge 6: 🎁 SVG NFT 🎫 Building Cohort",
     disabled: false,
@@ -96,7 +108,7 @@ export const SreChallengeInfo = {
     },
   },
   "learn-oracles": {
-    id: 7,
+    id: 8,
     branchName: "challenge-4-oracle",
     label: "🚩 Challenge 7: 🔮 Oracles",
     disabled: true,
@@ -112,3 +124,11 @@ export const SreChallengeInfo = {
     ],
   },
 };
+
+const githubChallengesRepoBaseRawUrl = {
+  js: "https://raw.githubusercontent.com/scaffold-eth/scaffold-eth-challenges",
+  ts: "https://raw.githubusercontent.com/scaffold-eth/scaffold-eth-typescript-challenges",
+};
+
+export const getGithubChallengeReadmeUrl = (challengeId, version) =>
+  `${githubChallengesRepoBaseRawUrl[version]}/${challengeInfo[challengeId].branchName}/README.md`;
