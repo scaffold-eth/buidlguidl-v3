@@ -39,6 +39,7 @@ import { getSreBuilder } from "../../data/api/sre";
 import BuilderChallengesTable from "../../components/BuilderChallengesTable";
 import StreamWithdrawButton from "../../components/StreamWithdrawButton";
 import { SERVER_URL as serverUrl } from "../../constants";
+import { SreChallengeInfo } from "../../data/SreChallenges";
 import MetaSeo from "../../components/MetaSeo";
 
 const secondsPerDay = 24 * 60 * 60;
@@ -70,7 +71,15 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     setIsLoadingBuilderChallenges(true);
     const challengesFromBuilder = await getSreBuilder(builderAddress);
 
-    const builderChallengesData = Object.entries(challengesFromBuilder.challenges ?? {});
+    let builderChallengesData = Object.entries(challengesFromBuilder.challenges ?? {});
+
+    if (builderChallengesData.length) {
+      builderChallengesData = builderChallengesData.sort((a, b) => {
+        const [aChallenge] = a;
+        const [bChallenge] = b;
+        return SreChallengeInfo[aChallenge].id > SreChallengeInfo[bChallenge].id ? 1 : -1;
+      });
+    }
 
     setBuilderChallenges(builderChallengesData);
     setIsLoadingBuilderChallenges(false);
