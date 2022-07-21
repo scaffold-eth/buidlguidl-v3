@@ -162,13 +162,13 @@ export default function Header({
                 </MenuItem>
                 <MenuItem>
                   <NextLink
-                    href="/admin/withdraw-stats"
+                    href="/admin/fund"
                     exact
                     activeStyle={{
                       color: primaryColorString,
                     }}
                   >
-                    Withdraw stats
+                    Fund Builders
                   </NextLink>
                 </MenuItem>
               </MenuList>
