@@ -77,9 +77,21 @@ const columns = [
       const balanceB = parseFloat(rowB.values?.stream?.balance);
       const capA = parseFloat(rowA.values?.stream?.cap);
       const capB = parseFloat(rowB.values?.stream?.cap);
-      const gapA = balanceA - capA;
-      const gapB = balanceB - capB;
-      return gapA - gapB;
+      const lastA = parseFloat(rowA.values?.stream?.lastContract);
+      const lastB = parseFloat(rowB.values?.stream?.lastContract);
+      const frequencyA = parseFloat(rowA.values?.stream?.frequency);
+      const frequencyB = parseFloat(rowB.values?.stream?.frequency);
+      const unlockedAmountA = (capA * Math.round(new Date().getTime() / 1000 - lastA)) / frequencyA;
+      const unlockedAmountB = (capB * Math.round(new Date().getTime() / 1000 - lastB)) / frequencyB;
+
+      const availableA = capA < unlockedAmountA ? capA : unlockedAmountA;
+      const availableB = capB < unlockedAmountB ? capB : unlockedAmountB;
+
+      const gapA = balanceA / availableA;
+      const gapB = balanceB / availableB;
+      console.log(rowA.values.builder.ens, gapA);
+      console.log(rowB.values.builder.ens, gapB);
+      return gapA < gapB ? -1 : 1;
     },
     Cell: ({ value }) => (
       <Box>
