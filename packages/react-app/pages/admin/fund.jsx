@@ -46,6 +46,7 @@ const BuilderAddressCell = ({ builder }) => {
   );
 };
 
+// eslint-disable-next-line react/display-name
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = useRef();
   const resolvedRef = ref || defaultRef;
