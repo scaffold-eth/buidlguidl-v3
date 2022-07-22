@@ -260,7 +260,7 @@ export default function Fund() {
     {
       columns,
       data: builderData,
-      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "lastEvent", desc: true }], []) },
+      initialState: { pageIndex: 0, pageSize: 100, sortBy: useMemo(() => [{ id: "lastEvent", desc: true }], []) },
     },
     useSortBy,
     usePagination,

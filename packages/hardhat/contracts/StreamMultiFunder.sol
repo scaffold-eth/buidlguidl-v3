@@ -14,10 +14,10 @@ contract StreamMultiFunder {
   function fundStreams(address[] memory streams, uint256[] memory amounts, string[] memory reasons) public payable {
     require(streams.length > 0,"No streams");
     require(msg.value > 0.001 ether, "Not worth the gas");
-    require(streams.length == amounts.length,"different length");
-    require(streams.length == reasons.length,"different length");
+    require(streams.length == amounts.length, "different length");
+    require(streams.length == reasons.length, "different length");
 
-    for(uint8 i = 0; i < streams.length; i++) {
+    for (uint8 i = 0; i < streams.length; i++) {
         ISimpleStream thisStream = ISimpleStream(streams[i]);
         thisStream.streamDeposit{value: amounts[i]}(reasons[i]);
     }

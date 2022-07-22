@@ -14,17 +14,14 @@ import {
   useToast,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useContractLoader } from "../hooks";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { Contract } from "@ethersproject/contracts";
 import streamMultiFunderAbi from "../contracts/streamMultiFunderAbi.json";
 import { Transactor } from "../helpers";
 import { ethers } from "ethers";
-import { updateStreamIndexerFor } from "../data/api/streams";
 
+const funderContractAddress = process.env.NEXT_PUBLIC_FUNDER_CONTRACT_ADDRESS;
 let tx;
-// ToDo. Right address
-const funderContractAddress = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
 
 const FundBuilders = ({ builders }) => {
   const [funderContract, setFunderContract] = useState(null);
