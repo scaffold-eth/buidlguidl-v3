@@ -1,15 +1,18 @@
 require("dotenv").config();
 
+// You can implement other DB connectors.
 const DB_SERVICES = {
   firebase: "./dbFirebase",
-  local: "./dbLocal",
 };
 
-// we should probably make a distinction: service could be firebase-staging, firebase, etc.
-// This is more "implementation" which is only firebase or local
 const isTesting = process.env.NODE_ENV === "test";
-const selectedService = isTesting ? "local" : process.env.DATABASE_SERVICE ?? "local";
-const dbService = DB_SERVICES[selectedService] ?? DB_SERVICES.local;
+if (isTesting && !process.env.FIRESTORE_EMULATOR_HOST) {
+  throw new Error("test can only run on firestore emulator");
+}
+
+// You can implement other DB connectors.
+const selectedService = "firebase";
+const dbService = DB_SERVICES[selectedService] ?? DB_SERVICES.firebase;
 // eslint-disable-next-line import/no-dynamic-require
 const db = require(dbService);
 
