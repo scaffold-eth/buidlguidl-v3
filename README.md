@@ -11,7 +11,7 @@ The 🏰 BuidlGuidl is a curated group of Ethereum builders creating products, p
 If you want to connect to a **local** firebase instance:
   - Install the [firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli)
   - Copy `packages/backend/.env.sample` to `packages/backend/.env`
-  - Seed the local firebase: You can copy `packages/backend/local_database/seed.sample.json` to `packages/backend/local_database/seed.json` and tweak it as you need.
+  - Seed the local firebase: Copy `packages/backend/local_database/seed.sample.json` to `packages/backend/local_database/seed.json` and tweak it as you need.
 
 If you want to connect to your **live** firebase instance:
  - Donwload the `serviceAccountKey.json` file from the Firebase UI
