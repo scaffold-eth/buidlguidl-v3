@@ -1,5 +1,7 @@
 require("dotenv").config();
 const firebaseAdmin = require("firebase-admin");
+const fs = require("fs");
+const { importSeed } = require("../../local_database/importSeed");
 
 if (process.env.NODE_ENV === "test") {
   // We won't be using firebase for testing for now. At some point,
@@ -15,6 +17,8 @@ if (process.env.FIRESTORE_EMULATOR_HOST) {
     projectId: "buidlguidl-v3",
     storageBucket: "buidlguidl-v3.appspot.com",
   });
+
+  importSeed(firebaseAdmin.firestore());
 } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
   console.log("using Firebase live DB");
   firebaseAdmin.initializeApp({
