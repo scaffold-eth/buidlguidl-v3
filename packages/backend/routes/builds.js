@@ -45,7 +45,7 @@ router.get("/builder/:builderAddress", async (req, res) => {
  */
 router.post("/", withRole("builder"), async (req, res) => {
   console.log("POST /builds");
-  const { buildUrl, videoUrl, demoUrl, desc, image, name, signature } = req.body;
+  const { buildUrl, videoUrl, demoUrl, desc, image, name, signature, coBuilders } = req.body;
   const address = req.address;
 
   const verifyOptions = {
@@ -57,6 +57,7 @@ router.post("/", withRole("builder"), async (req, res) => {
     desc,
     name,
     image,
+    coBuilders,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -97,7 +98,7 @@ router.post("/", withRole("builder"), async (req, res) => {
  */
 router.patch("/:buildId", withRole("builder"), async (req, res) => {
   const buildId = req.params.buildId;
-  const { buildUrl, demoUrl, videoUrl, desc, image, name, signature } = req.body;
+  const { buildUrl, demoUrl, videoUrl, desc, image, name, signature, coBuilders } = req.body;
   console.log("EDIT /builds/", buildId);
 
   const address = req.address;
@@ -112,6 +113,7 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
     desc,
     name,
     image,
+    coBuilders,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);

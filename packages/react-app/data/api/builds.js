@@ -2,7 +2,11 @@ import axios from "axios";
 import { SERVER_URL as serverUrl } from "../../constants";
 import { getGithubApiReadmeFromRepoUrl, getGithubReadmeUrlFromBranchUrl, isGithubBranch } from "../api";
 
-export const postBuildSubmit = async (address, signature, { buildUrl, videoUrl, demoUrl, desc, image, name }) => {
+export const postBuildSubmit = async (
+  address,
+  signature,
+  { buildUrl, videoUrl, demoUrl, desc, image, name, coBuilders },
+) => {
   try {
     await axios.post(
       `${serverUrl}/builds`,
@@ -13,6 +17,7 @@ export const postBuildSubmit = async (address, signature, { buildUrl, videoUrl, 
         desc,
         image,
         name,
+        coBuilders,
         signature,
       },
       {
@@ -35,7 +40,7 @@ export const postBuildSubmit = async (address, signature, { buildUrl, videoUrl, 
 export const patchBuildEdit = async (
   address,
   signature,
-  { buildId, buildUrl, videoUrl, demoUrl, desc, image, name },
+  { buildId, buildUrl, videoUrl, demoUrl, desc, image, name, coBuilders },
 ) => {
   try {
     await axios.patch(
@@ -47,6 +52,7 @@ export const patchBuildEdit = async (
         desc,
         image,
         name,
+        coBuilders,
         signature,
       },
       {

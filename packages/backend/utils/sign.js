@@ -12,6 +12,7 @@ const getSignMessageForId = async (messageId, options) => {
         videoUrl: options.videoUrl,
         desc: options.desc,
         image: options.image,
+        coBuilders: options.coBuilders,
       };
       return `I want to submit a new build as ${options.address}:\n\n${JSON.stringify(data, null, 2)}`;
 
@@ -23,6 +24,7 @@ const getSignMessageForId = async (messageId, options) => {
         videoUrl: options.videoUrl,
         desc: options.desc,
         image: options.image,
+        coBuilders: options.coBuilders,
       };
       return `I want to edit the build "${options.name}" (${options.buildId}) as ${
         options.address

@@ -68,7 +68,7 @@ export default function AddressInput(props) {
   );
 
   return (
-    <div>
+    <div style={{ flexGrow: 1 }}>
       {scan ? (
         <div
           style={{
