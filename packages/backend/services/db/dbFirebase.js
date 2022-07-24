@@ -177,8 +177,15 @@ const findAllBuilds = async (featured = null) => {
 
 const findBuilderBuilds = async builderAddress => {
   const buildsSnapshot = await database.collection("builds").where("builder", "==", builderAddress).get();
+  const coBuildsSnapshot = await database
+    .collection("builds")
+    .where("coBuilders", "array-contains", builderAddress)
+    .get();
 
-  return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  const totalBuilds = buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  totalBuilds.push(...coBuildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+
+  return totalBuilds;
 };
 
 const featureBuild = (buildId, featured) => {

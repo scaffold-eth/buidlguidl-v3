@@ -8,15 +8,60 @@ import { ellipsizedAddress } from "../helpers/strings";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import ImageModal from "./ImageModal";
 
-const BuildDetailHeader = ({ build, actionButtons }) => {
-  const { isOpen: isOpenImageModal, onOpen: onOpenImageModal, onClose: onCloseImageModal } = useDisclosure();
+const Builder = ({ builderAddress }) => {
   const mainnetProviderData = useContext(BlockchainProvidersContext).mainnet;
   const mainnetProvider = mainnetProviderData.provider;
 
-  const ens = useLookupAddress(mainnetProvider, build.builder);
-  const shortAddress = ellipsizedAddress(build.builder);
+  const ens = useLookupAddress(mainnetProvider, builderAddress);
+  const shortAddress = ellipsizedAddress(builderAddress);
   const hasEns = !!ens && ens.length !== 0 && !/^0x/.test(ens);
 
+  return (
+    <NextLink href={`/builders/${builderAddress}`} passHref>
+      <Link as={Link}>
+        <HStack spacing="20px">
+          <span style={{ verticalAlign: "middle" }}>
+            <QRPunkBlockie withQr={false} address={builderAddress.toLowerCase()} w={10} borderRadius="md" />
+          </span>
+          {hasEns ? (
+            <VStack spacing={0} alignItems="start">
+              <span
+                style={{
+                  verticalAlign: "middle",
+                  fontSize: 18,
+                  fontWeight: "bold",
+                }}
+              >
+                {ens}
+              </span>
+              <span
+                style={{
+                  verticalAlign: "middle",
+                  fontSize: 16,
+                }}
+              >
+                {shortAddress}
+              </span>
+            </VStack>
+          ) : (
+            <span
+              style={{
+                verticalAlign: "middle",
+                fontSize: 18,
+                fontWeight: "bold",
+              }}
+            >
+              {shortAddress}
+            </span>
+          )}
+        </HStack>
+      </Link>
+    </NextLink>
+  );
+};
+
+const BuildDetailHeader = ({ build, actionButtons }) => {
+  const { isOpen: isOpenImageModal, onOpen: onOpenImageModal, onClose: onCloseImageModal } = useDisclosure();
   const { borderColor } = useCustomColorModes();
 
   return (
@@ -30,46 +75,12 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
           <Text fontSize="lg" mb={6}>
             {build.desc}
           </Text>
-          <NextLink href={`/builders/${build.builder}`} passHref>
-            <Link as={Link}>
-              <HStack spacing="20px">
-                <span style={{ verticalAlign: "middle" }}>
-                  <QRPunkBlockie withQr={false} address={build.builder?.toLowerCase()} w={10} borderRadius="md" />
-                </span>
-                {hasEns ? (
-                  <VStack spacing={0} alignItems="start">
-                    <span
-                      style={{
-                        verticalAlign: "middle",
-                        fontSize: 18,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {ens}
-                    </span>
-                    <span
-                      style={{
-                        verticalAlign: "middle",
-                        fontSize: 16,
-                      }}
-                    >
-                      {shortAddress}
-                    </span>
-                  </VStack>
-                ) : (
-                  <span
-                    style={{
-                      verticalAlign: "middle",
-                      fontSize: 24,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {shortAddress}
-                  </span>
-                )}
-              </HStack>
-            </Link>
-          </NextLink>
+          <VStack align="left">
+            <Builder builderAddress={build.builder} />
+            {build?.coBuilders.map(builderAddress => (
+              <Builder builderAddress={builderAddress} key={builderAddress} />
+            ))}
+          </VStack>
         </Box>
         <Spacer p="5px" />
         {build.image && (
