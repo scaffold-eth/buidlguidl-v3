@@ -140,11 +140,11 @@ const createBuild = async build => {
   await updateUser(builderId, { builds: buildsData });
 
   // Save co-builders
-  for (let i = 0; i < build.coBuilders.length; i++) {
+  for (let i = 0; i < build.coBuilders?.length; i++) {
     const coBuilderId = build.coBuilders[i];
     const coBuilderData = (await getUserSnapshotById(coBuilderId)).data();
 
-    // Skip it if doesn's exist. Maybe we can throw at some point.
+    // Skip it if doesn't exist. Maybe we can throw at some point.
     if (!coBuilderData) continue;
 
     const coBuildsData = coBuilderData.builds || [];
@@ -175,6 +175,18 @@ const deleteBuild = async buildId => {
   // Delete build reference on user.
   const newBuildsReferences = existingUserData.builds.filter(buildRef => buildRef.id !== buildId);
   await updateUser(builderId, { builds: newBuildsReferences });
+
+  // Delete build reference on co-builders
+  for (let i = 0; i < build.coBuilders?.length; i++) {
+    const buildCoBuilderId = build.coBuilders[i];
+    const { id: coBuilderId, ...existingCoBuilderData } = (await findUserByAddress(buildCoBuilderId)).data;
+
+    // Skip it if doesn't exist.
+    if (!coBuilderId) continue;
+
+    const newCoBuildsReferences = existingCoBuilderData.builds?.filter(buildRef => buildRef.id !== buildId);
+    await updateUser(coBuilderId, { builds: newCoBuildsReferences });
+  }
 
   // Delete Build
   return database.collection("builds").doc(buildId).delete();
