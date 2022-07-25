@@ -143,6 +143,7 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
     desc,
     image,
     name,
+    coBuilders,
     // Keep existing builder (admin can edit)
     builder: build.builder,
   };

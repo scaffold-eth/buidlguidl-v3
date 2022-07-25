@@ -2,6 +2,7 @@ require("dotenv").config();
 const firebaseAdmin = require("firebase-admin");
 const fs = require("fs");
 const { importSeed } = require("../../local_database/importSeed");
+const { areArraysEqual } = require("../../utils/arrays");
 
 if (process.env.NODE_ENV === "test") {
   // We won't be using firebase for testing for now. At some point,
@@ -122,6 +123,38 @@ const findBuildById = async buildId => {
   return build.data();
 };
 
+const addCoBuilderReferences = async (build, coBuilders, timestamp) => {
+  for (let i = 0; i < coBuilders?.length; i++) {
+    const coBuilderId = coBuilders[i];
+    const coBuilderData = (await getUserSnapshotById(coBuilderId)).data();
+
+    // Skip it if doesn't exist. Maybe we can throw at some point.
+    if (!coBuilderData) continue;
+
+    const coBuildsData = coBuilderData.builds || [];
+
+    coBuildsData.push({
+      id: build.id,
+      submittedTimestamp: timestamp,
+    });
+
+    await updateUser(coBuilderId, { builds: coBuildsData });
+  }
+};
+
+const deleteCoBuilderReferences = async (buildId, coBuilders) => {
+  for (let i = 0; i < coBuilders?.length; i++) {
+    const buildCoBuilderId = coBuilders[i];
+    const { id: coBuilderId, ...existingCoBuilderData } = (await findUserByAddress(buildCoBuilderId)).data;
+
+    // Skip it if doesn't exist.
+    if (!coBuilderId) continue;
+
+    const newCoBuildsReferences = existingCoBuilderData.builds?.filter(buildRef => buildRef.id !== buildId);
+    await updateUser(coBuilderId, { builds: newCoBuildsReferences });
+  }
+};
+
 const createBuild = async build => {
   // Save build.
   const newBuild = await database.collection("builds").add(build);
@@ -138,33 +171,36 @@ const createBuild = async build => {
   });
 
   await updateUser(builderId, { builds: buildsData });
-
-  // Save co-builders
-  for (let i = 0; i < build.coBuilders?.length; i++) {
-    const coBuilderId = build.coBuilders[i];
-    const coBuilderData = (await getUserSnapshotById(coBuilderId)).data();
-
-    // Skip it if doesn't exist. Maybe we can throw at some point.
-    if (!coBuilderData) continue;
-
-    const coBuildsData = coBuilderData.builds || [];
-
-    coBuildsData.push({
-      id: newBuild.id,
-      submittedTimestamp: build.submittedTimestamp,
-    });
-
-    await updateUser(coBuilderId, { builds: coBuildsData });
-  }
+  await addCoBuilderReferences(newBuild, build.coBuilders, build.submittedTimestamp);
 
   return newBuild;
 };
 
 const updateBuild = async (buildId, buildData) => {
+  const existingBuildSnapshot = await getBuildSnapshotById(buildId);
   const buildDoc = getBuildDoc(buildId);
-  await buildDoc.update(buildData);
 
+  const existingBuildData = existingBuildSnapshot.data();
+  const existingCobuilders = existingBuildData.coBuilders;
+  const newCoBuilders = buildData.coBuilders;
+
+  if (!areArraysEqual(existingCobuilders, newCoBuilders)) {
+    // Update co-builder references.
+    const coBuildersToAdd = newCoBuilders.filter(x => {
+      return !existingCobuilders.includes(x);
+    });
+
+    const coBuildersToRemove = existingCobuilders.filter(x => {
+      return !newCoBuilders.includes(x);
+    });
+
+    console.log("coBuildersToAdd", coBuildersToAdd);
+    console.log("coBuildersToRemove", coBuildersToRemove);
+  }
+
+  await buildDoc.update(buildData);
   const buildSnapshot = await getBuildSnapshotById(buildId);
+
   return { id: buildId, ...buildSnapshot.data() };
 };
 
@@ -177,16 +213,7 @@ const deleteBuild = async buildId => {
   await updateUser(builderId, { builds: newBuildsReferences });
 
   // Delete build reference on co-builders
-  for (let i = 0; i < build.coBuilders?.length; i++) {
-    const buildCoBuilderId = build.coBuilders[i];
-    const { id: coBuilderId, ...existingCoBuilderData } = (await findUserByAddress(buildCoBuilderId)).data;
-
-    // Skip it if doesn't exist.
-    if (!coBuilderId) continue;
-
-    const newCoBuildsReferences = existingCoBuilderData.builds?.filter(buildRef => buildRef.id !== buildId);
-    await updateUser(coBuilderId, { builds: newCoBuildsReferences });
-  }
+  await deleteCoBuilderReferences(buildId, build.coBuilders);
 
   // Delete Build
   return database.collection("builds").doc(buildId).delete();
