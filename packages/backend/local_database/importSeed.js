@@ -28,6 +28,7 @@ const importSeed = async database => {
 
   // Do Import
   const seedToImport = needsToUpdateDbVersion ? exampleSeed : currentSeed;
+  console.log("Importing seed to firebase emulator....");
 
   // Users
   Object.entries(seedToImport.users).forEach(([userId, userData]) => {

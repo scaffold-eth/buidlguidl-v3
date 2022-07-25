@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import {
@@ -20,12 +20,20 @@ import {
   Text,
   Image,
   Spinner,
+  HStack,
+  VStack,
 } from "@chakra-ui/react";
 import { SERVER_URL as serverUrl } from "../constants";
 import useSignedRequest from "../hooks/useSignedRequest";
 import useConnectedAddress from "../hooks/useConnectedAddress";
+import AddressInput from "./AddressInput";
+import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
+import { AddIcon, DeleteIcon, SmallAddIcon } from "@chakra-ui/icons";
+import { isAddress } from "ethers/lib/utils";
 
 export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
+  const mainnetProviderData = useContext(BlockchainProvidersContext).mainnet;
+  const mainnetProvider = mainnetProviderData.provider;
   const address = useConnectedAddress();
   const isEditingExistingBuild = !!build;
 
@@ -36,6 +44,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
   const [buildUrl, setBuildUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
+  const [coBuilders, setCoBuilders] = useState([]);
   const [errors, setErrors] = useState({ buildName: false, description: false, buildUrl: false, imageUrl: false });
 
   const { isLoading, makeSignedRequest } = useSignedRequest("buildSubmit", address);
@@ -82,6 +91,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
       setDemoUrl(build.demoUrl ?? "");
       setImageUrl(build.image ?? "");
       setVideoUrl(build.videoUrl ?? "");
+      setCoBuilders(build.coBuilders ?? []);
     }
   }, [isEditingExistingBuild, build]);
 
@@ -92,6 +102,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
     setDemoUrl("");
     setImageUrl("");
     setVideoUrl("");
+    setCoBuilders([]);
   };
 
   const handleSubmit = async () => {
@@ -101,6 +112,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
       buildUrl: !buildUrl,
       demoUrl: false,
       imageUrl: false,
+      coBuilders: !coBuilders.every(address => isAddress(address)),
       videoUrl:
         videoUrl.length > 0 &&
         videoUrl.match(
@@ -123,9 +135,18 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
           desc: description,
           image: imageUrl,
           name: buildName,
+          coBuilders,
         });
       } else {
-        await makeSignedRequest({ buildUrl, videoUrl, demoUrl, desc: description, image: imageUrl, name: buildName });
+        await makeSignedRequest({
+          buildUrl,
+          videoUrl,
+          demoUrl,
+          desc: description,
+          image: imageUrl,
+          name: buildName,
+          coBuilders,
+        });
       }
     } catch (error) {
       toast({
@@ -217,6 +238,51 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
             />
             <FormErrorMessage>Invalid YouTube URL</FormErrorMessage>
           </FormControl>
+          <FormControl mb={4} isInvalid={errors.coBuilders}>
+            <FormLabel htmlFor="coBuilders">
+              <strong>
+                Co-Builders{" "}
+                <SmallAddIcon
+                  cursor="pointer"
+                  onClick={() => setCoBuilders(prevCoBuilders => [...prevCoBuilders, ""])}
+                />
+              </strong>
+            </FormLabel>
+            <VStack>
+              {coBuilders.map((builderAddress, index) => (
+                <HStack key={index} flexGrow="1" w="100%">
+                  <AddressInput
+                    autoFocus
+                    id={`builderAddress-${index}`}
+                    ensProvider={mainnetProvider}
+                    placeholder="Builder Address"
+                    value={coBuilders[index] || ""}
+                    style={{ flexGrow: 1 }}
+                    onChange={value =>
+                      setCoBuilders(prevCoBuilders => {
+                        const newCoBuilders = [...prevCoBuilders];
+                        newCoBuilders[index] = value;
+                        return newCoBuilders;
+                      })
+                    }
+                  />
+                  <DeleteIcon
+                    cursor="pointer"
+                    visibility={index + 1 !== coBuilders.length ? "hidden" : ""}
+                    onClick={() =>
+                      setCoBuilders(prevCoBuilders => {
+                        const newCoBuilders = [...prevCoBuilders];
+                        newCoBuilders.pop();
+                        return newCoBuilders;
+                      })
+                    }
+                  />
+                </HStack>
+              ))}
+            </VStack>
+            <FormErrorMessage>Invalid address</FormErrorMessage>
+          </FormControl>
+
           <FormControl mb={4} isInvalid={errors.imageUrl}>
             <FormLabel htmlFor="imageUrl">
               <strong>
