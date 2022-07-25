@@ -181,9 +181,9 @@ const updateBuild = async (buildId, buildData) => {
   const buildDoc = getBuildDoc(buildId);
 
   const existingBuildData = existingBuildSnapshot.data();
-  const existingCobuilders = existingBuildData.coBuilders;
+  const existingCobuilders = existingBuildData.coBuilders ?? [];
 
-  const newCoBuilders = buildData.coBuilders;
+  const newCoBuilders = buildData.coBuilders ?? [];
 
   if (!areArraysEqual(existingCobuilders, newCoBuilders)) {
     // Update co-builder references.
