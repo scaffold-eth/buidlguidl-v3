@@ -123,7 +123,7 @@ const findBuildById = async buildId => {
   return build.data();
 };
 
-const addCoBuilderReferences = async (build, coBuilders, timestamp) => {
+const addCoBuilderReferences = async (buildId, coBuilders, timestamp) => {
   for (let i = 0; i < coBuilders?.length; i++) {
     const coBuilderId = coBuilders[i];
     const coBuilderData = (await getUserSnapshotById(coBuilderId)).data();
@@ -134,7 +134,7 @@ const addCoBuilderReferences = async (build, coBuilders, timestamp) => {
     const coBuildsData = coBuilderData.builds || [];
 
     coBuildsData.push({
-      id: build.id,
+      id: buildId,
       submittedTimestamp: timestamp,
     });
 
@@ -171,7 +171,7 @@ const createBuild = async build => {
   });
 
   await updateUser(builderId, { builds: buildsData });
-  await addCoBuilderReferences(newBuild, build.coBuilders, build.submittedTimestamp);
+  await addCoBuilderReferences(newBuild.id, build.coBuilders, build.submittedTimestamp);
 
   return newBuild;
 };
@@ -182,6 +182,7 @@ const updateBuild = async (buildId, buildData) => {
 
   const existingBuildData = existingBuildSnapshot.data();
   const existingCobuilders = existingBuildData.coBuilders;
+
   const newCoBuilders = buildData.coBuilders;
 
   if (!areArraysEqual(existingCobuilders, newCoBuilders)) {
@@ -194,8 +195,8 @@ const updateBuild = async (buildId, buildData) => {
       return !newCoBuilders.includes(x);
     });
 
-    console.log("coBuildersToAdd", coBuildersToAdd);
-    console.log("coBuildersToRemove", coBuildersToRemove);
+    await addCoBuilderReferences(buildId, coBuildersToAdd, existingBuildData.submittedTimestamp);
+    await deleteCoBuilderReferences(buildId, coBuildersToRemove);
   }
 
   await buildDoc.update(buildData);
