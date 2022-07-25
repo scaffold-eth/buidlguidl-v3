@@ -139,6 +139,24 @@ const createBuild = async build => {
 
   await updateUser(builderId, { builds: buildsData });
 
+  // Save co-builders
+  for (let i = 0; i < build.coBuilders.length; i++) {
+    const coBuilderId = build.coBuilders[i];
+    const coBuilderData = (await getUserSnapshotById(coBuilderId)).data();
+
+    // Skip it if doesn's exist. Maybe we can throw at some point.
+    if (!coBuilderData) continue;
+
+    const coBuildsData = coBuilderData.builds || [];
+
+    coBuildsData.push({
+      id: newBuild.id,
+      submittedTimestamp: build.submittedTimestamp,
+    });
+
+    await updateUser(coBuilderId, { builds: coBuildsData });
+  }
+
   return newBuild;
 };
 

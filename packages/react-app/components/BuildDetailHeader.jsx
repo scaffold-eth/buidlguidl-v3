@@ -77,7 +77,7 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
           </Text>
           <VStack align="left">
             <Builder builderAddress={build.builder} />
-            {build?.coBuilders.map(builderAddress => (
+            {build?.coBuilders?.map(builderAddress => (
               <Builder builderAddress={builderAddress} key={builderAddress} />
             ))}
           </VStack>

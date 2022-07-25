@@ -102,6 +102,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
     setDemoUrl("");
     setImageUrl("");
     setVideoUrl("");
+    setCoBuilders([]);
   };
 
   const handleSubmit = async () => {
