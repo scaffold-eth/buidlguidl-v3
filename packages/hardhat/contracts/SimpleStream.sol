@@ -1,22 +1,29 @@
 pragma solidity >=0.8.0;
 //SPDX-License-Identifier: MIT
 
+// custom errors to save gas
+error UNAUTHORIZED_STREAM_OWNER();
+error INVALID_WITHDRAWAL_AMOUNT();
+error STREAM_DEPOSIT_LOW();
+
+
 contract SimpleStream {
 
   event Withdraw( address indexed to, uint256 amount, string reason );
   event Deposit( address indexed from, uint256 amount, string reason );
 
-  address payable public toAddress;// = payable(0xD75b0609ed51307E13bae0F9394b5f63A7f8b6A1);
-  uint256 public cap;// = 0.5 ether;
-  uint256 public frequency;// 1296000 seconds == 2 weeks;
+  // immutable vars to save gas
+  address payable immutable public toAddress;// = payable(0xD75b0609ed51307E13bae0F9394b5f63A7f8b6A1);
+  uint256 public immutable cap;// = 0.5 ether;
+  uint256 public immutable frequency;// 1296000 seconds == 2 weeks;
   uint256 public last;//stream starts empty (last = block.timestamp) or full (block.timestamp - frequency)
 
-  constructor(address payable _toAddress, uint256 _cap, uint256 _frequency, bool _startsFull) public {
+  constructor(address payable _toAddress, uint256 _cap, uint256 _frequency, bool _startsFull) {
     toAddress = _toAddress;
     cap = _cap;
     frequency = _frequency;
     if(_startsFull){
-      last = block.timestamp - frequency;
+      last = block.timestamp - _frequency;
     }else{
       last = block.timestamp;
     }
@@ -30,9 +37,13 @@ contract SimpleStream {
   }
 
   function streamWithdraw(uint256 amount, string memory reason) public {
-    require(msg.sender==toAddress,"this stream is not for you");
+    if (msg.sender != toAddress) {
+      revert UNAUTHORIZED_STREAM_OWNER();
+    }
     uint256 totalAmountCanWithdraw = streamBalance();
-    require(totalAmountCanWithdraw>=amount,"not enough in the stream");
+    if (amount > totalAmountCanWithdraw) {
+      revert INVALID_WITHDRAWAL_AMOUNT();
+    }
     uint256 cappedLast = block.timestamp-frequency;
     if(last<cappedLast){
       last = cappedLast;
@@ -43,7 +54,9 @@ contract SimpleStream {
   }
 
   function streamDeposit(string memory reason) public payable {
-    require(msg.value>=cap/10,"Not big enough, sorry.");
+    if (msg.value < (cap /10)) {
+      revert STREAM_DEPOSIT_LOW();
+    }
     emit Deposit( msg.sender, msg.value, reason );
   }
 
