@@ -140,9 +140,6 @@ export default function Index({ bgStats }) {
                 is our tool of choice.
               </Text>
               <Text fontSize={{ base: "md", lg: "lg" }} mt="8px">
-                🚀 Everything you need to build on Ethereum!
-              </Text>
-              <Text fontSize={{ base: "md", lg: "lg" }} mt="8px">
                 🔧 We actively maintain it and build with it.
               </Text>
             </Box>
