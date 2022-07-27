@@ -39,8 +39,8 @@ html.nprogress-busy .chakra-container {
   display: block;
   position: fixed;
   z-index: 1031;
-  top: 15px;
-  right: 15px;
+  left: 15px;
+  bottom: 35px;
 }
 
 #nprogress .spinner-icon {

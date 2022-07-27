@@ -109,11 +109,9 @@ function MyApp({ Component, pageProps }) {
   // Page transitions
   useEffect(() => {
     const handleStart = url => {
-      console.log(`Loading: ${url}`);
       NProgress.start();
     };
     const handleStop = () => {
-      console.log("STOP");
       NProgress.done();
     };
 
