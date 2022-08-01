@@ -90,8 +90,6 @@ const columns = [
 
       const gapA = balanceA / availableA;
       const gapB = balanceB / availableB;
-      console.log(rowA.values.builder.ens, gapA);
-      console.log(rowB.values.builder.ens, gapB);
       return gapA < gapB ? -1 : 1;
     },
     Cell: ({ value }) => (

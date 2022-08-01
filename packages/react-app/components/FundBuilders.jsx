@@ -43,8 +43,7 @@ const FundBuilders = ({ builders }) => {
       tx = Transactor({ providerOrSigner: userProviderData.provider, toast, toastVariant });
     };
     waitForSigner();
-    // eslint-disable-next-line
-  }, []);
+  }, [userProviderData]);
 
   if (!builders.length) {
     return null;
