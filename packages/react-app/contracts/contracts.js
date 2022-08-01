@@ -1,1 +1,1 @@
-module.exports = ["SimpleStream"];
+module.exports = ["SimpleStream", "StreamMultiFunder"];

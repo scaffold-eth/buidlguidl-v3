@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, forwardRef, useRef } from "react";
 import NextLink from "next/link";
 import {
   Box,
@@ -21,12 +21,13 @@ import {
   useToast,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useTable, usePagination, useSortBy } from "react-table";
+import { useTable, usePagination, useSortBy, useRowSelect } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { ethers } from "ethers";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import DateWithTooltip from "../../components/DateWithTooltip";
 import Address from "../../components/Address";
+import FundBuilders from "../../components/FundBuilders";
 import { getWithdrawEvents } from "../../data/api/streams";
 import { eventDisplay } from "../../helpers/events";
 import { byBigNumber, byTimestamp } from "../../helpers/sorting";
@@ -45,6 +46,22 @@ const BuilderAddressCell = ({ builder }) => {
   );
 };
 
+// eslint-disable-next-line react/display-name
+const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
+  const defaultRef = useRef();
+  const resolvedRef = ref || defaultRef;
+
+  useEffect(() => {
+    resolvedRef.current.indeterminate = indeterminate;
+  }, [resolvedRef, indeterminate]);
+
+  return (
+    <>
+      <input type="checkbox" ref={resolvedRef} {...rest} />
+    </>
+  );
+});
+
 const columns = [
   {
     Header: "Builder",
@@ -61,9 +78,21 @@ const columns = [
       const balanceB = parseFloat(rowB.values?.stream?.balance);
       const capA = parseFloat(rowA.values?.stream?.cap);
       const capB = parseFloat(rowB.values?.stream?.cap);
-      const gapA = balanceA - capA;
-      const gapB = balanceB - capB;
-      return gapA - gapB;
+      const lastA = parseFloat(rowA.values?.stream?.lastContract);
+      const lastB = parseFloat(rowB.values?.stream?.lastContract);
+      const frequencyA = parseFloat(rowA.values?.stream?.frequency);
+      const frequencyB = parseFloat(rowB.values?.stream?.frequency);
+      const unlockedAmountA = (capA * Math.round(new Date().getTime() / 1000 - lastA)) / frequencyA;
+      const unlockedAmountB = (capB * Math.round(new Date().getTime() / 1000 - lastB)) / frequencyB;
+
+      const availableA = capA < unlockedAmountA ? capA : unlockedAmountA;
+      const availableB = capB < unlockedAmountB ? capB : unlockedAmountB;
+
+      const gapA = balanceA / availableA;
+      const gapB = balanceB / availableB;
+      console.log(rowA.values.builder.ens, gapA);
+      console.log(rowB.values.builder.ens, gapB);
+      return gapA < gapB ? -1 : 1;
     },
     Cell: ({ value }) => (
       <Box>
@@ -118,7 +147,8 @@ const columns = [
 ];
 
 const milisIn30Days = 30 * 24 * 60 * 60 * 1000;
-export default function WithdrawStats() {
+
+export default function Fund() {
   const [events, setEvents] = useState([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
   const [buildersWithStream, setBuildersWithStream] = useState([]);
@@ -225,25 +255,46 @@ export default function WithdrawStats() {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize },
+    selectedFlatRows,
+    state: { pageIndex, pageSize, selectedRowIds },
   } = useTable(
     {
       columns,
       data: builderData,
-      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "lastEvent", desc: true }], []) },
+      initialState: { pageIndex: 0, pageSize: 100, sortBy: useMemo(() => [{ id: "lastEvent", desc: true }], []) },
     },
     useSortBy,
     usePagination,
+    useRowSelect,
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        {
+          id: "selection",
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ]);
+    },
   );
 
   return (
     <Container maxW="container.xl">
+      <FundBuilders builders={selectedFlatRows.map(rowData => rowData.values)} />
       <Container maxW="container.md" centerContent>
         <Heading as="h1" mb="4">
-          Withdraw Stats
+          Fund
         </Heading>
         <Text color={secondaryFontColor} mb="10" textAlign="center">
-          These are all the builders that have withdrawn funds from their streams
+          Fund builder streams
         </Text>
       </Container>
       {isLoading ? (
