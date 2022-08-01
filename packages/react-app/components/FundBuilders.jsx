@@ -63,7 +63,7 @@ const FundBuilders = ({ builders }) => {
   builders.forEach(builderData => {
     buildersStreams.push(builderData.stream.streamAddress);
     buildersAmounts.push(ethers.utils.parseEther(builderData.stream.cap));
-    buildersReasons.push("Keep building! BG <3");
+    buildersReasons.push("");
   });
 
   const fundTx = async () => {
@@ -94,7 +94,7 @@ const FundBuilders = ({ builders }) => {
     }
 
     toast({
-      status: "info",
+      status: "success",
       description: "TX completed!",
       variant: toastVariant,
     });
@@ -139,7 +139,7 @@ const FundBuilders = ({ builders }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <Box pos="fixed" bottom={0} p={6} left={0} right={0} w="full" display="flex" justifyContent="center">
+      <Box pos="fixed" bottom={0} p={6} left={0} right={0} w="full" display="flex" justifyContent="center" zIndex={10}>
         <Button onClick={onOpen} colorScheme="blue" variant="solid" border="1px solid" boxShadow="2xl">
           Fund 💸
         </Button>

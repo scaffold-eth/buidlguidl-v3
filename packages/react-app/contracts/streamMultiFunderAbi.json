@@ -1,5 +1,30 @@
 [
   {
+    "inputs": [],
+    "name": "AMOUNT_TOO_LOW",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ETH_TRANSFER_FAILURE",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INVALID_ARRAY_INPUT",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NOT_AUSTIN",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NO_STREAMS",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
