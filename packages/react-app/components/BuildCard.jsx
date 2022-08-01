@@ -110,11 +110,13 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
       flexDirection="column"
       pos="relative"
     >
-      <Link href={`/build/${build.id}`}>
-        <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor}>
-          {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
-        </Box>
-      </Link>
+      <NextLink href={`/build/${build.id}`} passHref>
+        <Link>
+          <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor}>
+            {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
+          </Box>
+        </Link>
+      </NextLink>
       <Flex pt={9} pb={4} px={4} direction="column" minH="240px" h="100%" pos="relative">
         {build.videoUrl && (
           <Box pos="absolute" right={0} top={0} pt="6px" pr="12px">
@@ -125,9 +127,11 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
             </Link>
           </Box>
         )}
-        <Link href={`/build/${build.id}`}>
-          <Text fontWeight="bold">{build.name}</Text>
-        </Link>
+        <NextLink href={`/build/${build.id}`} passHref>
+          <Link>
+            <Text fontWeight="bold">{build.name}</Text>
+          </Link>
+        </NextLink>
         <Text color={secondaryFontColor} whiteSpace="pre-wrap">
           {build.desc}
         </Text>

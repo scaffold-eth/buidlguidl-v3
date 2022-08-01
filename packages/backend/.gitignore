@@ -1,6 +1,6 @@
 .env
 firebaseServiceAccountKey.json
-local_database/local_db.json
+local_database/seed.json
 
 public/*
 !public/.gitkeep

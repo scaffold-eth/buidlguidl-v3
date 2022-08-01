@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
 import "../index.css";
+import "../public/nprogress.css";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import { InfuraProvider, StaticJsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { useUserAddress } from "eth-hooks";
 import axios from "axios";
 import Web3Modal from "web3modal";
+import NProgress from "nprogress";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import theme from "../theme";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
@@ -15,6 +17,7 @@ import { providerPromiseWrapper } from "../helpers/blockchainProviders";
 import { INFURA_ID, SERVER_URL as serverUrl } from "../constants";
 import { useUserProvider } from "../hooks";
 import { USER_ROLES } from "../helpers/constants";
+import { useRouter } from "next/router";
 
 const DEBUG = true;
 
@@ -49,6 +52,7 @@ const providerPromiseResolvers = {
 };
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
   const [providers, setProviders] = useState({
     mainnet: {
       provider: null,
@@ -101,6 +105,26 @@ function MyApp({ Component, pageProps }) {
           });
       });
   }, []);
+
+  // Page transitions
+  useEffect(() => {
+    const handleStart = url => {
+      NProgress.start();
+    };
+    const handleStop = () => {
+      NProgress.done();
+    };
+
+    router.events.on("routeChangeStart", handleStart);
+    router.events.on("routeChangeComplete", handleStop);
+    router.events.on("routeChangeError", handleStop);
+
+    return () => {
+      router.events.off("routeChangeStart", handleStart);
+      router.events.off("routeChangeComplete", handleStop);
+      router.events.off("routeChangeError", handleStop);
+    };
+  }, [router]);
 
   const mainnetProvider = providers.mainnet?.provider;
 

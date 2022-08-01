@@ -1,0 +1,86 @@
+{
+  "version": "1.1.0",
+  "users": {
+    "0x60583563D5879C2E59973E5718c7DE2147971807": {
+      "creationTimestamp": 1633088553221,
+      "role": "admin",
+      "ens": "carletex.eth",
+      "function": "damageDealer",
+      "status": {
+        "text": "My Status",
+        "timestamp": 1657208443047
+      },
+      "stream": {
+        "streamAddress": "0xCC756617C97a05aC472fD8Ab92C88F2A9cb681EC",
+        "streamAddress_rinkeby": "0xCC756617C97a05aC472fD8Ab92C88F2A9cb681EC",
+        "streamAddress_localhost": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "cap": "0.5",
+        "frequency": 2592000,
+        "lastContract": 1654720543,
+        "lastIndexedBlock": 10983432,
+        "balance": "0.21"
+      },
+      "builds": [
+        {
+          "id": "06bb3c9d-784b-44d1-b7e2-1ae5affdfa8b",
+          "submittedTimestamp": 1658587661752
+        }
+      ]
+    },
+    "0x70997970C51812dc3A010C7d01b50e0d17dc79C8": {
+      "creationTimestamp": 1633088553223,
+      "role": "builder",
+      "socialLinks": {
+        "telegram": "test",
+        "twitter": "test"
+      }
+    },
+    "0x34aA3F359A9D614239015126635CE7732c18fDF3": {
+      "creationTimestamp": 1648653481405,
+      "role": "builder",
+      "function": "knight",
+      "ens": "austingriffith.eth"
+    },
+    "0x72fC8b63692B516D0D8748d469faB65C7e4e7389": {
+      "creationTimestamp": 1648653501156,
+      "role": "builder",
+      "function": "cadets",
+      "ensClaimData": {
+        "submittedTimestamp": 1648736241913,
+        "provided": true
+      }
+    }
+  },
+  "builds": {
+    "06bb3c9d-784b-44d1-b7e2-1ae5affdfa8b": {
+      "branch": "https://github.com/moonshotcollective/scaffold-directory",
+      "demoUrl": "https://speedrunethereum.com/",
+      "videoUrl": "",
+      "desc": "👩‍🏫 Learn how to build on Ethereum completing the scaffold-eth challenges.",
+      "image": "http://localhost:49833/683f608e499416d7c8a388f00.png",
+      "name": "🏃‍♀️ SpeedRunEthereum.com",
+      "builder": "0x60583563D5879C2E59973E5718c7DE2147971807",
+      "featured": false,
+      "submittedTimestamp": 1658587661752,
+      "likes": ["0x60583563D5879C2E59973E5718c7DE2147971807"]
+    }
+  },
+  "events": [
+    {
+      "type": "build.submit",
+      "timestamp": 1658587661754,
+      "signature": "0x206e5f766fb427599acacb41d45dfb794d95076f3af8519008328cef9c6bf3b4137a87ba73368f1e16b19674edddb6860093e601e6576c1b427fcc8e7ffba4cb1b",
+      "payload": {
+        "userAddress": "0x60583563D5879C2E59973E5718c7DE2147971807",
+        "buildUrl": "https://github.com/moonshotcollective/scaffold-directory",
+        "name": "🏃‍♀️ SpeedRunEthereum.com",
+        "buildId": "06bb3c9d-784b-44d1-b7e2-1ae5affdfa8b"
+      }
+    }
+  ],
+  "config": {
+    "streams": {
+      "lastIndexedBlock": 10616289
+    }
+  }
+}

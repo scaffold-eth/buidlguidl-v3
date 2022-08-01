@@ -6,3 +6,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.App .chakra-link:focus {
+  box-shadow: none;
+}
