@@ -96,6 +96,9 @@ const getSignMessageForId = async (messageId, options) => {
     case "builderProvideEns":
       return `I want to mark as ENS provided to builder ${options.builderAddress} as ${options.address}`;
 
+    case "streamsUpdate":
+      return `I want to run the stream indexer as ${options.address}`;
+
     default:
       return "Invalid signing option";
   }

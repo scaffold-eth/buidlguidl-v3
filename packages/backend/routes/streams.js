@@ -1,51 +1,57 @@
 const express = require("express");
 const ethers = require("ethers");
 const db = require("../services/db/db");
-const { getStreamEvents } = require("../utils/streams");
+const { getStreamEvents, updateStreamsForBuilders } = require("../utils/streams");
 const { withRole } = require("../middlewares/auth");
+const { verifySignature } = require("../utils/sign");
 
 const router = express.Router();
 
 /**
- * Update all builders stream data.
+ * Update all builders stream data. (GET)
  */
 router.get("/update", async (req, res) => {
-  console.log("/streams/update");
+  console.log("GET /streams/update");
+  // This route is meant for cron runs. Protect it.
   if (process.env.NODE_ENV === "production" && req.header("X-Appengine-Cron") !== "true") {
     return res.status(403).send();
   }
-  const maxItems = Number(req.query.max) || 100;
-  const provider = new ethers.providers.StaticJsonRpcProvider(process.env.RPC_URL);
-  const currentBlock = await provider.getBlockNumber();
-  const streams = await db.findUpdatableStreams({ limit: maxItems });
-  let updated = 0;
 
-  const updates = streams.map(async stream => {
-    const fromBlock = stream.lastIndexedBlock ?? 0;
+  try {
+    const updated = await updateStreamsForBuilders(req.query.max);
+    console.log("respons", updated);
+    res.status(200).send({ updated });
+  } catch (e) {
+    res.status(500).send();
+  }
+});
 
-    return [await getStreamEvents(provider, stream, fromBlock + 1, currentBlock), stream];
-  });
+/**
+ * Update all builders stream data. (POST)
+ */
+router.post("/update", withRole("builder"), async (req, res) => {
+  console.log("POST /streams/update");
 
-  Promise.all(updates)
-    .then(async streamsResult => {
-      await Promise.all(
-        streamsResult.map(async ([streamUpdate, stream]) => {
-          if (streamUpdate.events.length) {
-            console.log("Updating stream data for", stream.builderAddress);
-            await db.updateStreamData(stream, streamUpdate);
-            updated += 1;
-          }
-        }),
-      );
-      // Not using it right now, but keeping it up to date.
-      console.log("Updating stream lastIndexedBlock", currentBlock);
-      await db.setConfigData("streams", { lastIndexedBlock: currentBlock });
-      res.status(200).send({ updated });
-    })
-    .catch(e => {
-      console.error("Error found. Not updating lastIndexedBlock", e);
-      res.status(500).send();
-    });
+  const { signature } = req.body;
+  const address = req.address;
+
+  const verifyOptions = {
+    messageId: "streamsUpdate",
+    address,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  try {
+    const updated = await updateStreamsForBuilders(req.query.max);
+    res.status(200).send({ updated });
+  } catch (e) {
+    res.status(500).send();
+  }
 });
 
 /**

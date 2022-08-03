@@ -1,6 +1,7 @@
 require("dotenv").config();
 const ethers = require("ethers");
 const fs = require("fs");
+const db = require("../services/db/db");
 
 const ABI_PATH = "./abi/SimpleStream.json";
 const SIMPLE_STREAM_ABI = JSON.parse(fs.readFileSync(ABI_PATH, "utf8"));
@@ -9,7 +10,7 @@ const SIMPLE_STREAM_ABI = JSON.parse(fs.readFileSync(ABI_PATH, "utf8"));
  * Retrieve a list of deposit/withdraw events for the given `streamAddress`.
  *
  * @param provider A connected ethersjs provider
- * @param streamAddress Stream for which events will be received
+ * @param stream Stream info for which events will be received
  * @param fromBlock Begin searching from this block number
  * @param toBlock Search up to this block number
  * @return {Promise<{balance: string, streamAddress, events: {type: string, payload: object}[]}>}
@@ -90,6 +91,42 @@ const getStreamEvents = async (provider, stream, fromBlock = 0, toBlock) => {
   };
 };
 
+const updateStreamsForBuilders = async (max = null) => {
+  const maxItems = Number(max) || 100;
+  const provider = new ethers.providers.StaticJsonRpcProvider(process.env.RPC_URL);
+  const currentBlock = await provider.getBlockNumber();
+  const streams = await db.findUpdatableStreams({ limit: maxItems });
+  let updated = 0;
+
+  const updates = streams.map(async stream => {
+    const fromBlock = stream.lastIndexedBlock ?? 0;
+
+    return [await getStreamEvents(provider, stream, fromBlock + 1, currentBlock), stream];
+  });
+
+  return Promise.all(updates)
+    .then(async streamsResult => {
+      await Promise.all(
+        streamsResult.map(async ([streamUpdate, stream]) => {
+          if (streamUpdate.events.length) {
+            console.log("Updating stream data for", stream.builderAddress);
+            await db.updateStreamData(stream, streamUpdate);
+            updated += 1;
+          }
+        }),
+      );
+      // Not using it right now, but keeping it up to date.
+      console.log("Updating stream lastIndexedBlock", currentBlock);
+      await db.setConfigData("streams", { lastIndexedBlock: currentBlock });
+      return updated;
+    })
+    .catch(e => {
+      console.error("Error found. Not updating lastIndexedBlock", e);
+      throw new Error(e);
+    });
+};
+
 module.exports = {
   getStreamEvents,
+  updateStreamsForBuilders,
 };
