@@ -72,9 +72,6 @@ export default function Header({
     });
   };
 
-  console.log("pathname", router.pathname);
-  console.log("asPath", router.asPath);
-
   return (
     <Box
       borderBottom="1px"
