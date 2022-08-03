@@ -13,6 +13,29 @@ export const getWithdrawEvents = async (address = false) => {
   }
 };
 
+export const postStreamsUpdate = async (address, signature) => {
+  try {
+    const response = await axios.post(
+      `${serverUrl}/streams/update`,
+      { signature },
+      {
+        headers: {
+          address,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    if (error.request?.status === 401) {
+      const WrongRoleError = new Error(`User doesn't have builder role or higher`);
+      WrongRoleError.status = 401;
+      throw WrongRoleError;
+    }
+    console.error(error);
+    throw new Error(`Couldn't update the stream indexer`);
+  }
+};
+
 export const updateStreamIndexerFor = async address => {
   try {
     await axios.post(

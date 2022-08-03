@@ -5,6 +5,7 @@ import { postStatusUpdate } from "../data/api/status";
 import { postBuildSubmit, postBuildLike, patchBuildEdit } from "../data/api/builds";
 import { postCreateUser, patchEditUser } from "../data/api/builder";
 import { patchProvideEns, postClaimEns } from "../data/api/ens";
+import { postStreamsUpdate } from "../data/api/streams";
 
 const actionIdToRequest = {
   builderCreate: postCreateUser,
@@ -15,6 +16,7 @@ const actionIdToRequest = {
   buildEdit: patchBuildEdit,
   builderClaimEns: postClaimEns,
   builderProvideEns: patchProvideEns,
+  streamsUpdate: postStreamsUpdate,
 };
 
 const useSignedRequest = (actionId, address) => {

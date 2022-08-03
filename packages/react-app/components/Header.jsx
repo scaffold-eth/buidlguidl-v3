@@ -15,12 +15,15 @@ import {
   MenuItem,
   useDisclosure,
   Link,
+  useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Account } from "./index";
 import { USER_ROLES } from "../helpers/constants";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ENVIRONMENT } from "../constants";
+import useSignedRequest from "../hooks/useSignedRequest";
 
 export default function Header({
   injectedProvider,
@@ -42,6 +45,32 @@ export default function Header({
   const isSignerProviderConnected =
     injectedProvider && injectedProvider.getSigner && injectedProvider.getSigner()._isSigner;
   const userIsRegistered = userRole && USER_ROLES.anonymous !== userRole;
+
+  const toast = useToast({ position: "top", isClosable: true });
+  const toastVariant = useColorModeValue("subtle", "solid");
+  const { isLoading, makeSignedRequest } = useSignedRequest("streamsUpdate", address);
+
+  const handleStreamsUpdate = async () => {
+    let updatedStreamsResponse;
+    try {
+      updatedStreamsResponse = await makeSignedRequest();
+    } catch (error) {
+      toast({
+        description: error.message,
+        status: "error",
+        variant: toastVariant,
+      });
+      return;
+    }
+
+    console.log("streamUpdateResponse", updatedStreamsResponse);
+
+    toast({
+      status: "success",
+      description: `Updated streams after indexer run: ${updatedStreamsResponse?.updated}`,
+      variant: toastVariant,
+    });
+  };
 
   return (
     <Box
@@ -171,7 +200,11 @@ export default function Header({
                     Fund Builders
                   </NextLink>
                 </MenuItem>
+                <MenuItem>
+                  <span onClick={handleStreamsUpdate}>Run stream indexer</span>
+                </MenuItem>
               </MenuList>
+              {isLoading && <Spinner />}
             </Menu>
           )}
         </HStack>
