@@ -19,7 +19,6 @@ router.get("/update", async (req, res) => {
 
   try {
     const updated = await updateStreamsForBuilders(req.query.max);
-    console.log("respons", updated);
     res.status(200).send({ updated });
   } catch (e) {
     res.status(500).send();
