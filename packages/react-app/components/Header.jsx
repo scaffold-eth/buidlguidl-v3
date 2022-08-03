@@ -72,11 +72,14 @@ export default function Header({
     });
   };
 
+  console.log("pathname", router.pathname);
+  console.log("asPath", router.asPath);
+
   return (
     <Box
       borderBottom="1px"
       borderColor={borderColor}
-      mb={router.asPath !== "/" ? 10 : 0}
+      mb={router.pathname !== "/" ? 10 : 0}
       px={{ base: 4, lg: 8 }}
       h={{ base: userIsRegistered ? "120px" : "80px", lg: "80px" }}
     >
