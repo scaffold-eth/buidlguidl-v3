@@ -21,7 +21,7 @@ if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
 
 // Docs: https://firebase.google.com/docs/firestore/quickstart#node.js_1
 const db = firebaseAdmin.firestore();
-
+let count = 0;
 const main = async () => {
   db.collection("users")
     .get()
@@ -35,8 +35,11 @@ const main = async () => {
 
         if (!currentBuilds && builderForMoreThanAMonth) {
           await user.ref.delete();
+          count += 1;
         }
       });
+
+      console.log("Removed", count, "builders from BG");
     });
 };
 
