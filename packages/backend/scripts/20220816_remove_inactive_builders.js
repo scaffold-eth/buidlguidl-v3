@@ -32,8 +32,9 @@ const main = async () => {
         const creationTimestamp = userData.creationTimestamp;
 
         const builderForMoreThanAMonth = Math.abs(Date.now() - creationTimestamp) / 1000 / 60 / 60 / 24 > 30;
+        const builderHasAStream = userData?.stream?.streamAddress ?? false;
 
-        if (!currentBuilds && builderForMoreThanAMonth) {
+        if (!currentBuilds && builderForMoreThanAMonth && !builderHasAStream) {
           await user.ref.delete();
           count += 1;
         }
