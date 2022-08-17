@@ -39,7 +39,7 @@ import StreamRunway from "../../components/StreamRunway";
 const BuilderAddressCell = ({ builder }) => {
   return (
     <NextLink href={`/builders/${builder.address}`} passHref>
-      <Link pos="relative">
+      <Link pos="relative" isExternal>
         <Address address={builder.address} w="12.5" fontSize="16" cachedEns={builder.ens} />
       </Link>
     </NextLink>
