@@ -58,7 +58,7 @@ const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
 
   return (
     <Flex direction="column">
-      <HStack spacing={1} alignItems="center">
+      <HStack spacing={3} alignItems="center" justifyContent="center">
         {socials.length ? (
           socials.map(([socialId, socialValue]) => <SocialLink id={socialId} key={socialId} value={socialValue} />)
         ) : (
@@ -66,7 +66,7 @@ const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
         )}
       </HStack>
       {isAdmin && builder.reachedOut && (
-        <Badge variant="outline" colorScheme="green" alignSelf="center" mt={2}>
+        <Badge variant="outline" colorScheme="green" mt={2} textAlign="center">
           Reached Out
         </Badge>
       )}
