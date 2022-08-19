@@ -99,6 +99,11 @@ const getSignMessageForId = async (messageId, options) => {
     case "streamsUpdate":
       return `I want to run the stream indexer as ${options.address}`;
 
+    case "builderUpdateReachedOut":
+      return `I want to mark builder ${options.builderAddress} as ${
+        options.reachedOut ? "reached out" : "not reached out"
+      }`;
+
     default:
       return "Invalid signing option";
   }

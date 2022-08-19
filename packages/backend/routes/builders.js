@@ -198,4 +198,26 @@ router.post("/update-status", withAddress, async (req, res) => {
   res.status(200).json(updatedUser);
 });
 
+router.post("/update-reached-out", withRole("admin"), async (request, response) => {
+  const { reachedOut, builderAddress, signature } = request.body;
+  const address = request.address;
+  console.log("POST /builders/update-reached-out", address, reachedOut);
+
+  const verifyOptions = {
+    messageId: "builderUpdateReachedOut",
+    address,
+    reachedOut,
+    builderAddress,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    response.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const updatedUser = await db.updateUser(builderAddress, { reachedOut });
+  response.status(200).send(updatedUser);
+});
+
 module.exports = router;
