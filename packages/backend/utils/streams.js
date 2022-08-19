@@ -112,6 +112,11 @@ const updateStreamsForBuilders = async (max = null) => {
             console.log("Updating stream data for", stream.builderAddress);
             await db.updateStreamData(stream, streamUpdate);
             updated += 1;
+          } else if (!stream.lastIndexedBlock) {
+            // New stream => set data even it doesn't have an event.
+            console.log("Updating NEW stream data for", stream.builderAddress);
+            await db.updateStreamData(stream, streamUpdate);
+            updated += 1;
           }
         }),
       );
