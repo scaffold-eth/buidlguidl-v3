@@ -52,3 +52,25 @@ export const getAllBuilders = async () => {
     throw new Error(error);
   }
 };
+
+export const postUpdateReachedOutFlag = async (address, signature, { builderAddress, reachedOut }) => {
+  try {
+    await axios.post(
+      `${serverUrl}/builders/update-reached-out`,
+      { builderAddress, reachedOut, signature },
+      {
+        headers: {
+          address,
+        },
+      },
+    );
+  } catch (error) {
+    if (error.request?.status === 401) {
+      const accessError = new Error(`Access denied`);
+      accessError.status = 401;
+      throw accessError;
+    }
+    console.error(error);
+    throw new Error(`Couldn't update the reached out flag`);
+  }
+};

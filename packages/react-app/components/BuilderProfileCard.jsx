@@ -25,6 +25,8 @@ import {
   Tooltip,
   useClipboard,
   VStack,
+  Badge,
+  Center,
 } from "@chakra-ui/react";
 import { CopyIcon, EditIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import QRPunkBlockie from "./QrPunkBlockie";
@@ -38,6 +40,7 @@ import BuilderStatus from "./BuilderStatus";
 import { USER_ROLES } from "../helpers/constants";
 import { BuilderCrudFormModal } from "./BuilderCrudForm";
 import { validateSocials } from "../helpers/validators";
+import useSignedRequest from "../hooks/useSignedRequest";
 
 const BuilderProfileCardSkeleton = ({ isLoaded, children }) => (
   <Skeleton isLoaded={isLoaded}>{isLoaded ? children() : <SkeletonText mt="4" noOfLines={4} spacing="4" />}</Skeleton>
@@ -62,6 +65,11 @@ const BuilderProfileCard = ({
   const { borderColor, secondaryFontColor } = useCustomColorModes();
   const shortAddress = ellipsizedAddress(builder?.id);
   const hasEns = ens !== shortAddress;
+
+  const { isLoading: isUpdatingReachedOutFlag, makeSignedRequest: makeSignedRequestReachedOut } = useSignedRequest(
+    "builderUpdateReachedOut",
+    address,
+  );
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
@@ -156,6 +164,29 @@ const BuilderProfileCard = ({
     onClose();
   };
 
+  const handleUpdateReachedOutFlag = async reachedOut => {
+    try {
+      await makeSignedRequestReachedOut({
+        builderAddress: builder.id,
+        reachedOut,
+      });
+    } catch (error) {
+      toast({
+        description: error.message,
+        status: "error",
+        variant: toastVariant,
+      });
+      return;
+    }
+
+    toast({
+      description: 'Updated "reached out" flag successfully',
+      status: "success",
+      variant: toastVariant,
+    });
+    onUpdate();
+  };
+
   return (
     <>
       <BuilderProfileCardSkeleton isLoaded={!!builder}>
@@ -186,16 +217,35 @@ const BuilderProfileCard = ({
               </NextLink>
 
               {canEditBuilder && (
-                <Button variant="outline" colorScheme="blue" size="sm" onClick={onOpenEditBuilder} mt={2}>
-                  <EditIcon w={6} color="blue.500" />
-                  Edit Builder
-                  <BuilderCrudFormModal
-                    isOpen={isOpenEditBuilder}
-                    onClose={onCloseEditBuilder}
-                    builder={builder}
-                    onUpdate={onUpdate}
-                  />
-                </Button>
+                <>
+                  <Button variant="outline" colorScheme="blue" size="sm" onClick={onOpenEditBuilder} mt={2}>
+                    <EditIcon w={6} color="blue.500" />
+                    Edit Builder
+                    <BuilderCrudFormModal
+                      isOpen={isOpenEditBuilder}
+                      onClose={onCloseEditBuilder}
+                      builder={builder}
+                      onUpdate={onUpdate}
+                    />
+                  </Button>
+                  <Center mb={4}>
+                    {builder.reachedOut ? (
+                      <Badge variant="outline" colorScheme="green" alignSelf="center">
+                        Reached Out
+                      </Badge>
+                    ) : (
+                      <Button
+                        colorScheme="green"
+                        size="xs"
+                        onClick={() => handleUpdateReachedOutFlag(true)}
+                        isLoading={isUpdatingReachedOutFlag}
+                        alignSelf="center"
+                      >
+                        Mark as reached out
+                      </Button>
+                    )}
+                  </Center>
+                </>
               )}
             </VStack>
             <Flex alignContent="center" direction="column" mt={4}>

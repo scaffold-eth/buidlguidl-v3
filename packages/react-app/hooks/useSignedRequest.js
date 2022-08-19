@@ -3,7 +3,7 @@ import { getSignMessage } from "../data/api/signature";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { postStatusUpdate } from "../data/api/status";
 import { postBuildSubmit, postBuildLike, patchBuildEdit } from "../data/api/builds";
-import { postCreateUser, patchEditUser } from "../data/api/builder";
+import { postCreateUser, patchEditUser, postUpdateReachedOutFlag } from "../data/api/builder";
 import { patchProvideEns, postClaimEns } from "../data/api/ens";
 import { postStreamsUpdate } from "../data/api/streams";
 
@@ -17,6 +17,7 @@ const actionIdToRequest = {
   builderClaimEns: postClaimEns,
   builderProvideEns: patchProvideEns,
   streamsUpdate: postStreamsUpdate,
+  builderUpdateReachedOut: postUpdateReachedOutFlag,
 };
 
 const useSignedRequest = (actionId, address) => {

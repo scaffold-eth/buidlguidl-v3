@@ -100,8 +100,9 @@ const getSignMessageForId = async (messageId, options) => {
       return `I want to run the stream indexer as ${options.address}`;
 
     case "builderUpdateReachedOut":
-      return `I want to mark builder ${options.builderAddress} as ${
-        options.reachedOut ? "reached out" : "not reached out"
+      const reachedOut = typeof options.reachedOut === "boolean" ? options.reachedOut : options.reachedOut === "true";
+      return `I (${options.address}) want to mark builder ${options.builderAddress} as ${
+        reachedOut ? "reached out" : "not reached out"
       }`;
 
     default:

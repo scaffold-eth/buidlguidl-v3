@@ -55,14 +55,15 @@ const builderLastActivity = builder => {
 
 const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
   const socials = Object.entries(builder.socialLinks ?? {}).sort(bySocialWeight);
-  if (!socials.length) return <Box>-</Box>;
 
   return (
     <Flex direction="column">
       <HStack spacing={1} alignItems="center">
-        {socials.map(([socialId, socialValue]) => (
-          <SocialLink id={socialId} key={socialId} value={socialValue} />
-        ))}
+        {socials.length ? (
+          socials.map(([socialId, socialValue]) => <SocialLink id={socialId} key={socialId} value={socialValue} />)
+        ) : (
+          <Box>-</Box>
+        )}
       </HStack>
       {isAdmin && builder.reachedOut && (
         <Badge variant="outline" colorScheme="green" alignSelf="center" mt={2}>
