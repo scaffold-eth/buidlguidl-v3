@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.1.1",
   "users": {
     "0x60583563D5879C2E59973E5718c7DE2147971807": {
       "creationTimestamp": 1633088553221,
@@ -33,6 +33,14 @@
       "socialLinks": {
         "telegram": "test",
         "twitter": "test"
+      },
+      "stream": {
+        "streamAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "cap": "0.5",
+        "frequency": 2592000,
+        "lastContract": 1654720543,
+        "lastIndexedBlock": 10983432,
+        "balance": "0.5"
       }
     },
     "0x34aA3F359A9D614239015126635CE7732c18fDF3": {
@@ -75,6 +83,18 @@
         "buildUrl": "https://github.com/moonshotcollective/scaffold-directory",
         "name": "🏃‍♀️ SpeedRunEthereum.com",
         "buildId": "06bb3c9d-784b-44d1-b7e2-1ae5affdfa8b"
+      }
+    },
+    {
+      "type": "stream.withdraw",
+      "timestamp": 1660983774000,
+      "payload": {
+        "userAddress": "0x60583563D5879C2E59973E5718c7DE2147971807",
+        "amount": "0.5",
+        "block": "13845820",
+        "reason": "Test withdraw",
+        "streamAddress": "0xCC756617C97a05aC472fD8Ab92C88F2A9cb681EC",
+        "tx": "0x6be7d0065eb1ec0f5e9296b82b527e4b1b8fec91d890066d43857044443a9969"
       }
     }
   ],

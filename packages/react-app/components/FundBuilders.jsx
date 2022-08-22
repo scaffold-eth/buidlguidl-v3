@@ -19,6 +19,7 @@ import { Contract } from "@ethersproject/contracts";
 import streamMultiFunderAbi from "../contracts/streamMultiFunderAbi.json";
 import { Transactor } from "../helpers";
 import { ethers } from "ethers";
+import { ellipsizedAddress } from "../helpers/strings";
 
 const funderContractAddress = process.env.NEXT_PUBLIC_FUNDER_CONTRACT_ADDRESS;
 let tx;
@@ -68,10 +69,6 @@ const FundBuilders = ({ builders }) => {
   const fundTx = async () => {
     setIsProcessingFunding(true);
     try {
-      console.log(buildersStreams);
-      console.log(buildersAmounts);
-      console.log(buildersReasons);
-      console.log(totalEth);
       await tx(
         funderContract.fundStreams(buildersStreams, buildersAmounts, buildersReasons, {
           value: ethers.utils.parseEther(totalEth),
@@ -116,7 +113,8 @@ const FundBuilders = ({ builders }) => {
               {builders.map(builderData => {
                 return (
                   <li key={builderData.builder.address}>
-                    <strong>{builderData.builder.ens}</strong>: Ξ {builderData.stream.cap}
+                    <strong>{builderData.builder.ens ?? ellipsizedAddress(builderData.builder.address)}</strong>: Ξ{" "}
+                    {builderData.stream.cap}
                   </li>
                 );
               })}
