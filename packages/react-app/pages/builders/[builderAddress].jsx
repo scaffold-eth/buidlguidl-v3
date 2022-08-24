@@ -41,6 +41,7 @@ import StreamWithdrawButton from "../../components/StreamWithdrawButton";
 import { SERVER_URL as serverUrl } from "../../constants";
 import { SreChallengeInfo } from "../../data/SreChallenges";
 import MetaSeo from "../../components/MetaSeo";
+import { getTelegramAccessForBuilder } from "../../helpers/server/getTelegramAccessForBuilder";
 
 const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole, builder }) {
@@ -337,7 +338,10 @@ export async function getServerSideProps(context) {
     };
   }
 
+  const builderData = fetchedBuilder?.data;
+  builderData.telegramAccess = getTelegramAccessForBuilder(builderData);
+
   return {
-    props: { builder: fetchedBuilder?.data },
+    props: { builder: builderData },
   };
 }
