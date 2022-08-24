@@ -41,6 +41,7 @@ import { USER_ROLES } from "../helpers/constants";
 import { BuilderCrudFormModal } from "./BuilderCrudForm";
 import { validateSocials } from "../helpers/validators";
 import useSignedRequest from "../hooks/useSignedRequest";
+import BuilderTelegramAccess from "./BuilderTelegramAccess";
 
 const BuilderProfileCardSkeleton = ({ isLoaded, children }) => (
   <Skeleton isLoaded={isLoaded}>{isLoaded ? children() : <SkeletonText mt="4" noOfLines={4} spacing="4" />}</Skeleton>
@@ -296,6 +297,12 @@ const BuilderProfileCard = ({
                 <Button mb={3} size="xs" variant="outline" onClick={onOpen}>
                   Update socials
                 </Button>
+              )}
+              {isMyProfile && (
+                <>
+                  <BuilderTelegramAccess builder={builder} />
+                  <Divider mb={3} />
+                </>
               )}
               <Text textAlign="center" color={secondaryFontColor}>
                 Joined {joinedDateDisplay}
