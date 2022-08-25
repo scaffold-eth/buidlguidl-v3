@@ -18,7 +18,7 @@ import { INFURA_ID, SERVER_URL as serverUrl } from "../constants";
 import { useUserProvider } from "../hooks";
 import { USER_ROLES } from "../helpers/constants";
 import { useRouter } from "next/router";
-import Script from "next/script";
+import PlausibleProvider from "next-plausible";
 
 const DEBUG = true;
 
@@ -206,39 +206,43 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ChakraProvider theme={theme}>
-      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-      <Script defer data-domain="buidlguidl.com" src="https://plausible.io/js/plausible.js" />
-      <BlockchainProvidersContext.Provider value={providers}>
-        <div className="App">
-          {/* ✏️ Edit the header and change the title to your project name */}
-          <Head>
-            <link rel="icon" href="/favicon.ico" />
-            <meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=1.0, user-scalable=0" />
-            <meta name="theme-color" content="#000000" />
-          </Head>
-          <Header
-            injectedProvider={injectedProvider}
-            userRole={userRole}
-            address={address}
-            mainnetProvider={mainnetProvider}
-            userProvider={userProvider}
-            loadWeb3Modal={loadWeb3Modal}
-            logoutOfWeb3Modal={logoutOfWeb3Modal}
-            setUserRole={setUserRole}
-          />
-          <TelegramJoin connectedBuilder={connectedBuilder} />
-          <Component
-            {...pageProps}
-            serverUrl={serverUrl}
-            mainnetProvider={mainnetProvider}
-            address={address}
-            userProvider={userProvider}
-            userRole={userRole}
-            connectedBuilder={connectedBuilder}
-          />
-          <ColorModeSwitcher />
-        </div>
-      </BlockchainProvidersContext.Provider>
+      <PlausibleProvider domain="buidlguidl.com">
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+        <BlockchainProvidersContext.Provider value={providers}>
+          <div className="App">
+            {/* ✏️ Edit the header and change the title to your project name */}
+            <Head>
+              <link rel="icon" href="/favicon.ico" />
+              <meta
+                name="viewport"
+                content="width=device-width, initial-scale=0.6, maximum-scale=1.0, user-scalable=0"
+              />
+              <meta name="theme-color" content="#000000" />
+            </Head>
+            <Header
+              injectedProvider={injectedProvider}
+              userRole={userRole}
+              address={address}
+              mainnetProvider={mainnetProvider}
+              userProvider={userProvider}
+              loadWeb3Modal={loadWeb3Modal}
+              logoutOfWeb3Modal={logoutOfWeb3Modal}
+              setUserRole={setUserRole}
+            />
+            <TelegramJoin connectedBuilder={connectedBuilder} />
+            <Component
+              {...pageProps}
+              serverUrl={serverUrl}
+              mainnetProvider={mainnetProvider}
+              address={address}
+              userProvider={userProvider}
+              userRole={userRole}
+              connectedBuilder={connectedBuilder}
+            />
+            <ColorModeSwitcher />
+          </div>
+        </BlockchainProvidersContext.Provider>
+      </PlausibleProvider>
     </ChakraProvider>
   );
 }
