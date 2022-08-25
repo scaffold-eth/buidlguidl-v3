@@ -42,6 +42,7 @@ import { BuilderCrudFormModal } from "./BuilderCrudForm";
 import { validateSocials } from "../helpers/validators";
 import useSignedRequest from "../hooks/useSignedRequest";
 import BuilderTelegramAccess from "./BuilderTelegramAccess";
+import DotIcon from "./icons/DotIcon";
 
 const BuilderProfileCardSkeleton = ({ isLoaded, children }) => (
   <Skeleton isLoaded={isLoaded}>{isLoaded ? children() : <SkeletonText mt="4" noOfLines={4} spacing="4" />}</Skeleton>
@@ -231,18 +232,17 @@ const BuilderProfileCard = ({
                   </Button>
                   <Center mb={4}>
                     {builder.reachedOut ? (
-                      <Badge variant="outline" colorScheme="green" alignSelf="center">
-                        Reached Out
-                      </Badge>
+                      <DotIcon size={3} active={true} />
                     ) : (
                       <Button
                         colorScheme="green"
+                        variant="link"
                         size="xs"
                         onClick={() => handleUpdateReachedOutFlag(true)}
                         isLoading={isUpdatingReachedOutFlag}
                         alignSelf="center"
                       >
-                        Mark as reached out
+                        <DotIcon size={3} />
                       </Button>
                     )}
                   </Center>

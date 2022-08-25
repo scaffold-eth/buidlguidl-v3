@@ -36,6 +36,7 @@ import { bySocialWeight } from "../data/socials";
 import { USER_ROLES } from "../helpers/constants";
 import StreamTableCell from "../components/StreamTableCell";
 import MetaSeo from "../components/MetaSeo";
+import DotIcon from "../components/icons/DotIcon";
 
 const serverPath = "/builders";
 
@@ -66,9 +67,9 @@ const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
         )}
       </HStack>
       {isAdmin && builder.reachedOut && (
-        <Badge variant="outline" colorScheme="green" mt={2} textAlign="center">
-          Reached Out
-        </Badge>
+        <Center>
+          <DotIcon size={3} active={true} />
+        </Center>
       )}
     </Flex>
   );
