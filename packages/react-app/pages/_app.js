@@ -18,6 +18,7 @@ import { INFURA_ID, SERVER_URL as serverUrl } from "../constants";
 import { useUserProvider } from "../hooks";
 import { USER_ROLES } from "../helpers/constants";
 import { useRouter } from "next/router";
+import Script from "next/script";
 
 const DEBUG = true;
 
@@ -206,6 +207,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      <Script defer data-domain="buidlguidl.com" src="https://plausible.io/js/plausible.js" />
       <BlockchainProvidersContext.Provider value={providers}>
         <div className="App">
           {/* ✏️ Edit the header and change the title to your project name */}
