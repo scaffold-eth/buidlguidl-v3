@@ -144,6 +144,7 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
     image,
     name,
     coBuilders,
+    submittedTimestamp: new Date().getTime(),
     // Keep existing builder (admin can edit)
     builder: build.builder,
   };

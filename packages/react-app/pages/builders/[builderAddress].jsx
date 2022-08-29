@@ -64,7 +64,10 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     setIsLoadingBuilder(true);
     const buildsFromBuilder = await axios.get(serverUrl + `/builds/builder/${builderAddress}`);
 
-    setBuilderBuilds(buildsFromBuilder.data);
+    const builds = buildsFromBuilder.data;
+    builds.sort((a, b) => b.submittedTimestamp - a.submittedTimestamp);
+
+    setBuilderBuilds(builds);
     setIsLoadingBuilder(false);
   }, [builderAddress, serverUrl]);
 
