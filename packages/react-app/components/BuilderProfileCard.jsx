@@ -25,10 +25,13 @@ import {
   Tooltip,
   useClipboard,
   VStack,
-  Badge,
-  Center,
+  Menu,
+  MenuList,
+  MenuItem,
+  MenuButton,
+  IconButton,
 } from "@chakra-ui/react";
-import { CopyIcon, EditIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
+import { CopyIcon, EditIcon, HamburgerIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import QRPunkBlockie from "./QrPunkBlockie";
 import SocialLink from "./SocialLink";
 import useDisplayAddress from "../hooks/useDisplayAddress";
@@ -40,9 +43,9 @@ import BuilderStatus from "./BuilderStatus";
 import { USER_ROLES } from "../helpers/constants";
 import { BuilderCrudFormModal } from "./BuilderCrudForm";
 import { validateSocials } from "../helpers/validators";
-import useSignedRequest from "../hooks/useSignedRequest";
 import BuilderTelegramAccess from "./BuilderTelegramAccess";
-import DotIcon from "./icons/DotIcon";
+import MenuItemReachedOutUpdate from "./builder/MenuItemReachedOutUpdate";
+import BuilderFlags from "./builder/BuilderFlags";
 
 const BuilderProfileCardSkeleton = ({ isLoaded, children }) => (
   <Skeleton isLoaded={isLoaded}>{isLoaded ? children() : <SkeletonText mt="4" noOfLines={4} spacing="4" />}</Skeleton>
@@ -67,11 +70,6 @@ const BuilderProfileCard = ({
   const { borderColor, secondaryFontColor } = useCustomColorModes();
   const shortAddress = ellipsizedAddress(builder?.id);
   const hasEns = ens !== shortAddress;
-
-  const { isLoading: isUpdatingReachedOutFlag, makeSignedRequest: makeSignedRequestReachedOut } = useSignedRequest(
-    "builderUpdateReachedOut",
-    address,
-  );
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
@@ -166,29 +164,6 @@ const BuilderProfileCard = ({
     onClose();
   };
 
-  const handleUpdateReachedOutFlag = async reachedOut => {
-    try {
-      await makeSignedRequestReachedOut({
-        builderAddress: builder.id,
-        reachedOut,
-      });
-    } catch (error) {
-      toast({
-        description: error.message,
-        status: "error",
-        variant: toastVariant,
-      });
-      return;
-    }
-
-    toast({
-      description: 'Updated "reached out" flag successfully',
-      status: "success",
-      variant: toastVariant,
-    });
-    onUpdate();
-  };
-
   return (
     <>
       <BuilderProfileCardSkeleton isLoaded={!!builder}>
@@ -220,32 +195,28 @@ const BuilderProfileCard = ({
 
               {canEditBuilder && (
                 <>
-                  <Button variant="outline" colorScheme="blue" size="sm" onClick={onOpenEditBuilder} mt={2}>
-                    <EditIcon w={6} color="blue.500" />
-                    Edit Builder
-                    <BuilderCrudFormModal
-                      isOpen={isOpenEditBuilder}
-                      onClose={onCloseEditBuilder}
-                      builder={builder}
-                      onUpdate={onUpdate}
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      colorScheme="blue"
+                      icon={<HamburgerIcon />}
+                      variant="outline"
+                      size="sm"
                     />
-                  </Button>
-                  <Center mb={4}>
-                    {builder.reachedOut ? (
-                      <DotIcon size={3} active={true} />
-                    ) : (
-                      <Button
-                        colorScheme="green"
-                        variant="link"
-                        size="xs"
-                        onClick={() => handleUpdateReachedOutFlag(true)}
-                        isLoading={isUpdatingReachedOutFlag}
-                        alignSelf="center"
-                      >
-                        <DotIcon size={3} />
-                      </Button>
-                    )}
-                  </Center>
+                    <MenuList>
+                      <MenuItem icon={<EditIcon />} onClick={onOpenEditBuilder}>
+                        Edit builder
+                        <BuilderCrudFormModal
+                          isOpen={isOpenEditBuilder}
+                          onClose={onCloseEditBuilder}
+                          builder={builder}
+                          onUpdate={onUpdate}
+                        />
+                      </MenuItem>
+                      <MenuItemReachedOutUpdate builder={builder} onUpdate={onUpdate} userProvider={userProvider} />
+                    </MenuList>
+                  </Menu>
+                  <BuilderFlags builder={builder} />
                 </>
               )}
             </VStack>
