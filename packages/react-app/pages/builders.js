@@ -37,6 +37,7 @@ import { USER_ROLES } from "../helpers/constants";
 import StreamTableCell from "../components/StreamTableCell";
 import MetaSeo from "../components/MetaSeo";
 import DotIcon from "../components/icons/DotIcon";
+import BuilderFlags from "../components/builder/BuilderFlags";
 
 const serverPath = "/builders";
 
@@ -66,11 +67,7 @@ const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
           <Box>-</Box>
         )}
       </HStack>
-      {isAdmin && builder.reachedOut && (
-        <Center>
-          <DotIcon size={3} active={true} />
-        </Center>
-      )}
+      {isAdmin && <BuilderFlags builder={builder} />}
     </Flex>
   );
 };
