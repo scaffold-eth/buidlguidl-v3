@@ -102,7 +102,14 @@ const getSignMessageForId = async (messageId, options) => {
     case "builderUpdateReachedOut":
       const reachedOut = typeof options.reachedOut === "boolean" ? options.reachedOut : options.reachedOut === "true";
       return `I (${options.address}) want to mark builder ${options.builderAddress} as ${
-        reachedOut ? "reached out" : "not reached out"
+        reachedOut ? "reached out" : "NOT reached out"
+      }`;
+
+    case "builderUpdateScholarship":
+      const scholarship =
+        typeof options.scholarship === "boolean" ? options.scholarship : options.scholarship === "true";
+      return `I (${options.address}) want to mark builder ${options.builderAddress} as ${
+        scholarship ? "scholarship'd out" : "NOT scholarship'd"
       }`;
 
     default:

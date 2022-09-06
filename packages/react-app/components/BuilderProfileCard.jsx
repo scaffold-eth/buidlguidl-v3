@@ -46,6 +46,7 @@ import { validateSocials } from "../helpers/validators";
 import BuilderTelegramAccess from "./BuilderTelegramAccess";
 import MenuItemReachedOutUpdate from "./builder/MenuItemReachedOutUpdate";
 import BuilderFlags from "./builder/BuilderFlags";
+import MenuItemScholarshipUpdate from "./builder/MenuItemScholarshipUpdate";
 
 const BuilderProfileCardSkeleton = ({ isLoaded, children }) => (
   <Skeleton isLoaded={isLoaded}>{isLoaded ? children() : <SkeletonText mt="4" noOfLines={4} spacing="4" />}</Skeleton>
@@ -214,6 +215,7 @@ const BuilderProfileCard = ({
                         />
                       </MenuItem>
                       <MenuItemReachedOutUpdate builder={builder} onUpdate={onUpdate} userProvider={userProvider} />
+                      <MenuItemScholarshipUpdate builder={builder} onUpdate={onUpdate} userProvider={userProvider} />
                     </MenuList>
                   </Menu>
                   <BuilderFlags builder={builder} />
