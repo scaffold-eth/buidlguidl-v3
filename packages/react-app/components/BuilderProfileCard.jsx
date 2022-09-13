@@ -79,6 +79,7 @@ const BuilderProfileCard = ({
   const joinedDateDisplay = joinedDate.toLocaleString("default", { month: "long" }) + " " + joinedDate.getFullYear();
 
   const canEditBuilder = USER_ROLES.admin === userRole;
+  const isLoggedIn = userRole !== null && userRole !== USER_ROLES.anonymous;
 
   // INFO: conditional chaining and coalescing didn't work when also checking the length
   const hasProfileLinks = builder?.socialLinks ? Object.keys(builder.socialLinks).length !== 0 : false;
@@ -246,7 +247,7 @@ const BuilderProfileCard = ({
               <Divider mb={2} />
               <BuilderStatus builder={builder} />
               <Divider mb={6} />
-              {hasProfileLinks ? (
+              {hasProfileLinks && isLoggedIn ? (
                 <Flex mb={4} justifyContent="space-evenly" alignItems="center">
                   {Object.entries(builder.socialLinks)
                     .sort(bySocialWeight)

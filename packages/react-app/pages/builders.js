@@ -85,7 +85,7 @@ const BuilderAddressCell = ({ builder, mainnetProvider }) => {
 const BuilderStatusCell = ({ status }) => {
   return (
     <Tooltip label={moment(status?.timestamp).fromNow()}>
-      <Text>{status?.text}</Text>
+      <Text maxW="350">{status?.text}</Text>
     </Tooltip>
   );
 };
@@ -111,6 +111,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
   const isAdmin = userRole === USER_ROLES.admin;
+  const isLoggedIn = userRole !== null && userRole !== USER_ROLES.anonymous;
 
   const ensFiltering = (rows, id, filterValue) => {
     if (filterValue.length < 2) {
@@ -126,58 +127,66 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   };
 
   const columns = useMemo(
-    () => [
-      {
-        Header: "Builder",
-        accessor: "builder",
-        disableSortBy: true,
-        canFilter: true,
-        Filter: EnsColumnFilter,
-        filter: ensFiltering,
-        Cell: ({ value }) => <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />,
-      },
-      {
-        Header: "Status",
-        accessor: "status",
-        disableSortBy: true,
-        disableFilters: true,
-        Cell: ({ value }) => <BuilderStatusCell status={value} />,
-      },
-      {
-        Header: "Builds",
-        accessor: "builds",
-        sortDescFirst: true,
-        disableFilters: true,
-        Cell: ({ value }) => <BuilderBuildsCell buildCount={value} />,
-      },
-      {
-        Header: "Stream",
-        accessor: "stream",
-        disableFilters: true,
-        // Sorting by stream cap for now.
-        sortType: (rowA, rowB) =>
-          Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
-        Cell: ({ value }) => <StreamTableCell stream={value} />,
-      },
-      {
-        Header: "Socials",
-        accessor: "socials",
-        disableSortBy: true,
-        disableFilters: true,
-        Cell: ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />,
-      },
-      {
-        Header: "Last Activity",
-        accessor: "lastActivity",
-        sortDescFirst: true,
-        disableFilters: true,
-        Cell: ({ value }) => (
-          <Text whiteSpace="nowrap">
-            <DateWithTooltip timestamp={value} />
-          </Text>
-        ),
-      },
-    ],
+    () => {
+      const allColumns = [
+        {
+          Header: "Builder",
+          accessor: "builder",
+          disableSortBy: true,
+          canFilter: true,
+          Filter: EnsColumnFilter,
+          filter: ensFiltering,
+          Cell: ({ value }) => <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />,
+        },
+        {
+          Header: "Status",
+          accessor: "status",
+          disableSortBy: true,
+          disableFilters: true,
+          Cell: ({ value }) => <BuilderStatusCell status={value} />,
+        },
+        {
+          Header: "Builds",
+          accessor: "builds",
+          sortDescFirst: true,
+          disableFilters: true,
+          Cell: ({ value }) => <BuilderBuildsCell buildCount={value} />,
+        },
+        {
+          Header: "Stream",
+          accessor: "stream",
+          disableFilters: true,
+          // Sorting by stream cap for now.
+          sortType: (rowA, rowB) =>
+            Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
+          Cell: ({ value }) => <StreamTableCell stream={value} />,
+        },
+        {
+          Header: "Socials",
+          accessor: "socials",
+          disableSortBy: true,
+          disableFilters: true,
+          Cell: ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />,
+        },
+        {
+          Header: "Last Activity",
+          accessor: "lastActivity",
+          sortDescFirst: true,
+          disableFilters: true,
+          Cell: ({ value }) => (
+            <Text whiteSpace="nowrap">
+              <DateWithTooltip timestamp={value} />
+            </Text>
+          ),
+        },
+      ];
+
+      if (!isLoggedIn) {
+        allColumns.splice(4, 1);
+      }
+
+      return allColumns;
+    },
     // eslint-disable-next-line
     [userRole],
   );

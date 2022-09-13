@@ -12,9 +12,9 @@ const BuilderListSkeleton = () => (
         <Tr>
           <Th>Builder</Th>
           <Th>Status</Th>
-          <Th>Streams</Th>
-          <Th>Socials</Th>
-          <Th>Last Activity</Th>
+          <Th>Builds</Th>
+          <Th>Stream</Th>
+          <Th>LastActivity</Th>
         </Tr>
       </Thead>
       <Tbody>
