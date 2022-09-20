@@ -61,7 +61,7 @@ const MenuItemGraduatedUpdate = ({ builder, onUpdate, userProvider }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Edit Builder</ModalHeader>
+          <ModalHeader>Graduate Builder</ModalHeader>
           <ModalCloseButton />
           <ModalBody p={6}>
             <Text mb={4}>Graduating a builder removes it from the streamed builder list.</Text>
