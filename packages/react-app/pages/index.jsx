@@ -270,7 +270,11 @@ export default function Index({ bgStats }) {
                 <Spinner />
               </Flex>
             ) : (
-              <BuilderFunctionList builders={builders.filter(builder => builder.function === builderFunction)} />
+              <BuilderFunctionList
+                builders={builders.filter(
+                  builder => builder.function === builderFunction && !builder?.graduated?.status,
+                )}
+              />
             )}
           </Box>
         ))}

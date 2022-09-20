@@ -106,8 +106,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     }
     const stream = builder.stream;
 
-    if (!stream) {
-      // user without stream
+    if (!stream || builder?.graduated?.status) {
+      // user without stream or graduated
       return;
     }
 

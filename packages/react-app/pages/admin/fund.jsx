@@ -182,6 +182,7 @@ export default function Fund() {
       const fetchedBuilders = await getAllBuilders();
 
       const processedBuilders = fetchedBuilders
+        .filter(builder => !builder?.graduated?.status)
         .map(builder => ({
           builder: builder.id,
           ens: builder.ens,

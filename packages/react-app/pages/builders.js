@@ -159,7 +159,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           // Sorting by stream cap for now.
           sortType: (rowA, rowB) =>
             Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
-          Cell: ({ value }) => <StreamTableCell stream={value} />,
+          Cell: ({ value }) => (value?.graduated?.status ? "" : <StreamTableCell stream={value.stream} />),
         },
         {
           Header: "Socials",
@@ -201,7 +201,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         .map(builder => ({
           builder,
           status: builder.status,
-          stream: builder.stream,
+          stream: builder,
           builds: builder.builds?.length || 0,
           socials: builder,
           lastActivity: builderLastActivity(builder),
