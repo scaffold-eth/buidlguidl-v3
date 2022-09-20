@@ -96,3 +96,25 @@ export const postUpdateScholarshipFlag = async (address, signature, { builderAdd
     throw new Error(`Couldn't update the scholarship flag`);
   }
 };
+
+export const postUpdateGraduatedFlag = async (address, signature, { builderAddress, graduated, reason }) => {
+  try {
+    await axios.post(
+      `${serverUrl}/builders/update-graduated`,
+      { builderAddress, graduated, reason, signature },
+      {
+        headers: {
+          address,
+        },
+      },
+    );
+  } catch (error) {
+    if (error.request?.status === 401) {
+      const accessError = new Error(`Access denied`);
+      accessError.status = 401;
+      throw accessError;
+    }
+    console.error(error);
+    throw new Error(`Couldn't update the scholarship flag`);
+  }
+};

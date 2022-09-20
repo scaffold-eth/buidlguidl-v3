@@ -242,4 +242,32 @@ router.post("/update-scholarship", withRole("admin"), async (request, response) 
   response.status(200).send(updatedUser);
 });
 
+router.post("/update-graduated", withRole("admin"), async (request, response) => {
+  const { graduated, reason, builderAddress, signature } = request.body;
+  const address = request.address;
+  console.log("POST /builders/update-graduated", address, graduated, reason);
+
+  const verifyOptions = {
+    messageId: "builderUpdateGraduated",
+    address,
+    graduated,
+    reason,
+    builderAddress,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    response.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const graduatedField = {
+    status: graduated,
+    reason,
+  };
+
+  const updatedUser = await db.updateUser(builderAddress, { graduated: graduatedField });
+  response.status(200).send(updatedUser);
+});
+
 module.exports = router;
