@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
-const TELEGRAM_GROUP_LINK = "https://t.me/+fOadQU8XKpxlZGVh";
+const TELEGRAM_GROUP_LINK = "";
 
 export default function TelegramJoin({ connectedBuilder }) {
   const [hasReadTelegramNotification, setHasReadTelegramNotification] = useState(false);

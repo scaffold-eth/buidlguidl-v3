@@ -229,7 +229,6 @@ function MyApp({ Component, pageProps }) {
               logoutOfWeb3Modal={logoutOfWeb3Modal}
               setUserRole={setUserRole}
             />
-            <TelegramJoin connectedBuilder={connectedBuilder} />
             <Component
               {...pageProps}
               serverUrl={serverUrl}
