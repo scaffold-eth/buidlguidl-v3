@@ -23,7 +23,8 @@ import { SERVER_URL } from "../constants";
 import { USER_FUNCTIONS } from "../helpers/constants";
 import MetaSeo from "../components/MetaSeo";
 import { getAllBuilders } from "../data/api/builder";
-import { getAllBuilds } from "../data/api";
+import { getAllBuilds, getAllEvents } from "../data/api";
+import { EVENT_TYPES } from "../helpers/events";
 
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
@@ -106,7 +107,7 @@ export default function Index({ bgStats }) {
                 <StatBox value={bgStats.buildCount} title="builds" link="/builds" />
               </LinkBox>
               <LinkBox onClick={() => smoothScroll(streamSection)} cursor="pointer">
-                <StatBox value={`Ξ ${bgStats.streamedEth}`} title="streamed" />
+                <StatBox value={`Ξ ${bgStats.streamedEth.toFixed(2)}`} title="streamed" />
               </LinkBox>
             </HStack>
           </Box>
@@ -301,9 +302,10 @@ export default function Index({ bgStats }) {
 export async function getStaticProps() {
   const builders = await getAllBuilders();
   const builds = await getAllBuilds();
+  const depositEvents = await getAllEvents(EVENT_TYPES.STREAM_DEPOSIT);
 
-  const streamedEth = builders.reduce((prevValue, currentValue) => {
-    return prevValue + parseFloat(currentValue?.stream?.cap ?? 0.0);
+  const streamedEth = depositEvents.reduce((prevValue, currentValue) => {
+    return prevValue + parseFloat(currentValue?.payload?.amount ?? 0.0);
   }, 0.0);
 
   return {
