@@ -25,10 +25,11 @@ import MetaSeo from "../components/MetaSeo";
 import { getAllBuilders } from "../data/api/builder";
 import { getAllBuilds, getAllEvents } from "../data/api";
 import { EVENT_TYPES } from "../helpers/events";
+import moment from "moment";
 
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
-const StatBox = ({ value, title, link }) => (
+const StatBox = ({ value, monthlyValue, title, link }) => (
   <Flex
     border="1px solid"
     borderColor="gray.300"
@@ -36,7 +37,7 @@ const StatBox = ({ value, title, link }) => (
     direction="column"
     justify="center"
     align="center"
-    minW="120px"
+    minW="140px"
     minH="120px"
   >
     <Text fontSize="2xl" fontWeight="bold">
@@ -49,6 +50,9 @@ const StatBox = ({ value, title, link }) => (
       )}
     </Text>
     <Text color="gray.400">{title}</Text>
+    <Text fontSize="xs" color="green.500">
+      ▲ {monthlyValue}
+    </Text>
   </Flex>
 );
 
@@ -99,17 +103,38 @@ export default function Index({ bgStats }) {
             </Text>
             <Text mb="10px">❤️ We are an Ethereum public good.</Text>
             {/*Builds / Builders / ETH distributed Ξ*/}
-            <HStack mt="50px" justifyContent={{ base: "center", lg: "initial" }}>
-              <LinkBox>
-                <StatBox value={bgStats.builderCount} title="builders" link="/builders" />
-              </LinkBox>
-              <LinkBox>
-                <StatBox value={bgStats.buildCount} title="builds" link="/builds" />
-              </LinkBox>
-              <LinkBox onClick={() => smoothScroll(streamSection)} cursor="pointer">
-                <StatBox value={`Ξ ${bgStats.streamedEth.toFixed(2)}`} title="streamed" />
-              </LinkBox>
-            </HStack>
+            <Box d="inline-block">
+              <HStack mt="50px" justifyContent={{ base: "center", lg: "initial" }}>
+                <LinkBox>
+                  <StatBox
+                    value={bgStats.builderCount}
+                    monthlyValue={bgStats.buildersCountMonth}
+                    title="builders"
+                    link="/builders"
+                  />
+                </LinkBox>
+                <LinkBox>
+                  <StatBox
+                    value={bgStats.buildCount}
+                    monthlyValue={bgStats.buildCountMonth}
+                    title="builds"
+                    link="/builds"
+                  />
+                </LinkBox>
+                <LinkBox onClick={() => smoothScroll(streamSection)} cursor="pointer">
+                  <StatBox
+                    value={`Ξ ${bgStats.streamedEth.toFixed(2)}`}
+                    monthlyValue={`Ξ ${bgStats.streamedEthMonth.toFixed(2)}`}
+                    title="streamed"
+                  />
+                </LinkBox>
+              </HStack>
+              <HStack mt="5px" justifyContent={{ base: "center", lg: "center" }}>
+                <Text fontSize="xs" color="green.500">
+                  ▲ Monthly change
+                </Text>
+              </HStack>
+            </Box>
           </Box>
         </Box>
 
@@ -308,12 +333,23 @@ export async function getStaticProps() {
     return prevValue + parseFloat(currentValue?.payload?.amount ?? 0.0);
   }, 0.0);
 
+  const timestampOneMonthAgo = moment().subtract(1, "months").valueOf();
+  const buildersMonth = builders.filter(builder => builder.creationTimestamp > timestampOneMonthAgo);
+  const buildsMonth = builds.filter(build => build.submittedTimestamp > timestampOneMonthAgo);
+  const depositEventsMonth = depositEvents.filter(event => event.timestamp > timestampOneMonthAgo);
+  const streamedEthMonth = depositEventsMonth.reduce((prevValue, currentValue) => {
+    return prevValue + parseFloat(currentValue?.payload?.amount ?? 0.0);
+  }, 0.0);
+
   return {
     props: {
       bgStats: {
         builderCount: builders.length,
         buildCount: builds.length,
         streamedEth,
+        buildersCountMonth: buildersMonth.length,
+        buildCountMonth: buildsMonth.length,
+        streamedEthMonth,
       },
     },
     // 6 hours refresh.
