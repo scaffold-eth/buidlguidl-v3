@@ -40,7 +40,7 @@ const StatBox = ({ value, monthlyValue, title, link }) => (
     minW="140px"
     minH="120px"
   >
-    <Text fontSize="2xl" fontWeight="bold">
+    <Text fontSize="2xl" fontWeight="bold" whiteSpace="nowrap">
       {link ? (
         <NextLink href={link} passHref>
           <LinkOverlay>{value}</LinkOverlay>
@@ -93,11 +93,11 @@ export default function Index({ bgStats }) {
       />
       <Flex bgColor={heroBg} alignItems="center" direction={{ base: "column-reverse", lg: "row" }}>
         <Box w={{ base: "100%", lg: "50%" }} pl={{ base: "50px", lg: "15%" }} pr="50px" py="50px">
-          <Box maxW="470px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
+          <Box maxW="500px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
             <Heading as="h1" mb="10px">
               BuidlGuidl <chakra.span color="#CBD5E0">v3</chakra.span>
             </Heading>
-            <Text mb="25px">
+            <Text mb="25px" maxW="470px">
               A curated group of <strong>Ethereum</strong> builders creating products, prototypes, and tutorials to
               enrich the web3 ecosystem.
             </Text>
