@@ -81,7 +81,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
       builderChallengesData = builderChallengesData.sort((a, b) => {
         const [aChallenge] = a;
         const [bChallenge] = b;
-        return SreChallengeInfo[aChallenge].id > SreChallengeInfo[bChallenge].id ? 1 : -1;
+        return SreChallengeInfo[aChallenge]?.id > SreChallengeInfo[bChallenge]?.id ? 1 : -1;
       });
     }
 
