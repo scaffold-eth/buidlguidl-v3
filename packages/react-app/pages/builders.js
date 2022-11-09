@@ -102,9 +102,20 @@ const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
       onChange={e => {
         setFilter(e.target.value || undefined);
       }}
-      placeholder="Search builder (ENS)"
+      placeholder="Search builder"
     />
   );
+};
+
+const isValueOnEnsOrSocials = (builder, filterValue) => {
+  const isOnEns = String(builder.ens).toLowerCase().includes(String(filterValue).toLowerCase());
+  const isOnSocials =
+    builder.socialLinks &&
+    Object.entries(builder.socialLinks ?? {}).some(([_, social]) => {
+      return String(social).toLowerCase().includes(String(filterValue).toLowerCase());
+    });
+
+  return isOnEns || isOnSocials;
 };
 
 export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
@@ -114,15 +125,13 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   const isLoggedIn = userRole !== null && userRole !== USER_ROLES.anonymous;
 
   const ensFiltering = (rows, id, filterValue) => {
-    if (filterValue.length < 2) {
+    if (filterValue.length < 3) {
       return rows;
     }
 
     return rows.filter(row => {
       const rowValue = row.values[id];
-      return rowValue !== undefined
-        ? String(rowValue.ens).toLowerCase().includes(String(filterValue).toLowerCase())
-        : true;
+      return rowValue !== undefined ? isValueOnEnsOrSocials(rowValue, filterValue) : true;
     });
   };
 
