@@ -24,6 +24,7 @@ import { USER_ROLES } from "../helpers/constants";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ENVIRONMENT } from "../constants";
 import useSignedRequest from "../hooks/useSignedRequest";
+import LogoBG from "./icons/LogoBG";
 
 export default function Header({
   injectedProvider,
@@ -63,8 +64,6 @@ export default function Header({
       return;
     }
 
-    console.log("streamUpdateResponse", updatedStreamsResponse);
-
     toast({
       status: "success",
       description: `Updated streams after indexer run: ${updatedStreamsResponse?.updated}`,
@@ -94,10 +93,9 @@ export default function Header({
         <Flex shrink={0} mr={9} mt={{ base: userIsRegistered ? 5 : 0, lg: 0 }}>
           <NextLink href="/" passHref>
             <Link>
-              <span role="img" aria-label="castle icon">
-                🏰️
-              </span>{" "}
-              <chakra.strong>BuidlGuidl</chakra.strong>
+              <Box>
+                <LogoBG w="150px" mt="-6px" />
+              </Box>
             </Link>
           </NextLink>
         </Flex>
