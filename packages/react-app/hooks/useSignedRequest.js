@@ -9,6 +9,7 @@ import {
   postUpdateReachedOutFlag,
   postUpdateScholarshipFlag,
   postUpdateGraduatedFlag,
+  postUpdateDisabledFlag,
 } from "../data/api/builder";
 import { patchProvideEns, postClaimEns } from "../data/api/ens";
 import { postStreamsUpdate } from "../data/api/streams";
@@ -26,6 +27,7 @@ const actionIdToRequest = {
   builderUpdateReachedOut: postUpdateReachedOutFlag,
   builderUpdateScholarship: postUpdateScholarshipFlag,
   builderUpdateGraduated: postUpdateGraduatedFlag,
+  builderUpdateDisabled: postUpdateDisabledFlag,
 };
 
 const useSignedRequest = (actionId, address) => {

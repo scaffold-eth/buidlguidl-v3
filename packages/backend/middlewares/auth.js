@@ -25,6 +25,12 @@ const withRole = role => {
   return (req, res, next) => {
     withAddress(req, res, async () => {
       const user = await db.findUserByAddress(req.address);
+
+      if (user.data.disabled) {
+        // :)
+        return res.sendStatus(200);
+      }
+
       // ToDo. Role utils: hasBuilderRoles or atLeastBuilder, etc.
       // For now, bypassing admin
       if (!user.exists || (user.data.role !== "admin" && user.data.role !== role)) {

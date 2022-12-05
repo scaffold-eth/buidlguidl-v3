@@ -15,6 +15,13 @@ const BuilderFlags = ({ builder }) => {
           <Box lineHeight={1}>🎓</Box>
         </Tooltip>
       )}
+      {builder?.disabled && (
+        <Tooltip label="Disabled builder">
+          <Box lineHeight={1} fontSize="12px">
+            🚫
+          </Box>
+        </Tooltip>
+      )}
     </HStack>
   );
 };

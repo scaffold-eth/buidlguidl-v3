@@ -54,7 +54,9 @@ const updateUser = async (userId, userData) => {
 
 const findAllUsers = async () => {
   const buildersSnapshot = await database.collection("users").get();
-  return buildersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  // Filter out disabled user. To use it directly on the query,
+  // we should create the disabled flag in all documents.
+  return buildersSnapshot.docs.filter(doc => !doc.data().disabled).map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
 const findUserByAddress = async builderAddress => {

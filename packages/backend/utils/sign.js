@@ -117,6 +117,13 @@ const getSignMessageForId = async (messageId, options) => {
       return `I (${options.address}) want to mark builder ${options.builderAddress} as ${
         graduated ? `graduated (${options.reason})` : "NOT graduated"
       }`;
+
+    case "builderUpdateDisabled": {
+      const disabled = typeof options.disabled === "boolean" ? options.disabled : options.disabled === "true";
+      return `I (${options.address}) want to mark builder ${options.builderAddress} as ${
+        disabled ? "disabled" : "NOT disabled"
+      }`;
+    }
     default:
       return "Invalid signing option";
   }

@@ -270,4 +270,26 @@ router.post("/update-graduated", withRole("admin"), async (request, response) =>
   response.status(200).send(updatedUser);
 });
 
+router.post("/update-disabled", withRole("admin"), async (request, response) => {
+  const { disabled, builderAddress, signature } = request.body;
+  const address = request.address;
+  console.log("POST /builders/update-disabled", address, disabled);
+
+  const verifyOptions = {
+    messageId: "builderUpdateDisabled",
+    address,
+    disabled,
+    builderAddress,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    response.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const updatedUser = await db.updateUser(builderAddress, { disabled });
+  response.status(200).send(updatedUser);
+});
+
 module.exports = router;
