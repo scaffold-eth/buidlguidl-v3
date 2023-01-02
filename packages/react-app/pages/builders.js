@@ -25,9 +25,10 @@ import {
   Input,
   InputRightElement,
   InputGroup,
+  useClipboard,
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy, useFilters } from "react-table";
-import { SearchIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { CopyIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import BuilderListSkeleton from "../components/skeletons/BuilderListSkeleton";
 import DateWithTooltip from "../components/DateWithTooltip";
 import SocialLink from "../components/SocialLink";
@@ -73,12 +74,19 @@ const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
 };
 
 const BuilderAddressCell = ({ builder, mainnetProvider }) => {
+  const { hasCopied, onCopy } = useClipboard(builder?.id);
+
   return (
-    <NextLink href={`/builders/${builder.id}`} passHref>
-      <Link pos="relative">
-        <Address address={builder.id} ensProvider={mainnetProvider} w="12.5" fontSize="16" cachedEns={builder.ens} />
-      </Link>
-    </NextLink>
+    <Flex alignItems="center">
+      <NextLink href={`/builders/${builder.id}`} passHref>
+        <Link pos="relative" d="inline-block">
+          <Address address={builder.id} ensProvider={mainnetProvider} w="12.5" fontSize="16" cachedEns={builder.ens} />
+        </Link>
+      </NextLink>
+      <Tooltip label={hasCopied ? "Copied!" : "Copy address"} closeOnClick={false}>
+        <CopyIcon cursor="pointer" onClick={onCopy} ml={"7px"} />
+      </Tooltip>
+    </Flex>
   );
 };
 
