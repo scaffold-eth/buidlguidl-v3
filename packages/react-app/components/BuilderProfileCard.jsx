@@ -31,7 +31,7 @@ import {
   MenuButton,
   IconButton,
 } from "@chakra-ui/react";
-import { CopyIcon, EditIcon, HamburgerIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
+import { CopyIcon, EditIcon, ExternalLinkIcon, HamburgerIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import QRPunkBlockie from "./QrPunkBlockie";
 import SocialLink from "./SocialLink";
 import useDisplayAddress from "../hooks/useDisplayAddress";
@@ -238,13 +238,23 @@ const BuilderProfileCard = ({
                     <Tooltip label={hasCopied ? "Copied!" : "Copy"} closeOnClick={false}>
                       <CopyIcon cursor="pointer" onClick={onCopy} />
                     </Tooltip>
+                    <Tooltip label="View on Etherscan" closeOnClick={false}>
+                      <Link href={`https://etherscan.io/address/${builder?.id}`} isExternal ml="4px">
+                        <ExternalLinkIcon cursor="pointer" />
+                      </Link>
+                    </Tooltip>
                   </Text>
                 </>
               ) : (
-                <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb={8}>
+                <Text fontWeight="bold" textAlign="center" mb={8}>
                   {shortAddress}{" "}
                   <Tooltip label={hasCopied ? "Copied!" : "Copy"} closeOnClick={false}>
                     <CopyIcon cursor="pointer" onClick={onCopy} />
+                  </Tooltip>
+                  <Tooltip label="View on Etherscan" closeOnClick={false}>
+                    <Link href={`https://etherscan.io/address/${builder?.id}`} isExternal ml="4px">
+                      <ExternalLinkIcon cursor="pointer" />
+                    </Link>
                   </Tooltip>
                 </Text>
               )}
