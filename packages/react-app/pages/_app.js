@@ -12,7 +12,6 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import theme from "../theme";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { ColorModeSwitcher, Header } from "../components";
-import TelegramJoin from "../components/TelegramJoin";
 import { providerPromiseWrapper } from "../helpers/blockchainProviders";
 import { INFURA_ID, SERVER_URL as serverUrl } from "../constants";
 import { useUserProvider } from "../hooks";
@@ -20,7 +19,7 @@ import { USER_ROLES } from "../helpers/constants";
 import { useRouter } from "next/router";
 import PlausibleProvider from "next-plausible";
 
-const DEBUG = true;
+const DEBUG = false;
 
 /*
   Web3 modal helps us "connect" external wallets:
@@ -161,7 +160,9 @@ function MyApp({ Component, pageProps }) {
   }, [mainnetProvider, address, selectedChainId]);
 
   const loadWeb3Modal = useCallback(async () => {
+    console.info("DEBUG: Loading loadWeb3Modal");
     const provider = await web3Modal.connect();
+    console.info("DEBUG: provider", provider);
     setInjectedProvider(new Web3Provider(provider));
   }, [setInjectedProvider]);
 
@@ -188,7 +189,6 @@ function MyApp({ Component, pageProps }) {
   const [connectedBuilder, setConnectedBuilder] = useState(null);
 
   const fetchUserData = useCallback(async () => {
-    console.log("getting user data");
     try {
       const fetchedUserObject = await axios.get(serverUrl + `/builders/${address}`);
       setUserRole(USER_ROLES[fetchedUserObject.data.role] ?? USER_ROLES.anonymous);
