@@ -77,7 +77,7 @@ const BuilderAddressCell = ({ builder, mainnetProvider }) => {
   const { hasCopied, onCopy } = useClipboard(builder?.id);
 
   return (
-    <Flex alignItems="center">
+    <Flex alignItems="center" whiteSpace="nowrap">
       <NextLink href={`/builders/${builder.id}`} passHref>
         <Link pos="relative" d="inline-block">
           <Address address={builder.id} ensProvider={mainnetProvider} w="12.5" fontSize="16" cachedEns={builder.ens} />
