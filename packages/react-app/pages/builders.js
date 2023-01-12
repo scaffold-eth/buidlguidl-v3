@@ -269,7 +269,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       {isLoadingBuilders ? (
         <BuilderListSkeleton />
       ) : (
-        <Box overflowX="auto" mb={8}>
+        <Box overflowX={{ base: "auto", lg: "visible" }} mb={8}>
           <Center mb={5} flexDir="column">
             <Box mb={2}>
               <chakra.strong mr={2}>Total builders:</chakra.strong> {builders.length}
@@ -281,12 +281,12 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
               </InputGroup>
             </Box>
           </Center>
-          <Table {...getTableProps()}>
+          <Table {...getTableProps()} wordBreak={{ base: "normal", lg: "break-word" }}>
             <Thead>
               {headerGroups.map((headerGroup, index) => (
                 <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                   {headerGroup.headers.map(column => (
-                    <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
+                    <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id} whiteSpace="nowrap">
                       {column.render("Header")}
                       <chakra.span pl="4">
                         {column.isSorted ? (
