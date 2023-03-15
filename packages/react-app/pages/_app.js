@@ -231,6 +231,7 @@ function MyApp({ Component, pageProps }) {
             />
             <Component
               {...pageProps}
+              key={router.asPath}
               serverUrl={serverUrl}
               mainnetProvider={mainnetProvider}
               address={address}
