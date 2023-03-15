@@ -35,13 +35,14 @@ import DateWithTooltip from "../../components/DateWithTooltip";
 import { USER_FUNCTIONS } from "../../helpers/constants";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import { getWithdrawEvents } from "../../data/api/streams";
-import { getSreBuilder } from "../../data/api/sre";
+import { getChallengeEventsForUser, getSreBuilder } from "../../data/api/sre";
 import BuilderChallengesTable from "../../components/BuilderChallengesTable";
 import StreamWithdrawButton from "../../components/StreamWithdrawButton";
 import { SERVER_URL as serverUrl } from "../../constants";
 import { SreChallengeInfo } from "../../data/SreChallenges";
 import MetaSeo from "../../components/MetaSeo";
 import { getTelegramAccessForBuilder } from "../../helpers/server/getTelegramAccessForBuilder";
+import { byTimestamp } from "../../helpers/sorting";
 
 const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole, builder }) {
@@ -56,6 +57,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const [withdrawEvents, setWithdrawEvents] = useState([]);
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
   const [builderChallenges, setBuilderChallenges] = useState([]);
+  const [isLoadingTimestamps, setIsLoadingTimestamps] = useState(false);
+  const [challengeEvents, setChallengeEvents] = useState([]);
   const [isLoadingBuilderChallenges, setIsLoadingBuilderChallenges] = useState(false);
   const [streamDisplay, setStreamDisplay] = useState(null);
   const isMyProfile = builderAddress === address;
@@ -134,6 +137,26 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
       unlockedPercentage,
     });
   }, [builder]);
+
+  useEffect(() => {
+    if (!builderAddress) {
+      return;
+    }
+
+    async function fetchChallengeEvents() {
+      setIsLoadingTimestamps(true);
+      try {
+        const fetchedChallengeEvents = await getChallengeEventsForUser(builderAddress);
+        console.log("LOOOOOG", fetchedChallengeEvents);
+        setChallengeEvents(fetchedChallengeEvents.sort(byTimestamp).reverse());
+        setIsLoadingTimestamps(false);
+      } catch (error) {
+        console.log("Cant fetch challenge events", error);
+      }
+    }
+    fetchChallengeEvents();
+    // eslint-disable-next-line
+  }, [builderAddress]);
 
   return (
     <Container maxW="container.xl" mb="50px">
@@ -290,7 +313,11 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               </Flex>
             ))}
           {!isLoadingBuilderChallenges && Object.keys(builderChallenges).length !== 0 && (
-            <BuilderChallengesTable challenges={builderChallenges} />
+            <BuilderChallengesTable
+              challenges={builderChallenges}
+              isLoadingTimestamps={isLoadingTimestamps}
+              challengeEvents={challengeEvents}
+            />
           )}
           {!isLoadingBuilder && withdrawEvents.length !== 0 && (
             <Box mb={4}>

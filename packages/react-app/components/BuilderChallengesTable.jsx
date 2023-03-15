@@ -1,11 +1,12 @@
 import React from "react";
-import { Box, Link, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Link, SkeletonText, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { SreChallengeInfo } from "../data/SreChallenges";
 import ChallengeStatusTag from "./ChallengeStatusTag";
+import DateWithTooltip from "./DateWithTooltip";
 
 const SRE_FRONTEND = "https://speedrunethereum.com";
 
-export default function BuilderChallengesTable({ challenges }) {
+export default function BuilderChallengesTable({ challenges, isLoadingTimestamps, challengeEvents }) {
   return (
     challenges && (
       <Box overflowX="auto" mb={10}>
@@ -18,6 +19,7 @@ export default function BuilderChallengesTable({ challenges }) {
               <Th>Name</Th>
               <Th>Contract</Th>
               <Th>Live Demo</Th>
+              <Th>Updated</Th>
               <Th>Status</Th>
             </Tr>
           </Thead>
@@ -26,6 +28,9 @@ export default function BuilderChallengesTable({ challenges }) {
               if (!SreChallengeInfo[challengeId]) {
                 return null;
               }
+              const lastEventForChallenge = challengeEvents?.filter(
+                event => event.payload.challengeId === challengeId,
+              )[0];
 
               return (
                 <Tr key={challengeId}>
@@ -54,6 +59,13 @@ export default function BuilderChallengesTable({ challenges }) {
                     <Link href={lastSubmission.deployedUrl} color="teal.500" target="_blank" rel="noopener noreferrer">
                       Demo
                     </Link>
+                  </Td>
+                  <Td>
+                    {isLoadingTimestamps ? (
+                      <SkeletonText noOfLines={1} />
+                    ) : (
+                      <DateWithTooltip timestamp={lastEventForChallenge?.timestamp} />
+                    )}
                   </Td>
                   <Td>
                     <ChallengeStatusTag

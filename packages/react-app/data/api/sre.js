@@ -10,3 +10,13 @@ export const getSreBuilder = async address => {
     return {};
   }
 };
+
+export const getChallengeEventsForUser = async userId => {
+  try {
+    const response = await axios.get(`${SreServerUrl}/events?user=${userId}&type=challenge.submit,challenge.review`);
+    return response.data;
+  } catch (err) {
+    console.log(`error fetching events for user ${userId}.`, err);
+    return [];
+  }
+};
