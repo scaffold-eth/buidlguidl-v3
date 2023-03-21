@@ -151,6 +151,15 @@ export default function Header({
               Builders
             </NextLink>
           </chakra.li>
+          <chakra.li key="/faq" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <a
+              href="https://mirror.xyz/news.buidlguidl.eth/O_Gc84QO4TjvxJnunkRr-s-It1qBTK7TMlJcWf4FQ_I"
+              target="_blank"
+              rel="noreferrer"
+            >
+              FAQ
+            </a>
+          </chakra.li>
           {[USER_ROLES.admin, USER_ROLES.builder].includes(userRole) && (
             <chakra.li key="/build/vote" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
               <NextLink
