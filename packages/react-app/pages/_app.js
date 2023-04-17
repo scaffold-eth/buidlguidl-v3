@@ -18,7 +18,6 @@ import { useUserProvider } from "../hooks";
 import { USER_ROLES } from "../helpers/constants";
 import { useRouter } from "next/router";
 import PlausibleProvider from "next-plausible";
-import AnnouncementBanner from "../components/AnnouncementBanner";
 
 const DEBUG = false;
 
@@ -220,7 +219,6 @@ function MyApp({ Component, pageProps }) {
               />
               <meta name="theme-color" content="#000000" />
             </Head>
-            <AnnouncementBanner />
             <Header
               injectedProvider={injectedProvider}
               userRole={userRole}
