@@ -11,6 +11,7 @@ import useConnectedAddress from "../../hooks/useConnectedAddress";
 import { getYoutubeVideoId } from "../../helpers/strings";
 import { useRouter } from "next/router";
 import MetaSeo from "../../components/MetaSeo";
+import HackathonWinner from "../../components/HackathonWinner";
 
 export default function BuildDetailView({ build }) {
   const address = useConnectedAddress();
@@ -82,6 +83,7 @@ export default function BuildDetailView({ build }) {
         likesAmount={build.likes?.length ?? 0}
         onLike={refreshData}
       />
+      <HackathonWinner message={build.hackathonWinner} />
     </>
   );
 

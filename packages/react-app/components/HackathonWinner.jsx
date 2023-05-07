@@ -3,6 +3,8 @@ import BadgeIcon from "./icons/BadgeIcon";
 import { Button, Icon, Tooltip } from "@chakra-ui/react";
 
 const HackathonWinner = ({ message }) => {
+  if (!message) return;
+
   return (
     <Tooltip label={message}>
       <Button variant="outline" size="sm">
