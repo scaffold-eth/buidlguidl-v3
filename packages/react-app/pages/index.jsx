@@ -160,8 +160,13 @@ export default function Index({ bgStats }) {
             />
             <Box pl={{ base: "0", lg: "80px" }}>
               <Text fontSize={{ base: "xl", lg: "2xl" }} fontWeight="bold">
-                <Link href="https://github.com/scaffold-eth/scaffold-eth" fontWeight="700" color="teal.500" isExternal>
-                  🏗 scaffold-eth
+                <Link
+                  href="https://github.com/scaffold-eth/scaffold-eth-2"
+                  fontWeight="700"
+                  color="teal.500"
+                  isExternal
+                >
+                  🏗 Scaffold-ETH 2
                 </Link>{" "}
                 is our tool of choice.
               </Text>
