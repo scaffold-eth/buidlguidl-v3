@@ -92,7 +92,7 @@ const getStreamEvents = async (provider, stream, fromBlock = 0, toBlock) => {
 };
 
 const updateStreamsForBuilders = async (max = null) => {
-  const maxItems = Number(max) || 100;
+  const maxItems = Number(max) || 500;
   const provider = new ethers.providers.StaticJsonRpcProvider(process.env.RPC_URL);
   const currentBlock = await provider.getBlockNumber();
   const streams = await db.findUpdatableStreams({ limit: maxItems });
