@@ -222,7 +222,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ChakraProvider theme={theme}>
-      <PlausibleProvider domain="buidlguidl.com">
+      <PlausibleProvider domain="app.buidlguidl.com">
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <BlockchainProvidersContext.Provider value={providers}>
           <div className="App">
