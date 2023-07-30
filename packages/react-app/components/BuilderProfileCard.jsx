@@ -30,6 +30,8 @@ import {
   MenuItem,
   MenuButton,
   IconButton,
+  Badge,
+  Center,
 } from "@chakra-ui/react";
 import { CopyIcon, EditIcon, ExternalLinkIcon, HamburgerIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import QRPunkBlockie from "./QrPunkBlockie";
@@ -257,6 +259,15 @@ const BuilderProfileCard = ({
                     </Link>
                   </Tooltip>
                 </Text>
+              )}
+              {builder.builderCohort && (
+                <Center>
+                  <Link href={builder.builderCohort.link} isExternal>
+                    <Badge colorScheme="purple" textAlign="center" mb={4}>
+                      {builder.builderCohort.name}
+                    </Badge>
+                  </Link>
+                </Center>
               )}
               <Divider mb={2} />
               <BuilderStatus builder={builder} />
