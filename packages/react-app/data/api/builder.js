@@ -4,12 +4,12 @@ import { SERVER_URL as serverUrl } from "../../constants";
 export const postCreateUser = async (
   address,
   signature,
-  { builderAddress, builderRole, builderFunction, builderStreamAddress },
+  { builderAddress, builderRole, builderFunction, builderStreamAddress, builderCohort },
 ) => {
   try {
     await axios.post(
       `${serverUrl}/builders/create`,
-      { builderAddress, builderRole, builderFunction, signature, builderStreamAddress },
+      { builderAddress, builderRole, builderFunction, signature, builderStreamAddress, builderCohort },
       {
         headers: {
           address,
@@ -25,12 +25,12 @@ export const postCreateUser = async (
 export const patchEditUser = async (
   address,
   signature,
-  { builderAddress, builderRole, builderFunction, builderStreamAddress },
+  { builderAddress, builderRole, builderFunction, builderStreamAddress, builderCohort },
 ) => {
   try {
     await axios.patch(
       `${serverUrl}/builders/update`,
-      { builderAddress, builderRole, builderFunction, signature, builderStreamAddress },
+      { builderAddress, builderRole, builderFunction, signature, builderStreamAddress, builderCohort },
       {
         headers: {
           address,
@@ -46,6 +46,16 @@ export const patchEditUser = async (
 export const getAllBuilders = async () => {
   try {
     const response = await axios.get(`${serverUrl}/builders`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+};
+
+export const getAllCohorts = async () => {
+  try {
+    const response = await axios.get(`${serverUrl}/builders/cohorts`);
     return response.data;
   } catch (error) {
     console.error(error);

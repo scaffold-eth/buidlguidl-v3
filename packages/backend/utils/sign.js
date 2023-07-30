@@ -62,6 +62,11 @@ const getSignMessageForId = async (messageId, options) => {
         builderFunction: options.builderFunction,
         builderRole: options.builderRole,
         builderStreamAddress: options.builderStreamAddress,
+        builderCohort: options.builderCohort
+          ? typeof options.builderCohort === "string"
+            ? JSON.parse(options.builderCohort).name
+            : options.builderCohort.name
+          : undefined,
       };
       return `I want to add a builder to BuidlGuidl as ${options.address}:\n\n${JSON.stringify(data, null, 2)}`;
 
@@ -71,6 +76,11 @@ const getSignMessageForId = async (messageId, options) => {
         builderFunction: options.builderFunction,
         builderRole: options.builderRole,
         builderStreamAddress: options.builderStreamAddress,
+        builderCohort: options.builderCohort
+          ? typeof options.builderCohort === "string"
+            ? JSON.parse(options.builderCohort).name
+            : options.builderCohort.name
+          : undefined,
       };
       return `I want to edit the builder "${options.builderAddress}" as ${options.address}:\n\n${JSON.stringify(
         data,

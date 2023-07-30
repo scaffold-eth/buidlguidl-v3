@@ -43,7 +43,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
   }
 
   // ToDo. Param validation.
-  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress } = req.body;
+  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress, builderCohort } = req.body;
   const address = req.address;
   console.log("POST /builders/create", address, builderAddress);
 
@@ -59,6 +59,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderFunction,
     builderRole,
     builderStreamAddress,
+    builderCohort,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -86,6 +87,10 @@ router.post("/create", withRole("admin"), async (req, res) => {
     };
   }
 
+  if (builderCohort) {
+    builderData.builderCohort = builderCohort;
+  }
+
   const ens = await getEnsFromAddress(builderAddress);
   if (ens) {
     builderData.ens = ens;
@@ -109,7 +114,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
   }
 
   // ToDo. Param validation.
-  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress } = req.body;
+  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress, builderCohort } = req.body;
   const address = req.address;
   console.log("PATCH /builders/update", address, builderAddress);
 
@@ -120,6 +125,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderFunction,
     builderRole,
     builderStreamAddress,
+    builderCohort,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -144,6 +150,11 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderData.stream = {
       streamAddress: builderStreamAddress,
     };
+  }
+
+  if (builderCohort !== user.data.builderCohort?.name) {
+    console.log("Cohort", builderCohort);
+    builderData.builderCohort = builderCohort ?? {};
   }
 
   // Update user.

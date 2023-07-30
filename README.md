@@ -33,7 +33,7 @@ yarn install
 
 (Optional) Start the firebase emulators (vs set up a live Firebase instance)
 ```bash
-
+# You might need to add a real "--project <projectName>" (run firebase project:list)
 firebase emulators:start
 
 ```

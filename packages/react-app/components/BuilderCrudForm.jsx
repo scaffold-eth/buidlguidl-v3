@@ -22,6 +22,8 @@ import { USER_FUNCTIONS, USER_ROLES } from "../helpers/constants";
 import AddressInput from "./AddressInput";
 import useSignedRequest from "../hooks/useSignedRequest";
 import useConnectedAddress from "../hooks/useConnectedAddress";
+import axios from "axios";
+import { getAllCohorts } from "../data/api/builder";
 
 const INITIAL_FORM_STATE = { builderRole: USER_ROLES.builder };
 
@@ -56,6 +58,8 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [formErrors, setFormErrors] = useState({});
 
+  const [cohorts, setCohorts] = useState([]);
+
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
@@ -72,8 +76,19 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderStreamAddress: builder.stream?.streamAddress,
         builderRole: builder.role,
         builderFunction: builder.function,
+        builderCohort: builder.builderCohort?.name,
       });
     }
+    (async () => {
+      try {
+        const cohorts = await getAllCohorts();
+        // You can use the cohorts variable here
+        setCohorts(cohorts);
+      } catch (error) {
+        // Handle any errors that might occur during the process
+        console.error("Error getting the all cohorts", error);
+      }
+    })();
   }, [isEditingBuilder, builder]);
 
   const handleSubmit = async () => {
@@ -96,6 +111,11 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderFunction: formState.builderFunction,
         builderStreamAddress: formState.builderStreamAddress,
       };
+
+      if (formState.builderCohort) {
+        const selectedCohort = cohorts.find(cohort => cohort.name === formState.builderCohort);
+        requestPayload.builderCohort = { name: selectedCohort.name, link: selectedCohort.link };
+      }
 
       if (isEditingBuilder) {
         await makeSignedRequestEdit(requestPayload);
@@ -192,6 +212,25 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
           {Object.keys(USER_FUNCTIONS).map(value => (
             <option key={value} value={value}>
               {value}
+            </option>
+          ))}
+        </Select>
+        <FormErrorMessage>Required</FormErrorMessage>
+      </FormControl>
+
+      <FormControl mb={8} isInvalid={formErrors.builderCohort}>
+        <FormLabel htmlFor="builderCohort">
+          <strong>Cohort</strong>
+        </FormLabel>
+        <Select
+          id="builderCohort"
+          placeholder="Select option"
+          onChange={handleInputChange}
+          value={formState.builderCohort || ""}
+        >
+          {cohorts.map(cohort => (
+            <option key={cohort.id} value={cohort.name}>
+              {cohort.name}
             </option>
           ))}
         </Select>
