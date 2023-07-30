@@ -98,6 +98,16 @@
       }
     }
   ],
+  "cohorts": [
+    {
+      "name": "Sand Garden",
+      "link": "https://sandgarden.buidlguidl.com"
+    },
+    {
+      "name": "Jessy's Hacker House",
+      "link": "https://hackerhouse.buidlguidl.com/"
+    }
+  ],
   "config": {
     "streams": {
       "lastIndexedBlock": 10616289
