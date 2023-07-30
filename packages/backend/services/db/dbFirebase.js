@@ -67,6 +67,11 @@ const findUserByAddress = async builderAddress => {
   return { exists: true, data: { id: builderSnapshot.id, ...builderSnapshot.data() } };
 };
 
+const findAllCohorts = async () => {
+  const buildersSnapshot = await database.collection("cohorts").get();
+  return buildersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
 const getBuildersWithPendingEnsClaims = async () => {
   const usersEnsPendingSnapshot = await database.collection("users").where("ensClaimData.provided", "==", false).get();
 
@@ -305,6 +310,7 @@ module.exports = {
   updateUser,
   findAllUsers,
   findUserByAddress,
+  findAllCohorts,
 
   createEvent,
   findAllEvents,

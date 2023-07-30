@@ -50,6 +50,13 @@ const findAllUsers = db.findAllUsers;
  * }}
  */
 const findUserByAddress = db.findUserByAddress;
+
+/**
+ *
+ * @returns {{id:string, name: string, link: string}[]}
+ */
+const findAllCohorts = db.findAllCohorts;
+
 /**
  * Builder that have claimed ENS and are still pending.
  *
@@ -189,6 +196,7 @@ module.exports = {
   findAllUsers,
   findUserByAddress,
   getBuildersWithPendingEnsClaims,
+  findAllCohorts,
 
   createEvent,
   findAllEvents,

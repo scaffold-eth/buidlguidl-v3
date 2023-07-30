@@ -14,6 +14,13 @@ router.get("/", async (req, res) => {
   res.status(200).send(builders);
 });
 
+router.get("/cohorts", async (req, res) => {
+  console.log(`/builders/cohorts`);
+
+  const cohorts = await db.findAllCohorts();
+  res.status(200).json(cohorts);
+});
+
 router.get("/:builderAddress", async (req, res) => {
   const builderAddress = req.params.builderAddress;
   console.log(`/builders/${builderAddress}`);
