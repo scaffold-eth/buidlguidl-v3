@@ -22,11 +22,7 @@ import BuilderFunctionList from "../components/BuilderFunctionList";
 import { SERVER_URL } from "../constants";
 import { USER_FUNCTIONS } from "../helpers/constants";
 import MetaSeo from "../components/MetaSeo";
-import { getAllBuilders } from "../data/api/builder";
-import { getAllBuilds, getAllEvents } from "../data/api";
-import { EVENT_TYPES } from "../helpers/events";
-import moment from "moment";
-
+import { getStats } from "../data/api/builder";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 const StatBox = ({ value, monthlyValue, title, link }) => (
@@ -108,7 +104,7 @@ export default function Index({ bgStats }) {
                 <LinkBox>
                   <StatBox
                     value={bgStats.builderCount}
-                    monthlyValue={bgStats.buildersCountMonth}
+                    monthlyValue={bgStats.buildersIncrementMonth}
                     title="builders"
                     link="/builders"
                   />
@@ -116,7 +112,7 @@ export default function Index({ bgStats }) {
                 <LinkBox>
                   <StatBox
                     value={bgStats.buildCount}
-                    monthlyValue={bgStats.buildCountMonth}
+                    monthlyValue={bgStats.buildsIncrementMonth}
                     title="builds"
                     link="/builds"
                   />
@@ -124,7 +120,7 @@ export default function Index({ bgStats }) {
                 <LinkBox onClick={() => smoothScroll(streamSection)} cursor="pointer">
                   <StatBox
                     value={`Ξ ${bgStats.streamedEth.toFixed(2)}`}
-                    monthlyValue={`Ξ ${bgStats.streamedEthMonth.toFixed(2)}`}
+                    monthlyValue={`Ξ ${bgStats.streamedEthIncrementMonth.toFixed(2)}`}
                     title="streamed"
                   />
                 </LinkBox>
@@ -330,31 +326,17 @@ export default function Index({ bgStats }) {
 }
 
 export async function getStaticProps() {
-  const builders = await getAllBuilders();
-  const builds = await getAllBuilds();
-  const depositEvents = await getAllEvents(EVENT_TYPES.STREAM_DEPOSIT);
-
-  const streamedEth = depositEvents.reduce((prevValue, currentValue) => {
-    return prevValue + parseFloat(currentValue?.payload?.amount ?? 0.0);
-  }, 0.0);
-
-  const timestampOneMonthAgo = moment().subtract(1, "months").valueOf();
-  const buildersMonth = builders.filter(builder => builder.creationTimestamp > timestampOneMonthAgo);
-  const buildsMonth = builds.filter(build => build.submittedTimestamp > timestampOneMonthAgo);
-  const depositEventsMonth = depositEvents.filter(event => event.timestamp > timestampOneMonthAgo);
-  const streamedEthMonth = depositEventsMonth.reduce((prevValue, currentValue) => {
-    return prevValue + parseFloat(currentValue?.payload?.amount ?? 0.0);
-  }, 0.0);
+  const stats = await getStats();
 
   return {
     props: {
       bgStats: {
-        builderCount: builders.length,
-        buildCount: builds.length,
-        streamedEth,
-        buildersCountMonth: buildersMonth.length,
-        buildCountMonth: buildsMonth.length,
-        streamedEthMonth,
+        builderCount: stats?.builderCount,
+        buildCount: stats?.buildCount,
+        streamedEth: stats?.streamedEth,
+        buildersIncrementMonth: stats?.buildersIncrementMonth,
+        buildsIncrementMonth: stats?.buildsIncrementMonth,
+        streamedEthIncrementMonth: stats?.streamedEthIncrementMonth,
       },
     },
     // 6 hours refresh.

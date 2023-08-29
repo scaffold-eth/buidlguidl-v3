@@ -65,7 +65,7 @@ router.get("/stats", async (req, res) => {
   const buildersMonth = builders.filter(builder => builder.creationTimestamp > timestampOneMonthAgo);
   const buildsMonth = builds.filter(build => build.submittedTimestamp > timestampOneMonthAgo);
   const depositEventsMonth = depositEvents.filter(event => event.timestamp > timestampOneMonthAgo);
-  const streamedEthMonth = depositEventsMonth.reduce((prevValue, currentValue) => {
+  const streamedEthIncrementMonth = depositEventsMonth.reduce((prevValue, currentValue) => {
     return prevValue + parseFloat(currentValue?.payload?.amount ?? 0.0);
   }, 0.0);
 
@@ -75,7 +75,7 @@ router.get("/stats", async (req, res) => {
     streamedEth,
     buildersIncrementMonth: buildersMonth.length,
     buildsIncrementMonth: buildsMonth.length,
-    streamedEthMonth,
+    streamedEthIncrementMonth,
   });
 });
 

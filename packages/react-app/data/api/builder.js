@@ -63,6 +63,16 @@ export const getAllCohorts = async () => {
   }
 };
 
+export const getStats = async () => {
+  try {
+    const response = await axios.get(`${serverUrl}/api/stats`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+};
+
 export const postUpdateReachedOutFlag = async (address, signature, { builderAddress, reachedOut }) => {
   try {
     await axios.post(
