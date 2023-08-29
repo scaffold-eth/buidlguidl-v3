@@ -4,6 +4,7 @@ const db = require("../services/db/db");
 const { createEvent, EVENT_TYPES } = require("../utils/events");
 const { withApiKey } = require("../middlewares/auth");
 const { getEnsFromAddress } = require("../utils/ens");
+const moment = require("moment");
 
 const router = express.Router();
 
@@ -48,6 +49,34 @@ router.post("/builders/create", withApiKey, async (req, res) => {
   db.createEvent(event); // INFO: async, no await here
 
   res.json(user.data);
+});
+
+router.get("/stats", async (req, res) => {
+  console.log("/stats");
+  const builders = await db.findAllUsers();
+  const builds = await db.findAllBuilds();
+  const depositEvents = await db.findEventsWhere({ conditions: { type: EVENT_TYPES.STREAM_DEPOSIT } });
+
+  const streamedEth = depositEvents.reduce((prevValue, currentValue) => {
+    return prevValue + parseFloat(currentValue?.payload?.amount ?? 0.0);
+  }, 0.0);
+
+  const timestampOneMonthAgo = moment().subtract(1, "months").valueOf();
+  const buildersMonth = builders.filter(builder => builder.creationTimestamp > timestampOneMonthAgo);
+  const buildsMonth = builds.filter(build => build.submittedTimestamp > timestampOneMonthAgo);
+  const depositEventsMonth = depositEvents.filter(event => event.timestamp > timestampOneMonthAgo);
+  const streamedEthMonth = depositEventsMonth.reduce((prevValue, currentValue) => {
+    return prevValue + parseFloat(currentValue?.payload?.amount ?? 0.0);
+  }, 0.0);
+
+  res.status(200).send({
+    builderCount: builders.length,
+    buildCount: builds.length,
+    streamedEth,
+    buildersIncrementMonth: buildersMonth.length,
+    buildsIncrementMonth: buildsMonth.length,
+    streamedEthMonth,
+  });
 });
 
 module.exports = router;
