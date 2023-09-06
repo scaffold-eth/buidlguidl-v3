@@ -1,17 +1,15 @@
 steps:
-  # Creates the production .env file
-  - name: 'alpine'
-    entrypoint: sh
-    args: ['-c', 'printenv > packages/backend/.env']
-    env:
-      - DATABASE_SERVICE=firebase
-      - API_KEY=$_API_KEY
-      - RPC_URL=$_RPC_URL
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: 'bash'
     args:
       - '-c'
       - |
         cd packages/backend
+        printenv > .env
+        ll
         gcloud app deploy --no-cache --quiet
+    env:
+      - DATABASE_SERVICE=firebase
+      - API_KEY=$_API_KEY
+      - RPC_URL=$_RPC_URL
 timeout: "1600s"
