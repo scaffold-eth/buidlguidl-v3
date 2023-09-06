@@ -8,11 +8,15 @@ steps:
       - API_KEY=$_API_KEY
       - RPC_URL=$_RPC_URL
 
-  - name: "gcr.io/cloud-builders/gcloud"
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        cd packages/backend
-        gcloud app deploy --quiet
+  - name: 'alpine'
+    entrypoint: 'cat'
+    args: ['packages/backend/.env']
+
+#  - name: "gcr.io/cloud-builders/gcloud"
+#    entrypoint: 'bash'
+#    args:
+#      - '-c'
+#      - |
+#        cd packages/backend
+#        gcloud app deploy --quiet
 timeout: "1600s"
