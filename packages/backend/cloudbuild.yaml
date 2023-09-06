@@ -12,7 +12,5 @@ steps:
       - '-c'
       - |
         cd packages/backend
-        ls -la
-        cat .env
         gcloud app deploy --no-cache --quiet
 timeout: "1600s"
