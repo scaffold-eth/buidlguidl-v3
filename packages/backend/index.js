@@ -12,6 +12,7 @@ const eventsRoutes = require("./routes/events");
 const streamsRoutes = require("./routes/streams");
 const ensRoutes = require("./routes/ens");
 const apiRoutes = require("./routes/api");
+const cohortRoutes = require("./routes/cohorts");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/latest-events", eventsRoutes);
 app.use("/streams", streamsRoutes);
 app.use("/ens", ensRoutes);
 app.use("/api", apiRoutes);
+app.use("/cohorts", cohortRoutes);
 
 app.get("/sign-message", async (req, res) => {
   const messageId = req.query.messageId;
