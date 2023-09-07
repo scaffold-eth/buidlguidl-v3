@@ -45,11 +45,6 @@ const importSeed = async database => {
     database.collection("events").add(eventData);
   });
 
-  // Cohorts
-  Object.entries(seedToImport.cohorts).forEach(([_, eventData]) => {
-    database.collection("cohorts").add(eventData);
-  });
-
   // Config
   Object.entries(seedToImport.config).forEach(([configId, configData]) => {
     database.collection("config").doc(configId).set(configData);
