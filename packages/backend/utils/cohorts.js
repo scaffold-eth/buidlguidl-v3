@@ -5,7 +5,7 @@ const db = require("../services/db/db");
 const COHORT_STREAM_ABI = require("../abi/CohortStream.json");
 
 /**
- * Retrieve a list of withdraw/addBuilder/UpdateBuilder events for the given `streamAddress`.
+ * Retrieve a list of withdraw/addBuilder/UpdateBuilder events + data for the given cohort
  *
  * @param provider A connected ethersjs provider
  * @param cohort cohort info for which events will be received
@@ -13,7 +13,7 @@ const COHORT_STREAM_ABI = require("../abi/CohortStream.json");
  * @param toBlock Search up to this block number
  * @return {Promise<{balance: string, streamAddress, events: {type: string, payload: object}[]}>}
  */
-const getCohortStreamEvents = async (provider, cohort, fromBlock = 0, toBlock) => {
+const getCohortStreamData = async (provider, cohort, fromBlock = 0, toBlock) => {
   const cohortStreamAddress = cohort.id;
   const cohortContract = new ethers.Contract(cohortStreamAddress, COHORT_STREAM_ABI, provider);
 
@@ -89,7 +89,7 @@ const getCohortStreamEvents = async (provider, cohort, fromBlock = 0, toBlock) =
   };
 };
 
-const updateStreamsForBuilders = async () => {
+const updateCohorts = async () => {
   const mainnetProvider = new ethers.providers.StaticJsonRpcProvider(process.env.RPC_URL);
   const optimismProvider = new ethers.providers.StaticJsonRpcProvider(process.env.OP_RPC_URL);
   const currentBlockMainnet = await mainnetProvider.getBlockNumber();
@@ -102,28 +102,26 @@ const updateStreamsForBuilders = async () => {
     const provider = cohort.chainId === 1 ? mainnetProvider : optimismProvider;
     const currentBlock = cohort.chainId === 1 ? currentBlockMainnet : currentBlockOp;
 
-    return [await getCohortStreamEvents(provider, cohort, fromBlock + 1, currentBlock), cohort];
+    return [await getCohortStreamData(provider, cohort, fromBlock + 1, currentBlock), cohort];
   });
 
   return Promise.all(updates)
     .then(async cohortsResult => {
       await Promise.all(
         cohortsResult.map(async ([cohortUpdate, cohort]) => {
-          // ToDo. Process & Save to database
+          db.updateCohortData(cohort, cohortUpdate);
           updated += 1;
         }),
       );
       return updated;
     })
     .catch(e => {
-      console.error("Error found. Not updating lastIndexedBlock", e);
+      console.error("Error found when updating Cohorts Data", e);
       throw new Error(e);
     });
 };
 
-updateStreamsForBuilders();
-
 module.exports = {
-  getStreamEvents: getCohortStreamEvents,
-  updateStreamsForBuilders,
+  getCohortStreamEvents: getCohortStreamData,
+  updateCohorts,
 };

@@ -51,11 +51,20 @@ const findAllUsers = db.findAllUsers;
  */
 const findUserByAddress = db.findUserByAddress;
 
+// --- Cohorts
 /**
  *
  * @returns {{id:string, name: string, link: string}[]}
  */
 const findAllCohorts = db.findAllCohorts;
+
+/**
+ * Given the output of `getCohortStreamData`, update the `cohort` collection and store the events in the db.
+ *
+ * @param {*} stream A `cohort` collection
+ * @param {*} streamUpdate The result of `getCohortStreamData` for this `cohort`.
+ */
+const updateCohortData = db.updateCohortData;
 
 /**
  * Builder that have claimed ENS and are still pending.
@@ -197,6 +206,7 @@ module.exports = {
   findUserByAddress,
   getBuildersWithPendingEnsClaims,
   findAllCohorts,
+  updateCohortData,
 
   createEvent,
   findAllEvents,

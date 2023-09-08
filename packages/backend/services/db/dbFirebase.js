@@ -3,6 +3,7 @@ const firebaseAdmin = require("firebase-admin");
 const fs = require("fs");
 const { importSeed } = require("../../local_database/importSeed");
 const { areArraysEqual } = require("../../utils/arrays");
+const { getEnsFromAddress } = require("../../utils/ens");
 
 if (process.env.NODE_ENV === "test") {
   // We won't be using firebase for testing for now. At some point,
@@ -288,6 +289,47 @@ const updateStreamData = async (stream, streamUpdate) => {
   console.log(`Stream ${stream.streamAddress} updated to ${streamUpdate.lastBlock} balance ${streamUpdate.balance}`);
 };
 
+const updateCohortData = async (cohort, cohortUpdate) => {
+  // Save all the withdrawals events
+  cohortUpdate.withdrawEvents.map(createEvent);
+
+  const selectedCohort = database.collection("cohorts").doc(cohort.id);
+  const selectedCohortData = (await selectedCohort.get()).data();
+  const cohortBuilders = selectedCohortData.builders ?? {};
+
+  // Add new builders
+  await Promise.all(
+    cohortUpdate.newBuilders.map(async builder => {
+      const ens = await getEnsFromAddress(builder.userAddress);
+      cohortBuilders[builder.userAddress] = {
+        amount: builder.amount,
+        ens: ens || "",
+      };
+    }),
+  );
+
+  // Update / remove builders
+  cohortUpdate.updatedBuilders.map(async builder => {
+    // Remove from exiting builder is builder.amount is 0
+    if (!builder.amount) {
+      delete cohortBuilders[builder.userAddress];
+      return;
+    }
+    cohortBuilders[builder.userAddress] = {
+      ...cohortBuilders[builder.userAddress],
+      amount: builder.amount,
+    };
+  });
+
+  await selectedCohort.update({
+    lastIndexedBlock: cohortUpdate.lastBlock,
+    balance: cohortUpdate.balance,
+    builders: cohortBuilders,
+  });
+
+  console.log(`Cohort ${cohort.name} updated to ${cohortUpdate.lastBlock} balance ${cohortUpdate.balance}`);
+};
+
 // --- General config data
 const getConfigDoc = id => database.collection("config").doc(id);
 const getUsConfigSnapshotById = id => getConfigDoc(id).get();
@@ -311,6 +353,7 @@ module.exports = {
   findAllUsers,
   findUserByAddress,
   findAllCohorts,
+  updateCohortData,
 
   createEvent,
   findAllEvents,
