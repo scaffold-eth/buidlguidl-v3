@@ -6,6 +6,7 @@ steps:
     env:
       - API_KEY=$_API_KEY
       - RPC_URL=$_RPC_URL
+      - OP_RPC_URL=$_OP_RPC_URL
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: 'bash'
     args:

@@ -14,7 +14,6 @@ export default function ActivityView() {
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
 
   const router = useRouter();
-  console.log("router", router);
 
   useEffect(() => {
     const { filter, count } = router.query;
