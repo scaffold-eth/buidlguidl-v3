@@ -24,6 +24,7 @@ import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
 import SubmitBuildModal from "./SubmitBuildModal";
 import { USER_ROLES } from "../helpers/constants";
 import BuildLikeButton from "./BuildLikeButton";
+import HackathonWinner from "./HackathonWinner";
 
 const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
   const address = useUserAddress(userProvider);
@@ -148,6 +149,9 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
             likesAmount={build?.likes?.length ?? 0}
             onLike={onUpdate}
           />
+          {build.hackathonWinner && (
+            <HackathonWinner message={build.hackathonWinner}/>
+          )}
         </ButtonGroup>
       </Flex>
       {canEditBuild && (
