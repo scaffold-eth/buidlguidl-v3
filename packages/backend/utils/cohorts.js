@@ -38,6 +38,7 @@ const getCohortStreamData = async (provider, cohort, fromBlock = 0, toBlock) => 
           block: log.blockNumber,
           tx: log.transactionHash,
           streamAddress: cohortStreamAddress,
+          cohortName: cohort.name,
         },
       };
     }),

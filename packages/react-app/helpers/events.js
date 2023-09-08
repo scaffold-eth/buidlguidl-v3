@@ -14,6 +14,7 @@ export const EVENT_TYPES = {
   USER_UPDATE_STATUS: "user.update_status",
   STREAM_WITHDRAW: "stream.withdraw",
   STREAM_DEPOSIT: "stream.deposit",
+  COHORT_WITHDRAW: "cohort.withdraw",
 };
 
 export const eventDisplay = ({ type, payload }) => {
@@ -96,6 +97,20 @@ export const eventDisplay = ({ type, payload }) => {
                 <Address address={payload.builderAddress} w="10" fontSize="16" />
               </Link>
             </NextLink>
+          </Text>
+        </>
+      );
+    }
+
+    case EVENT_TYPES.COHORT_WITHDRAW: {
+      return (
+        <>
+          <Text>withdrew Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
+          <Text fontWeight="bold" mt={2} wordBreak="break-all">
+            From «{payload.cohortName}»
+          </Text>
+          <Text fontStyle="italic" mt={2} wordBreak="break-all">
+            "{payload.reason}"
           </Text>
         </>
       );

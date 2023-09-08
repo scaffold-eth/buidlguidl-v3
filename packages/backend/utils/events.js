@@ -8,6 +8,7 @@ const EVENT_TYPES = {
   USER_UPDATE_STATUS: "user.update_status",
   STREAM_WITHDRAW: "stream.withdraw",
   STREAM_DEPOSIT: "stream.deposit",
+  COHORT_WITHDRAW: "cohort.withdraw",
 };
 
 // TODO we could check here if the payload is correct for the type
