@@ -262,7 +262,7 @@ const BuilderProfileCard = ({
               )}
               {builder.builderCohort && (
                 <Center>
-                  <Link href={builder.builderCohort.link} isExternal>
+                  <Link href={builder.builderCohort.url} isExternal>
                     <Badge colorScheme="purple" textAlign="center" mb={4}>
                       {builder.builderCohort.name}
                     </Badge>
