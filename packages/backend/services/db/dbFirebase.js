@@ -1,6 +1,5 @@
 require("dotenv").config();
 const firebaseAdmin = require("firebase-admin");
-const fs = require("fs");
 const { importSeed } = require("../../local_database/importSeed");
 const { areArraysEqual } = require("../../utils/arrays");
 const { getEnsFromAddress } = require("../../utils/ens");
@@ -305,6 +304,32 @@ const updateCohortData = async (cohort, cohortUpdate) => {
         amount: builder.amount,
         ens: ens || "",
       };
+
+      // Add user to BG if it doesn't exist yet
+      const user = await findUserByAddress(builder.userAddress);
+
+      if (user.exists) {
+        return;
+      }
+
+      const builderData = {
+        creationTimestamp: new Date().getTime(),
+        role: "builder",
+        function: "cadets",
+        builderCohort: {
+          id: cohort.id,
+          url: cohort.url,
+          name: cohort.name,
+        },
+      };
+
+      if (ens) {
+        builderData.ens = ens;
+      }
+
+      // Create user.
+      await createUser(builder.userAddress, builderData);
+      console.log("New cohort user created: ", builder.userAddress);
     }),
   );
 
