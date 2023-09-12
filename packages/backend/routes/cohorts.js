@@ -14,6 +14,37 @@ router.get("/", async (req, res) => {
 });
 
 /**
+ * Get all Cohort data with stats.
+ */
+router.get("/stats", async (req, res) => {
+  console.log("/cohorts/stats");
+  const allCohorts = await db.findAllCohorts();
+  const events = await db.findEventsWhere({ conditions: { type: "cohort.withdraw" } });
+
+  // Get all the withdrawals by cohort
+  const totalWithdrawByCohort = events.reduce((acc, event) => {
+    const address = event.payload.streamAddress;
+
+    if (!acc[address]) {
+      acc[address] = { totalWithdrawn: 0 };
+    }
+
+    acc[address].totalWithdrawn += parseFloat(event.payload.amount);
+
+    return acc;
+  }, {});
+
+  const allCohortWithStats = allCohorts.map(item => {
+    return {
+      ...item,
+      totalWithdrawn: totalWithdrawByCohort[item.id]?.totalWithdrawn ?? 0,
+    };
+  });
+
+  res.json(allCohortWithStats);
+});
+
+/**
  * Update all cohort  data. (GET)
  */
 router.get("/update", async (req, res) => {
