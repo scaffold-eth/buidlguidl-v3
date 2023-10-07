@@ -114,7 +114,7 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
 
       if (formState.builderCohort) {
         const selectedCohort = cohorts.find(cohort => cohort.name === formState.builderCohort);
-        requestPayload.builderCohort = { name: selectedCohort.name, link: selectedCohort.link };
+        requestPayload.builderCohort = { name: selectedCohort.name, link: selectedCohort.url, id: selectedCohort.id };
       }
 
       if (isEditingBuilder) {
