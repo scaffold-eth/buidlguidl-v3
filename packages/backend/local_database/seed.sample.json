@@ -112,5 +112,25 @@
     "streams": {
       "lastIndexedBlock": 10616289
     }
-  }
+  },
+  "notifications": [
+    {
+      "criteria": {
+        "minBuilds": 2,
+        "daysJoinedBefore": 30,
+        "hasStream": true
+      },
+      "title": "New cohort coming",
+      "content": "Some 'New cohort coming' **markdown** content with [links](https://buidlguidl.com)",
+      "active": true
+    },
+    {
+      "criteria": {
+        "daysJoinedAfter": 2
+      },
+      "title": "Onboarding Batch!",
+      "content": "Some 'Onboarding Batch' **markdown** content with [links](https://buidlguidl.com)",
+      "active": true
+    }
+  ]
 }

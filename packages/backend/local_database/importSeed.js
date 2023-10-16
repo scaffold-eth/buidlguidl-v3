@@ -49,6 +49,11 @@ const importSeed = async database => {
   Object.entries(seedToImport.config).forEach(([configId, configData]) => {
     database.collection("config").doc(configId).set(configData);
   });
+
+  // Notifications
+  Object.entries(seedToImport.notifications).forEach(([_, notificationData]) => {
+    database.collection("notifications").add(notificationData);
+  });
 };
 
 module.exports = {
