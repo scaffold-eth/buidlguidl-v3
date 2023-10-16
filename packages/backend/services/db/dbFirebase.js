@@ -372,6 +372,11 @@ const setConfigData = async (category, configData) => {
   return configSnapshot.data();
 };
 
+const findAllNotifications = async () => {
+  const buildersSnapshot = await database.collection("notifications").get();
+  return buildersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
 module.exports = {
   createUser,
   updateUser,
@@ -398,4 +403,6 @@ module.exports = {
 
   getConfigData,
   setConfigData,
+
+  findAllNotifications,
 };
