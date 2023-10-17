@@ -10,8 +10,6 @@ const router = express.Router();
  */
 router.get("/", withAddress, async (req, res) => {
   console.log("/notifications");
-  const allNotifications = await db.findAllNotifications();
-
   const builderAddress = req.address;
   const user = await db.findUserByAddress(builderAddress);
   if (!user.exists) {
@@ -19,6 +17,7 @@ router.get("/", withAddress, async (req, res) => {
     return;
   }
 
+  const allNotifications = await db.findAllNotifications();
   const eligibleNotifications = allNotifications.filter(notification =>
     isUserEligibleForNotification(user.data, notification),
   );

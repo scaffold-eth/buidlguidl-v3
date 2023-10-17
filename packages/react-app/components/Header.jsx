@@ -17,6 +17,7 @@ import {
   Link,
   useToast,
   Spinner,
+  Badge,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Account } from "./index";
@@ -35,6 +36,7 @@ export default function Header({
   loadWeb3Modal,
   logoutOfWeb3Modal,
   setUserRole,
+  notifications,
 }) {
   const { secondaryFontColor, borderColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -111,14 +113,35 @@ export default function Header({
         >
           {userRole && USER_ROLES.anonymous !== userRole && (
             <chakra.li key="/portfolio" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-              <NextLink
-                href={`/builders/${address}`}
-                activeStyle={{
-                  color: primaryColorString,
-                }}
-              >
-                Portfolio
-              </NextLink>
+              <Box position="relative">
+                <NextLink
+                  href={`/builders/${address}`}
+                  activeStyle={{
+                    color: primaryColorString,
+                  }}
+                >
+                  Portfolio
+                </NextLink>
+                {notifications?.length > 0 && (
+                  <Badge
+                    position="absolute"
+                    top="0"
+                    right="-17px"
+                    borderRadius="50%"
+                    color="white"
+                    padding="2px"
+                    width="15px"
+                    height="15px"
+                    fontSize="10px"
+                    display="flex"
+                    justifyContent="center"
+                    background="#ff7676"
+                    alignItems="center"
+                  >
+                    {notifications.length}
+                  </Badge>
+                )}
+              </Box>
             </chakra.li>
           )}
           <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>

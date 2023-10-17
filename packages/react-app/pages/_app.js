@@ -18,6 +18,7 @@ import { useUserProvider } from "../hooks";
 import { USER_ROLES } from "../helpers/constants";
 import { useRouter } from "next/router";
 import PlausibleProvider from "next-plausible";
+import { getNotificationsForUser } from "../data/api/notifications";
 
 const DEBUG = false;
 
@@ -202,6 +203,7 @@ function MyApp({ Component, pageProps }) {
 
   // ToDo. We could merge these two states.
   const [userRole, setUserRole] = useState(null);
+  const [userNotifications, setUserNotifications] = useState(null);
   const [connectedBuilder, setConnectedBuilder] = useState(null);
 
   const fetchUserData = useCallback(async () => {
@@ -214,9 +216,17 @@ function MyApp({ Component, pageProps }) {
     }
   }, [address]);
 
+  const fetchUserNotifications = useCallback(async () => {
+    try {
+      const fetchedUserNotifications = await getNotificationsForUser(address);
+      setUserNotifications(fetchedUserNotifications);
+    } catch (e) {}
+  }, [address]);
+
   useEffect(() => {
     if (address) {
       fetchUserData();
+      fetchUserNotifications();
     }
   }, [address, fetchUserData]);
 
@@ -244,6 +254,7 @@ function MyApp({ Component, pageProps }) {
               loadWeb3Modal={loadWeb3Modal}
               logoutOfWeb3Modal={logoutOfWeb3Modal}
               setUserRole={setUserRole}
+              notifications={userNotifications}
             />
             <Component
               {...pageProps}
