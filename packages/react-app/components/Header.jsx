@@ -26,6 +26,7 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ENVIRONMENT } from "../constants";
 import useSignedRequest from "../hooks/useSignedRequest";
 import LogoBG from "./icons/LogoBG";
+import { useNotifications } from "../contexts/notificationContext";
 
 export default function Header({
   injectedProvider,
@@ -36,10 +37,10 @@ export default function Header({
   loadWeb3Modal,
   logoutOfWeb3Modal,
   setUserRole,
-  notifications,
 }) {
   const { secondaryFontColor, borderColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { notifications } = useNotifications();
 
   const router = useRouter();
 
