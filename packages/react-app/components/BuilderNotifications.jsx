@@ -1,4 +1,4 @@
-import { Box, Button, Heading, VStack } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, CloseButton, Heading, Tooltip, VStack } from "@chakra-ui/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { chakraMarkdownComponents } from "../helpers/chakraMarkdownTheme";
 import ReactMarkdown from "react-markdown";
@@ -16,15 +16,18 @@ const NotificationItem = ({ notification, onMarkAsRead }) => {
   }
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" padding="4" marginY="2" boxShadow="sm">
-      <Heading size="md" marginBottom="2">
-        {notification.title}
-      </Heading>
-      <ReactMarkdown components={ChakraUIRenderer(chakraMarkdownComponents)}>{notification.content}</ReactMarkdown>
-      <Button mt="4" colorScheme="blue" onClick={() => onMarkAsRead(notification.id)}>
-        Mark as Read
-      </Button>
-    </Box>
+    <Alert status="warning" position="relative">
+      <AlertIcon />
+      <Box>
+        <Heading size="md" marginBottom="2">
+          {notification.title}
+        </Heading>
+        <ReactMarkdown components={ChakraUIRenderer(chakraMarkdownComponents)}>{notification.content}</ReactMarkdown>
+        <Tooltip label="Mark as Read" aria-label="Mark as Read">
+          <CloseButton position="absolute" right="4px" top="4px" onClick={() => onMarkAsRead(notification.id)} />
+        </Tooltip>
+      </Box>
+    </Alert>
   );
 };
 
