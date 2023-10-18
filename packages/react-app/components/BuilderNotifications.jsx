@@ -2,10 +2,19 @@ import { Box, Button, Heading, VStack } from "@chakra-ui/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { chakraMarkdownComponents } from "../helpers/chakraMarkdownTheme";
 import ReactMarkdown from "react-markdown";
-import React, { useEffect, useState } from "react";
 import { useNotifications } from "../contexts/notificationContext";
+import OnboardingBatch from "./notifications/OnboardingBatch";
+
+const notificationComponents = {
+  OnboardingBatch: OnboardingBatch,
+};
 
 const NotificationItem = ({ notification, onMarkAsRead }) => {
+  if (notification.component && notificationComponents[notification.component]) {
+    const Component = notificationComponents[notification.component];
+    return <Component notification={notification} onMarkAsRead={onMarkAsRead} />;
+  }
+
   return (
     <Box borderWidth="1px" borderRadius="lg" padding="4" marginY="2" boxShadow="sm">
       <Heading size="md" marginBottom="2">
@@ -27,7 +36,7 @@ const BuilderNotifications = () => {
   return (
     <VStack align="stretch" spacing="4" mb="4">
       {notifications.map(notification => (
-        <NotificationItem key={notification.title} notification={notification} onMarkAsRead={markNotificationAsRead} />
+        <NotificationItem key={notification.id} notification={notification} onMarkAsRead={markNotificationAsRead} />
       ))}
     </VStack>
   );
