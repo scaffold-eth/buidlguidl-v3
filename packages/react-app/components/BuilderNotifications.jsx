@@ -25,7 +25,7 @@ const BuilderNotifications = () => {
   if (!notifications || notifications.length === 0) return null;
 
   return (
-    <VStack align="stretch" spacing="4">
+    <VStack align="stretch" spacing="4" mb="4">
       {notifications.map(notification => (
         <NotificationItem key={notification.title} notification={notification} onMarkAsRead={markNotificationAsRead} />
       ))}

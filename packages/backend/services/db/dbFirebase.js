@@ -373,7 +373,8 @@ const setConfigData = async (category, configData) => {
 };
 
 const findAllNotifications = async () => {
-  const buildersSnapshot = await database.collection("notifications").get();
+  const buildersSnapshot = await database.collection("notifications").where("active", "==", true).get();
+
   return buildersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
