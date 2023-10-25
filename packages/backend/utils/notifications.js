@@ -1,4 +1,7 @@
 function isUserEligibleForNotification(userData, notification) {
+  // Always show notifications to admins
+  if (userData.role === "admin") return true;
+
   const criteria = notification.criteria;
 
   const userJoinedDate = new Date(userData.creationTimestamp);
