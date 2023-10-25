@@ -18,6 +18,8 @@ import { useUserProvider } from "../hooks";
 import { USER_ROLES } from "../helpers/constants";
 import { useRouter } from "next/router";
 import PlausibleProvider from "next-plausible";
+import { getNotificationsForUser } from "../data/api/notifications";
+import { NotificationsProvider, useNotifications } from "../contexts/notificationContext";
 
 const DEBUG = false;
 
@@ -224,40 +226,42 @@ function MyApp({ Component, pageProps }) {
     <ChakraProvider theme={theme}>
       <PlausibleProvider domain="app.buidlguidl.com">
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <BlockchainProvidersContext.Provider value={providers}>
-          <div className="App">
-            {/* ✏️ Edit the header and change the title to your project name */}
-            <Head>
-              <link rel="icon" href="/favicon.ico" />
-              <meta
-                name="viewport"
-                content="width=device-width, initial-scale=0.6, maximum-scale=1.0, user-scalable=0"
+        <NotificationsProvider address={address}>
+          <BlockchainProvidersContext.Provider value={providers}>
+            <div className="App">
+              {/* ✏️ Edit the header and change the title to your project name */}
+              <Head>
+                <link rel="icon" href="/favicon.ico" />
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=0.6, maximum-scale=1.0, user-scalable=0"
+                />
+                <meta name="theme-color" content="#000000" />
+              </Head>
+              <Header
+                injectedProvider={injectedProvider}
+                userRole={userRole}
+                address={address}
+                mainnetProvider={mainnetProvider}
+                userProvider={userProvider}
+                loadWeb3Modal={loadWeb3Modal}
+                logoutOfWeb3Modal={logoutOfWeb3Modal}
+                setUserRole={setUserRole}
               />
-              <meta name="theme-color" content="#000000" />
-            </Head>
-            <Header
-              injectedProvider={injectedProvider}
-              userRole={userRole}
-              address={address}
-              mainnetProvider={mainnetProvider}
-              userProvider={userProvider}
-              loadWeb3Modal={loadWeb3Modal}
-              logoutOfWeb3Modal={logoutOfWeb3Modal}
-              setUserRole={setUserRole}
-            />
-            <Component
-              {...pageProps}
-              key={router.asPath}
-              serverUrl={serverUrl}
-              mainnetProvider={mainnetProvider}
-              address={address}
-              userProvider={userProvider}
-              userRole={userRole}
-              connectedBuilder={connectedBuilder}
-            />
-            <ColorModeSwitcher />
-          </div>
-        </BlockchainProvidersContext.Provider>
+              <Component
+                {...pageProps}
+                key={router.asPath}
+                serverUrl={serverUrl}
+                mainnetProvider={mainnetProvider}
+                address={address}
+                userProvider={userProvider}
+                userRole={userRole}
+                connectedBuilder={connectedBuilder}
+              />
+              <ColorModeSwitcher />
+            </div>
+          </BlockchainProvidersContext.Provider>
+        </NotificationsProvider>
       </PlausibleProvider>
     </ChakraProvider>
   );

@@ -43,6 +43,7 @@ import { SreChallengeInfo } from "../../data/SreChallenges";
 import MetaSeo from "../../components/MetaSeo";
 import { getTelegramAccessForBuilder } from "../../helpers/server/getTelegramAccessForBuilder";
 import { byTimestamp } from "../../helpers/sorting";
+import BuilderNotifications from "../../components/BuilderNotifications";
 
 const secondsPerDay = 24 * 60 * 60;
 export default function BuilderProfileView({ serverUrl, mainnetProvider, address, userProvider, userRole, builder }) {
@@ -180,6 +181,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           )}
         </GridItem>
         <GridItem colSpan={{ base: 1, xl: 3 }}>
+          <BuilderNotifications />
           <Flex spacing={4} mb={8} direction={{ base: "column-reverse", md: "row" }}>
             <Flex mr={{ base: 0, md: 2 }} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full">
               {isLoadingBuilder && <BuilderProfileStreamSkeleton />}
