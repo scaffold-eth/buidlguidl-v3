@@ -94,8 +94,8 @@ const columns = [
     },
     Cell: ({ value }) => (
       <Box>
-        <StreamRunway stream={value} />
-        <StreamTableCell stream={value} />
+        <StreamRunway stream={value?.stream} />
+        <StreamTableCell builder={value} />
       </Box>
     ),
   },
@@ -187,6 +187,7 @@ export default function Fund() {
           builder: builder.id,
           ens: builder.ens,
           stream: builder.stream,
+          builderData: builder,
         }))
         .filter(({ stream }) => stream !== undefined);
 
@@ -206,10 +207,10 @@ export default function Fund() {
 
     const builderStreamDict = {};
 
-    Object.values(buildersWithStream).forEach(({ builder, stream, ens }) => {
+    Object.values(buildersWithStream).forEach(({ builder, builderData, ens }) => {
       builderStreamDict[builder] = {
         builder: { address: builder, ens },
-        stream,
+        stream: builderData,
         total: ethers.BigNumber.from(0),
         last30: ethers.BigNumber.from(0),
         lastEvent: null,
