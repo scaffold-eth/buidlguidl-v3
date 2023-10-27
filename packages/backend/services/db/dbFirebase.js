@@ -305,31 +305,39 @@ const updateCohortData = async (cohort, cohortUpdate) => {
         ens: ens || "",
       };
 
-      // Add user to BG if it doesn't exist yet
       const user = await findUserByAddress(builder.userAddress);
 
       if (user.exists) {
-        return;
+        // Update cohort data on existing user
+        await updateUser(builder.userAddress, {
+          builderCohort: {
+            id: cohort.id,
+            url: cohort.url,
+            name: cohort.name,
+          },
+        });
+        console.log("Update cohort info on user:", builder.userAddress);
+      } else {
+        // Add user to BG if it doesn't exist yet
+        const builderData = {
+          creationTimestamp: new Date().getTime(),
+          role: "builder",
+          function: "cadets",
+          builderCohort: {
+            id: cohort.id,
+            url: cohort.url,
+            name: cohort.name,
+          },
+        };
+
+        if (ens) {
+          builderData.ens = ens;
+        }
+
+        // Create user.
+        await createUser(builder.userAddress, builderData);
+        console.log("New cohort user created:", builder.userAddress);
       }
-
-      const builderData = {
-        creationTimestamp: new Date().getTime(),
-        role: "builder",
-        function: "cadets",
-        builderCohort: {
-          id: cohort.id,
-          url: cohort.url,
-          name: cohort.name,
-        },
-      };
-
-      if (ens) {
-        builderData.ens = ens;
-      }
-
-      // Create user.
-      await createUser(builder.userAddress, builderData);
-      console.log("New cohort user created: ", builder.userAddress);
     }),
   );
 
