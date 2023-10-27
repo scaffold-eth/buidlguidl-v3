@@ -176,7 +176,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           // Sorting by stream cap for now.
           sortType: (rowA, rowB) =>
             Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
-          Cell: ({ value }) => (value?.graduated?.status ? "" : <StreamTableCell stream={value.stream} />),
+          Cell: ({ value }) => (value?.graduated?.status ? "" : <StreamTableCell builder={value} />),
         },
         {
           Header: "Socials",

@@ -98,16 +98,18 @@
       }
     }
   ],
-  "cohorts": [
-    {
+  "cohorts": {
+    "0x2eA63c9C9C114ae85b1027697A906420a23e8572": {
+      "chainId": 10,
       "name": "Sand Garden",
-      "link": "https://sandgarden.buidlguidl.com"
+      "url": "https://sandgarden.buidlguidl.com"
     },
-    {
+    "0x2Be18e07C7be0a2CC408C9E02C90203B2052D7DE": {
+      "chainId": 1,
       "name": "Jessy's Hacker House",
-      "link": "https://hackerhouse.buidlguidl.com/"
+      "url": "https://hackerhouse.buidlguidl.com/"
     }
-  ],
+  },
   "config": {
     "streams": {
       "lastIndexedBlock": 10616289

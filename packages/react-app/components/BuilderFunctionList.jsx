@@ -20,7 +20,7 @@ const BuilderFunctionList = ({ builders }) => {
                   </NextLink>
                 </Td>
                 <Td>
-                  <BuilderStreamCell stream={builder.stream} />
+                  <BuilderStreamCell builder={builder} />
                 </Td>
                 <Td display={{ base: "none", md: "block" }}>
                   <NextLink href={`/builders/${builder.id}`} passHref>
