@@ -112,9 +112,8 @@ const FundBuilders = ({ builders }) => {
             <ul style={{ listStyle: "none" }}>
               {builders.map(builderData => {
                 return (
-                  <li key={builderData.builder.address}>
-                    <strong>{builderData.builder.ens ?? ellipsizedAddress(builderData.builder.address)}</strong>: Ξ{" "}
-                    {builderData.stream.cap}
+                  <li key={builderData.id}>
+                    <strong>{builderData.ens ?? ellipsizedAddress(builderData.id)}</strong>: Ξ {builderData.stream.cap}
                   </li>
                 );
               })}

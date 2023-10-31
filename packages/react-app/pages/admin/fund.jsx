@@ -74,7 +74,6 @@ const columns = [
     accessor: "stream",
     // Sorting by stream cap for now.
     sortType: (rowA, rowB) => {
-      console.log("rowA", rowA.values, "rowB", rowB.values);
       const balanceA = parseFloat(rowA.values?.stream?.stream?.balance);
       const balanceB = parseFloat(rowB.values?.stream?.stream?.balance);
       const capA = parseFloat(rowA.values?.stream?.stream?.cap);
@@ -289,7 +288,7 @@ export default function Fund() {
 
   return (
     <Container maxW="container.xl">
-      <FundBuilders builders={selectedFlatRows.map(rowData => rowData.values)} />
+      <FundBuilders builders={selectedFlatRows.map(rowData => rowData.values?.stream)} />
       <Container maxW="container.md" centerContent>
         <Heading as="h1" mb="4">
           Fund
