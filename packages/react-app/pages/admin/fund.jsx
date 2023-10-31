@@ -74,14 +74,15 @@ const columns = [
     accessor: "stream",
     // Sorting by stream cap for now.
     sortType: (rowA, rowB) => {
-      const balanceA = parseFloat(rowA.values?.stream?.balance);
-      const balanceB = parseFloat(rowB.values?.stream?.balance);
-      const capA = parseFloat(rowA.values?.stream?.cap);
-      const capB = parseFloat(rowB.values?.stream?.cap);
-      const lastA = parseFloat(rowA.values?.stream?.lastContract);
-      const lastB = parseFloat(rowB.values?.stream?.lastContract);
-      const frequencyA = parseFloat(rowA.values?.stream?.frequency);
-      const frequencyB = parseFloat(rowB.values?.stream?.frequency);
+      console.log("rowA", rowA.values, "rowB", rowB.values);
+      const balanceA = parseFloat(rowA.values?.stream?.stream?.balance);
+      const balanceB = parseFloat(rowB.values?.stream?.stream?.balance);
+      const capA = parseFloat(rowA.values?.stream?.stream?.cap);
+      const capB = parseFloat(rowB.values?.stream?.stream?.cap);
+      const lastA = parseFloat(rowA.values?.stream?.stream?.lastContract);
+      const lastB = parseFloat(rowB.values?.stream?.stream?.lastContract);
+      const frequencyA = parseFloat(rowA.values?.stream?.stream?.frequency);
+      const frequencyB = parseFloat(rowB.values?.stream?.stream?.frequency);
       const unlockedAmountA = (capA * Math.round(new Date().getTime() / 1000 - lastA)) / frequencyA;
       const unlockedAmountB = (capB * Math.round(new Date().getTime() / 1000 - lastB)) / frequencyB;
 
