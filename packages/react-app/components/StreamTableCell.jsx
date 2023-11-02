@@ -1,13 +1,13 @@
 import React from "react";
-import { Badge, Box, Center, Flex, Link, Progress, Spacer } from "@chakra-ui/react";
+import { Badge, Box, Center, Flex, Link, Progress } from "@chakra-ui/react";
 import { ethers } from "ethers";
 
 const CohortDisplay = ({ cohorts }) => {
   if (!cohorts?.length) return null;
 
-  const cohortList = cohorts.map((cohort, i) => {
+  return cohorts.map((cohort, i) => {
     return (
-      <Center mt={2}>
+      <Center mt={2} key={cohort.id}>
         <Link href={cohort.url} isExternal>
           <Badge colorScheme="purple" textAlign="center" mb={i + 1 === cohorts.length ? 4 : 0}>
             {cohort.name}
@@ -16,8 +16,6 @@ const CohortDisplay = ({ cohorts }) => {
       </Center>
     );
   });
-
-  return cohortList;
 };
 
 const secondsPerDay = 24 * 60 * 60;
