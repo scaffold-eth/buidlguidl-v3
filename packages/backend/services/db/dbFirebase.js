@@ -308,13 +308,21 @@ const updateCohortData = async (cohort, cohortUpdate) => {
       const user = await findUserByAddress(builder.userAddress);
 
       if (user.exists) {
+        const currentCohorts = user.data.builderCohort || [];
+        // Check if the cohort is already added.
+        const cohortExists = currentCohorts.some(cohortItem => cohortItem.id === cohort.id);
+        if (cohortExists) return;
+
         // Update cohort data on existing user
         await updateUser(builder.userAddress, {
-          builderCohort: {
-            id: cohort.id,
-            url: cohort.url,
-            name: cohort.name,
-          },
+          builderCohort: [
+            ...currentCohorts,
+            {
+              id: cohort.id,
+              url: cohort.url,
+              name: cohort.name,
+            },
+          ],
         });
         console.log("Update cohort info on user:", builder.userAddress);
       } else {
@@ -323,11 +331,13 @@ const updateCohortData = async (cohort, cohortUpdate) => {
           creationTimestamp: new Date().getTime(),
           role: "builder",
           function: "cadets",
-          builderCohort: {
-            id: cohort.id,
-            url: cohort.url,
-            name: cohort.name,
-          },
+          builderCohort: [
+            {
+              id: cohort.id,
+              url: cohort.url,
+              name: cohort.name,
+            },
+          ],
         };
 
         if (ens) {
