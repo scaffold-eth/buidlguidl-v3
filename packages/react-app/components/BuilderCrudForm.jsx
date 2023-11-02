@@ -74,16 +74,6 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderFunction: builder.function,
       });
     }
-    (async () => {
-      try {
-        const cohorts = await getAllCohorts();
-        // You can use the cohorts variable here
-        setCohorts(cohorts);
-      } catch (error) {
-        // Handle any errors that might occur during the process
-        console.error("Error getting the all cohorts", error);
-      }
-    })();
   }, [isEditingBuilder, builder]);
 
   const handleSubmit = async () => {
