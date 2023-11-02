@@ -42,15 +42,18 @@ const BuilderStreamCell = ({ builder }) => {
           <Progress flexShrink={1} size="xs" value={unlockedPercentage * 100} colorScheme="green" />
         </Box>
       </Flex>
-      {builder.builderCohort && (
-        <Center mt={2}>
-          <Link href={builder.builderCohort.url} isExternal>
-            <Badge colorScheme="purple" textAlign="center" mb={4}>
-              {builder.builderCohort.name}
-            </Badge>
-          </Link>
-        </Center>
-      )}
+      {builder.builderCohort?.length &&
+        builder.builderCohort.map((cohort, i) => {
+          return (
+            <Center mt={2}>
+              <Link href={cohort.url} isExternal>
+                <Badge colorScheme="purple" textAlign="center" mb={i + 1 === builder.builderCohort.length ? 4 : 0}>
+                  {cohort.name}
+                </Badge>
+              </Link>
+            </Center>
+          );
+        })}
     </Flex>
   );
 };
