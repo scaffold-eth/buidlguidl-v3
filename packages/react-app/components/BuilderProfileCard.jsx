@@ -260,15 +260,22 @@ const BuilderProfileCard = ({
                   </Tooltip>
                 </Text>
               )}
-              {builder.builderCohort && (
-                <Center>
-                  <Link href={builder.builderCohort.url} isExternal>
-                    <Badge colorScheme="purple" textAlign="center" mb={4}>
-                      {builder.builderCohort.name}
-                    </Badge>
-                  </Link>
-                </Center>
-              )}
+              {builder.builderCohort?.length &&
+                builder.builderCohort.map((cohort, i) => {
+                  return (
+                    <Center mt={2}>
+                      <Link href={cohort.url} isExternal>
+                        <Badge
+                          colorScheme="purple"
+                          textAlign="center"
+                          mb={i + 1 === builder.builderCohort.length ? 4 : 0}
+                        >
+                          {cohort.name}
+                        </Badge>
+                      </Link>
+                    </Center>
+                  );
+                })}
               <Divider mb={2} />
               <BuilderStatus builder={builder} />
               <Divider mb={6} />

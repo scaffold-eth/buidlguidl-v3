@@ -10,6 +10,13 @@
         "text": "My Status",
         "timestamp": 1657208443047
       },
+      "builderCohort": [
+        {
+          "id": "0x2eA63c9C9C114ae85b1027697A906420a23e8572",
+          "name": "Sand Garden",
+          "url": "https://sandgarden.buidlguidl.com"
+        }
+      ],
       "stream": {
         "streamAddress": "0xCC756617C97a05aC472fD8Ab92C88F2A9cb681EC",
         "streamAddress_rinkeby": "0xCC756617C97a05aC472fD8Ab92C88F2A9cb681EC",
@@ -30,10 +37,23 @@
     "0x70997970C51812dc3A010C7d01b50e0d17dc79C8": {
       "creationTimestamp": 1633088553223,
       "role": "builder",
+      "function": "damageDealer",
       "socialLinks": {
         "telegram": "test",
         "twitter": "test"
       },
+      "builderCohort": [
+        {
+          "id": "0x2eA63c9C9C114ae85b1027697A906420a23e8572",
+          "name": "Sand Garden",
+          "url": "https://sandgarden.buidlguidl.com"
+        },
+        {
+          "id": "0xaCc9Cc4983D57cea0748B8CD1Adb87Ada5b1a67c",
+          "name": "Not Just Notfellows",
+          "url": "https://not-just-notfellows.buidlguidl.com/"
+        }
+      ],
       "stream": {
         "streamAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
         "cap": "0.5",
