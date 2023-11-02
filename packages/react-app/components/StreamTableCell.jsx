@@ -2,25 +2,31 @@ import React from "react";
 import { Badge, Box, Center, Flex, Link, Progress, Spacer } from "@chakra-ui/react";
 import { ethers } from "ethers";
 
+const CohortDisplay = ({ cohorts }) => {
+  if (!cohorts?.length) return null;
+
+  const cohortList = cohorts.map((cohort, i) => {
+    return (
+      <Center mt={2}>
+        <Link href={cohort.url} isExternal>
+          <Badge colorScheme="purple" textAlign="center" mb={i + 1 === cohorts.length ? 4 : 0}>
+            {cohort.name}
+          </Badge>
+        </Link>
+      </Center>
+    );
+  });
+
+  return cohortList;
+};
+
 const secondsPerDay = 24 * 60 * 60;
 const BuilderStreamCell = ({ builder }) => {
   const stream = builder?.stream;
-  if (!stream || !stream?.cap)
-    return (
-      <Box>
-        {builder.builderCohort ? (
-          <Center mt={2}>
-            <Link href={builder.builderCohort.url} isExternal>
-              <Badge colorScheme="purple" textAlign="center" mb={4}>
-                {builder.builderCohort.name}
-              </Badge>
-            </Link>
-          </Center>
-        ) : (
-          "-"
-        )}
-      </Box>
-    );
+
+  if (!stream || !stream?.cap) {
+    return builder.builderCohort?.length ? <CohortDisplay cohorts={builder.builderCohort} /> : <Center>-</Center>;
+  }
 
   const cap = ethers.utils.parseUnits(stream.cap);
   const frequency = stream.frequency;
@@ -42,18 +48,7 @@ const BuilderStreamCell = ({ builder }) => {
           <Progress flexShrink={1} size="xs" value={unlockedPercentage * 100} colorScheme="green" />
         </Box>
       </Flex>
-      {builder.builderCohort?.length &&
-        builder.builderCohort.map((cohort, i) => {
-          return (
-            <Center mt={2}>
-              <Link href={cohort.url} isExternal>
-                <Badge colorScheme="purple" textAlign="center" mb={i + 1 === builder.builderCohort.length ? 4 : 0}>
-                  {cohort.name}
-                </Badge>
-              </Link>
-            </Center>
-          );
-        })}
+      <CohortDisplay cohorts={builder.builderCohort} />
     </Flex>
   );
 };
