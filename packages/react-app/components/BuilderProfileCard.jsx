@@ -260,10 +260,10 @@ const BuilderProfileCard = ({
                   </Tooltip>
                 </Text>
               )}
-              {builder.builderCohort?.length &&
-                builder.builderCohort.map((cohort, i) => {
+              {builder.builderCohort &&
+                builder?.builderCohort?.map((cohort, i) => {
                   return (
-                    <Center mt={2}>
+                    <Center mt={2} key={cohort.id}>
                       <Link href={cohort.url} isExternal>
                         <Badge
                           colorScheme="purple"
