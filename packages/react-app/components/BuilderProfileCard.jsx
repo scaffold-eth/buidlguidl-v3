@@ -260,7 +260,7 @@ const BuilderProfileCard = ({
                   </Tooltip>
                 </Text>
               )}
-              {builder.builderCohort &&
+              {builder.builderCohort?.length &&
                 builder?.builderCohort?.map((cohort, i) => {
                   return (
                     <Center mt={2} key={cohort.id}>
