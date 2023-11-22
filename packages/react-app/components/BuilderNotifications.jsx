@@ -20,7 +20,7 @@ const NotificationItem = ({ notification, onMarkAsRead, builder }) => {
       props: {
         id: notification.id,
         title: notification.title,
-        builderAddress: builder.address,
+        builderAddress: builder.id,
       },
     });
   }, [notification]);
