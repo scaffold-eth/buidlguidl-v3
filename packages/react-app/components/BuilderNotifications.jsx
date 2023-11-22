@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Box, CloseButton, Heading, Tooltip, VStack } from "@chakra-ui/react";
+import { Box, CloseButton, Heading, Tooltip, VStack } from "@chakra-ui/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { chakraMarkdownComponents } from "../helpers/chakraMarkdownTheme";
 import ReactMarkdown from "react-markdown";
@@ -16,8 +16,7 @@ const NotificationItem = ({ notification, onMarkAsRead }) => {
   }
 
   return (
-    <Alert status="warning" position="relative">
-      <AlertIcon />
+    <Box p={6} position="relative" backgroundColor="blue.100">
       <Box>
         <Heading size="md" marginBottom="2">
           {notification.title}
@@ -27,7 +26,7 @@ const NotificationItem = ({ notification, onMarkAsRead }) => {
           <CloseButton position="absolute" right="4px" top="4px" onClick={() => onMarkAsRead(notification.id)} />
         </Tooltip>
       </Box>
-    </Alert>
+    </Box>
   );
 };
 
