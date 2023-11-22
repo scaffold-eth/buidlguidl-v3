@@ -148,7 +148,6 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
       setIsLoadingTimestamps(true);
       try {
         const fetchedChallengeEvents = await getChallengeEventsForUser(builderAddress);
-        console.log("LOOOOOG", fetchedChallengeEvents);
         setChallengeEvents(fetchedChallengeEvents.sort(byTimestamp).reverse());
         setIsLoadingTimestamps(false);
       } catch (error) {
@@ -181,7 +180,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           )}
         </GridItem>
         <GridItem colSpan={{ base: 1, xl: 3 }}>
-          {isMyProfile && <BuilderNotifications />}
+          {isMyProfile && <BuilderNotifications builder={builder} />}
           <Flex spacing={4} mb={8} direction={{ base: "column-reverse", md: "row" }}>
             <Flex mr={{ base: 0, md: 2 }} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full">
               {isLoadingBuilder && <BuilderProfileStreamSkeleton />}

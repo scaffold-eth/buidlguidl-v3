@@ -178,9 +178,7 @@ function MyApp({ Component, pageProps }) {
   }, [mainnetProvider, address, selectedChainId]);
 
   const loadWeb3Modal = useCallback(async () => {
-    console.info("DEBUG: Loading loadWeb3Modal");
     const provider = await web3Modal.connect();
-    console.info("DEBUG: provider", provider);
     setInjectedProvider(new Web3Provider(provider));
   }, [setInjectedProvider]);
 

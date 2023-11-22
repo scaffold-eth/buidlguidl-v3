@@ -4,12 +4,27 @@ import { chakraMarkdownComponents } from "../helpers/chakraMarkdownTheme";
 import ReactMarkdown from "react-markdown";
 import { useNotifications } from "../contexts/notificationContext";
 import OnboardingBatch from "./notifications/OnboardingBatch";
+import { useEffect } from "react";
+import { usePlausible } from "next-plausible";
 
 const notificationComponents = {
   OnboardingBatch: OnboardingBatch,
 };
 
-const NotificationItem = ({ notification, onMarkAsRead }) => {
+const NotificationItem = ({ notification, onMarkAsRead, builder }) => {
+  const plausible = usePlausible();
+
+  useEffect(() => {
+    if (builder.role === "admin") return;
+    plausible("NotificationViewed", {
+      props: {
+        id: notification.id,
+        title: notification.title,
+        builderAddress: builder.address,
+      },
+    });
+  }, [notification]);
+
   if (notification.component && notificationComponents[notification.component]) {
     const Component = notificationComponents[notification.component];
     return <Component notification={notification} onMarkAsRead={onMarkAsRead} />;
@@ -30,7 +45,7 @@ const NotificationItem = ({ notification, onMarkAsRead }) => {
   );
 };
 
-const BuilderNotifications = () => {
+const BuilderNotifications = ({ builder }) => {
   const { notifications, markNotificationAsRead } = useNotifications();
 
   if (!notifications || notifications.length === 0) return null;
@@ -38,7 +53,12 @@ const BuilderNotifications = () => {
   return (
     <VStack align="stretch" spacing="4" mb="4">
       {notifications.map(notification => (
-        <NotificationItem key={notification.id} notification={notification} onMarkAsRead={markNotificationAsRead} />
+        <NotificationItem
+          key={notification.id}
+          notification={notification}
+          onMarkAsRead={markNotificationAsRead}
+          builder={builder}
+        />
       ))}
     </VStack>
   );
