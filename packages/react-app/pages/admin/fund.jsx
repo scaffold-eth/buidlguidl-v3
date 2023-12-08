@@ -182,14 +182,14 @@ export default function Fund() {
       const fetchedBuilders = await getAllBuilders();
 
       const processedBuilders = fetchedBuilders
+        .filter(({ stream }) => stream?.streamAddress)
         .filter(builder => !builder?.graduated?.status)
         .map(builder => ({
           builder: builder.id,
           ens: builder.ens,
           stream: builder.stream,
           builderData: builder,
-        }))
-        .filter(({ stream }) => stream !== undefined);
+        }));
 
       setBuildersWithStream(processedBuilders);
       setIsLoadingBuilders(false);
