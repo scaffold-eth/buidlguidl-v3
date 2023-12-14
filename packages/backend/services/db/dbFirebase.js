@@ -354,7 +354,7 @@ const updateCohortData = async (cohort, cohortUpdate) => {
   // Update / remove builders
   cohortUpdate.updatedBuilders.map(async builder => {
     // Remove from exiting builder is builder.amount is 0
-    if (!builder.amount) {
+    if (!builder.amount || builder.amount === 0.0 || builder.amount === "0.0") {
       delete cohortBuilders[builder.userAddress];
       return;
     }
@@ -362,6 +362,15 @@ const updateCohortData = async (cohort, cohortUpdate) => {
       ...cohortBuilders[builder.userAddress],
       amount: builder.amount,
     };
+
+    // Delete the data on user profile
+    const user = await findUserByAddress(builder.userAddress);
+    if (user.exists) {
+      const currentCohorts = user.data.builderCohort || [];
+      const newCohorts = currentCohorts.filter(cohortItem => cohortItem.id !== cohort.id);
+      await updateUser(builder.userAddress, { builderCohort: newCohorts });
+      console.log("Delete cohort info on user:", builder.userAddress);
+    }
   });
 
   await selectedCohort.update({
