@@ -16,6 +16,12 @@ import {
   ModalCloseButton,
   ModalBody,
   Modal,
+  Input,
+  NumberInputField,
+  NumberInput,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  NumberInputStepper,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { USER_FUNCTIONS, USER_ROLES } from "../helpers/constants";
@@ -72,6 +78,7 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderStreamAddress: builder.stream?.streamAddress,
         builderRole: builder.role,
         builderFunction: builder.function,
+        builderBatch: builder.builderBatch,
       });
     }
   }, [isEditingBuilder, builder]);
@@ -95,6 +102,7 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderRole: formState.builderRole,
         builderFunction: formState.builderFunction,
         builderStreamAddress: formState.builderStreamAddress,
+        builderBatch: formState.builderBatch,
       };
 
       if (isEditingBuilder) {
@@ -216,6 +224,31 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
           }
         />
         <FormErrorMessage>Invalid address</FormErrorMessage>
+      </FormControl>
+
+      <FormControl mb={8} isInvalid={formErrors.builderBatch}>
+        <FormLabel htmlFor="builderBatch">
+          <strong>Batch</strong>
+        </FormLabel>
+        <NumberInput
+          id="builderBatch"
+          type="number"
+          min={0}
+          placeholder="Builder Batch"
+          value={formState.builderBatch || ""}
+          onChange={value =>
+            setFormState(prevFormState => ({
+              ...prevFormState,
+              builderBatch: value,
+            }))
+          }
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
       </FormControl>
 
       <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isLoading || isLoadingEdit} isFullWidth>
