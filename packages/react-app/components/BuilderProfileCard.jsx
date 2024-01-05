@@ -260,6 +260,13 @@ const BuilderProfileCard = ({
                   </Tooltip>
                 </Text>
               )}
+              {builder.builderBatch && !isNaN(builder.builderBatch) && (
+                <Center mt={2} mb={builder.builderCohort?.length > 0 ? 0 : 4}>
+                  <Badge colorScheme="green" textAlign="center">
+                    Batch #{builder.builderBatch}
+                  </Badge>
+                </Center>
+              )}
               {builder.builderCohort?.length > 0 &&
                 builder?.builderCohort?.map((cohort, i) => {
                   return (

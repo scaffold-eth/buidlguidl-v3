@@ -18,12 +18,31 @@ const CohortDisplay = ({ cohorts }) => {
   });
 };
 
+const BatchDisplay = ({ batch }) => {
+  if (!batch) return null;
+
+  return (
+    <Center mt={2}>
+      <Badge colorScheme="green" textAlign="center">
+        Batch #{batch}
+      </Badge>
+    </Center>
+  );
+};
+
 const secondsPerDay = 24 * 60 * 60;
 const BuilderStreamCell = ({ builder }) => {
   const stream = builder?.stream;
 
   if (!stream || !stream?.cap) {
-    return builder.builderCohort?.length ? <CohortDisplay cohorts={builder.builderCohort} /> : <Center>-</Center>;
+    return builder.builderCohort?.length || builder.builderBatch ? (
+      <>
+        <BatchDisplay batch={builder.builderBatch} />
+        <CohortDisplay cohorts={builder.builderCohort} />
+      </>
+    ) : (
+      <Center>-</Center>
+    );
   }
 
   const cap = ethers.utils.parseUnits(stream.cap);
@@ -46,6 +65,7 @@ const BuilderStreamCell = ({ builder }) => {
           <Progress flexShrink={1} size="xs" value={unlockedPercentage * 100} colorScheme="green" />
         </Box>
       </Flex>
+      <BatchDisplay batch={builder.builderBatch} />
       <CohortDisplay cohorts={builder.builderCohort} />
     </Flex>
   );
