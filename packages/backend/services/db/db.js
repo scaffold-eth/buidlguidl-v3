@@ -40,6 +40,12 @@ const findAllUsers = db.findAllUsers;
 
 /**
  *
+ * @returns {{id: string, challenges?: object, role?: string}[]}
+ */
+const findAllBatchedUsers = db.findAllBatchedUsers;
+
+/**
+ *
  * @param {Address} builderAddress
  * @returns {{
  *  exists: boolean,
@@ -205,6 +211,7 @@ module.exports = {
   createUser,
   updateUser,
   findAllUsers,
+  findAllBatchedUsers,
   findUserByAddress,
   getBuildersWithPendingEnsClaims,
   findAllCohorts,
