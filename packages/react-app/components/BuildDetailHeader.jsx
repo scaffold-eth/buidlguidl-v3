@@ -72,10 +72,11 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
             {build.name}
           </Heading>
           <HStack mb={6}>{actionButtons}</HStack>
-          <Text fontSize="lg" mb={6}>
-            {build.desc}
+          <Text fontSize="lg">{build.desc}</Text>
+          <Text fontSize="xs" as="i">
+            {new Date(build.submittedTimestamp).toDateString()}
           </Text>
-          <VStack align="left">
+          <VStack align="left" mt={6}>
             <Builder builderAddress={build.builder} />
             {build?.coBuilders?.map(builderAddress => (
               <Builder builderAddress={builderAddress} key={builderAddress} />

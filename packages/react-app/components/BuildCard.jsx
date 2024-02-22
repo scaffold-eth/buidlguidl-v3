@@ -136,6 +136,10 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
           {build.desc}
         </Text>
         <Spacer />
+        <Text fontSize="xs" as="i">
+          {new Date(build.submittedTimestamp).toDateString()}
+        </Text>
+        <Spacer />
         <ButtonGroup mt={3}>
           <NextLink href={`/build/${build.id}`} passHref>
             <Button as={Link} variant="outline" size="sm" isFullWidth>
