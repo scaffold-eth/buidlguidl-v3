@@ -11,10 +11,10 @@ const OnboardingBatch = ({ notification, onMarkAsRead }) => {
         <Box maxW="200px">
           <Image src="/assets/onboarding_batches_logo.png" alt="onboarding batches illustarion: futuristic train" wi />
         </Box>
-        <Text fontSize="30px" fontWeight="bold" lineHeight="1.2">
+        <Text fontSize="30px" fontWeight="bold" lineHeight="1.2" color="gray.800">
           Welcome to BuidlGuidl!
         </Text>
-        <Text fontSize="sm" my="2">
+        <Text fontSize="sm" my="2" color="gray.800">
           To help you get started in BuidlGuidl, we've created the BG onboarding batch program. Dive into end-to-end
           dApp development, receive mentorship from BG members, and learn how to collaborate with fellow developers in
           open-source projects.
@@ -26,7 +26,7 @@ const OnboardingBatch = ({ notification, onMarkAsRead }) => {
               Join Telegram
             </Button>
           </Link>
-          <Text fontSize="xs">
+          <Text fontSize="xs" color="gray.800">
             Next batch starting on <strong>{NEXT_BATCH_DATE}</strong>
           </Text>
         </Flex>

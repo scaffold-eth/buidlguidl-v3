@@ -1,4 +1,4 @@
-import { Box, CloseButton, Heading, Tooltip, VStack } from "@chakra-ui/react";
+import { Box, CloseButton, Heading, Tooltip, useColorModeValue, VStack } from "@chakra-ui/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { chakraMarkdownComponents } from "../helpers/chakraMarkdownTheme";
 import ReactMarkdown from "react-markdown";
@@ -13,6 +13,7 @@ const notificationComponents = {
 
 const NotificationItem = ({ notification, onMarkAsRead, builder }) => {
   const plausible = usePlausible();
+  const bannerBg = useColorModeValue("blue.100", "blue.900");
 
   useEffect(() => {
     if (builder.role === "admin") return;
@@ -31,7 +32,7 @@ const NotificationItem = ({ notification, onMarkAsRead, builder }) => {
   }
 
   return (
-    <Box p={6} position="relative" backgroundColor="blue.100">
+    <Box p={6} position="relative" backgroundColor={bannerBg}>
       <Box>
         <Heading size="md" marginBottom="2">
           {notification.title}
