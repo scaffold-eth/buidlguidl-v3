@@ -90,13 +90,11 @@ export default function Index({ bgStats }) {
         <Box w={{ base: "100%", lg: "50%" }} pl={{ base: "50px", lg: "15%" }} pr="50px" py="50px">
           <Box maxW="500px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
             <Heading as="h1" mb="10px">
-              BuidlGuidl <chakra.span color="#CBD5E0">v3</chakra.span>
+              BuidlGuidl <chakra.span fontSize={16}>APP v3.5</chakra.span>
             </Heading>
             <Text mb="25px" maxW="470px">
-              A curated group of <strong>Ethereum</strong> builders creating products, prototypes, and tutorials to
-              enrich the web3 ecosystem.
+              The BuidlGuidl ‘backoffice’, where you’ll be able to dig more into the day to day activity of the guild.
             </Text>
-            <Text mb="10px">❤️ We are an Ethereum public good.</Text>
             {/*Builds / Builders / ETH distributed Ξ*/}
             <Box d="inline-block">
               <HStack mt="50px" justifyContent={{ base: "center", lg: "initial" }}>
