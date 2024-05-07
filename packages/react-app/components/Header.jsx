@@ -38,7 +38,7 @@ export default function Header({
   logoutOfWeb3Modal,
   setUserRole,
 }) {
-  const { secondaryFontColor, borderColor } = useCustomColorModes();
+  const { secondaryFontColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { notifications } = useNotifications();
 
@@ -76,8 +76,6 @@ export default function Header({
 
   return (
     <Box
-      borderBottom="1px"
-      borderColor={borderColor}
       mb={router.pathname !== "/" ? 10 : 0}
       px={{ base: 4, lg: 8 }}
       h={{ base: userIsRegistered ? "120px" : "80px", lg: "80px" }}
