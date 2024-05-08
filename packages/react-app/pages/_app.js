@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
 import "../index.css";
 import "../public/nprogress.css";
+import "@fontsource/space-mono/400.css";
+import "@fontsource/space-mono/700.css";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import { InfuraProvider, StaticJsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { useUserAddress } from "eth-hooks";
@@ -20,6 +22,7 @@ import { useRouter } from "next/router";
 import PlausibleProvider from "next-plausible";
 import { getNotificationsForUser } from "../data/api/notifications";
 import { NotificationsProvider, useNotifications } from "../contexts/notificationContext";
+import Fonts from "../components/Fonts";
 
 const DEBUG = false;
 
@@ -222,6 +225,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ChakraProvider theme={theme}>
+      <Fonts />
       <PlausibleProvider domain="app.buidlguidl.com">
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <NotificationsProvider address={address}>
