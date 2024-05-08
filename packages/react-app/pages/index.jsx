@@ -23,6 +23,7 @@ import { SERVER_URL } from "../constants";
 import { USER_FUNCTIONS } from "../helpers/constants";
 import MetaSeo from "../components/MetaSeo";
 import { getStats } from "../data/api/builder";
+import useCustomColorModes from "../hooks/useCustomColorModes";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 const StatBox = ({ value, monthlyValue, title, link }) => (
@@ -63,6 +64,8 @@ export default function Index({ bgStats }) {
   const isDarkMode = colorMode === "dark";
   const scaffoldEthBg = useColorModeValue("#fbf7f6", "whiteAlpha.300");
 
+  const { textColor } = useCustomColorModes();
+
   useEffect(() => {
     async function fetchBuilders() {
       setIsLoadingBuilders(true);
@@ -86,7 +89,7 @@ export default function Index({ bgStats }) {
         description="A curated group of Ethereum builders creating products, prototypes, and tutorials to enrich the web3 ecosytem."
         image="/assets/bg_teaser.png"
       />
-      <Flex alignItems="center" direction={{ base: "column-reverse", lg: "row" }}>
+      <Flex alignItems="center" color={textColor} direction={{ base: "column-reverse", lg: "row" }}>
         <Box w={{ base: "100%", lg: "50%" }} pl={{ base: "50px", lg: "15%" }} pr="50px" py="50px">
           <Box maxW="500px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
             <Heading as="h1" mb="10px">
