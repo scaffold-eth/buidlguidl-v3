@@ -5,6 +5,12 @@ const config = {
   useSystemColorMode: false,
 };
 
-const theme = extendTheme({ config });
+const theme = extendTheme({
+  config,
+  fonts: {
+    heading: "Space mono, monospace",
+    body: "Space mono, monospace",
+  },
+});
 
 export default theme;

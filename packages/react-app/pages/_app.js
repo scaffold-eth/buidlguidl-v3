@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
 import "../index.css";
 import "../public/nprogress.css";
+import "@fontsource/space-mono/400.css";
+import "@fontsource/space-mono/700.css";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import { InfuraProvider, StaticJsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { useUserAddress } from "eth-hooks";
