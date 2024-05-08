@@ -2926,6 +2926,11 @@
   dependencies:
     tslib "^2.1.0"
 
+"@fontsource/space-mono@5.0.20":
+  version "5.0.20"
+  resolved "https://registry.yarnpkg.com/@fontsource/space-mono/-/space-mono-5.0.20.tgz#d4110a8a7f336db14e7eb99eff9de82079dcaa0b"
+  integrity sha512-F+9Y/PA06mB6kXI6l8ub0vSR72x3wpzJtxAUoPpvJDu9nWADFIwunkfzSS9PyzFQOgAPPzuCfywTTG+GfQxqeg==
+
 "@google-cloud/common@^3.7.0":
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/@google-cloud/common/-/common-3.7.2.tgz#2f1feef9aaeb4f392d627ceab06e7eaa03329f58"
