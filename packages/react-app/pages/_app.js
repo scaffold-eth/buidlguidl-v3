@@ -22,6 +22,7 @@ import { useRouter } from "next/router";
 import PlausibleProvider from "next-plausible";
 import { getNotificationsForUser } from "../data/api/notifications";
 import { NotificationsProvider, useNotifications } from "../contexts/notificationContext";
+import Fonts from "../components/Fonts";
 
 const DEBUG = false;
 
@@ -224,6 +225,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ChakraProvider theme={theme}>
+      <Fonts />
       <PlausibleProvider domain="app.buidlguidl.com">
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <NotificationsProvider address={address}>

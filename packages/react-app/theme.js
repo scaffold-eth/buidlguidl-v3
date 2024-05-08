@@ -8,7 +8,7 @@ const config = {
 const theme = extendTheme({
   config,
   fonts: {
-    heading: "Space mono, monospace",
+    heading: "PPNeueMachina, roboto, sans-serif",
     body: "Space mono, monospace",
   },
 });

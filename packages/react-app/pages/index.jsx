@@ -90,7 +90,10 @@ export default function Index({ bgStats }) {
         <Box w={{ base: "100%", lg: "50%" }} pl={{ base: "50px", lg: "15%" }} pr="50px" py="50px">
           <Box maxW="500px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
             <Heading as="h1" mb="10px">
-              BuidlGuidl <chakra.span fontSize={16}>APP v3.5</chakra.span>
+              BuidlGuidl{" "}
+              <chakra.span fontWeight="500" fontSize={16}>
+                APP v3.5
+              </chakra.span>
             </Heading>
             <Text mb="25px" maxW="470px">
               The BuidlGuidl ‘backoffice’, where you’ll be able to dig more into the day to day activity of the guild.
