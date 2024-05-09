@@ -36,6 +36,13 @@ const theme = extendTheme({
       body: {
         color: props.colorMode === "light" ? "light.text" : "dark.text",
       },
+      a: {
+        // hover => opacity with transition 0.3s
+        _hover: {
+          opacity: 0.6,
+          transition: "opacity 0.3s",
+        },
+      },
     }),
   },
 });
