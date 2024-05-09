@@ -36,6 +36,7 @@ const theme = extendTheme({
       50: "#FFFCFC",
       100: "#cfd2d9",
       // color (dark)
+      // hover bg (dark) with opacity
       200: "#FFFCFC",
       300: "#9da3b2",
       400: "#848ca0",
