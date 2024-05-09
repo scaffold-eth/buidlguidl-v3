@@ -204,7 +204,7 @@ export default function Header({
         <Box mt={{ base: userIsRegistered ? 3 : 0, lg: 0 }}>
           <Account
             address={address}
-            connectText="Connect Wallet"
+            connectText="Connect"
             ensProvider={mainnetProvider}
             isWalletConnected={isSignerProviderConnected}
             loadWeb3Modal={loadWeb3Modal}

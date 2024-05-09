@@ -30,6 +30,29 @@ const theme = extendTheme({
       accentGreen: "#B5DC3A",
       baseGreen: "#EAFFA9",
     },
+    // color schemes
+    customBaseColorScheme: {
+      // hover bg (light)
+      50: "#FFFCFC",
+      100: "#cfd2d9",
+      // color (dark)
+      200: "#FFFCFC",
+      300: "#9da3b2",
+      400: "#848ca0",
+      500: "#182232",
+      // color (light)
+      600: "#182232",
+      700: "#131b27",
+      800: "#101722",
+      900: "#0c1017",
+    },
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        borderRadius: 0,
+      },
+    },
   },
   styles: {
     global: props => ({

@@ -87,7 +87,7 @@ export default function Account({
   const isAnonymous = userRole === USER_ROLES.anonymous;
 
   const connectWallet = (
-    <Button colorScheme="blue" key="loginbutton" onClick={loadWeb3Modal}>
+    <Button colorScheme="customBaseColorScheme" key="loginbutton" variant="outline" onClick={loadWeb3Modal}>
       {connectText || "connect"}
     </Button>
   );
@@ -121,7 +121,7 @@ export default function Account({
           <UserDisplayName textAlign="left" />
         </Box>
         <Tooltip label="Disconnect wallet">
-          <Button ml={4} onClick={logoutOfWeb3Modal} variant="outline" size="sm">
+          <Button ml={4} onClick={logoutOfWeb3Modal} variant="outline" size="sm" colorScheme="customBaseColorScheme">
             X
           </Button>
         </Tooltip>
@@ -140,7 +140,7 @@ export default function Account({
         </Button>
       </PopoverTrigger>
       <Tooltip label="Disconnect wallet">
-        <Button ml={4} onClick={logoutOfWeb3Modal} variant="outline" size="sm">
+        <Button ml={4} onClick={logoutOfWeb3Modal} variant="outline" size="sm" colorScheme="customBaseColorScheme">
           X
         </Button>
       </Tooltip>
