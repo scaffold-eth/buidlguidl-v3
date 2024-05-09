@@ -30,6 +30,43 @@ const theme = extendTheme({
       accentGreen: "#B5DC3A",
       baseGreen: "#EAFFA9",
     },
+    // color schemes
+    customBaseColorScheme: {
+      // hover bg (light)
+      50: "#FFFCFC",
+      100: "#cfd2d9",
+      // color (dark)
+      // hover bg (dark) with opacity
+      200: "#FFFCFC",
+      300: "#9da3b2",
+      400: "#848ca0",
+      500: "#182232",
+      // color (light)
+      600: "#182232",
+      700: "#131b27",
+      800: "#101722",
+      900: "#0c1017",
+    },
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        borderRadius: 0,
+      },
+    },
+  },
+  styles: {
+    global: props => ({
+      body: {
+        color: props.colorMode === "light" ? "light.text" : "dark.text",
+      },
+      a: {
+        _hover: {
+          opacity: 0.6,
+          transition: "opacity 0.3s",
+        },
+      },
+    }),
   },
 });
 
