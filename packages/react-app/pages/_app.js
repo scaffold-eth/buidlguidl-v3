@@ -233,8 +233,6 @@ function MyApp({ Component, pageProps }) {
             <div
               className="App"
               style={{
-                background:
-                  "var(--linear, linear-gradient(180deg, #BFCDFF 10.47%, #D9EBE5 60.39%, #EFFBCA 89.55%, rgba(239, 251, 202, 0.00) 116.3%))",
                 minHeight: "100vh",
               }}
             >
