@@ -31,6 +31,13 @@ const theme = extendTheme({
       baseGreen: "#EAFFA9",
     },
   },
+  styles: {
+    global: props => ({
+      body: {
+        color: props.colorMode === "light" ? "light.text" : "dark.text",
+      },
+    }),
+  },
 });
 
 export default theme;
