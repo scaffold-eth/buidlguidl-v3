@@ -95,7 +95,7 @@ export default function Header({
           <NextLink href="/" passHref>
             <Link>
               <Box>
-                <LogoBG w="150px" mt="-6px" />
+                <LogoBG w="200px" mt="-12px" />
               </Box>
             </Link>
           </NextLink>
