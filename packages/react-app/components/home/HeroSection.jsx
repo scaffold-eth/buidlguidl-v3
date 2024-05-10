@@ -7,7 +7,12 @@ const HeroSection = props => {
   return (
     <Box mt={{ base: 20, lg: 14 }}>
       <Flex px={12} justifyContent="center" w="full">
-        <Flex maxW="6xl" alignItems="center" w="full" direction={{ base: "column", lg: "row" }}>
+        <Flex
+          maxW={{ base: "6xl", "2xl": "8xl" }}
+          alignItems="center"
+          w="full"
+          direction={{ base: "column", lg: "row" }}
+        >
           <Stack h="full" py={4} mb={{ base: 8, lg: 0 }}>
             <Heading as="h1" size="3xl" textAlign={{ base: "center", lg: "left" }}>
               BuidlGuidl
