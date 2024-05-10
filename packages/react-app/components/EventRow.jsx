@@ -9,7 +9,7 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 const fundersAddresses = ["0xef6784161dc2eAB0A2c385DEf264DaF2F52Df970", "0x60775dCC868EcE33B6AC45A1Dd5D448aea3B7a71"];
 const buidlGuidlAddress = "0x97843608a00e2bbc75ab0c1911387e002565dede";
 
-const EventRow = ({ event }) => {
+const EventRow = ({ event, bgColor }) => {
   let userAddress = event.payload.userAddress;
 
   if (fundersAddresses.includes(userAddress)) {
@@ -17,11 +17,11 @@ const EventRow = ({ event }) => {
     userAddress = buidlGuidlAddress;
   }
 
-  const { baseBlueColor } = useCustomColorModes();
+  const { baseColor } = useCustomColorModes();
   const [eventTitle, eventDescription] = eventDisplay(event);
 
   return (
-    <Box backgroundColor={baseBlueColor} mb={4} px={8} py={6}>
+    <Box backgroundColor={bgColor ?? baseColor} mb={4} px={8} py={6}>
       <HStack spacing={8} align="flex-start" justify="space-between">
         <HStack spacing={2.5} align="flex-start">
           <NextLink href={`/builders/${userAddress}`} passHref>

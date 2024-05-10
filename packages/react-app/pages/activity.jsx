@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Box, Container, SkeletonText, Table, Thead, Tbody, Tr, Th, Select, Flex, Center } from "@chakra-ui/react";
+import { Box, Container, SkeletonText, Select, Flex, Center } from "@chakra-ui/react";
 import { getAllEvents } from "../data/api";
 import EventRow from "../components/EventRow";
 import { EVENT_TYPES } from "../helpers/events";
+import useCustomColorModes from "../hooks/useCustomColorModes";
 
 const countEventValues = [25, 50, 100];
 
@@ -14,6 +15,8 @@ export default function ActivityView() {
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
 
   const router = useRouter();
+
+  const { baseBlueColor } = useCustomColorModes();
 
   useEffect(() => {
     const { filter, count } = router.query;
@@ -95,7 +98,7 @@ export default function ActivityView() {
           </Flex>
           <Box mb={6}>
             {eventsFeed.map(event => (
-              <EventRow key={JSON.stringify(event.payload)} event={event} />
+              <EventRow key={JSON.stringify(event.payload)} event={event} bgColor={baseBlueColor} />
             ))}
           </Box>
           <Center mt={4}>
