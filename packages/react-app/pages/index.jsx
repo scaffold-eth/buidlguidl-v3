@@ -1,3 +1,49 @@
+// Second Iteration
+/* <Card>
+              <HStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                <VStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                  <Center h="full" p="4">
+                    <Text>Builder</Text>
+                  </Center>
+                  <Center h="full" p="4">
+                    <Text>Buids</Text>
+                  </Center>
+                  <Center h="full" p="4">
+                    <Text>Streamed</Text>
+                  </Center>
+                </VStack>
+                <VStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                  <Center h="full" p="4">
+                    <Heading mt={3} lineHeight={0}>
+                      1056
+                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
+                        {" "}
+                        + 12
+                      </chakra.span>
+                    </Heading>
+                  </Center>
+                  <Center h="full" p="4">
+                    <Heading mt={3} lineHeight={0}>
+                      1056
+                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
+                        {" "}
+                        + 12
+                      </chakra.span>
+                    </Heading>
+                  </Center>
+                  <Center h="full" p="4">
+                    <Heading mt={3} lineHeight={0}>
+                      1056
+                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
+                        {" "}
+                        + 12
+                      </chakra.span>
+                    </Heading>
+                  </Center>
+                </VStack>
+              </HStack>
+            </Card> */
+
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import NextLink from "next/link";
@@ -19,6 +65,10 @@ import {
   LinkBox,
   Stack,
   Spacer,
+  StackDivider,
+  VStack,
+  Center,
+  Divider,
 } from "@chakra-ui/react";
 import BuilderFunctionList from "../components/BuilderFunctionList";
 import { SERVER_URL } from "../constants";
@@ -26,6 +76,7 @@ import { USER_FUNCTIONS } from "../helpers/constants";
 import MetaSeo from "../components/MetaSeo";
 import { getStats } from "../data/api/builder";
 import useCustomColorModes from "../hooks/useCustomColorModes";
+import Card from "../components/Card";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 const StatBox = ({ value, monthlyValue, title, link }) => (
@@ -66,6 +117,8 @@ export default function Index({ bgStats }) {
   const isDarkMode = colorMode === "dark";
   const scaffoldEthBg = useColorModeValue("#fbf7f6", "whiteAlpha.300");
 
+  const { textColor, accentGreenColor } = useCustomColorModes();
+
   useEffect(() => {
     async function fetchBuilders() {
       setIsLoadingBuilders(true);
@@ -91,53 +144,68 @@ export default function Index({ bgStats }) {
       />
       {/* Hero*/}
       <Box mt="14">
-        <Flex justifyContent="center" w="full" border="1px" borderColor="green">
-          <Flex maxW="6xl" w="full" border="1px" borderColor="red">
-            <Stack border="1px" borderColor="blue">
-              <Heading as="h1">
+        <Flex justifyContent="center" w="full">
+          <Flex maxW="6xl" w="full">
+            <Stack>
+              <Heading as="h1" size="4xl">
                 BuidlGuidl{" "}
                 <chakra.span fontWeight="500" fontSize={16}>
                   APP v3.5
                 </chakra.span>
               </Heading>
-              <Text maxW="360px">
+              <Text maxW="md" fontSize="xl">
                 The BuidlGuidl ‘backoffice’, where you’ll be able to dig more into the day to day activity of the guild.
               </Text>
             </Stack>
             <Spacer />
             {/*Builds / Builders / ETH distributed Ξ*/}
-            <Box d="inline-block">
-              <HStack mt="50px" justifyContent={{ base: "center", lg: "initial" }}>
-                <LinkBox>
-                  <StatBox
-                    value={bgStats.builderCount}
-                    monthlyValue={bgStats.buildersIncrementMonth}
-                    title="builders"
-                    link="/builders"
-                  />
-                </LinkBox>
-                <LinkBox>
-                  <StatBox
-                    value={bgStats.buildCount}
-                    monthlyValue={bgStats.buildsIncrementMonth}
-                    title="builds"
-                    link="/builds"
-                  />
-                </LinkBox>
-                <LinkBox onClick={() => smoothScroll(streamSection)} cursor="pointer">
-                  <StatBox
-                    value={`Ξ ${bgStats.streamedEth.toFixed(2)}`}
-                    monthlyValue={`Ξ ${bgStats.streamedEthIncrementMonth.toFixed(2)}`}
-                    title="streamed"
-                  />
-                </LinkBox>
-              </HStack>
-              <HStack mt="5px" justifyContent={{ base: "center", lg: "center" }}>
-                <Text fontSize="xs" color="green.500">
-                  ▲ Monthly change
-                </Text>
-              </HStack>
-            </Box>
+            {/* Initial iteration */}
+            <Card display="flex" flexDirection="column" w="420px">
+              <VStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                <HStack h="20" w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                  <Center h="full" w={40} p="4">
+                    <Text>BUILDERS</Text>
+                  </Center>
+                  <Center h="full" p="4">
+                    <Heading mt={3} lineHeight={0}>
+                      1056
+                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
+                        {" "}
+                        + 12
+                      </chakra.span>
+                    </Heading>
+                  </Center>
+                </HStack>
+                <HStack h="20" w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                  <Center h="full" w={40} p="4">
+                    <Text>BUILDS</Text>
+                  </Center>
+                  <Center h="full" p="4">
+                    <Heading mt={3} lineHeight={0}>
+                      1056
+                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
+                        {" "}
+                        + 12
+                      </chakra.span>
+                    </Heading>
+                  </Center>
+                </HStack>
+                <HStack h="20" w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                  <Center h="full" w={40} p="4">
+                    <Text>STREAMED</Text>
+                  </Center>
+                  <Center h="full" p="4">
+                    <Heading mt={3} lineHeight={0}>
+                      743.83
+                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
+                        {" "}
+                        + 12
+                      </chakra.span>
+                    </Heading>
+                  </Center>
+                </HStack>
+              </VStack>
+            </Card>
           </Flex>
         </Flex>
         <Image src={`/assets/hero_image_${isDarkMode ? "dark" : "light"}.png`} alt="Hero Image" w="full" />

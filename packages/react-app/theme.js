@@ -1,5 +1,14 @@
 import { extendTheme } from "@chakra-ui/react";
 
+const Card = {
+  baseStyle: props => ({
+    border: "1px solid",
+    borderColor: props.colorMode === "light" ? "light.text" : "dark.text",
+    background: props.colorMode === "light" ? "light.base" : "dark.base",
+    boxShadow: `8px 8px 0px 0px ${props.colorMode === "light" ? "#808CFF" : "var(--chakra-colors-dark-baseBlue)"}`,
+  }),
+};
+
 const theme = extendTheme({
   config: {
     initialColorMode: "light",
@@ -54,6 +63,7 @@ const theme = extendTheme({
         borderRadius: 0,
       },
     },
+    Card,
   },
   styles: {
     global: props => ({
