@@ -230,12 +230,7 @@ function MyApp({ Component, pageProps }) {
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <NotificationsProvider address={address}>
           <BlockchainProvidersContext.Provider value={providers}>
-            <div
-              className="App"
-              style={{
-                minHeight: "100vh",
-              }}
-            >
+            <div className="App">
               {/* ✏️ Edit the header and change the title to your project name */}
               <Head>
                 <link rel="icon" href="/favicon.ico" />

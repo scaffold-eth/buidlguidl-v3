@@ -87,7 +87,7 @@ export default function Index({ bgStats }) {
         description="A curated group of Ethereum builders creating products, prototypes, and tutorials to enrich the web3 ecosytem."
         image="/assets/bg_teaser.png"
       />
-      <Flex alignItems="center" direction={{ base: "column-reverse", lg: "row" }}>
+      <Box>
         <Box w={{ base: "100%", lg: "50%" }} pl={{ base: "50px", lg: "15%" }} pr="50px" py="50px">
           <Box maxW="500px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
             <Heading as="h1" mb="10px">
@@ -134,7 +134,8 @@ export default function Index({ bgStats }) {
             </Box>
           </Box>
         </Box>
-      </Flex>
+        <Image src={`/assets/hero_image_${isDarkMode ? "dark" : "light"}.png`} alt="Hero Image" w="full" />
+      </Box>
 
       <Container maxW="container.md" centerContent>
         <Box mt="128px" mb="25px">
