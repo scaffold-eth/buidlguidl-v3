@@ -93,7 +93,7 @@ export default function Index({ bgStats }) {
         image="/assets/bg_teaser.png"
       />
       {/* Hero*/}
-      <HeroSection />
+      <HeroSection {...bgStats} />
 
       {/* Footer */}
       <Container maxW="container.md" centerContent>

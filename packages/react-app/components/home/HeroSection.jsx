@@ -1,7 +1,7 @@
 import { Box, Heading, Text, Image, chakra, Flex, Stack, Spacer, useColorMode } from "@chakra-ui/react";
 import StatsBox from "./StatsBox";
 
-const HeroSection = () => {
+const HeroSection = props => {
   const { colorMode } = useColorMode();
   const isDarkMode = colorMode === "dark";
   return (
@@ -22,7 +22,7 @@ const HeroSection = () => {
           </Stack>
           <Spacer />
           {/*Stats card with caption*/}
-          <StatsBox />
+          <StatsBox {...props} />
         </Flex>
       </Flex>
       <Image src={`/assets/hero_image_${isDarkMode ? "dark" : "light"}.png`} alt="Hero Image" w="full" />

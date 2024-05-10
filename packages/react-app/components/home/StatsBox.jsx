@@ -1,4 +1,4 @@
-import { HStack, Heading, Text, chakra, Flex, StackDivider, VStack, Center } from "@chakra-ui/react";
+import { HStack, Heading, Text, Flex, StackDivider, VStack, Center } from "@chakra-ui/react";
 import Card from "../Card";
 import EthIcon from "../icons/EthIcon";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
@@ -28,15 +28,27 @@ const Stat = ({ title, value, change, icon }) => {
   );
 };
 
-const StatsBox = () => {
+const StatsBox = ({
+  builderCount,
+  buildCount,
+  streamedEth,
+  buildersIncrementMonth,
+  buildsIncrementMonth,
+  streamedEthIncrementMonth,
+}) => {
   const { textColor, baseGreenColor } = useCustomColorModes();
   return (
     <Flex direction="column">
       <Card display="flex" flexDirection="column" w={{ base: "sm", md: "380px" }}>
         <VStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
-          <Stat title="BUILDERS" value="1056" change="12" />
-          <Stat title="BUILDS" value="743.83" change="12" />
-          <Stat title="STREAMED" value="1056" change="12" icon={<EthIcon alignSelf="start" h={5} w={5} />} />
+          <Stat title="BUILDERS" value={builderCount} change={buildersIncrementMonth} />
+          <Stat title="BUILDS" value={buildCount} change={buildsIncrementMonth} />
+          <Stat
+            title="STREAMED"
+            value={streamedEth}
+            change={streamedEthIncrementMonth}
+            icon={<EthIcon alignSelf="start" h={5} w={5} />}
+          />
         </VStack>
       </Card>
       <Text bg={baseGreenColor} color="light.text" mt={4} alignSelf="end" fontSize="xs" py={0.5} px={2}>
