@@ -148,8 +148,9 @@ export default function Index({ bgStats }) {
           <Flex maxW="6xl" w="full">
             <Stack>
               <Heading as="h1" size="4xl">
-                BuidlGuidl{" "}
-                <chakra.span fontWeight="500" fontSize={16}>
+                BuidlGuidl
+                <chakra.span fontWeight="500" fontSize="2xl">
+                  {" "}
                   APP v3.5
                 </chakra.span>
               </Heading>
