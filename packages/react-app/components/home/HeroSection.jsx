@@ -26,7 +26,6 @@ const HeroSection = props => {
             </Text>
           </Stack>
           <Spacer />
-          {/*Stats card with caption*/}
           <StatsBox {...props} />
         </Flex>
       </Flex>

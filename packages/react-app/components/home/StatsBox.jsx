@@ -38,15 +38,15 @@ const StatsBox = ({
 }) => {
   const { textColor, baseGreenColor } = useCustomColorModes();
   return (
-    <Flex direction="column">
-      <Card display="flex" flexDirection="column" w={{ base: "sm", md: "380px" }}>
+    <Flex direction="column" w="420px" maxW="full" h="full">
+      <Card display="flex" flexDirection="column">
         <VStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
           <Stat title="BUILDERS" value={builderCount} change={buildersIncrementMonth} />
           <Stat title="BUILDS" value={buildCount} change={buildsIncrementMonth} />
           <Stat
             title="STREAMED"
-            value={streamedEth}
-            change={streamedEthIncrementMonth}
+            value={streamedEth.toFixed(2)}
+            change={streamedEthIncrementMonth.toFixed(2)}
             icon={<EthIcon alignSelf="start" h={5} w={5} />}
           />
         </VStack>
