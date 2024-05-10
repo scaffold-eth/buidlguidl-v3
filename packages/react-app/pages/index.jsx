@@ -101,26 +101,28 @@ export default function Index({ bgStats }) {
         <Flex px={12} justifyContent="center" w="full">
           <Flex maxW="6xl" alignItems="center" w="full" direction={{ base: "column", lg: "row" }}>
             <Stack h="full" py={4} mb={{ base: 8, lg: 0 }}>
-              <Heading as="h1" size="4xl" textAlign={{ base: "center", lg: "left" }}>
+              <Heading as="h1" size="3xl" textAlign={{ base: "center", lg: "left" }}>
                 BuidlGuidl
-                <chakra.span fontWeight="500" fontSize="2xl">
+                <chakra.span fontWeight="500" fontSize="xl">
                   {" "}
                   APP v3.5
                 </chakra.span>
               </Heading>
-              <Text maxW={{ base: "lg", lg: "md" }} fontSize="xl" align={{ base: "center", lg: "left" }}>
+              <Text maxW={{ base: "lg", lg: "md" }} fontSize="lg" align={{ base: "center", lg: "left" }}>
                 The BuidlGuidl ‘backoffice’, where you’ll be able to dig more into the day to day activity of the guild.
               </Text>
             </Stack>
             <Spacer />
-            <Card display="flex" flexDirection="column" w={{ base: "sm", md: "420px" }}>
+            <Card display="flex" flexDirection="column" w={{ base: "sm", md: "380px" }}>
               <VStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
-                <HStack h="20" w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
                   <Center h="full" w={40} p="4">
-                    <Text>BUILDERS</Text>
+                    <Text mt={4} fontSize="sm">
+                      BUILDERS
+                    </Text>
                   </Center>
                   <Center h="full" p="4">
-                    <Heading mt={3} lineHeight={0}>
+                    <Heading mt={3} fontSize="3xl" lineHeight={0}>
                       1056
                       <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
                         {" "}
@@ -129,27 +131,31 @@ export default function Index({ bgStats }) {
                     </Heading>
                   </Center>
                 </HStack>
-                <HStack h="20" w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
                   <Center h="full" w={40} p="4">
-                    <Text>BUILDS</Text>
+                    <Text mt={4} fontSize="sm">
+                      BUILDS
+                    </Text>
                   </Center>
                   <Center h="full" p="4">
-                    <Heading mt={3} lineHeight={0}>
-                      1056
-                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
-                        {" "}
-                        + 12
-                      </chakra.span>
-                    </Heading>
-                  </Center>
-                </HStack>
-                <HStack h="20" w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
-                  <Center h="full" w={40} p="4">
-                    <Text>STREAMED</Text>
-                  </Center>
-                  <Center h="full" p="4">
-                    <Heading mt={3} lineHeight={0}>
+                    <Heading mt={3} fontSize="3xl" lineHeight={0}>
                       743.83
+                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
+                        {" "}
+                        + 12
+                      </chakra.span>
+                    </Heading>
+                  </Center>
+                </HStack>
+                <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                  <Center h="full" w={40} p="4">
+                    <Text mt={4} fontSize="sm">
+                      STREAMED
+                    </Text>
+                  </Center>
+                  <Center h="full" p="4">
+                    <Heading mt={3} fontSize="3xl" lineHeight={0}>
+                      1056
                       <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
                         {" "}
                         + 12
