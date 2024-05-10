@@ -17,6 +17,8 @@ import {
   useColorMode,
   LinkOverlay,
   LinkBox,
+  Stack,
+  Spacer,
 } from "@chakra-ui/react";
 import BuilderFunctionList from "../components/BuilderFunctionList";
 import { SERVER_URL } from "../constants";
@@ -87,18 +89,22 @@ export default function Index({ bgStats }) {
         description="A curated group of Ethereum builders creating products, prototypes, and tutorials to enrich the web3 ecosytem."
         image="/assets/bg_teaser.png"
       />
-      <Box>
-        <Box w={{ base: "100%", lg: "50%" }} pl={{ base: "50px", lg: "15%" }} pr="50px" py="50px">
-          <Box maxW="500px" margin={{ base: "auto", lg: "0" }} textAlign={{ base: "center", lg: "left" }}>
-            <Heading as="h1" mb="10px">
-              BuidlGuidl{" "}
-              <chakra.span fontWeight="500" fontSize={16}>
-                APP v3.5
-              </chakra.span>
-            </Heading>
-            <Text mb="25px" maxW="470px">
-              The BuidlGuidl ‘backoffice’, where you’ll be able to dig more into the day to day activity of the guild.
-            </Text>
+      {/* Hero*/}
+      <Box mt="14">
+        <Flex justifyContent="center" w="full" border="1px" borderColor="green">
+          <Flex maxW="6xl" w="full" border="1px" borderColor="red">
+            <Stack border="1px" borderColor="blue">
+              <Heading as="h1">
+                BuidlGuidl{" "}
+                <chakra.span fontWeight="500" fontSize={16}>
+                  APP v3.5
+                </chakra.span>
+              </Heading>
+              <Text maxW="360px">
+                The BuidlGuidl ‘backoffice’, where you’ll be able to dig more into the day to day activity of the guild.
+              </Text>
+            </Stack>
+            <Spacer />
             {/*Builds / Builders / ETH distributed Ξ*/}
             <Box d="inline-block">
               <HStack mt="50px" justifyContent={{ base: "center", lg: "initial" }}>
@@ -132,11 +138,12 @@ export default function Index({ bgStats }) {
                 </Text>
               </HStack>
             </Box>
-          </Box>
-        </Box>
+          </Flex>
+        </Flex>
         <Image src={`/assets/hero_image_${isDarkMode ? "dark" : "light"}.png`} alt="Hero Image" w="full" />
       </Box>
 
+      {/* Footer */}
       <Container maxW="container.md" centerContent>
         <Box mt="128px" mb="25px">
           🏰<b>BuidlGuidl</b> is a registered 🤠{" "}
