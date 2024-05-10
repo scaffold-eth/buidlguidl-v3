@@ -22,7 +22,6 @@ import {
   StackDivider,
   VStack,
   Center,
-  Divider,
 } from "@chakra-ui/react";
 import BuilderFunctionList from "../components/BuilderFunctionList";
 import { SERVER_URL } from "../constants";
@@ -71,7 +70,7 @@ export default function Index({ bgStats }) {
   const isDarkMode = colorMode === "dark";
   const scaffoldEthBg = useColorModeValue("#fbf7f6", "whiteAlpha.300");
 
-  const { textColor, accentGreenColor } = useCustomColorModes();
+  const { textColor, accentGreenColor, baseGreenColor } = useCustomColorModes();
 
   useEffect(() => {
     async function fetchBuilders() {
@@ -113,58 +112,64 @@ export default function Index({ bgStats }) {
               </Text>
             </Stack>
             <Spacer />
-            <Card display="flex" flexDirection="column" w={{ base: "sm", md: "380px" }}>
-              <VStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
-                <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
-                  <Center h="full" w={40} p="4">
-                    <Text mt={4} fontSize="sm">
-                      BUILDERS
-                    </Text>
-                  </Center>
-                  <Center h="full" p="4">
-                    <Heading mt={3} fontSize="3xl" lineHeight={0}>
-                      1056
-                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
-                        {" "}
-                        + 12
-                      </chakra.span>
-                    </Heading>
-                  </Center>
-                </HStack>
-                <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
-                  <Center h="full" w={40} p="4">
-                    <Text mt={4} fontSize="sm">
-                      BUILDS
-                    </Text>
-                  </Center>
-                  <Center h="full" p="4">
-                    <Heading mt={3} fontSize="3xl" lineHeight={0}>
-                      743.83
-                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
-                        {" "}
-                        + 12
-                      </chakra.span>
-                    </Heading>
-                  </Center>
-                </HStack>
-                <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
-                  <Center h="full" w={40} p="4">
-                    <Text mt={4} fontSize="sm">
-                      STREAMED
-                    </Text>
-                  </Center>
-                  <Center h="full" p="4">
-                    <Heading mt={3} fontSize="3xl" lineHeight={0}>
-                      1056
-                      <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
-                        {" "}
-                        + 12
-                      </chakra.span>
-                    </Heading>
-                  </Center>
-                </HStack>
-              </VStack>
-            </Card>
+            {/*Stats card with caption*/}
+            <Flex direction="column">
+              <Card display="flex" flexDirection="column" w={{ base: "sm", md: "380px" }}>
+                <VStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                  <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                    <Center h="full" w={40} p="4">
+                      <Text mt={4} fontSize="sm">
+                        BUILDERS
+                      </Text>
+                    </Center>
+                    <Center h="full" p="4">
+                      <Heading mt={3} fontSize="3xl" lineHeight={0}>
+                        1056
+                        <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
+                          {" "}
+                          + 12
+                        </chakra.span>
+                      </Heading>
+                    </Center>
+                  </HStack>
+                  <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                    <Center h="full" w={40} p="4">
+                      <Text mt={4} fontSize="sm">
+                        BUILDS
+                      </Text>
+                    </Center>
+                    <Center h="full" p="4">
+                      <Heading mt={3} fontSize="3xl" lineHeight={0}>
+                        743.83
+                        <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
+                          {" "}
+                          + 12
+                        </chakra.span>
+                      </Heading>
+                    </Center>
+                  </HStack>
+                  <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
+                    <Center h="full" w={40} p="4">
+                      <Text mt={4} fontSize="sm">
+                        STREAMED
+                      </Text>
+                    </Center>
+                    <Center h="full" p="4">
+                      <Heading mt={3} fontSize="3xl" lineHeight={0}>
+                        1056
+                        <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
+                          {" "}
+                          + 12
+                        </chakra.span>
+                      </Heading>
+                    </Center>
+                  </HStack>
+                </VStack>
+              </Card>
+              <Text bg={baseGreenColor} color="light.text" mt={4} alignSelf="end" fontSize="xs" py={0.5} px={2}>
+                + MONTHLY CHANGE
+              </Text>
+            </Flex>
           </Flex>
         </Flex>
         <Image src={`/assets/hero_image_${isDarkMode ? "dark" : "light"}.png`} alt="Hero Image" w="full" />
