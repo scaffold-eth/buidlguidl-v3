@@ -1,6 +1,6 @@
 import React from "react";
 import NextLink from "next/link";
-import { Link, Text } from "@chakra-ui/react";
+import { Badge, HStack, Link, Text } from "@chakra-ui/react";
 import Address from "../components/Address";
 
 // TODO PR: how do we keep just one instance of this enum? Like a commons library
@@ -20,104 +20,112 @@ export const EVENT_TYPES = {
 export const eventDisplay = ({ type, payload }) => {
   switch (type) {
     case EVENT_TYPES.BUILD_SUBMIT: {
-      return (
+      return [
         <>
           just submitted a new build:{" "}
           <NextLink href={`/build/${payload.buildId}`} passHref>
             <Link textDecoration="underline">{payload.name}</Link>
           </NextLink>
-        </>
-      );
+        </>,
+      ];
     }
 
     case EVENT_TYPES.BUILD_EDIT: {
-      return (
+      return [
         <>
           just edited a build:{" "}
           <NextLink href={`/build/${payload.buildId}`} passHref>
             <Link textDecoration="underline">{payload.name}</Link>
           </NextLink>
-        </>
-      );
+        </>,
+      ];
     }
 
     case EVENT_TYPES.BUILD_DELETE: {
-      return `just deleted a build: "${payload.name}"`;
+      return [`just deleted a build: "${payload.name}"`];
     }
 
     case EVENT_TYPES.BUILD_FEATURED: {
-      return (
+      return [
         <>
           Their build{" "}
           <NextLink href={`/build/${payload.buildId}`} passHref>
             <Link textDecoration="underline">{payload.name}</Link>
           </NextLink>{" "}
           has been {payload.featured ? "featured" : "unfeatured"}`
-        </>
-      );
+        </>,
+      ];
     }
 
     case EVENT_TYPES.BUILD_LIKED: {
-      return (
+      return [
         <>
           {payload.liked ? "liked" : "unliked"} the build{" "}
           <NextLink href={`/build/${payload.buildId}`} passHref>
             <Link textDecoration="underline">{payload.name}</Link>
           </NextLink>
-        </>
-      );
+        </>,
+      ];
     }
 
     case EVENT_TYPES.USER_CREATE: {
-      return `is a new builder on BuidlGuidl. Welcome! ${payload.fromApiCall ? "(from SRE)" : ""}`;
+      return [`is a new builder on BuidlGuidl. Welcome! ${payload.fromApiCall ? "(from SRE)" : ""}`];
     }
 
     case EVENT_TYPES.USER_UPDATE_STATUS: {
-      return `updated their status: "${payload.text}"`;
+      return [`updated their status: "${payload.text}"`];
     }
 
     case EVENT_TYPES.STREAM_WITHDRAW: {
-      return (
+      return [
         <>
           <Text>withdrew Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
-          <Text fontStyle="italic" mt={2} wordBreak="break-all">
+        </>,
+        <>
+          <Text fontStyle="italic" mt={2} wordBreak="break-all" fontSize="xs">
             "{payload.reason}"
           </Text>
-        </>
-      );
+        </>,
+      ];
     }
 
     case EVENT_TYPES.STREAM_DEPOSIT: {
-      return (
+      return [
         <>
-          <Text>funded with Ξ {parseFloat(payload.amount).toFixed(4)} to </Text>
-          <Text mt={2}>
-            <NextLink href={`/builders/${payload.builderAddress}`} passHref>
-              <Link pos="relative">
-                <Address address={payload.builderAddress} w="10" fontSize="16" />
-              </Link>
-            </NextLink>
-          </Text>
-        </>
-      );
+          <HStack>
+            <Text>funded with Ξ {parseFloat(payload.amount).toFixed(4)} to </Text>
+            <Text mt={2}>
+              <NextLink href={`/builders/${payload.builderAddress}`} passHref>
+                <Link pos="relative">
+                  <Address address={payload.builderAddress} w="5" fontSize="16" />
+                </Link>
+              </NextLink>
+            </Text>
+          </HStack>
+        </>,
+      ];
     }
 
     case EVENT_TYPES.COHORT_WITHDRAW: {
-      return (
+      return [
         <>
-          <Text>withdrew Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
-          <Text fontWeight="bold" mt={2} wordBreak="break-all">
-            From «{payload.cohortName}»
-          </Text>
-          <Text fontStyle="italic" mt={2} wordBreak="break-all">
+          <HStack>
+            <Badge colorScheme="orange" textAlign="center">
+              {payload.cohortName}
+            </Badge>
+            <Text>withdrew Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
+          </HStack>
+        </>,
+        <>
+          <Text fontStyle="italic" mt={2} wordBreak="break-all" fontSize="xs">
             "{payload.reason}"
           </Text>
-        </>
-      );
+        </>,
+      ];
     }
 
     default:
       // do nothing
-      return "";
+      return [""];
   }
 };

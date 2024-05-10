@@ -51,7 +51,7 @@ export default function Address({ value, address: sentAddress, size, w, fontSize
   }
 
   return (
-    <HStack spacing={w <= 10 ? "12px" : "20px"}>
+    <HStack spacing={w <= 10 ? "8px" : "20px"}>
       <span style={{ verticalAlign: "middle" }}>
         <QRPunkBlockie withQr={false} address={address?.toLowerCase()} w={w ?? 12.5} borderRadius="md" />
       </span>

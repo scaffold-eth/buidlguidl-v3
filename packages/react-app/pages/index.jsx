@@ -5,10 +5,12 @@ import { SERVER_URL } from "../constants";
 import MetaSeo from "../components/MetaSeo";
 import { getStats } from "../data/api/builder";
 import HeroSection from "../components/home/HeroSection";
+import ActivitySection from "../components/home/ActivitySection";
+import { getAllEvents } from "../data/api";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 /* eslint-disable jsx-a11y/accessible-emoji */
-export default function Index({ bgStats }) {
+export default function Index({ bgStats, events }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
 
@@ -37,12 +39,14 @@ export default function Index({ bgStats }) {
   return (
     <>
       <MetaSeo
-        title="BuidlGuidl v3"
+        title="BuidlGuidl v3.5"
         description="A curated group of Ethereum builders creating products, prototypes, and tutorials to enrich the web3 ecosytem."
         image="/assets/bg_teaser.png"
       />
       {/* Hero*/}
       <HeroSection {...bgStats} />
+
+      <ActivitySection events={events} />
 
       {/* Footer */}
       <Container maxW="container.md" centerContent>
@@ -59,6 +63,7 @@ export default function Index({ bgStats }) {
 
 export async function getStaticProps() {
   const stats = await getStats();
+  const events = await getAllEvents(null, 10);
 
   return {
     props: {
@@ -70,7 +75,9 @@ export async function getStaticProps() {
         buildsIncrementMonth: stats?.buildsIncrementMonth,
         streamedEthIncrementMonth: stats?.streamedEthIncrementMonth,
       },
+      events,
     },
+    // ToDo. Maybe a 15 min refresh? or load events in the frontend?
     // 6 hours refresh.
     revalidate: 21600,
   };
