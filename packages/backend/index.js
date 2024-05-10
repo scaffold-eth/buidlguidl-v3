@@ -14,6 +14,7 @@ const ensRoutes = require("./routes/ens");
 const apiRoutes = require("./routes/api");
 const cohortRoutes = require("./routes/cohorts");
 const notificationsRoutes = require("./routes/notifications");
+const blogRoutes = require("./routes/blog");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use("/ens", ensRoutes);
 app.use("/api", apiRoutes);
 app.use("/cohorts", cohortRoutes);
 app.use("/notifications", notificationsRoutes);
+app.use("/blog", blogRoutes);
 
 app.get("/sign-message", async (req, res) => {
   const messageId = req.query.messageId;

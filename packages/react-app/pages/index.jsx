@@ -7,10 +7,11 @@ import { getStats } from "../data/api/builder";
 import HeroSection from "../components/home/HeroSection";
 import ActivitySection from "../components/home/ActivitySection";
 import { getAllEvents } from "../data/api";
+import BlogSection from "../components/BlogSection";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 /* eslint-disable jsx-a11y/accessible-emoji */
-export default function Index({ bgStats, events }) {
+export default function Index({ bgStats, events, posts }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
 
@@ -48,6 +49,8 @@ export default function Index({ bgStats, events }) {
 
       <ActivitySection events={events} />
 
+      <BlogSection posts={posts} />
+
       {/* Footer */}
       <Container maxW="container.md" centerContent>
         <Box mt="128px" mb="25px">
@@ -64,6 +67,7 @@ export default function Index({ bgStats, events }) {
 export async function getStaticProps() {
   const stats = await getStats();
   const events = await getAllEvents(null, 10);
+  const posts = await fetchRecentPosts();
 
   return {
     props: {
@@ -76,6 +80,7 @@ export async function getStaticProps() {
         streamedEthIncrementMonth: stats?.streamedEthIncrementMonth,
       },
       events,
+      posts,
     },
     // ToDo. Maybe a 15 min refresh? or load events in the frontend?
     // 6 hours refresh.
