@@ -107,7 +107,7 @@ export default function Index({ bgStats }) {
                   APP v3.5
                 </chakra.span>
               </Heading>
-              <Text maxW={{ base: "lg", lg: "md" }} fontSize="lg" align={{ base: "center", lg: "left" }}>
+              <Text maxW="md" fontSize="lg" align={{ base: "center", lg: "left" }}>
                 The BuidlGuidl ‘backoffice’, where you’ll be able to dig more into the day to day activity of the guild.
               </Text>
             </Stack>
