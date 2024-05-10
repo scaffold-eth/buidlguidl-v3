@@ -1,62 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import NextLink from "next/link";
-import {
-  Box,
-  HStack,
-  Heading,
-  Text,
-  Link,
-  Image,
-  chakra,
-  Container,
-  Button,
-  Spinner,
-  Flex,
-  useColorModeValue,
-  useColorMode,
-  LinkOverlay,
-  LinkBox,
-  Stack,
-  Spacer,
-  StackDivider,
-  VStack,
-  Center,
-} from "@chakra-ui/react";
-import BuilderFunctionList from "../components/BuilderFunctionList";
+import { Box, Link, Container, useColorModeValue, useColorMode } from "@chakra-ui/react";
 import { SERVER_URL } from "../constants";
-import { USER_FUNCTIONS } from "../helpers/constants";
 import MetaSeo from "../components/MetaSeo";
 import { getStats } from "../data/api/builder";
 import HeroSection from "../components/home/HeroSection";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
-
-const StatBox = ({ value, monthlyValue, title, link }) => (
-  <Flex
-    border="1px solid"
-    borderColor="gray.300"
-    p="20px"
-    direction="column"
-    justify="center"
-    align="center"
-    minW="140px"
-    minH="120px"
-  >
-    <Text fontSize="2xl" fontWeight="bold" whiteSpace="nowrap">
-      {link ? (
-        <NextLink href={link} passHref>
-          <LinkOverlay>{value}</LinkOverlay>
-        </NextLink>
-      ) : (
-        <>{value}</>
-      )}
-    </Text>
-    <Text color="gray.400">{title}</Text>
-    <Text fontSize="xs" color="green.500">
-      ▲ {monthlyValue}
-    </Text>
-  </Flex>
-);
 
 /* eslint-disable jsx-a11y/accessible-emoji */
 export default function Index({ bgStats }) {
