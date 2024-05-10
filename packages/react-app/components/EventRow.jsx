@@ -21,7 +21,7 @@ const EventRow = ({ event }) => {
   const [eventTitle, eventDescription] = eventDisplay(event);
 
   return (
-    <Box backgroundColor={baseBlueColor} mb={4} p={8}>
+    <Box backgroundColor={baseBlueColor} mb={4} px={8} py={6}>
       <HStack spacing={8} align="flex-start" justify="space-between">
         <HStack spacing={2.5} align="flex-start">
           <NextLink href={`/builders/${userAddress}`} passHref>
@@ -35,7 +35,11 @@ const EventRow = ({ event }) => {
           <DateWithTooltip timestamp={event.timestamp} />
         </Box>
       </HStack>
-      <Box mt={4}>{eventDescription && <Box fontSize="sm">{eventDescription}</Box>}</Box>
+      {eventDescription && (
+        <Box fontSize="sm" mt={4}>
+          {eventDescription}
+        </Box>
+      )}
     </Box>
   );
 };
