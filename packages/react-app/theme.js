@@ -59,6 +59,11 @@ const theme = extendTheme({
     global: props => ({
       body: {
         color: props.colorMode === "light" ? "light.text" : "dark.text",
+        background:
+          props.colorMode === "light"
+            ? "linear-gradient(180deg, #BFCDFF 10.47%, #D9EBE5 60.39%, #EFFBCA 89.55%, rgba(239, 251, 202, 0.00) 116.3%)"
+            : "linear-gradient(180deg, #0B2041 10.47%, #2F3679 107%)",
+        minHeight: "100vh",
       },
       a: {
         _hover: {
