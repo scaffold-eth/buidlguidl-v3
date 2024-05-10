@@ -77,7 +77,7 @@ export default function ActivityView() {
   };
 
   return (
-    <Container maxW="container.md" centerContent mb="50px">
+    <Container maxW="container.lg" centerContent mb="50px">
       {isLoadingEvents ? (
         <Box w="100%" maxW="500px">
           <SkeletonText mt="4" noOfLines={10} spacing="4" />
@@ -93,20 +93,11 @@ export default function ActivityView() {
               ))}
             </Select>
           </Flex>
-          <Table mb={6}>
-            <Thead>
-              <Tr>
-                <Th>Builder</Th>
-                <Th>Time</Th>
-                <Th>Action</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {eventsFeed.map(event => (
-                <EventRow key={JSON.stringify(event.payload)} event={event} />
-              ))}
-            </Tbody>
-          </Table>
+          <Box mb={6}>
+            {eventsFeed.map(event => (
+              <EventRow key={JSON.stringify(event.payload)} event={event} />
+            ))}
+          </Box>
           <Center mt={4}>
             <Box>
               <Select
