@@ -1,6 +1,6 @@
 import React from "react";
 import NextLink from "next/link";
-import { Tr, Td, Link, Box, HStack, Flex } from "@chakra-ui/react";
+import { Tr, Td, Link, Box, HStack, Flex, Stack } from "@chakra-ui/react";
 import Address from "./Address";
 import { eventDisplay } from "../helpers/events";
 import DateWithTooltip from "./DateWithTooltip";
@@ -23,14 +23,15 @@ const EventRow = ({ event, bgColor }) => {
   return (
     <Box backgroundColor={bgColor ?? baseColor} mb={4} px={8} py={6}>
       <HStack spacing={8} align="flex-start" justify="space-between">
-        <HStack spacing={2.5} align="flex-start">
+        {/*HStack direction = col for mobile, but ROW for rest */}
+        <Stack spacing={2.5} align="flex-start" direction={{ base: "column", md: "row" }}>
           <NextLink href={`/builders/${userAddress}`} passHref>
             <Link pos="relative" mt="-5.5px">
               <Address address={userAddress} w="8" fontSize={14} />
             </Link>
           </NextLink>
           <Box fontSize="sm">{eventTitle}</Box>
-        </HStack>
+        </Stack>
         <Box whiteSpace="nowrap" fontSize="sm">
           <DateWithTooltip timestamp={event.timestamp} />
         </Box>
