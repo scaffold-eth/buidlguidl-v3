@@ -30,6 +30,7 @@ import MetaSeo from "../components/MetaSeo";
 import { getStats } from "../data/api/builder";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import Card from "../components/Card";
+import EthIcon from "../components/icons/EthIcon";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 const StatBox = ({ value, monthlyValue, title, link }) => (
@@ -155,13 +156,15 @@ export default function Index({ bgStats }) {
                       </Text>
                     </Center>
                     <Center h="full" p="4">
-                      <Heading mt={3} fontSize="3xl" lineHeight={0}>
-                        1056
-                        <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
-                          {" "}
+                      <HStack h="full" align="center" spacing={1}>
+                        <Heading fontSize="3xl" mt={1} lineHeight={0}>
+                          1056
+                        </Heading>
+                        <EthIcon alignSelf="start" h={5} w={5} />
+                        <Heading color={accentGreenColor} alignSelf="end" fontWeight="600" fontSize={14}>
                           + 12
-                        </chakra.span>
-                      </Heading>
+                        </Heading>
+                      </HStack>
                     </Center>
                   </HStack>
                 </VStack>
