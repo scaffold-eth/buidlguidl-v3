@@ -143,25 +143,23 @@ export default function Index({ bgStats }) {
         image="/assets/bg_teaser.png"
       />
       {/* Hero*/}
-      <Box mt="14">
-        <Flex justifyContent="center" w="full">
-          <Flex maxW="6xl" w="full">
-            <Stack>
-              <Heading as="h1" size="4xl">
+      <Box mt={{ base: 20, lg: 14 }}>
+        <Flex px={12} justifyContent="center" w="full">
+          <Flex maxW="6xl" alignItems="center" w="full" direction={{ base: "column", lg: "row" }}>
+            <Stack h="full" py={4} mb={{ base: 8, lg: 0 }}>
+              <Heading as="h1" size="4xl" textAlign={{ base: "center", lg: "left" }}>
                 BuidlGuidl
                 <chakra.span fontWeight="500" fontSize="2xl">
                   {" "}
                   APP v3.5
                 </chakra.span>
               </Heading>
-              <Text maxW="md" fontSize="xl">
+              <Text maxW={{ base: "lg", lg: "md" }} fontSize="xl" align={{ base: "center", lg: "left" }}>
                 The BuidlGuidl ‘backoffice’, where you’ll be able to dig more into the day to day activity of the guild.
               </Text>
             </Stack>
             <Spacer />
-            {/*Builds / Builders / ETH distributed Ξ*/}
-            {/* Initial iteration */}
-            <Card display="flex" flexDirection="column" w="420px">
+            <Card display="flex" flexDirection="column" w={{ base: "sm", md: "420px" }}>
               <VStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
                 <HStack h="20" w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
                   <Center h="full" w={40} p="4">
