@@ -28,9 +28,7 @@ import { SERVER_URL } from "../constants";
 import { USER_FUNCTIONS } from "../helpers/constants";
 import MetaSeo from "../components/MetaSeo";
 import { getStats } from "../data/api/builder";
-import useCustomColorModes from "../hooks/useCustomColorModes";
-import Card from "../components/Card";
-import EthIcon from "../components/icons/EthIcon";
+import HeroSection from "../components/home/HeroSection";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 const StatBox = ({ value, monthlyValue, title, link }) => (
@@ -71,8 +69,6 @@ export default function Index({ bgStats }) {
   const isDarkMode = colorMode === "dark";
   const scaffoldEthBg = useColorModeValue("#fbf7f6", "whiteAlpha.300");
 
-  const { textColor, accentGreenColor, baseGreenColor } = useCustomColorModes();
-
   useEffect(() => {
     async function fetchBuilders() {
       setIsLoadingBuilders(true);
@@ -97,86 +93,7 @@ export default function Index({ bgStats }) {
         image="/assets/bg_teaser.png"
       />
       {/* Hero*/}
-      <Box mt={{ base: 20, lg: 14 }}>
-        <Flex px={12} justifyContent="center" w="full">
-          <Flex maxW="6xl" alignItems="center" w="full" direction={{ base: "column", lg: "row" }}>
-            <Stack h="full" py={4} mb={{ base: 8, lg: 0 }}>
-              <Heading as="h1" size="3xl" textAlign={{ base: "center", lg: "left" }}>
-                BuidlGuidl
-                <chakra.span fontWeight="500" fontSize="xl">
-                  {" "}
-                  APP v3.5
-                </chakra.span>
-              </Heading>
-              <Text maxW="md" fontSize="lg" align={{ base: "center", lg: "left" }}>
-                The BuidlGuidl ‘backoffice’, where you’ll be able to dig more into the day to day activity of the guild.
-              </Text>
-            </Stack>
-            <Spacer />
-            {/*Stats card with caption*/}
-            <Flex direction="column">
-              <Card display="flex" flexDirection="column" w={{ base: "sm", md: "380px" }}>
-                <VStack spacing={0} divider={<StackDivider borderColor={textColor} />}>
-                  <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
-                    <Center h="full" w={40} p="4">
-                      <Text mt={4} fontSize="sm">
-                        BUILDERS
-                      </Text>
-                    </Center>
-                    <Center h="full" p="4">
-                      <Heading mt={3} fontSize="3xl" lineHeight={0}>
-                        1056
-                        <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
-                          {" "}
-                          + 12
-                        </chakra.span>
-                      </Heading>
-                    </Center>
-                  </HStack>
-                  <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
-                    <Center h="full" w={40} p="4">
-                      <Text mt={4} fontSize="sm">
-                        BUILDS
-                      </Text>
-                    </Center>
-                    <Center h="full" p="4">
-                      <Heading mt={3} fontSize="3xl" lineHeight={0}>
-                        743.83
-                        <chakra.span color={accentGreenColor} fontWeight="600" fontSize={14}>
-                          {" "}
-                          + 12
-                        </chakra.span>
-                      </Heading>
-                    </Center>
-                  </HStack>
-                  <HStack h={16} w="full" spacing={0} divider={<StackDivider borderColor={textColor} />}>
-                    <Center h="full" w={40} p="4">
-                      <Text mt={4} fontSize="sm">
-                        STREAMED
-                      </Text>
-                    </Center>
-                    <Center h="full" p="4">
-                      <HStack h="full" align="center" spacing={1}>
-                        <Heading fontSize="3xl" mt={1} lineHeight={0}>
-                          1056
-                        </Heading>
-                        <EthIcon alignSelf="start" h={5} w={5} />
-                        <Heading color={accentGreenColor} alignSelf="end" fontWeight="600" fontSize={14}>
-                          + 12
-                        </Heading>
-                      </HStack>
-                    </Center>
-                  </HStack>
-                </VStack>
-              </Card>
-              <Text bg={baseGreenColor} color="light.text" mt={4} alignSelf="end" fontSize="xs" py={0.5} px={2}>
-                + MONTHLY CHANGE
-              </Text>
-            </Flex>
-          </Flex>
-        </Flex>
-        <Image src={`/assets/hero_image_${isDarkMode ? "dark" : "light"}.png`} alt="Hero Image" w="full" />
-      </Box>
+      <HeroSection />
 
       {/* Footer */}
       <Container maxW="container.md" centerContent>
