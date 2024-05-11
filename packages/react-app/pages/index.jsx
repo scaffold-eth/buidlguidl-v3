@@ -8,6 +8,7 @@ import HeroSection from "../components/home/HeroSection";
 import ActivitySection from "../components/home/ActivitySection";
 import { getAllEvents } from "../data/api";
 import BlogSection from "../components/BlogSection";
+import { fetchRecentPosts } from "../data/api/blog";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 /* eslint-disable jsx-a11y/accessible-emoji */

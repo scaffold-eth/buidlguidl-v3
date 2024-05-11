@@ -1,33 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Container, VStack, Box, Heading, Text, Image, Link, Flex } from '@chakra-ui/react';
-import { fetchRecentPosts } from "../data/api/blog";
 
-const BlogSection = ( posts ) => {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const recentPosts = await fetchRecentPosts();
-        setPosts(recentPosts);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
-    };
-
-    fetchPosts();
-  }, []);
-
+const BlogSection = ({ posts }) => {
  return (
-      <Container maxW="container.lg" mb="50px">
-        <Heading fontWeight="500" mb={8} mt={20}>
-          Shipping Log
-        </Heading>
-        {posts.map((post, index) => {
-          const date = new Date(post.pubDate);
-          const formattedDate = `${date.toLocaleString('default', { month: 'short' }).toUpperCase()} ${date.getDate()}`;
-
-          return (
+    <Container maxW="container.lg" mb="50px">
+      <Heading fontWeight="500" mb={8} mt={20}>
+        Shipping Log
+      </Heading>
+      {posts.map((post, index) => {
+        const date = new Date(post.pubDate);
+        const formattedDate = `${date.toLocaleString('default', { month: 'short' }).toUpperCase()} ${date.getDate()}`;
+        return (
             <Link key={index} href={post.link} isExternal>
               <Box bg="transparent" w="full" mb={4}>
                 <Box bg="white" rounded="md" shadow="md" w="full">
@@ -37,7 +20,7 @@ const BlogSection = ( posts ) => {
                       <Text fontSize="sm" noOfLines={3}>{post.description}</Text>
                       <Text color="gray.400" fontSize="sm">{formattedDate}</Text>
                     </VStack>
-                    <Image display={{ base: "none", sm: "block" }} maxW="200px" src={post.imageUrl} alt={post.title} objectFit="cover" />
+                    <Image display={{ base: "none", md: "block" }} maxW="200px" src={post.imageUrl} alt={post.title} objectFit="cover" />
                   </Flex>
                 </Box>
               </Box>
