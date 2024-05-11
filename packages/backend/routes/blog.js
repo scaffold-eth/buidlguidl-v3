@@ -1,16 +1,15 @@
 const express = require("express");
 const axios = require("axios");
 const xml2js = require("xml2js");
-const cors = require('cors');
 
 const router = express.Router();
 
-router.get("/posts", cors(), async (req, res) => {
+router.get("/posts", async (req, res) => {
   try {
     const response = await axios.get("https://buidlguidl.substack.com/feed");
     const xml = response.data;
-
     const parser = new xml2js.Parser();
+
     parser.parseString(xml, (err, result) => {
       if (err) {
         console.error("Failed to parse blog feed:", err);
