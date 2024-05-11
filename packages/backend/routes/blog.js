@@ -15,13 +15,18 @@ router.get("/posts", async (req, res) => {
         console.error("Failed to parse blog feed:", err);
         res.status(500).json({ error: "Failed to parse blog feed" });
       } else {
-        const posts = result.rss.channel[0].item.map(item => ({
-          title: item.title[0],
-          description: item.description[0],
-          link: item.link[0],
-          pubDate: item.pubDate[0],
-          imageUrl: item.enclosure ? item.enclosure[0].$.url : null
-        }));
+        const posts = result.rss.channel[0].item.map(item => {
+          const date = new Date(item.pubDate[0]);
+          const formattedDate = `${date.toLocaleString('default', { month: 'short' }).toUpperCase()} ${date.getDate()}`;
+
+          return {
+            title: item.title[0],
+            description: item.description[0],
+            link: item.link[0],
+            pubDate: formattedDate,
+            imageUrl: item.enclosure ? item.enclosure[0].$.url : null
+          };
+        });
 
         res.status(200).json(posts.slice(0, 3)); // Return the last 3 posts
       }
