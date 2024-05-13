@@ -3,17 +3,20 @@ import { Box, Link, SkeletonText, Table, Tbody, Td, Text, Th, Thead, Tr } from "
 import { SreChallengeInfo } from "../data/SreChallenges";
 import ChallengeStatusTag from "./ChallengeStatusTag";
 import DateWithTooltip from "./DateWithTooltip";
+import useCustomColorModes from "../hooks/useCustomColorModes";
 
 const SRE_FRONTEND = "https://speedrunethereum.com";
 
 export default function BuilderChallengesTable({ challenges, isLoadingTimestamps, challengeEvents }) {
+  const { baseColor } = useCustomColorModes();
+
   return (
     challenges && (
       <Box overflowX="auto" mb={10}>
         <Text fontSize="2xl" fontWeight="bold">
           Challenges
         </Text>
-        <Table>
+        <Table background={baseColor} colorScheme="customBaseColorScheme" mt={6}>
           <Thead>
             <Tr>
               <Th>Name</Th>

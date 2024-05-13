@@ -62,6 +62,15 @@ const theme = extendTheme({
       baseStyle: {
         borderRadius: 0,
       },
+      variants: {
+        secondary: ({ colorMode }) => ({
+          color: "light.text",
+          background: colorMode === "light" ? "light.blue" : "dark.blue",
+          _hover: {
+            background: colorMode === "light" ? "light.baseBlue" : "dark.baseBlue",
+          },
+        }),
+      },
     },
     Card,
   },

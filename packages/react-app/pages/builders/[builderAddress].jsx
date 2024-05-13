@@ -257,7 +257,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
             </Heading>
             <Spacer />
             {isMyProfile && (
-              <Button colorScheme="blue" mb={8} onClick={onOpen}>
+              <Button variant="secondary" mb={8} onClick={onOpen}>
                 Submit New Build
               </Button>
             )}
