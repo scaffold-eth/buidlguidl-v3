@@ -32,7 +32,6 @@ import BuilderProfileStreamSkeleton from "../../components/skeletons/BuilderProf
 import BuildCard from "../../components/BuildCard";
 import SubmitBuildModal from "../../components/SubmitBuildModal";
 import DateWithTooltip from "../../components/DateWithTooltip";
-import { USER_FUNCTIONS } from "../../helpers/constants";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import { getWithdrawEvents } from "../../data/api/streams";
 import { getChallengeEventsForUser, getSreBuilder } from "../../data/api/sre";
@@ -52,7 +51,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const refreshData = () => router.replace(router.asPath);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { secondaryFontColor, borderColor } = useCustomColorModes();
+  const { secondaryFontColor, textColor, baseColor } = useCustomColorModes();
   const [builderBuilds, setBuilderBuilds] = useState(null);
   const { hasCopied, onCopy } = useClipboard(builder?.stream?.streamAddress);
   const [withdrawEvents, setWithdrawEvents] = useState([]);
@@ -182,10 +181,16 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
         <GridItem colSpan={{ base: 1, xl: 3 }}>
           {isMyProfile && <BuilderNotifications builder={builder} />}
           <Flex spacing={4} mb={8} direction={{ base: "column-reverse", md: "row" }}>
-            <Flex mr={{ base: 0, md: 2 }} borderRadius="lg" borderColor={borderColor} borderWidth={1} p={4} w="full">
-              {isLoadingBuilder && <BuilderProfileStreamSkeleton />}
-              {!isLoadingBuilder && !streamDisplay && <Text>-</Text>}
-              {!isLoadingBuilder && !!streamDisplay && (
+            {isLoadingBuilder && <BuilderProfileStreamSkeleton />}
+            {!isLoadingBuilder && !!streamDisplay && (
+              <Flex
+                mr={{ base: 0, md: 2 }}
+                borderColor={textColor}
+                borderWidth={1}
+                background={baseColor}
+                p={4}
+                w={{ base: "full", md: "50%" }}
+              >
                 <Box w="full">
                   <Flex align="center" justify="space-evenly" w="full">
                     <Flex>
@@ -229,6 +234,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                         size="sm"
                         value={streamDisplay.unlockedPercentage * 100}
                         colorScheme="green"
+                        borderColor={textColor}
+                        borderWidth={1}
                       />
                     </Box>
                   </Flex>
@@ -240,33 +247,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                     />
                   )}
                 </Box>
-              )}
-            </Flex>
-            <Flex
-              ml={{ base: 0, md: 2 }}
-              mb={{ base: 2, md: 0 }}
-              borderRadius="lg"
-              borderColor={borderColor}
-              borderWidth={1}
-              p={2}
-              w="full"
-              justify="right"
-            >
-              <Text fontSize="xl" fontWeight="medium" textAlign="right">
-                {builder?.function ? (
-                  <HStack>
-                    <Tag colorScheme="gray" variant="solid">
-                      {USER_FUNCTIONS[builder?.function]?.label}
-                    </Tag>
-                    {USER_FUNCTIONS[builder?.function]?.graphic && (
-                      <Image src={`/assets/${USER_FUNCTIONS[builder?.function]?.graphic}`} maxW="92px" />
-                    )}
-                  </HStack>
-                ) : (
-                  "-"
-                )}
-              </Text>
-            </Flex>
+              </Flex>
+            )}
           </Flex>
           <Flex mb={4}>
             <Text fontSize="2xl" fontWeight="bold">
@@ -300,7 +282,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                 justify="center"
                 align="center"
                 borderRadius="lg"
-                borderColor={borderColor}
+                borderColor={textColor}
                 borderWidth={1}
                 py={20}
                 mb={8}
