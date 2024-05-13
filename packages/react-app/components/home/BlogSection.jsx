@@ -4,6 +4,11 @@ import useCustomColorModes from "../../hooks/useCustomColorModes";
 
 const BlogSection = ({ posts }) => {
   const { baseColor, secondaryFontColor } = useCustomColorModes();
+
+  if (!posts || posts.length === 0) {
+    return null;
+  }
+
   return (
     <Container maxW="container.lg" mb="50px">
       <Heading fontWeight="500" mb={8} mt={20}>

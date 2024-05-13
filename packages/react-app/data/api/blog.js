@@ -7,6 +7,6 @@ export const fetchRecentPosts = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching recent posts:", error);
-    throw new Error("Couldn't fetch recent posts");
+    return [];
   }
 };
