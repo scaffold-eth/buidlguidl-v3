@@ -77,6 +77,7 @@ const theme = extendTheme({
   styles: {
     global: props => ({
       body: {
+        minHeight: "100vh",
         color: props.colorMode === "light" ? "light.text" : "dark.text",
         background:
           props.colorMode === "light"
