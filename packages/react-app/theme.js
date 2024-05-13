@@ -80,6 +80,10 @@ const theme = extendTheme({
           transition: "opacity 0.3s",
         },
       },
+      "p, span, li, td": {
+        fontFamily: "Space mono, monospace",
+        letterSpacing: "-0.03rem",
+      },
     }),
   },
 });

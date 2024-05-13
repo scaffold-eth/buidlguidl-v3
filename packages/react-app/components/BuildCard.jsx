@@ -124,7 +124,7 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
             <Text fontWeight="bold">{build.name}</Text>
           </Link>
         </NextLink>
-        <Text color={secondaryFontColor} whiteSpace="pre-wrap">
+        <Text color={secondaryFontColor} whiteSpace="pre-wrap" fontSize="sm">
           {build.desc.length > 200 ? `${build.desc.slice(0, 200)}...` : build.desc}
         </Text>
         <Spacer />

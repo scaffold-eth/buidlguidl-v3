@@ -24,6 +24,7 @@ import {
   Tooltip,
   useClipboard,
   Link,
+  Heading,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import BuilderProfileCard from "../../components/BuilderProfileCard";
@@ -251,9 +252,9 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
             )}
           </Flex>
           <Flex mb={4}>
-            <Text fontSize="2xl" fontWeight="bold">
+            <Heading fontSize="2xl" fontWeight="bold">
               Builds
-            </Text>
+            </Heading>
             <Spacer />
             {isMyProfile && (
               <Button colorScheme="blue" mb={8} onClick={onOpen}>
@@ -304,9 +305,9 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           )}
           {!isLoadingBuilder && withdrawEvents.length !== 0 && (
             <Box mb={4}>
-              <Text fontSize="2xl" fontWeight="bold">
+              <Heading fontSize="2xl" fontWeight="bold">
                 Stream withdraws
-              </Text>
+              </Heading>
               <Table
                 variant="simple"
                 overflowY="auto"
@@ -329,7 +330,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                     <Td>
                       <Text whiteSpace="nowrap">Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
                     </Td>
-                    <Td>{payload.reason}</Td>
+                    <Td fontSize="sm">{payload.reason}</Td>
                   </Tr>
                 ))}
               </Table>
