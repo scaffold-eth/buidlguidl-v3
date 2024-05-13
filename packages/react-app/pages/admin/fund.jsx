@@ -152,7 +152,7 @@ export default function Fund() {
   const [buildersWithStream, setBuildersWithStream] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
   const [builderData, setBuilderData] = useState([]);
-  const { secondaryFontColor } = useCustomColorModes();
+  const { secondaryFontColor, alternativeBaseColor } = useCustomColorModes();
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
@@ -304,7 +304,8 @@ export default function Fund() {
           <Center mb={5}>
             <chakra.strong mr={2}>Total builders with stream:</chakra.strong> {buildersWithStream.length}
           </Center>
-          <Table {...getTableProps()}>
+
+          <Table {...getTableProps()} background={alternativeBaseColor} colorScheme="customBaseColorScheme" size="sm">
             <Thead>
               {headerGroups.map((headerGroup, index) => (
                 <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
@@ -350,7 +351,6 @@ export default function Fund() {
               })}
             </Tbody>
           </Table>
-
           <Center mt={4}>
             <ButtonGroup>
               <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>

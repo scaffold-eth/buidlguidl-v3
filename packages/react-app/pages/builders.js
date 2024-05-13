@@ -37,7 +37,6 @@ import { bySocialWeight } from "../data/socials";
 import { USER_ROLES } from "../helpers/constants";
 import StreamTableCell from "../components/StreamTableCell";
 import MetaSeo from "../components/MetaSeo";
-import DotIcon from "../components/icons/DotIcon";
 import BuilderFlags from "../components/builder/BuilderFlags";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 
@@ -293,6 +292,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
             wordBreak={{ base: "normal", lg: "break-word" }}
             background={alternativeBaseColor}
             colorScheme="customBaseColorScheme"
+            size="sm"
           >
             <Thead>
               {headerGroups.map((headerGroup, index) => (
