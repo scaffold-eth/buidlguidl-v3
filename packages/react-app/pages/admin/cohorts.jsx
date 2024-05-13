@@ -19,7 +19,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy, useRowSelect } from "react-table";
-import { ExternalLinkIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import WithdrawStatsSkeleton from "../../components/skeletons/WithdrawStatsSkeleton";
 import { getAllCohorts } from "../../data/api/builder";
@@ -101,7 +101,7 @@ export default function Fund() {
   const [buildersWithStream, setBuildersWithStream] = useState([]);
   const [isLoadingCohorts, setIsLoadingCohorts] = useState(true);
   const [cohortData, setCohortData] = useState([]);
-  const { secondaryFontColor } = useCustomColorModes();
+  const { secondaryFontColor, alternativeBaseColor } = useCustomColorModes();
 
   const isLoading = isLoadingEvents || isLoadingCohorts;
 
@@ -197,7 +197,7 @@ export default function Fund() {
           <Center mb={5}>
             <chakra.strong mr={2}>Total Cohorts:</chakra.strong> {cohortData.length}
           </Center>
-          <Table {...getTableProps()}>
+          <Table {...getTableProps()} background={alternativeBaseColor} colorScheme="customBaseColorScheme" size="sm">
             <Thead>
               {headerGroups.map((headerGroup, index) => (
                 <Tr {...headerGroup.getHeaderGroupProps()} key={index}>

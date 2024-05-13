@@ -17,7 +17,7 @@ const ActivitySection = ({ events }) => {
       {/*Center*/}
       <Box textAlign="center" mt={12}>
         <NextLink href="activity" passHref>
-          <Button as="a" href="/activity" variant="outline" colorScheme="customColorScheme" mx="auto" size="sm">
+          <Button as="a" href="/activity" variant="outline" colorScheme="customBaseColorScheme" mx="auto" size="sm">
             View All
           </Button>
         </NextLink>
