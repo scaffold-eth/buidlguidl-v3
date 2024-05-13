@@ -6,6 +6,7 @@ import { Flex, Button, VStack, Container, Divider, Heading, chakra, Text, Link }
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import { formatDateFromNow } from "../../helpers/formatDateFromNow";
 
+const MAX_DESC_LEN = 150;
 const RecentBuildCard = ({ build }) => {
   const { baseColor, baseBlue2Color, blueColor } = useCustomColorModes();
   return (
@@ -19,7 +20,9 @@ const RecentBuildCard = ({ build }) => {
         </VStack>
         <Divider />
         <VStack align="start" spacing={3} p={5} bg={baseBlue2Color}>
-          <Text fontSize="sm">{build.desc}</Text>
+          <Text fontSize="sm">
+            {build.desc.length > MAX_DESC_LEN ? `${build.desc.substring(0, MAX_DESC_LEN)}...` : build.desc}
+          </Text>
           <NextLink href={`/build/${build.id}`} passHref>
             <Button
               color="light.text"
