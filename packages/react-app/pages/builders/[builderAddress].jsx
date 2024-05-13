@@ -307,7 +307,13 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               <Text fontSize="2xl" fontWeight="bold">
                 Stream withdraws
               </Text>
-              <Table variant="simple" overflowY="auto" background={baseColor} colorScheme="customBaseColorScheme">
+              <Table
+                variant="simple"
+                overflowY="auto"
+                background={baseColor}
+                colorScheme="customBaseColorScheme"
+                mt={6}
+              >
                 <Thead>
                   <Tr>
                     <Th>Time</Th>
