@@ -307,7 +307,7 @@ const BuilderProfileCard = ({
                 )
               )}
               {isMyProfile && (
-                <Button mb={3} size="xs" variant="outline" onClick={onOpen} colorScheme="customColorScheme">
+                <Button mb={3} size="xs" variant="outline" onClick={onOpen} colorScheme="customBaseColorScheme">
                   Update socials
                 </Button>
               )}

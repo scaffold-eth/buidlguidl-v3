@@ -42,7 +42,7 @@ const theme = extendTheme({
     // color schemes
     customBaseColorScheme: {
       // hover bg (light)
-      50: "#FFFCFC",
+      50: "#cfd2d9",
       100: "#cfd2d9",
       // color (dark)
       // hover bg (dark) with opacity
