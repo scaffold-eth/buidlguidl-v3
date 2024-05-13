@@ -68,7 +68,7 @@ export default function Index({ bgStats, events, builds }) {
 export async function getStaticProps() {
   const stats = await getStats();
   const events = await getAllEvents(null, 10);
-  const builds = (await getAllBuilds()).sort(bySubmittedTimestamp).slice(0, 4);
+  const builds = (await getAllBuilds()).sort((a, b) => b.submittedTimestamp - a.submittedTimestamp).slice(0, 4);
 
   return {
     props: {
