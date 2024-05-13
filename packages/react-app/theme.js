@@ -22,6 +22,7 @@ const theme = extendTheme({
     light: {
       text: "#182232",
       base: "#FFFCFC",
+      alternativeBase: "#FFFCFC",
       blue: "#9FA9FF",
       baseBlue: "#D8DCFF",
       baseBlue2: "#EDEFFF",
@@ -32,6 +33,7 @@ const theme = extendTheme({
     dark: {
       text: "#FFFCFC",
       base: "#0B2041",
+      alternativeBase: "#2F3679",
       blue: "#9FA9FF",
       baseBlue: "#4B55B0",
       baseBlue2: "#2F3679",

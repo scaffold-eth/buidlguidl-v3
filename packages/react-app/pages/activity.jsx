@@ -16,7 +16,7 @@ export default function ActivityView() {
 
   const router = useRouter();
 
-  const { baseBlueColor } = useCustomColorModes();
+  const { baseBlueColor, alternativeBaseColor } = useCustomColorModes();
 
   useEffect(() => {
     const { filter, count } = router.query;
@@ -98,7 +98,7 @@ export default function ActivityView() {
           </Flex>
           <Box mb={6}>
             {eventsFeed.map(event => (
-              <EventRow key={JSON.stringify(event.payload)} event={event} bgColor={baseBlueColor} />
+              <EventRow key={JSON.stringify(event.payload)} event={event} bgColor={alternativeBaseColor} />
             ))}
           </Box>
           <Center mt={4}>
