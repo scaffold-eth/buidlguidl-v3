@@ -26,7 +26,7 @@ const theme = extendTheme({
       baseBlue: "#D8DCFF",
       baseBlue2: "#EDEFFF",
       baseGreen: "#EAFFA9",
-      accentGreen: "#B5DC3A",
+      accentGreen: "#9FC622",
       baseOrange: "#FFD4B5",
     },
     dark: {

@@ -101,7 +101,7 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
   };
 
   return (
-    <Box overflow="hidden" display="flex" flexDirection="column" pos="relative" borderColor={textColor} borderWidth={1}>
+    <Box overflow="hidden" display="flex" flexDirection="column" pos="relative" borderRadius="xl">
       <NextLink href={`/build/${build.id}`} passHref>
         <Link>
           <Box bgColor={baseColor} borderBottom="1px" borderColor={textColor}>
