@@ -110,7 +110,9 @@ export default function BuildDetailView({ build }) {
             </Heading>
           </Box>
           <SkeletonText mt="4" noOfLines={4} spacing="4" isLoaded={description} />
-          <ReactMarkdown components={ChakraUIRenderer(chakraMarkdownComponents)}>{description}</ReactMarkdown>
+          <Box mx="auto" maxW="container.md">
+            <ReactMarkdown components={ChakraUIRenderer(chakraMarkdownComponents)}>{description}</ReactMarkdown>
+          </Box>
         </>
       )}
       <HStack
