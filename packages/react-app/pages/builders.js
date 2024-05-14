@@ -37,8 +37,8 @@ import { bySocialWeight } from "../data/socials";
 import { USER_ROLES } from "../helpers/constants";
 import StreamTableCell from "../components/StreamTableCell";
 import MetaSeo from "../components/MetaSeo";
-import DotIcon from "../components/icons/DotIcon";
 import BuilderFlags from "../components/builder/BuilderFlags";
+import useCustomColorModes from "../hooks/useCustomColorModes";
 
 const serverPath = "/builders";
 
@@ -103,6 +103,8 @@ const BuilderBuildsCell = ({ buildCount }) => {
 };
 
 const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
+  const { alternativeBaseColor } = useCustomColorModes();
+
   return (
     <Input
       type="text"
@@ -111,6 +113,8 @@ const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
         setFilter(e.target.value || undefined);
       }}
       placeholder="Search builder"
+      bgColor={alternativeBaseColor}
+      mb={8}
     />
   );
 };
@@ -131,6 +135,8 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
   const isAdmin = userRole === USER_ROLES.admin;
   const isLoggedIn = userRole !== null && userRole !== USER_ROLES.anonymous;
+
+  const { alternativeBaseColor } = useCustomColorModes();
 
   const ensFiltering = (rows, id, filterValue) => {
     if (filterValue.length < 3) {
@@ -281,7 +287,13 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
               </InputGroup>
             </Box>
           </Center>
-          <Table {...getTableProps()} wordBreak={{ base: "normal", lg: "break-word" }}>
+          <Table
+            {...getTableProps()}
+            wordBreak={{ base: "normal", lg: "break-word" }}
+            background={alternativeBaseColor}
+            colorScheme="customBaseColorScheme"
+            size="sm"
+          >
             <Thead>
               {headerGroups.map((headerGroup, index) => (
                 <Tr {...headerGroup.getHeaderGroupProps()} key={index}>

@@ -22,16 +22,18 @@ const theme = extendTheme({
     light: {
       text: "#182232",
       base: "#FFFCFC",
+      alternativeBase: "#FFFCFC",
       blue: "#9FA9FF",
       baseBlue: "#D8DCFF",
       baseBlue2: "#EDEFFF",
       baseGreen: "#EAFFA9",
-      accentGreen: "#B5DC3A",
+      accentGreen: "#9FC622",
       baseOrange: "#FFD4B5",
     },
     dark: {
       text: "#FFFCFC",
       base: "#0B2041",
+      alternativeBase: "#2F3679",
       blue: "#9FA9FF",
       baseBlue: "#4B55B0",
       baseBlue2: "#2F3679",
@@ -42,7 +44,7 @@ const theme = extendTheme({
     // color schemes
     customBaseColorScheme: {
       // hover bg (light)
-      50: "#FFFCFC",
+      50: "#cfd2d9",
       100: "#cfd2d9",
       // color (dark)
       // hover bg (dark) with opacity
@@ -62,12 +64,22 @@ const theme = extendTheme({
       baseStyle: {
         borderRadius: 0,
       },
+      variants: {
+        secondary: ({ colorMode }) => ({
+          color: "light.text",
+          background: colorMode === "light" ? "light.blue" : "dark.blue",
+          _hover: {
+            background: colorMode === "light" ? "light.baseBlue" : "dark.baseBlue",
+          },
+        }),
+      },
     },
     Card,
   },
   styles: {
     global: props => ({
       body: {
+        minHeight: "100vh",
         color: props.colorMode === "light" ? "light.text" : "dark.text",
         background:
           props.colorMode === "light"
@@ -79,6 +91,10 @@ const theme = extendTheme({
           opacity: 0.6,
           transition: "opacity 0.3s",
         },
+      },
+      "p, span, li, td": {
+        fontFamily: "Space mono, monospace",
+        letterSpacing: "-0.03rem",
       },
     }),
   },

@@ -55,7 +55,8 @@ export default function BuildVoteList() {
   const address = useConnectedAddress();
   const [builds, setBuilds] = useState([]);
   const [isLoadingBuilds, setIsLoadingBuilds] = useState(false);
-  const { secondaryFontColor } = useCustomColorModes();
+  const { secondaryFontColor, alternativeBaseColor } = useCustomColorModes();
+
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
@@ -190,7 +191,7 @@ export default function BuildVoteList() {
           <Center mb={5}>
             <chakra.strong mr={2}>Total builds:</chakra.strong> {builds.length}
           </Center>
-          <Table {...getTableProps()}>
+          <Table {...getTableProps()} background={alternativeBaseColor} colorScheme="customBaseColorScheme">
             <Thead>
               {headerGroups.map((headerGroup, index) => (
                 <Tr {...headerGroup.getHeaderGroupProps()} key={index}>

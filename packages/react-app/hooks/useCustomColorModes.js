@@ -11,6 +11,7 @@ const useCustomColorModes = () => {
 
   const textColor = useColorModeValue("light.text", "dark.text");
   const baseColor = useColorModeValue("light.base", "dark.base");
+  const alternativeBaseColor = useColorModeValue("light.alternativeBase", "dark.alternativeBase");
   const blueColor = useColorModeValue("light.blue", "dark.blue");
   const baseBlueColor = useColorModeValue("light.baseBlue", "dark.baseBlue");
   const baseBlue2Color = useColorModeValue("light.baseBlue2", "dark.baseBlue2");
@@ -29,6 +30,7 @@ const useCustomColorModes = () => {
     // New colors
     textColor,
     baseColor,
+    alternativeBaseColor,
     blueColor,
     baseBlueColor,
     baseBlue2Color,
