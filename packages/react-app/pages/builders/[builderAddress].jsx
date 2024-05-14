@@ -266,7 +266,13 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           {!isLoadingBuilder &&
             (builderBuilds?.length ? (
               <Box overflowX="auto" mb={8}>
-                <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={5}>
+                <SimpleGrid
+                  columns={[1, null, 2, null, 3]}
+                  spacing={6}
+                  pb={5}
+                  maxW={{ base: "315px", md: "none" }}
+                  mx="auto"
+                >
                   {builderBuilds.map(build => (
                     <BuildCard
                       build={build}

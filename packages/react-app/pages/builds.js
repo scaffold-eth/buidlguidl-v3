@@ -28,7 +28,7 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { alternativeBaseColor } = useCustomColorModes();
+  const { baseColor } = useCustomColorModes();
 
   const updateBuilds = useCallback(async () => {
     // We used to retrieve only the featured builds.
@@ -74,7 +74,7 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
       )}
 
       <Box mb={8}>
-        <InputGroup bgColor={alternativeBaseColor}>
+        <InputGroup bgColor={baseColor}>
           <Input placeholder="Search builds" onChange={event => setSearchQuery(event.target.value)} />
           <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
         </InputGroup>
@@ -83,7 +83,7 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
       {isLoadingBuilds ? (
         <Spinner />
       ) : buildsToRender.length ? (
-        <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
+        <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20} maxW={{ base: "315px", md: "none" }}>
           {buildsToRender.map(build => (
             <BuildCard
               build={build}

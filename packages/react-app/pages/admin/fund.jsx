@@ -152,7 +152,7 @@ export default function Fund() {
   const [buildersWithStream, setBuildersWithStream] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
   const [builderData, setBuilderData] = useState([]);
-  const { secondaryFontColor, alternativeBaseColor } = useCustomColorModes();
+  const { secondaryFontColor, baseColor } = useCustomColorModes();
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
@@ -305,7 +305,7 @@ export default function Fund() {
             <chakra.strong mr={2}>Total builders with stream:</chakra.strong> {buildersWithStream.length}
           </Center>
 
-          <Table {...getTableProps()} background={alternativeBaseColor} colorScheme="customBaseColorScheme" size="sm">
+          <Table {...getTableProps()} background={baseColor} colorScheme="customBaseColorScheme" size="sm">
             <Thead>
               {headerGroups.map((headerGroup, index) => (
                 <Tr {...headerGroup.getHeaderGroupProps()} key={index}>

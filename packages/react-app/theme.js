@@ -22,7 +22,6 @@ const theme = extendTheme({
     light: {
       text: "#182232",
       base: "#FFFCFC",
-      alternativeBase: "#FFFCFC",
       blue: "#9FA9FF",
       baseBlue: "#D8DCFF",
       baseBlue2: "#EDEFFF",
@@ -33,7 +32,6 @@ const theme = extendTheme({
     dark: {
       text: "#FFFCFC",
       base: "#0B2041",
-      alternativeBase: "#2F3679",
       blue: "#9FA9FF",
       baseBlue: "#4B55B0",
       baseBlue2: "#2F3679",
@@ -84,7 +82,7 @@ const theme = extendTheme({
         background:
           props.colorMode === "light"
             ? "linear-gradient(180deg, #BFCDFF 10.47%, #D9EBE5 60.39%, #EFFBCA 89.55%, rgba(239, 251, 202, 0.00) 116.3%)"
-            : "linear-gradient(180deg, #0B2041 10.47%, #2F3679 107%)",
+            : "linear-gradient(180deg, #0C2A59 10.47%, #313A88 98.28%)",
       },
       a: {
         _hover: {

@@ -27,7 +27,7 @@ import BuildLikeButton from "./BuildLikeButton";
 
 const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
   const address = useUserAddress(userProvider);
-  const { borderColor, secondaryFontColor, baseColor, alternativeBaseColor, textColor } = useCustomColorModes();
+  const { borderColor, secondaryFontColor, baseColor, textColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isDeletingBuild, setIsDeletingBuild] = useState(false);
 
@@ -104,21 +104,12 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
     <Box overflow="hidden" display="flex" flexDirection="column" pos="relative" borderRadius="xl">
       <NextLink href={`/build/${build.id}`} passHref>
         <Link>
-          <Box bgColor={alternativeBaseColor} borderBottom="1px" borderColor={textColor}>
+          <Box bgColor={baseColor} borderBottom="1px" borderColor={textColor}>
             {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
           </Box>
         </Link>
       </NextLink>
-      <Flex
-        pt={9}
-        pb={4}
-        px={4}
-        direction="column"
-        minH="240px"
-        h="100%"
-        pos="relative"
-        backgroundColor={alternativeBaseColor}
-      >
+      <Flex pt={9} pb={4} px={4} direction="column" minH="240px" h="100%" pos="relative" backgroundColor={baseColor}>
         {build.videoUrl && (
           <Box pos="absolute" right={0} top={0} pt="6px" pr="12px">
             <Link href={build.videoUrl} isExternal>
@@ -139,7 +130,7 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
         <Spacer />
         <ButtonGroup mt={3}>
           <NextLink href={`/build/${build.id}`} passHref>
-            <Button variant="outline" size="sm" isFullWidth colorScheme="customBaseColorScheme">
+            <Button as="a" variant="outline" size="sm" isFullWidth colorScheme="customBaseColorScheme">
               View
             </Button>
           </NextLink>

@@ -16,7 +16,7 @@ export default function ActivityView() {
 
   const router = useRouter();
 
-  const { alternativeBaseColor } = useCustomColorModes();
+  const { baseColor } = useCustomColorModes();
 
   useEffect(() => {
     const { filter, count } = router.query;
@@ -92,7 +92,7 @@ export default function ActivityView() {
               placeholder="- All -"
               onChange={handleFilterChange}
               value={eventTypeFilter}
-              bgColor={alternativeBaseColor}
+              bgColor={baseColor}
               mb={10}
             >
               {Object.entries(EVENT_TYPES).map(([id, value]) => (
@@ -104,7 +104,7 @@ export default function ActivityView() {
           </Flex>
           <Box mb={6}>
             {eventsFeed.map(event => (
-              <EventRow key={JSON.stringify(event.payload)} event={event} bgColor={alternativeBaseColor} />
+              <EventRow key={JSON.stringify(event.payload)} event={event} bgColor={baseColor} />
             ))}
           </Box>
           <Center mt={4}>
@@ -112,7 +112,7 @@ export default function ActivityView() {
               <Select
                 isFullWidth={false}
                 value={eventCount}
-                bgColor={alternativeBaseColor}
+                bgColor={baseColor}
                 onChange={e => {
                   const count = Number(e.target.value);
                   setEventCount(count);

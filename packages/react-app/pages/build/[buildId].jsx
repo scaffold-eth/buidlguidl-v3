@@ -86,7 +86,7 @@ export default function BuildDetailView({ build }) {
   );
 
   return (
-    <Container maxW="container.md" mb="100px">
+    <Container maxW="container.lg" mb="100px">
       <MetaSeo title={build?.name} description={build?.desc} image={build?.image ?? null} />
       <BuildDetailHeader build={build} actionButtons={actionButtons} />
       {build.videoUrl && (
@@ -110,7 +110,9 @@ export default function BuildDetailView({ build }) {
             </Heading>
           </Box>
           <SkeletonText mt="4" noOfLines={4} spacing="4" isLoaded={description} />
-          <ReactMarkdown components={ChakraUIRenderer(chakraMarkdownComponents)}>{description}</ReactMarkdown>
+          <Box mx="auto" maxW="container.md">
+            <ReactMarkdown components={ChakraUIRenderer(chakraMarkdownComponents)}>{description}</ReactMarkdown>
+          </Box>
         </>
       )}
       <HStack
