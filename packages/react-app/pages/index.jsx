@@ -6,11 +6,13 @@ import MetaSeo from "../components/MetaSeo";
 import { getStats } from "../data/api/builder";
 import HeroSection from "../components/home/HeroSection";
 import ActivitySection from "../components/home/ActivitySection";
-import { getAllEvents } from "../data/api";
+import { getAllBuilds, getAllEvents } from "../data/api";
+import RecentBuildsSection from "../components/home/RecentBuildsSection";
+import { bySubmittedTimestamp } from "../helpers/sorting";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 /* eslint-disable jsx-a11y/accessible-emoji */
-export default function Index({ bgStats, events }) {
+export default function Index({ bgStats, events, builds }) {
   const [builders, setBuilders] = useState([]);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
 
@@ -46,6 +48,8 @@ export default function Index({ bgStats, events }) {
       {/* Hero*/}
       <HeroSection {...bgStats} />
 
+      <RecentBuildsSection builds={builds} />
+
       <ActivitySection events={events} />
 
       {/* Footer */}
@@ -64,6 +68,7 @@ export default function Index({ bgStats, events }) {
 export async function getStaticProps() {
   const stats = await getStats();
   const events = await getAllEvents(null, 10);
+  const builds = (await getAllBuilds()).sort((a, b) => b.submittedTimestamp - a.submittedTimestamp).slice(0, 4);
 
   return {
     props: {
@@ -76,6 +81,7 @@ export async function getStaticProps() {
         streamedEthIncrementMonth: stats?.streamedEthIncrementMonth,
       },
       events,
+      builds,
     },
     // ToDo. Maybe a 15 min refresh? or load events in the frontend?
     // 6 hours refresh.

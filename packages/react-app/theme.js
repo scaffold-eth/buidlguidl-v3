@@ -69,7 +69,7 @@ const theme = extendTheme({
           color: "light.text",
           background: colorMode === "light" ? "light.blue" : "dark.blue",
           _hover: {
-            background: colorMode === "light" ? "light.baseBlue" : "dark.baseBlue",
+            opacity: 0.8,
           },
         }),
       },
