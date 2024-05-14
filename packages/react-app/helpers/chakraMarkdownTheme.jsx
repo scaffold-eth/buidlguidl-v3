@@ -23,10 +23,10 @@ const MdCode = ({ children }) => {
 };
 
 const MdH1 = ({ children }) => {
-  const { borderColor } = useCustomColorModes();
+  const { textColor } = useCustomColorModes();
 
   return (
-    <Heading as="h1" size="xl" mt={6} mb={4} pb={2} borderBottom="1px solid" borderColor={borderColor}>
+    <Heading as="h1" size="xl" mt={6} mb={4} pb={2} borderBottom="1px solid" borderColor={textColor}>
       {children}
     </Heading>
   );

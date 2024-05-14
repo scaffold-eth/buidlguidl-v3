@@ -1,7 +1,20 @@
 import React, { useContext } from "react";
 import NextLink from "next/link";
 import { useLookupAddress } from "eth-hooks";
-import { Heading, Box, Image, HStack, VStack, Flex, Text, Link, Spacer, useDisclosure } from "@chakra-ui/react";
+import {
+  Heading,
+  Box,
+  Image,
+  HStack,
+  VStack,
+  Flex,
+  Text,
+  Link,
+  Spacer,
+  useDisclosure,
+  Grid,
+  Stack,
+} from "@chakra-ui/react";
 import QRPunkBlockie from "./QrPunkBlockie";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ellipsizedAddress } from "../helpers/strings";
@@ -62,37 +75,47 @@ const Builder = ({ builderAddress }) => {
 
 const BuildDetailHeader = ({ build, actionButtons }) => {
   const { isOpen: isOpenImageModal, onOpen: onOpenImageModal, onClose: onCloseImageModal } = useDisclosure();
-  const { borderColor } = useCustomColorModes();
+  const { textColor, baseColor, baseBlue2Color } = useCustomColorModes();
 
   return (
-    <>
-      <Flex borderRadius="lg" borderColor={borderColor} borderWidth={1} p={6} margin="auto">
-        <Box maxW={build.image ? "65%" : "none"}>
-          <Heading as="h1" mb={4} pb={2} borderColor={borderColor} size="md">
+    <Box borderColor={textColor} borderWidth={1} margin="auto" bgColor={baseColor} mb={12}>
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        spacing={{ base: "0", md: "20px" }}
+        p={6}
+        pb={0}
+        justify="space-between"
+      >
+        <Box maxW={{ base: "100%", md: build.image ? "65%" : "none" }}>
+          <Heading as="h1" pb={2} borderColor={textColor} size="lg">
             {build.name}
           </Heading>
           <HStack mb={6}>{actionButtons}</HStack>
-          <Text fontSize="lg" mb={6}>
-            {build.desc}
-          </Text>
-          <VStack align="left">
-            <Builder builderAddress={build.builder} />
-            {build?.coBuilders?.map(builderAddress => (
-              <Builder builderAddress={builderAddress} key={builderAddress} />
-            ))}
-          </VStack>
+          <Text mb={6}>{build.desc}</Text>
         </Box>
-        <Spacer p="5px" />
         {build.image && (
           <Box>
-            <Box border="2px" borderStyle="solid" borderColor={borderColor}>
-              <Image src={build.image} h="200px" mx="auto" onClick={onOpenImageModal} cursor="pointer" />
+            <Box border="2px" borderStyle="solid" borderColor={textColor} display="inline-block">
+              <Image
+                src={build.image}
+                h="200px"
+                mx="auto"
+                onClick={onOpenImageModal}
+                cursor="pointer"
+                objectFit="cover"
+              />
               <ImageModal image={build.image} onClose={onCloseImageModal} isOpen={isOpenImageModal} />
             </Box>
           </Box>
         )}
+      </Stack>
+      <Flex wrap="wrap" style={{ gap: "15px" }} mt={4} bg={baseBlue2Color} px={6} py={2}>
+        <Builder builderAddress={build.builder} />
+        {build?.coBuilders?.map(builderAddress => (
+          <Builder builderAddress={builderAddress} key={builderAddress} />
+        ))}
       </Flex>
-    </>
+    </Box>
   );
 };
 

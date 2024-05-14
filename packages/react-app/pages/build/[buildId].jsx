@@ -86,7 +86,7 @@ export default function BuildDetailView({ build }) {
   );
 
   return (
-    <Container maxW="container.md" mb="100px">
+    <Container maxW="container.lg" mb="100px">
       <MetaSeo title={build?.name} description={build?.desc} image={build?.image ?? null} />
       <BuildDetailHeader build={build} actionButtons={actionButtons} />
       {build.videoUrl && (
