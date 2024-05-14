@@ -4,7 +4,7 @@ import Address from "../Address";
 import Card from "../Card";
 import { Flex, Button, VStack, Container, Divider, Heading, chakra, Text, Link } from "@chakra-ui/react";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
-import { formatDateFromNow } from "../../helpers/formatDateFromNow";
+import DateWithTooltip from "../DateWithTooltip";
 
 const MAX_DESC_LEN = 150;
 const RecentBuildCard = ({ build }) => {
@@ -13,7 +13,7 @@ const RecentBuildCard = ({ build }) => {
     <VStack key={build.id} align="start" spacing={5}>
       <Card maxW="xs" display="flex" flexDirection="column" key={build}>
         <VStack align="start" spacing={3} p={5} bg={baseColor}>
-          <chakra.span fontSize="sm">{formatDateFromNow(build.submittedTimestamp)}</chakra.span>
+          <DateWithTooltip timestamp={build.submittedTimestamp} fontSize="sm" />
           <Heading size="md" fontWeight="500">
             {build.name}
           </Heading>
