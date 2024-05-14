@@ -131,7 +131,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
   const isAdmin = userRole === USER_ROLES.admin;
   const isLoggedIn = userRole !== null && userRole !== USER_ROLES.anonymous;
-  const { alternativeBaseColor } = useCustomColorModes();
+  const { baseColor } = useCustomColorModes();
 
   const ensFiltering = (rows, id, filterValue) => {
     if (filterValue.length < 3) {
@@ -277,7 +277,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
               {builders.length}
             </Box>
             <Box mb={8}>
-              <InputGroup bgColor={alternativeBaseColor}>
+              <InputGroup bgColor={baseColor}>
                 {ensFilter.render("Filter")}
                 <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
               </InputGroup>
@@ -286,7 +286,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           <Table
             {...getTableProps()}
             wordBreak={{ base: "normal", lg: "break-word" }}
-            background={alternativeBaseColor}
+            background={baseColor}
             colorScheme="customBaseColorScheme"
             size="sm"
           >

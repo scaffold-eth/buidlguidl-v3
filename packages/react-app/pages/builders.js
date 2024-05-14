@@ -103,7 +103,7 @@ const BuilderBuildsCell = ({ buildCount }) => {
 };
 
 const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
-  const { alternativeBaseColor } = useCustomColorModes();
+  const { baseColor } = useCustomColorModes();
 
   return (
     <Input
@@ -113,7 +113,7 @@ const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
         setFilter(e.target.value || undefined);
       }}
       placeholder="Search builder"
-      bgColor={alternativeBaseColor}
+      bgColor={baseColor}
       mb={8}
     />
   );
@@ -136,7 +136,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   const isAdmin = userRole === USER_ROLES.admin;
   const isLoggedIn = userRole !== null && userRole !== USER_ROLES.anonymous;
 
-  const { alternativeBaseColor } = useCustomColorModes();
+  const { baseColor } = useCustomColorModes();
 
   const ensFiltering = (rows, id, filterValue) => {
     if (filterValue.length < 3) {
@@ -290,7 +290,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           <Table
             {...getTableProps()}
             wordBreak={{ base: "normal", lg: "break-word" }}
-            background={alternativeBaseColor}
+            background={baseColor}
             colorScheme="customBaseColorScheme"
             size="sm"
           >
@@ -359,6 +359,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
               <Select
                 isFullWidth={false}
                 value={pageSize}
+                bgColor={baseColor}
                 onChange={e => {
                   setPageSize(Number(e.target.value));
                 }}
