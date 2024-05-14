@@ -81,18 +81,24 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
     <Box borderColor={textColor} borderWidth={1} margin="auto" bgColor={baseColor} mb={12}>
       <Stack
         direction={{ base: "column", md: "row" }}
-        spacing={{ base: "0", md: "20px" }}
+        spacing={5}
         p={6}
         pb={0}
         justify="space-between"
+        align={{ base: "center", md: "start" }}
       >
-        <Box maxW={{ base: "100%", md: build.image ? "65%" : "none" }}>
-          <Heading as="h1" pb={2} borderColor={textColor} size="lg">
+        <Stack
+          align={{ base: "center", md: "start" }}
+          spacing={5}
+          textAlign={{ base: "center", md: "start" }}
+          maxW={{ base: "100%", md: build.image ? "65%" : "none" }}
+        >
+          <Heading as="h1" borderColor={textColor} size="lg">
             {build.name}
           </Heading>
-          <HStack mb={6}>{actionButtons}</HStack>
-          <Text mb={6}>{build.desc}</Text>
-        </Box>
+          <HStack>{actionButtons}</HStack>
+          <Text>{build.desc}</Text>
+        </Stack>
         {build.image && (
           <Box>
             <Box border="2px" borderStyle="solid" borderColor={textColor} display="inline-block">
@@ -109,7 +115,15 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
           </Box>
         )}
       </Stack>
-      <Flex wrap="wrap" style={{ gap: "15px" }} mt={4} bg={baseBlue2Color} px={6} py={2}>
+      <Flex
+        wrap="wrap"
+        justify={{ base: "center", md: "start" }}
+        style={{ gap: "15px" }}
+        mt={4}
+        bg={baseBlue2Color}
+        px={6}
+        py={2}
+      >
         <Builder builderAddress={build.builder} />
         {build?.coBuilders?.map(builderAddress => (
           <Builder builderAddress={builderAddress} key={builderAddress} />
