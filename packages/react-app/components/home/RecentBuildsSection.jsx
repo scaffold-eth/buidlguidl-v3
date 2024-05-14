@@ -8,7 +8,7 @@ import DateWithTooltip from "../DateWithTooltip";
 
 const MAX_DESC_LEN = 150;
 const RecentBuildCard = ({ build }) => {
-  const { baseColor, baseBlue2Color, blueColor } = useCustomColorModes();
+  const { baseColor, baseBlue2Color } = useCustomColorModes();
   return (
     <VStack key={build.id} align="start" spacing={5}>
       <Card maxW="xs" display="flex" flexDirection="column" key={build}>
@@ -24,14 +24,7 @@ const RecentBuildCard = ({ build }) => {
             {build.desc.length > MAX_DESC_LEN ? `${build.desc.substring(0, MAX_DESC_LEN)}...` : build.desc}
           </Text>
           <NextLink href={`/build/${build.id}`} passHref>
-            <Button
-              color="light.text"
-              fontWeight="500"
-              bg={blueColor}
-              px={4}
-              py={2}
-              _hover={{ opacity: 0.8, textDecoration: "underline" }}
-            >
+            <Button as="a" variant="secondary" fontWeight="500" _hover={{ textDecoration: "underline" }}>
               Learn more
             </Button>
           </NextLink>
