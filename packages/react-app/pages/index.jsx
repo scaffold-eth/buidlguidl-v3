@@ -51,16 +51,6 @@ export default function Index({ bgStats, events, builds }) {
       <RecentBuildsSection builds={builds} />
 
       <ActivitySection events={events} />
-
-      {/* Footer */}
-      <Container maxW="container.md" centerContent>
-        <Box mt="128px" mb="25px">
-          🏰<b>BuidlGuidl</b> is a registered 🤠{" "}
-          <Link href="https://dao.buidlguidl.com/" fontWeight="700" color="teal.500" isExternal>
-            Wyoming DAO LLC
-          </Link>
-        </Box>
-      </Container>
     </>
   );
 }

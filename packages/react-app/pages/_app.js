@@ -4,7 +4,7 @@ import "../index.css";
 import "../public/nprogress.css";
 import "@fontsource/space-mono/400.css";
 import "@fontsource/space-mono/700.css";
-import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript, Flex, Spacer } from "@chakra-ui/react";
 import { InfuraProvider, StaticJsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { useUserAddress } from "eth-hooks";
 import axios from "axios";
@@ -23,6 +23,7 @@ import PlausibleProvider from "next-plausible";
 import { getNotificationsForUser } from "../data/api/notifications";
 import { NotificationsProvider, useNotifications } from "../contexts/notificationContext";
 import Fonts from "../components/Fonts";
+import Footer from "../components/Footer";
 
 const DEBUG = false;
 
@@ -240,26 +241,30 @@ function MyApp({ Component, pageProps }) {
                 />
                 <meta name="theme-color" content="#000000" />
               </Head>
-              <Header
-                injectedProvider={injectedProvider}
-                userRole={userRole}
-                address={address}
-                mainnetProvider={mainnetProvider}
-                userProvider={userProvider}
-                loadWeb3Modal={loadWeb3Modal}
-                logoutOfWeb3Modal={logoutOfWeb3Modal}
-                setUserRole={setUserRole}
-              />
-              <Component
-                {...pageProps}
-                key={router.asPath}
-                serverUrl={serverUrl}
-                mainnetProvider={mainnetProvider}
-                address={address}
-                userProvider={userProvider}
-                userRole={userRole}
-                connectedBuilder={connectedBuilder}
-              />
+              <Flex direction="column" minHeight="100vh">
+                <Header
+                  injectedProvider={injectedProvider}
+                  userRole={userRole}
+                  address={address}
+                  mainnetProvider={mainnetProvider}
+                  userProvider={userProvider}
+                  loadWeb3Modal={loadWeb3Modal}
+                  logoutOfWeb3Modal={logoutOfWeb3Modal}
+                  setUserRole={setUserRole}
+                />
+                <Component
+                  {...pageProps}
+                  key={router.asPath}
+                  serverUrl={serverUrl}
+                  mainnetProvider={mainnetProvider}
+                  address={address}
+                  userProvider={userProvider}
+                  userRole={userRole}
+                  connectedBuilder={connectedBuilder}
+                />
+                <Spacer />
+                <Footer />
+              </Flex>
               <ColorModeSwitcher />
             </div>
           </BlockchainProvidersContext.Provider>
