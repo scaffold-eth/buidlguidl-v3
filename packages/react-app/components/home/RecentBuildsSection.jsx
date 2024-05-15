@@ -11,7 +11,7 @@ const RecentBuildCard = ({ build }) => {
   const { baseColor, baseBlue2Color } = useCustomColorModes();
   return (
     <VStack key={build.id} align="start" spacing={5}>
-      <Card maxW="xs" display="flex" flexDirection="column" key={build}>
+      <Card maxW={{ base: "17rem", md: "xs" }} display="flex" flexDirection="column" key={build}>
         <VStack align="start" spacing={3} p={5} bg={baseColor}>
           <DateWithTooltip timestamp={build.submittedTimestamp} fontSize="sm" />
           <Heading size="md" fontWeight="500">
@@ -47,7 +47,6 @@ const RecentBuildsSection = ({ builds }) => {
       </Heading>
       <Flex
         w="full"
-        direction={{ base: "column", md: "row" }}
         flexWrap={{ base: "wrap", xl: "nowrap" }}
         justify="center"
         align={{ base: "center", md: "start" }}
