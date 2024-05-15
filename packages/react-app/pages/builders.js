@@ -270,7 +270,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       <MetaSeo
         title="All Builders"
         description="These are all the builder that are part of the BuidlGuidl"
-        image="/assets/infantry_thumb.jpeg"
+        image="assets/bg_teaser.png"
       />
       {isLoadingBuilders ? (
         <BuilderListSkeleton />

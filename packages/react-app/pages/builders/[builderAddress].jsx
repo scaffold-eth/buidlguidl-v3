@@ -163,7 +163,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
       <MetaSeo
         title={builder?.ens ?? builder.id}
         description={`${builder?.status?.text ?? ""} - Total builds: ${builder?.builds?.length ?? 0}`}
-        image="/assets/bg_teaser.png"
+        image="assets/bg_teaser.png"
       />
       <SimpleGrid gap={14} columns={{ base: 1, xl: 4 }}>
         <GridItem colSpan={1}>

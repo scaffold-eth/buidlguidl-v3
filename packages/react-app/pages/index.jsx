@@ -43,7 +43,7 @@ export default function Index({ bgStats, events, builds }) {
       <MetaSeo
         title="BuidlGuidl v3.5"
         description="A curated group of Ethereum builders creating products, prototypes, and tutorials to enrich the web3 ecosytem."
-        image="/assets/bg_teaser.png"
+        image="assets/bg_teaser.png"
       />
       {/* Hero*/}
       <HeroSection {...bgStats} />
