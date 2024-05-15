@@ -107,7 +107,7 @@ export default function Header({
           spacing={{ base: 6, lg: 9 }}
           pos={{ base: "absolute", lg: "static" }}
           justifyContent={{ base: "center", lg: "left" }}
-          top="85px"
+          top="65px"
           left={0}
           fontWeight="400"
         >
