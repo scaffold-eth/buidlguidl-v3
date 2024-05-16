@@ -163,7 +163,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
       <MetaSeo
         title={builder?.ens ?? builder.id}
         description={`${builder?.status?.text ?? ""} - Total builds: ${builder?.builds?.length ?? 0}`}
-        image="/assets/bg_teaser.png"
+        image="assets/bg_teaser.png"
       />
       <SimpleGrid gap={14} columns={{ base: 1, xl: 4 }}>
         <GridItem colSpan={1}>
@@ -266,13 +266,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           {!isLoadingBuilder &&
             (builderBuilds?.length ? (
               <Box overflowX="auto" mb={8}>
-                <SimpleGrid
-                  columns={[1, null, 2, null, 3]}
-                  spacing={6}
-                  pb={5}
-                  maxW={{ base: "315px", md: "none" }}
-                  mx="auto"
-                >
+                <SimpleGrid columns={[2, null, 2, 3]} spacing={6} pb={5} mx="auto">
                   {builderBuilds.map(build => (
                     <BuildCard
                       build={build}
@@ -314,32 +308,34 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
               <Heading fontSize="2xl" fontWeight="bold">
                 Stream withdraws
               </Heading>
-              <Table
-                variant="simple"
-                overflowY="auto"
-                background={baseColor}
-                colorScheme="customBaseColorScheme"
-                mt={6}
-              >
-                <Thead>
-                  <Tr>
-                    <Th>Time</Th>
-                    <Th>Amount</Th>
-                    <Th>Reason</Th>
-                  </Tr>
-                </Thead>
-                {withdrawEvents.map(({ timestamp, payload }) => (
-                  <Tr key={timestamp}>
-                    <Td whiteSpace="nowrap">
-                      <DateWithTooltip timestamp={timestamp} />{" "}
-                    </Td>
-                    <Td>
-                      <Text whiteSpace="nowrap">Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
-                    </Td>
-                    <Td fontSize="sm">{payload.reason}</Td>
-                  </Tr>
-                ))}
-              </Table>
+              <Box overflowX="auto">
+                <Table
+                  variant="simple"
+                  overflowY="auto"
+                  background={baseColor}
+                  colorScheme="customBaseColorScheme"
+                  mt={6}
+                >
+                  <Thead>
+                    <Tr>
+                      <Th>Time</Th>
+                      <Th>Amount</Th>
+                      <Th>Reason</Th>
+                    </Tr>
+                  </Thead>
+                  {withdrawEvents.map(({ timestamp, payload }) => (
+                    <Tr key={timestamp}>
+                      <Td whiteSpace="nowrap">
+                        <DateWithTooltip timestamp={timestamp} />{" "}
+                      </Td>
+                      <Td>
+                        <Text whiteSpace="nowrap">Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
+                      </Td>
+                      <Td fontSize="sm">{payload.reason}</Td>
+                    </Tr>
+                  ))}
+                </Table>
+              </Box>
             </Box>
           )}
         </GridItem>

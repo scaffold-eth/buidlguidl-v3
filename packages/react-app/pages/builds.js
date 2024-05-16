@@ -66,7 +66,7 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
 
   return (
     <Container maxW="container.lg" centerContent>
-      <MetaSeo title="Builds" description="Checkout the builds from the BuidlGuidl" image="/assets/bg_teaser.png" />
+      <MetaSeo title="Builds" description="Checkout the builds from the BuidlGuidl" image="assets/bg_teaser.png" />
       {connectedBuilder && (
         <Button variant="secondary" mb={6} onClick={onOpen}>
           Submit New Build
@@ -83,7 +83,7 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
       {isLoadingBuilds ? (
         <Spinner />
       ) : buildsToRender.length ? (
-        <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20} maxW={{ base: "315px", md: "none" }}>
+        <SimpleGrid columns={[2, null, 2, 3]} spacing={6} pb={20}>
           {buildsToRender.map(build => (
             <BuildCard
               build={build}

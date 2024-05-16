@@ -43,7 +43,7 @@ export default function Index({ bgStats, events, builds }) {
       <MetaSeo
         title="BuidlGuidl v3.5"
         description="A curated group of Ethereum builders creating products, prototypes, and tutorials to enrich the web3 ecosytem."
-        image="/assets/bg_teaser.png"
+        image="assets/bg_teaser.png"
       />
       {/* Hero*/}
       <HeroSection {...bgStats} />
@@ -51,16 +51,6 @@ export default function Index({ bgStats, events, builds }) {
       <RecentBuildsSection builds={builds} />
 
       <ActivitySection events={events} />
-
-      {/* Footer */}
-      <Container maxW="container.md" centerContent>
-        <Box mt="128px" mb="25px">
-          🏰<b>BuidlGuidl</b> is a registered 🤠{" "}
-          <Link href="https://dao.buidlguidl.com/" fontWeight="700" color="teal.500" isExternal>
-            Wyoming DAO LLC
-          </Link>
-        </Box>
-      </Container>
     </>
   );
 }
