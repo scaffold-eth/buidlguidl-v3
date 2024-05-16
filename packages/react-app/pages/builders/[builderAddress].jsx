@@ -304,36 +304,38 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
             />
           )}
           {!isLoadingBuilder && withdrawEvents.length !== 0 && (
-            <Box overflowX="auto" mb={4}>
+            <Box mb={4}>
               <Heading fontSize="2xl" fontWeight="bold">
                 Stream withdraws
               </Heading>
-              <Table
-                variant="simple"
-                overflowY="auto"
-                background={baseColor}
-                colorScheme="customBaseColorScheme"
-                mt={6}
-              >
-                <Thead>
-                  <Tr>
-                    <Th>Time</Th>
-                    <Th>Amount</Th>
-                    <Th>Reason</Th>
-                  </Tr>
-                </Thead>
-                {withdrawEvents.map(({ timestamp, payload }) => (
-                  <Tr key={timestamp}>
-                    <Td whiteSpace="nowrap">
-                      <DateWithTooltip timestamp={timestamp} />{" "}
-                    </Td>
-                    <Td>
-                      <Text whiteSpace="nowrap">Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
-                    </Td>
-                    <Td fontSize="sm">{payload.reason}</Td>
-                  </Tr>
-                ))}
-              </Table>
+              <Box overflowX="auto">
+                <Table
+                  variant="simple"
+                  overflowY="auto"
+                  background={baseColor}
+                  colorScheme="customBaseColorScheme"
+                  mt={6}
+                >
+                  <Thead>
+                    <Tr>
+                      <Th>Time</Th>
+                      <Th>Amount</Th>
+                      <Th>Reason</Th>
+                    </Tr>
+                  </Thead>
+                  {withdrawEvents.map(({ timestamp, payload }) => (
+                    <Tr key={timestamp}>
+                      <Td whiteSpace="nowrap">
+                        <DateWithTooltip timestamp={timestamp} />{" "}
+                      </Td>
+                      <Td>
+                        <Text whiteSpace="nowrap">Ξ {parseFloat(payload.amount).toFixed(4)}</Text>
+                      </Td>
+                      <Td fontSize="sm">{payload.reason}</Td>
+                    </Tr>
+                  ))}
+                </Table>
+              </Box>
             </Box>
           )}
         </GridItem>
