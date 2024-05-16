@@ -304,7 +304,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
             />
           )}
           {!isLoadingBuilder && withdrawEvents.length !== 0 && (
-            <Box mb={4}>
+            <Box overflowX="auto" mb={4}>
               <Heading fontSize="2xl" fontWeight="bold">
                 Stream withdraws
               </Heading>
