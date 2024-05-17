@@ -38,14 +38,14 @@ export default function Header({
   logoutOfWeb3Modal,
   setUserRole,
 }) {
-  const { secondaryFontColor, borderColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { notifications } = useNotifications();
 
   const router = useRouter();
 
-  const primaryColorString = useColorModeValue("gray.700", "gray.200");
+  const { textColor } = useCustomColorModes();
   const envMarkerBgColor = useColorModeValue("yellow.200", "yellow.800");
+
   const isSignerProviderConnected =
     injectedProvider && injectedProvider.getSigner && injectedProvider.getSigner()._isSigner;
   const userIsRegistered = userRole && USER_ROLES.anonymous !== userRole;
@@ -76,8 +76,6 @@ export default function Header({
 
   return (
     <Box
-      borderBottom="1px"
-      borderColor={borderColor}
       mb={router.pathname !== "/" ? 10 : 0}
       px={{ base: 4, lg: 8 }}
       h={{ base: userIsRegistered ? "120px" : "80px", lg: "80px" }}
@@ -97,7 +95,7 @@ export default function Header({
           <NextLink href="/" passHref>
             <Link>
               <Box>
-                <LogoBG w="150px" mt="-6px" />
+                <LogoBG w="200px" mt="-12px" />
               </Box>
             </Link>
           </NextLink>
@@ -109,20 +107,14 @@ export default function Header({
           spacing={{ base: 6, lg: 9 }}
           pos={{ base: "absolute", lg: "static" }}
           justifyContent={{ base: "center", lg: "left" }}
-          top="85px"
+          top="65px"
           left={0}
+          fontWeight="400"
         >
           {userRole && USER_ROLES.anonymous !== userRole && (
-            <chakra.li key="/portfolio" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+            <chakra.li key="/portfolio">
               <Box position="relative">
-                <NextLink
-                  href={`/builders/${address}`}
-                  activeStyle={{
-                    color: primaryColorString,
-                  }}
-                >
-                  Portfolio
-                </NextLink>
+                <NextLink href={`/builders/${address}`}>Portfolio</NextLink>
                 {notifications?.length > 0 && (
                   <Badge
                     position="absolute"
@@ -145,37 +137,16 @@ export default function Header({
               </Box>
             </chakra.li>
           )}
-          <chakra.li key="/activity" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-            <NextLink
-              href="/activity"
-              activeStyle={{
-                color: primaryColorString,
-              }}
-            >
-              Activity
-            </NextLink>
+          <chakra.li key="/activity">
+            <NextLink href="/activity">Activity</NextLink>
           </chakra.li>
-          <chakra.li key="/builds" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-            <NextLink
-              href="/builds"
-              activeStyle={{
-                color: primaryColorString,
-              }}
-            >
-              Builds
-            </NextLink>
+          <chakra.li key="/builds">
+            <NextLink href="/builds">Builds</NextLink>
           </chakra.li>
-          <chakra.li key="/builders" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-            <NextLink
-              href="/builders"
-              activeStyle={{
-                color: primaryColorString,
-              }}
-            >
-              Builders
-            </NextLink>
+          <chakra.li key="/builders">
+            <NextLink href="/builders">Builders</NextLink>
           </chakra.li>
-          <chakra.li key="/faq" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
+          <chakra.li key="/faq">
             <a
               href="https://mirror.xyz/news.buidlguidl.eth/O_Gc84QO4TjvxJnunkRr-s-It1qBTK7TMlJcWf4FQ_I"
               target="_blank"
@@ -185,15 +156,8 @@ export default function Header({
             </a>
           </chakra.li>
           {[USER_ROLES.admin, USER_ROLES.builder].includes(userRole) && (
-            <chakra.li key="/build/vote" color={secondaryFontColor} _hover={{ color: primaryColorString }}>
-              <NextLink
-                href="/build/vote"
-                activeStyle={{
-                  color: primaryColorString,
-                }}
-              >
-                Vote Builds
-              </NextLink>
+            <chakra.li key="/build/vote">
+              <NextLink href="/build/vote">Vote Builds</NextLink>
             </chakra.li>
           )}
           {USER_ROLES.admin === userRole && (
@@ -201,55 +165,30 @@ export default function Header({
               <MenuButton
                 as={Button}
                 variant="link"
-                color={secondaryFontColor}
-                _hover={{ color: primaryColorString }}
+                color={textColor}
                 rightIcon={<ChevronDownIcon />}
                 onMouseEnter={onOpen}
                 onMouseLeave={onClose}
+                fontWeight="400"
               >
                 Admin
               </MenuButton>
               <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>
                 <MenuItem>
-                  <NextLink
-                    href="/admin/add-builder"
-                    activeStyle={{
-                      color: primaryColorString,
-                    }}
-                  >
-                    Add Builder
-                  </NextLink>
+                  <NextLink href="/admin/add-builder">Add Builder</NextLink>
                 </MenuItem>
                 <MenuItem>
-                  <NextLink
-                    href="/admin/fund"
-                    exact
-                    activeStyle={{
-                      color: primaryColorString,
-                    }}
-                  >
+                  <NextLink href="/admin/fund" exact>
                     Fund Builders
                   </NextLink>
                 </MenuItem>
                 <MenuItem>
-                  <NextLink
-                    href="/admin/cohorts"
-                    exact
-                    activeStyle={{
-                      color: primaryColorString,
-                    }}
-                  >
+                  <NextLink href="/admin/cohorts" exact>
                     Cohorts
                   </NextLink>
                 </MenuItem>
                 <MenuItem>
-                  <NextLink
-                    href="/admin/batches"
-                    exact
-                    activeStyle={{
-                      color: primaryColorString,
-                    }}
-                  >
+                  <NextLink href="/admin/batches" exact>
                     Batches
                   </NextLink>
                 </MenuItem>
@@ -265,7 +204,7 @@ export default function Header({
         <Box mt={{ base: userIsRegistered ? 3 : 0, lg: 0 }}>
           <Account
             address={address}
-            connectText="Connect Wallet"
+            connectText="Connect"
             ensProvider={mainnetProvider}
             isWalletConnected={isSignerProviderConnected}
             loadWeb3Modal={loadWeb3Modal}

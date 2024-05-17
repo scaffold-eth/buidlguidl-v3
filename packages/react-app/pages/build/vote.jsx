@@ -55,7 +55,8 @@ export default function BuildVoteList() {
   const address = useConnectedAddress();
   const [builds, setBuilds] = useState([]);
   const [isLoadingBuilds, setIsLoadingBuilds] = useState(false);
-  const { secondaryFontColor } = useCustomColorModes();
+  const { secondaryFontColor, baseColor } = useCustomColorModes();
+
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
@@ -186,46 +187,48 @@ export default function BuildVoteList() {
       {isLoadingBuilds ? (
         <BuildsVoteListSkeleton />
       ) : (
-        <Box overflowX="auto" mb={8}>
+        <Box mb={8}>
           <Center mb={5}>
             <chakra.strong mr={2}>Total builds:</chakra.strong> {builds.length}
           </Center>
-          <Table {...getTableProps()}>
-            <Thead>
-              {headerGroups.map((headerGroup, index) => (
-                <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                  {headerGroup.headers.map(column => (
-                    <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
-                      {column.render("Header")}
-                      <chakra.span pl="4">
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <TriangleDownIcon aria-label="sorted descending" />
-                          ) : (
-                            <TriangleUpIcon aria-label="sorted ascending" />
-                          )
-                        ) : null}
-                      </chakra.span>
-                    </Th>
-                  ))}
-                </Tr>
-              ))}
-            </Thead>
-            <Tbody {...getTableBodyProps()}>
-              {page.map(row => {
-                prepareRow(row);
-                return (
-                  <Tr {...row.getRowProps()} key={row.id}>
-                    {row.cells.map(cell => (
-                      <Td {...cell.getCellProps()} key={cell.column.id}>
-                        {cell.render("Cell")}
-                      </Td>
+          <Box overflowX="auto">
+            <Table {...getTableProps()} background={baseColor} colorScheme="customBaseColorScheme">
+              <Thead>
+                {headerGroups.map((headerGroup, index) => (
+                  <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                    {headerGroup.headers.map(column => (
+                      <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
+                        {column.render("Header")}
+                        <chakra.span pl="4">
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <TriangleDownIcon aria-label="sorted descending" />
+                            ) : (
+                              <TriangleUpIcon aria-label="sorted ascending" />
+                            )
+                          ) : null}
+                        </chakra.span>
+                      </Th>
                     ))}
                   </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
+                ))}
+              </Thead>
+              <Tbody {...getTableBodyProps()}>
+                {page.map(row => {
+                  prepareRow(row);
+                  return (
+                    <Tr {...row.getRowProps()} key={row.id}>
+                      {row.cells.map(cell => (
+                        <Td {...cell.getCellProps()} key={cell.column.id}>
+                          {cell.render("Cell")}
+                        </Td>
+                      ))}
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </Box>
 
           <Center mt={4}>
             <ButtonGroup>

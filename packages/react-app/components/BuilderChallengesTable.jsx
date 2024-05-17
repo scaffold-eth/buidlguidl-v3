@@ -1,19 +1,22 @@
 import React from "react";
-import { Box, Link, SkeletonText, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Heading, Link, SkeletonText, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { SreChallengeInfo } from "../data/SreChallenges";
 import ChallengeStatusTag from "./ChallengeStatusTag";
 import DateWithTooltip from "./DateWithTooltip";
+import useCustomColorModes from "../hooks/useCustomColorModes";
 
 const SRE_FRONTEND = "https://speedrunethereum.com";
 
 export default function BuilderChallengesTable({ challenges, isLoadingTimestamps, challengeEvents }) {
+  const { baseColor } = useCustomColorModes();
+
   return (
     challenges && (
       <Box overflowX="auto" mb={10}>
-        <Text fontSize="2xl" fontWeight="bold">
+        <Heading fontSize="2xl" fontWeight="bold">
           Challenges
-        </Text>
-        <Table>
+        </Heading>
+        <Table background={baseColor} colorScheme="customBaseColorScheme" mt={6}>
           <Thead>
             <Tr>
               <Th>Name</Th>

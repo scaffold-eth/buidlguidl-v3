@@ -19,7 +19,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useTable, usePagination, useSortBy, useRowSelect } from "react-table";
-import { ExternalLinkIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import WithdrawStatsSkeleton from "../../components/skeletons/WithdrawStatsSkeleton";
 import { getAllCohorts } from "../../data/api/builder";
@@ -28,14 +28,6 @@ import { SERVER_URL as serverUrl } from "../../constants";
 import DateWithTooltip from "../../components/DateWithTooltip";
 import { eventDisplay } from "../../helpers/events";
 import { AddressWithBlockExplorer } from "../../components";
-
-const getLatestEvent = (groupedEvents, streamAddress) => {
-  if (!groupedEvents[streamAddress] || groupedEvents[streamAddress].length === 0) {
-    return null;
-  }
-
-  return groupedEvents[streamAddress].sort((a, b) => b.timestamp - a.timestamp)[0];
-};
 
 const CohortAddressCell = ({ cohort }) => (
   <Link href={cohort.url} isExternal fontWeight="700" color="teal.500">
@@ -96,12 +88,10 @@ const columns = [
 ];
 
 export default function Fund() {
-  const [events, setEvents] = useState([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
-  const [buildersWithStream, setBuildersWithStream] = useState([]);
   const [isLoadingCohorts, setIsLoadingCohorts] = useState(true);
   const [cohortData, setCohortData] = useState([]);
-  const { secondaryFontColor } = useCustomColorModes();
+  const { secondaryFontColor, baseColor } = useCustomColorModes();
 
   const isLoading = isLoadingEvents || isLoadingCohorts;
 
@@ -197,7 +187,7 @@ export default function Fund() {
           <Center mb={5}>
             <chakra.strong mr={2}>Total Cohorts:</chakra.strong> {cohortData.length}
           </Center>
-          <Table {...getTableProps()}>
+          <Table {...getTableProps()} background={baseColor} colorScheme="customBaseColorScheme" size="sm">
             <Thead>
               {headerGroups.map((headerGroup, index) => (
                 <Tr {...headerGroup.getHeaderGroupProps()} key={index}>

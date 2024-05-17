@@ -27,7 +27,7 @@ import BuildLikeButton from "./BuildLikeButton";
 
 const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
   const address = useUserAddress(userProvider);
-  const { borderColor, secondaryFontColor } = useCustomColorModes();
+  const { borderColor, secondaryFontColor, baseColor, textColor } = useCustomColorModes();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isDeletingBuild, setIsDeletingBuild] = useState(false);
 
@@ -101,23 +101,15 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
   };
 
   return (
-    <Box
-      borderWidth="1px"
-      borderRadius="lg"
-      borderColor={borderColor}
-      overflow="hidden"
-      display="flex"
-      flexDirection="column"
-      pos="relative"
-    >
+    <Box overflow="hidden" display="flex" flexDirection="column" pos="relative" borderRadius="xl">
       <NextLink href={`/build/${build.id}`} passHref>
         <Link>
-          <Box bgColor={borderColor} borderBottom="1px" borderColor={borderColor}>
+          <Box bgColor={baseColor} borderBottom="1px" borderColor={textColor}>
             {build.image ? <Image src={build.image} h="200px" mx="auto" /> : <Center h="200px">No image</Center>}
           </Box>
         </Link>
       </NextLink>
-      <Flex pt={9} pb={4} px={4} direction="column" minH="240px" h="100%" pos="relative">
+      <Flex pt={9} pb={4} px={4} direction="column" minH="240px" h="100%" pos="relative" backgroundColor={baseColor}>
         {build.videoUrl && (
           <Box pos="absolute" right={0} top={0} pt="6px" pr="12px">
             <Link href={build.videoUrl} isExternal>
@@ -132,13 +124,13 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
             <Text fontWeight="bold">{build.name}</Text>
           </Link>
         </NextLink>
-        <Text color={secondaryFontColor} whiteSpace="pre-wrap">
-          {build.desc}
+        <Text color={secondaryFontColor} whiteSpace="pre-wrap" fontSize="sm">
+          {build.desc.length > 200 ? `${build.desc.slice(0, 200)}...` : build.desc}
         </Text>
         <Spacer />
         <ButtonGroup mt={3}>
           <NextLink href={`/build/${build.id}`} passHref>
-            <Button as={Link} variant="outline" size="sm" isFullWidth>
+            <Button as="a" variant="outline" size="sm" isFullWidth colorScheme="customBaseColorScheme">
               View
             </Button>
           </NextLink>
