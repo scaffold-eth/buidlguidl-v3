@@ -12,8 +12,8 @@ const MetaSeo = ({ title, description, image }) => (
     <meta property="og:title" content={`${title} | BuidlGuidl`} />
     <meta property="og:description" content={description} />
 
-    <meta property="twitter:title" content={`${title} | BuidlGuidl`} />
-    <meta property="twitter:description" content={description} />
+    <meta name="twitter:title" content={`${title} | BuidlGuidl`} />
+    <meta name="twitter:description" content={description} />
 
     {image && (
       <>
