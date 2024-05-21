@@ -5,38 +5,10 @@ import HeroSection from "../components/home/HeroSection";
 import ActivitySection from "../components/home/ActivitySection";
 import { getAllBuilds, getAllEvents } from "../data/api";
 import RecentBuildsSection from "../components/home/RecentBuildsSection";
-import BlogSection from "../components/home/BlogSection";
 import { getRecentPosts } from "../data/api/blog";
-const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
+import BlogSection from "../components/home/BlogSection";
 
-/* eslint-disable jsx-a11y/accessible-emoji */
-export default function Index({ bgStats, events, posts }) {
-  const [builders, setBuilders] = useState([]);
-  const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
-
-  const streamSection = useRef(null);
-
-  const { colorMode } = useColorMode();
-  const isDarkMode = colorMode === "dark";
-  const scaffoldEthBg = useColorModeValue("#fbf7f6", "whiteAlpha.300");
-
-  useEffect(() => {
-    async function fetchBuilders() {
-      setIsLoadingBuilders(true);
-      const fetchedBuilders = await axios.get(`${SERVER_URL}/builders`);
-
-      setBuilders(fetchedBuilders.data);
-      setIsLoadingBuilders(false);
-    }
-
-    fetchBuilders();
-  }, []);
-
-  const smoothScroll = ref => {
-    ref.current.scrollIntoView({ behavior: "smooth" });
-  };
-
-export default function Index({ bgStats, events, builds }) {
+export default function Index({ bgStats, events, builds, posts }) {
   return (
     <>
       <MetaSeo
