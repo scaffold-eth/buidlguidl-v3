@@ -6,7 +6,7 @@ import ActivitySection from "../components/home/ActivitySection";
 import { getAllBuilds, getAllEvents } from "../data/api";
 import RecentBuildsSection from "../components/home/RecentBuildsSection";
 import BlogSection from "../components/home/BlogSection";
-import { fetchRecentPosts } from "../data/api/blog";
+import { getRecentPosts } from "../data/api/blog";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
 
 /* eslint-disable jsx-a11y/accessible-emoji */
@@ -56,7 +56,7 @@ export async function getStaticProps() {
   const stats = await getStats();
   const events = await getAllEvents(null, 10);
   const builds = (await getAllBuilds()).sort((a, b) => b.submittedTimestamp - a.submittedTimestamp).slice(0, 4);
-  const posts = await fetchRecentPosts();
+  const posts = await getRecentPosts();
 
   return {
     props: {
