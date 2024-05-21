@@ -72,7 +72,7 @@ const BuilderProfileCard = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOpenEditBuilder, onOpen: onOpenEditBuilder, onClose: onCloseEditBuilder } = useDisclosure();
   const { hasCopied, onCopy } = useClipboard(builder?.id);
-  const { borderColor, secondaryFontColor } = useCustomColorModes();
+  const { textColor, blueColor, baseColor, secondaryFontColor } = useCustomColorModes();
   const shortAddress = ellipsizedAddress(builder?.id);
   const hasEns = ens !== shortAddress;
 
@@ -176,9 +176,9 @@ const BuilderProfileCard = ({
         {() => (
           /* delay execution */
           <Flex
-            borderRadius="lg"
-            borderColor={borderColor}
+            borderColor={textColor}
             borderWidth={1}
+            background={baseColor}
             justify={{ base: "space-around", xl: "center" }}
             direction={{ base: "row", xl: "column" }}
             p={4}
@@ -283,9 +283,9 @@ const BuilderProfileCard = ({
                     </Center>
                   );
                 })}
-              <Divider mb={2} />
+              <Divider mb={2} borderColor={blueColor} />
               <BuilderStatus builder={builder} />
-              <Divider mb={6} />
+              <Divider mb={6} borderColor={blueColor} />
               {hasProfileLinks && isLoggedIn ? (
                 <Flex mb={4} justifyContent="space-evenly" alignItems="center">
                   {Object.entries(builder.socialLinks)
@@ -307,7 +307,7 @@ const BuilderProfileCard = ({
                 )
               )}
               {isMyProfile && (
-                <Button mb={3} size="xs" variant="outline" onClick={onOpen}>
+                <Button mb={3} size="xs" variant="outline" onClick={onOpen} colorScheme="customBaseColorScheme">
                   Update socials
                 </Button>
               )}
@@ -317,7 +317,7 @@ const BuilderProfileCard = ({
                   <Divider mb={3} />
                 </>
               )}
-              <Text textAlign="center" color={secondaryFontColor}>
+              <Text textAlign="center" color={secondaryFontColor} fontSize="sm">
                 Joined {joinedDateDisplay}
               </Text>
             </Flex>

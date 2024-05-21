@@ -38,6 +38,7 @@ import StreamTableCell from "../../components/StreamTableCell";
 import MetaSeo from "../../components/MetaSeo";
 import DotIcon from "../../components/icons/DotIcon";
 import BuilderFlags from "../../components/builder/BuilderFlags";
+import useCustomColorModes from "../../hooks/useCustomColorModes";
 
 const serverPath = "/builders/batches";
 
@@ -130,6 +131,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
   const isAdmin = userRole === USER_ROLES.admin;
   const isLoggedIn = userRole !== null && userRole !== USER_ROLES.anonymous;
+  const { baseColor } = useCustomColorModes();
 
   const ensFiltering = (rows, id, filterValue) => {
     if (filterValue.length < 3) {
@@ -274,14 +276,20 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
               <chakra.strong mr={2}>Total builders in Batches:</chakra.strong>
               {builders.length}
             </Box>
-            <Box>
-              <InputGroup>
+            <Box mb={8}>
+              <InputGroup bgColor={baseColor}>
                 {ensFilter.render("Filter")}
                 <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
               </InputGroup>
             </Box>
           </Center>
-          <Table {...getTableProps()} wordBreak={{ base: "normal", lg: "break-word" }}>
+          <Table
+            {...getTableProps()}
+            wordBreak={{ base: "normal", lg: "break-word" }}
+            background={baseColor}
+            colorScheme="customBaseColorScheme"
+            size="sm"
+          >
             <Thead>
               {headerGroups.map((headerGroup, index) => (
                 <Tr {...headerGroup.getHeaderGroupProps()} key={index}>

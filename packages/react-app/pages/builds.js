@@ -17,6 +17,7 @@ import { getAllBuilds } from "../data/api";
 import BuildCard from "../components/BuildCard";
 import SubmitBuildModal from "../components/SubmitBuildModal";
 import MetaSeo from "../components/MetaSeo";
+import useCustomColorModes from "../hooks/useCustomColorModes";
 
 // The number of likes required for the build to be shown in the list.
 const MIN_LIKES = 1;
@@ -26,6 +27,8 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
   const [isLoadingBuilds, setIsLoadingBuilds] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { baseColor } = useCustomColorModes();
 
   const updateBuilds = useCallback(async () => {
     // We used to retrieve only the featured builds.
@@ -63,15 +66,15 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
 
   return (
     <Container maxW="container.lg" centerContent>
-      <MetaSeo title="Builds" description="Checkout the builds from the BuidlGuidl" image="/assets/bg_teaser.png" />
+      <MetaSeo title="Builds" description="Checkout the builds from the BuidlGuidl" image="assets/bg_teaser.png" />
       {connectedBuilder && (
-        <Button colorScheme="blue" mb={6} onClick={onOpen}>
+        <Button variant="secondary" mb={6} onClick={onOpen}>
           Submit New Build
         </Button>
       )}
 
       <Box mb={8}>
-        <InputGroup>
+        <InputGroup bgColor={baseColor}>
           <Input placeholder="Search builds" onChange={event => setSearchQuery(event.target.value)} />
           <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
         </InputGroup>
@@ -80,7 +83,7 @@ export default function BuildsView({ userProvider, connectedBuilder, userRole })
       {isLoadingBuilds ? (
         <Spinner />
       ) : buildsToRender.length ? (
-        <SimpleGrid columns={[1, null, 2, null, 3]} spacing={6} pb={20}>
+        <SimpleGrid columns={[2, null, 2, 3]} spacing={6} pb={20}>
           {buildsToRender.map(build => (
             <BuildCard
               build={build}

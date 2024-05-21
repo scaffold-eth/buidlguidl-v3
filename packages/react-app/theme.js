@@ -26,7 +26,7 @@ const theme = extendTheme({
       baseBlue: "#D8DCFF",
       baseBlue2: "#EDEFFF",
       baseGreen: "#EAFFA9",
-      accentGreen: "#B5DC3A",
+      accentGreen: "#9FC622",
       baseOrange: "#FFD4B5",
     },
     dark: {
@@ -42,7 +42,7 @@ const theme = extendTheme({
     // color schemes
     customBaseColorScheme: {
       // hover bg (light)
-      50: "#FFFCFC",
+      50: "#cfd2d9",
       100: "#cfd2d9",
       // color (dark)
       // hover bg (dark) with opacity
@@ -62,23 +62,37 @@ const theme = extendTheme({
       baseStyle: {
         borderRadius: 0,
       },
+      variants: {
+        secondary: ({ colorMode }) => ({
+          color: "light.text",
+          background: colorMode === "light" ? "light.blue" : "dark.blue",
+          _hover: {
+            opacity: 0.8,
+          },
+        }),
+      },
     },
     Card,
   },
   styles: {
     global: props => ({
       body: {
+        minHeight: "100vh",
         color: props.colorMode === "light" ? "light.text" : "dark.text",
         background:
           props.colorMode === "light"
             ? "linear-gradient(180deg, #BFCDFF 10.47%, #D9EBE5 60.39%, #EFFBCA 89.55%, rgba(239, 251, 202, 0.00) 116.3%)"
-            : "linear-gradient(180deg, #0B2041 10.47%, #2F3679 107%)",
+            : "linear-gradient(180deg, #0C2A59 10.47%, #313A88 98.28%)",
       },
       a: {
         _hover: {
           opacity: 0.6,
           transition: "opacity 0.3s",
         },
+      },
+      "p, span, li, td": {
+        fontFamily: "Space mono, monospace",
+        letterSpacing: "-0.03rem",
       },
     }),
   },

@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
-import { Box, Link, Container, useColorModeValue, useColorMode } from "@chakra-ui/react";
-import { SERVER_URL } from "../constants";
+import React from "react";
 import MetaSeo from "../components/MetaSeo";
 import { getStats } from "../data/api/builder";
 import HeroSection from "../components/home/HeroSection";
 import ActivitySection from "../components/home/ActivitySection";
-import { getAllEvents } from "../data/api";
+import { getAllBuilds, getAllEvents } from "../data/api";
+import RecentBuildsSection from "../components/home/RecentBuildsSection";
 import BlogSection from "../components/home/BlogSection";
 import { fetchRecentPosts } from "../data/api/blog";
 const buildersToShow = ["fullstack", "frontend", "damageDealer", "advisor", "artist", "support"];
@@ -38,29 +36,18 @@ export default function Index({ bgStats, events, posts }) {
     ref.current.scrollIntoView({ behavior: "smooth" });
   };
 
+export default function Index({ bgStats, events, builds }) {
   return (
     <>
       <MetaSeo
         title="BuidlGuidl v3.5"
         description="A curated group of Ethereum builders creating products, prototypes, and tutorials to enrich the web3 ecosytem."
-        image="/assets/bg_teaser.png"
+        image="assets/bg_teaser.png"
       />
-      {/* Hero*/}
       <HeroSection {...bgStats} />
-
+      <RecentBuildsSection builds={builds} />
       <ActivitySection events={events} />
-
       <BlogSection posts={posts} />
-
-      {/* Footer */}
-      <Container maxW="container.md" centerContent>
-        <Box mt="128px" mb="25px">
-          🏰<b>BuidlGuidl</b> is a registered 🤠{" "}
-          <Link href="https://dao.buidlguidl.com/" fontWeight="700" color="teal.500" isExternal>
-            Wyoming DAO LLC
-          </Link>
-        </Box>
-      </Container>
     </>
   );
 }
@@ -68,6 +55,7 @@ export default function Index({ bgStats, events, posts }) {
 export async function getStaticProps() {
   const stats = await getStats();
   const events = await getAllEvents(null, 10);
+  const builds = (await getAllBuilds()).sort((a, b) => b.submittedTimestamp - a.submittedTimestamp).slice(0, 4);
   const posts = await fetchRecentPosts();
 
   return {
@@ -81,10 +69,10 @@ export async function getStaticProps() {
         streamedEthIncrementMonth: stats?.streamedEthIncrementMonth,
       },
       events,
+      builds,
       posts,
     },
-    // ToDo. Maybe a 15 min refresh? or load events in the frontend?
-    // 6 hours refresh.
-    revalidate: 21600,
+    // 2 hours caching
+    revalidate: 7200,
   };
 }
