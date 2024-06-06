@@ -1,4 +1,4 @@
-# BuidlGuidl v3
+# BuidlGuidl v3 (archived)
 
 The 🏰 BuidlGuidl is a curated group of Ethereum builders creating products, prototypes, and tutorials with 🏗 [scaffold-eth](https://github.com/scaffold-eth/scaffold-eth)
 
