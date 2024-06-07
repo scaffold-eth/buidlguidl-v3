@@ -176,12 +176,16 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           Cell: ({ value }) => <BuilderBuildsCell buildCount={value} />,
         },
         {
-          Header: "Stream",
+          Header: "Cohort",
           accessor: "stream",
           disableFilters: true,
           // Sorting by stream cap for now.
-          sortType: (rowA, rowB) =>
-            Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
+          sortType: (rowA, rowB) => {
+            // Sort this by builderCohort
+            const lengthA = rowA.values?.stream?.builderCohort?.length || 0;
+            const lengthB = rowB.values?.stream?.builderCohort?.length || 0;
+            return lengthA > lengthB ? 1 : -1;
+          },
           Cell: ({ value }) => (value?.graduated?.status ? "" : <StreamTableCell builder={value} />),
         },
         {
