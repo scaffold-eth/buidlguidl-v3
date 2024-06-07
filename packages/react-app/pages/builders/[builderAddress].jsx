@@ -196,7 +196,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
         <Flex align="center" justify="center" direction="column" p={4} mt={4} bgColor={baseOrangeColor}>
           <Text mb={2} fontSize="xs">
             The BuidlGuidl is no longer funding <strong>Simple Streams</strong>. Read more about it{" "}
-            <Link href="#" isExternal textDecoration="underline">
+            <Link href="https://mirror.xyz/austingriffith.eth/-jXBWxpIPMByDrqLBKBvi93iKUGkI4zp8Pt7E6jGAqk" isExternal textDecoration="underline">
               here
             </Link>
             .
