@@ -12,10 +12,7 @@ import {
   Container,
   SimpleGrid,
   GridItem,
-  Tag,
-  Image,
   useDisclosure,
-  Progress,
   Table,
   Thead,
   Tr,
@@ -37,7 +34,6 @@ import useCustomColorModes from "../../hooks/useCustomColorModes";
 import { getWithdrawEvents } from "../../data/api/streams";
 import { getChallengeEventsForUser, getSreBuilder } from "../../data/api/sre";
 import BuilderChallengesTable from "../../components/BuilderChallengesTable";
-import StreamWithdrawButton from "../../components/StreamWithdrawButton";
 import { SERVER_URL as serverUrl } from "../../constants";
 import { SreChallengeInfo } from "../../data/SreChallenges";
 import MetaSeo from "../../components/MetaSeo";
@@ -52,7 +48,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const refreshData = () => router.replace(router.asPath);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { secondaryFontColor, textColor, baseColor } = useCustomColorModes();
+  const { secondaryFontColor, textColor, baseColor, baseOrangeColor } = useCustomColorModes();
   const [builderBuilds, setBuilderBuilds] = useState(null);
   const { hasCopied, onCopy } = useClipboard(builder?.stream?.streamAddress);
   const [withdrawEvents, setWithdrawEvents] = useState([]);
@@ -158,6 +154,69 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     // eslint-disable-next-line
   }, [builderAddress]);
 
+  const StreamInfo = isMyProfile && !isLoadingBuilder && !!streamDisplay && (
+    <Flex
+      mr={{ base: 0, md: 2 }}
+      borderColor={textColor}
+      borderWidth={1}
+      background={baseColor}
+      p={4}
+      w={{ base: "full", md: "50%" }}
+    >
+      <Box w="full">
+        <Flex align="center" justify="space-evenly" w="full">
+          <Flex>
+            <Text mr={2} fontWeight="bold">
+              <Tooltip label={hasCopied ? "Copied!" : "Copy Stream Address"} closeOnClick={false}>
+                <Text onClick={onCopy} cursor="pointer">
+                  Stream
+                </Text>
+              </Tooltip>
+            </Text>
+            <Flex align="center" justify="end">
+              <HStack>
+                <Box>
+                  Ξ {parseFloat(streamDisplay.capStr).toFixed(2)} @ {streamDisplay.frequencyDays}d
+                </Box>
+                <Link href={`https://etherscan.io/address/${builder.stream?.streamAddress}`} isExternal>
+                  <ExternalLinkIcon d="block" />
+                </Link>
+              </HStack>
+            </Flex>
+          </Flex>
+          <Flex>
+            <Text mr={2} fontWeight="bold">
+              Balance
+            </Text>
+            <Flex align="center" justify="end">
+              Ξ {parseFloat(streamDisplay.balance).toFixed(4) ?? 0}
+            </Flex>
+          </Flex>
+        </Flex>
+        <Flex align="center" justify="center" direction="column" p={4} mt={4} bgColor={baseOrangeColor}>
+          <Text mb={2} fontSize="xs">
+            The BuidlGuidl is no longer funding <strong>Simple Streams</strong>. Read more about it{" "}
+            <Link href="#" isExternal textDecoration="underline">
+              here
+            </Link>
+            .
+          </Text>
+          <Text fontSize="xs">
+            If you still have ETH in your stream, you can withdraw it on this{" "}
+            <Link
+              href={`https://abi.ninja/${builder.stream?.streamAddress}/1?methods=streamWithdraw`}
+              isExternal
+              textDecoration="underline"
+            >
+              custom ABI Ninja link
+            </Link>
+            .
+          </Text>
+        </Flex>
+      </Box>
+    </Flex>
+  );
+
   return (
     <Container maxW="container.xl" mb="50px">
       <MetaSeo
@@ -183,73 +242,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           {isMyProfile && <BuilderNotifications builder={builder} />}
           <Flex spacing={4} mb={8} direction={{ base: "column-reverse", md: "row" }}>
             {isLoadingBuilder && <BuilderProfileStreamSkeleton />}
-            {!isLoadingBuilder && !!streamDisplay && (
-              <Flex
-                mr={{ base: 0, md: 2 }}
-                borderColor={textColor}
-                borderWidth={1}
-                background={baseColor}
-                p={4}
-                w={{ base: "full", md: "50%" }}
-              >
-                <Box w="full">
-                  <Flex align="center" justify="space-evenly" w="full">
-                    <Flex>
-                      <Text mr={2} fontWeight="bold">
-                        <Tooltip label={hasCopied ? "Copied!" : "Copy Stream Address"} closeOnClick={false}>
-                          <Text onClick={onCopy} cursor="pointer">
-                            Stream
-                          </Text>
-                        </Tooltip>
-                      </Text>
-                      <Flex align="center" justify="end">
-                        <HStack>
-                          <Box>
-                            Ξ {parseFloat(streamDisplay.capStr).toFixed(2)} @ {streamDisplay.frequencyDays}d
-                          </Box>
-                          <Link href={`https://etherscan.io/address/${builder.stream?.streamAddress}`} isExternal>
-                            <ExternalLinkIcon d="block" />
-                          </Link>
-                        </HStack>
-                      </Flex>
-                    </Flex>
-                    <Flex>
-                      <Text mr={2} fontWeight="bold">
-                        Balance
-                      </Text>
-                      <Flex align="center" justify="end">
-                        Ξ {parseFloat(streamDisplay.balance).toFixed(4) ?? 0}
-                      </Flex>
-                    </Flex>
-                  </Flex>
-                  <Flex align="center" justify="center" direction="column" px={4} mt={4}>
-                    <Flex>
-                      <Text mr={2} fontWeight="bold">
-                        Unlocked
-                      </Text>
-                      <Box mb={1}>Ξ {parseFloat(streamDisplay.availableStr).toFixed(4)}</Box>
-                    </Flex>
-                    <Box w="full" pl={1}>
-                      <Progress
-                        flexShrink={1}
-                        size="sm"
-                        value={streamDisplay.unlockedPercentage * 100}
-                        colorScheme="green"
-                        borderColor={textColor}
-                        borderWidth={1}
-                      />
-                    </Box>
-                  </Flex>
-                  {isMyProfile && builder.stream?.streamAddress && (
-                    <StreamWithdrawButton
-                      streamAddress={builder.stream?.streamAddress}
-                      builderAddress={builderAddress}
-                      onUpdate={refreshData}
-                    />
-                  )}
-                </Box>
-              </Flex>
-            )}
+            {StreamInfo}
           </Flex>
           <Flex mb={4}>
             <Heading fontSize="2xl" fontWeight="bold">
