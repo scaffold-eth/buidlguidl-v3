@@ -15,7 +15,7 @@ const OnboardingBatch = ({ notification, onMarkAsRead }) => {
           Welcome to BuidlGuidl!
         </Text>
         <Text fontSize="sm" my="2" color="gray.800">
-          To help you get started in BuidlGuidl, we've created the BG onboarding batch program. Dive into end-to-end
+          To help you get started in the Ethereum ecosystem, we've created the BG onboarding batch program. Dive into end-to-end
           dApp development, receive mentorship from BG members, and learn how to collaborate with fellow developers in
           open-source projects.
         </Text>
