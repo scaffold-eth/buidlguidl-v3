@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { getSignMessage } from "../data/api/signature";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { postStatusUpdate } from "../data/api/status";
+import { postLocationUpdate } from "../data/api/location";
 import { postBuildSubmit, postBuildLike, patchBuildEdit } from "../data/api/builds";
 import {
   postCreateUser,
@@ -18,6 +19,7 @@ const actionIdToRequest = {
   builderCreate: postCreateUser,
   builderEdit: patchEditUser,
   builderUpdateStatus: postStatusUpdate,
+  builderUpdateLocation: postLocationUpdate,
   buildSubmit: postBuildSubmit,
   buildLike: postBuildLike,
   buildEdit: patchBuildEdit,

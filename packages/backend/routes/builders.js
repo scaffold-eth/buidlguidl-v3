@@ -233,6 +233,28 @@ router.post("/update-status", withAddress, async (req, res) => {
   res.status(200).json(updatedUser);
 });
 
+router.post("/update-location", withAddress, async (req, res) => {
+  const { location, signature } = req.body;
+  const address = req.address;
+  console.log("POST /builders/update-location", address, location);
+
+  const verifyOptions = {
+    messageId: "builderUpdateLocation",
+    address,
+    location,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const updatedUser = await db.updateUser(address, { location });
+
+  res.status(200).json(updatedUser);
+});
+
 router.post("/update-reached-out", withRole("admin"), async (request, response) => {
   const { reachedOut, builderAddress, signature } = request.body;
   const address = request.address;

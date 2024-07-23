@@ -42,6 +42,7 @@ import { ellipsizedAddress } from "../helpers/strings";
 import { getUpdateSocialsSignMessage, postUpdateSocials } from "../data/api";
 import { bySocialWeight, socials } from "../data/socials";
 import BuilderStatus from "./BuilderStatus";
+import BuilderLocation from "./BuilderLocation";
 import { USER_ROLES } from "../helpers/constants";
 import { BuilderCrudFormModal } from "./BuilderCrudForm";
 import { validateSocials } from "../helpers/validators";
@@ -283,6 +284,7 @@ const BuilderProfileCard = ({
                     </Center>
                   );
                 })}
+              <BuilderLocation builder={builder} />
               <Divider mb={2} borderColor={blueColor} />
               <BuilderStatus builder={builder} />
               <Divider mb={6} borderColor={blueColor} />

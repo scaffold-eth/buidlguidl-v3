@@ -102,6 +102,9 @@ const getSignMessageForId = async (messageId, options) => {
     case "builderUpdateStatus":
       return `I want to update my status as ${options.address}:\n\n"${options.status}"`;
 
+    case "builderUpdateLocation":
+      return `I want to update my location to ${options.location} as ${options.address}`;
+
     case "builderClaimEns":
       return `I want to claim an ENS as ${options.address}`;
 
