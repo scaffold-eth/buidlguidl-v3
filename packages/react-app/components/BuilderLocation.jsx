@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import ReactCountryFlag from "react-country-flag";
+import ReactFlagsSelect from "react-flags-select";
 import {
   Box,
   Button,
   Text,
+  Tooltip,
   useColorModeValue,
   useDisclosure,
   useToast,
@@ -64,7 +67,23 @@ const BuilderLocation = ({ builder }) => {
     <>
       <Box mb={3}>
         <Box textAlign="center" fontStyle="italic">
-          {currentLocation ? <Text>{currentLocation}</Text> : <Text color={secondaryFontColor}>No location set</Text>}
+          {currentLocation ? (
+            <Tooltip label={currentLocation}>
+              <div>
+                <ReactCountryFlag
+                  className="emojiFlag"
+                  countryCode={currentLocation}
+                  style={{
+                    fontSize: "1em",
+                    lineHeight: "1em",
+                  }}
+                  aria-label={currentLocation}
+                />
+              </div>
+            </Tooltip>
+          ) : (
+            <Text color={secondaryFontColor}>No location set</Text>
+          )}
         </Box>
         {isMyProfile && (
           <Button mt={3} size="xs" variant="outline" onClick={onOpen} isFullWidth colorScheme="customBaseColorScheme">
@@ -83,7 +102,13 @@ const BuilderLocation = ({ builder }) => {
               <FormLabel htmlFor="status" mb={0}>
                 <strong>Location</strong>
               </FormLabel>
-              {/* TODO: Flag selector */}
+              {/* TODO: Dark mode not displaying correctly */}
+              {/* TODO: Select is not closing when selecting the flag */}
+              <ReactFlagsSelect
+                searchable
+                selected={newLocation}
+                onSelect={countryCode => setNewLocation(countryCode)}
+              />
               <Input
                 type="text"
                 name="location"
