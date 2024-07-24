@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ReactCountryFlag from "react-country-flag";
 import ReactFlagsSelect from "react-flags-select";
 import {
@@ -15,7 +15,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
-  Input,
   FormLabel,
   FormControl,
 } from "@chakra-ui/react";
@@ -30,6 +29,7 @@ const BuilderLocation = ({ builder }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isLoading, makeSignedRequest } = useSignedRequest("builderUpdateLocation", builder?.id);
   const { secondaryFontColor } = useCustomColorModes();
+  const flagsSelectRef = useRef(null);
 
   const isMyProfile = address === builder?.id;
 
@@ -63,6 +63,17 @@ const BuilderLocation = ({ builder }) => {
     setCurrentLocation(builderResponse.location);
   };
 
+  const handleFlagSelect = countryCode => {
+    setNewLocation(countryCode);
+    // Close the dropdown after selection (bug in ReiactFlagsSelect)
+    if (flagsSelectRef.current) {
+      const selectButton = flagsSelectRef.current.querySelector("#rfs-btn");
+      if (selectButton) {
+        selectButton.click();
+      }
+    }
+  };
+
   return (
     <>
       <Box mb={3}>
@@ -82,7 +93,7 @@ const BuilderLocation = ({ builder }) => {
               </div>
             </Tooltip>
           ) : (
-            <Text color={secondaryFontColor}>No location set</Text>
+            isMyProfile && <Text color={secondaryFontColor}>No location set</Text>
           )}
         </Box>
         {isMyProfile && (
@@ -104,20 +115,9 @@ const BuilderLocation = ({ builder }) => {
               </FormLabel>
               {/* TODO: Dark mode not displaying correctly */}
               {/* TODO: Select is not closing when selecting the flag */}
-              <ReactFlagsSelect
-                searchable
-                selected={newLocation}
-                onSelect={countryCode => setNewLocation(countryCode)}
-              />
-              <Input
-                type="text"
-                name="location"
-                value={newLocation}
-                placeholder={builder?.location}
-                onChange={e => {
-                  setNewLocation(e.target.value);
-                }}
-              />
+              <div ref={flagsSelectRef}>
+                <ReactFlagsSelect searchable selected={newLocation} onSelect={handleFlagSelect} />
+              </div>
             </FormControl>
             <Button colorScheme="blue" px={4} onClick={handleSetLocation} isLoading={isLoading} isFullWidth>
               Update
