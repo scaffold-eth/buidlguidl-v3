@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import ReactCountryFlag from "react-country-flag";
-import ReactFlagsSelect from "react-flags-select";
+import ReactFlagsSelect, { Ag, Be, Cg, Es, Sa, Us } from "react-flags-select";
 import {
   Box,
   Button,
   Text,
+  Flex,
   Tooltip,
   useColorModeValue,
   useDisclosure,
@@ -96,7 +97,15 @@ const BuilderLocation = ({ builder }) => {
               </div>
             </Tooltip>
           ) : (
-            isMyProfile && <Text color={secondaryFontColor}>No location set</Text>
+            isMyProfile && (
+              <Flex style={{ gap: "10px" }} justify="center" color={secondaryFontColor} opacity="0.2">
+                <Us />
+                <Ag />
+                <Be />
+                <Es />
+                <Cg />
+              </Flex>
+            )
           )}
         </Box>
         {isMyProfile && (
