@@ -17,12 +17,14 @@ import {
   ModalCloseButton,
   FormLabel,
   FormControl,
+  useTheme,
 } from "@chakra-ui/react";
 import useSignedRequest from "../hooks/useSignedRequest";
 import useConnectedAddress from "../hooks/useConnectedAddress";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 
 const BuilderLocation = ({ builder }) => {
+  const theme = useTheme();
   const address = useConnectedAddress();
   const [currentLocation, setCurrentLocation] = useState(builder?.location);
   const [newLocation, setNewLocation] = useState("");
@@ -30,7 +32,8 @@ const BuilderLocation = ({ builder }) => {
   const { isLoading, makeSignedRequest } = useSignedRequest("builderUpdateLocation", builder?.id);
   const { secondaryFontColor } = useCustomColorModes();
   const flagsSelectRef = useRef(null);
-
+  const bgColorSelect = useColorModeValue("white", theme.colors.dark.baseBlue);
+  const textColorSelect = useColorModeValue("black", "white");
   const isMyProfile = address === builder?.id;
 
   useEffect(() => {
@@ -113,9 +116,7 @@ const BuilderLocation = ({ builder }) => {
               <FormLabel htmlFor="status" mb={0}>
                 <strong>Location</strong>
               </FormLabel>
-              {/* TODO: Dark mode not displaying correctly */}
-              {/* TODO: Select is not closing when selecting the flag */}
-              <div ref={flagsSelectRef}>
+              <div className="flag-selector" ref={flagsSelectRef}>
                 <ReactFlagsSelect searchable selected={newLocation} onSelect={handleFlagSelect} />
               </div>
             </FormControl>
@@ -125,6 +126,16 @@ const BuilderLocation = ({ builder }) => {
           </ModalBody>
         </ModalContent>
       </Modal>
+      {/* ReactFlagsSelect doesn't allow proper styling */}
+      <style jsx global>{`
+        .flag-selector ul,
+        .flag-selector #rfs-btn,
+        .flag-selector ul > div,
+        .flag-selector input {
+          background-color: ${bgColorSelect};
+          color: ${textColorSelect};
+        }
+      `}</style>
     </>
   );
 };
