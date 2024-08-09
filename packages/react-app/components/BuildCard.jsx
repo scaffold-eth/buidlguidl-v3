@@ -127,7 +127,7 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
               <Text fontWeight="bold">
                 {build.name}
               </Text>
-              <BuildTypeBadge type={build.buildType} />
+              <BuildTypeBadge type={build.type} />
             </HStack>
           </Link>
         </NextLink>

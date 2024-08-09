@@ -68,7 +68,7 @@ router.post("/", withRole("builder"), async (req, res) => {
   }
 
   const buildData = {
-    buildType,
+    type: buildType,
     branch: buildUrl,
     demoUrl,
     videoUrl,
