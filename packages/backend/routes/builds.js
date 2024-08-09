@@ -45,12 +45,13 @@ router.get("/builder/:builderAddress", async (req, res) => {
  */
 router.post("/", withRole("builder"), async (req, res) => {
   console.log("POST /builds");
-  const { buildUrl, videoUrl, demoUrl, desc, image, name, signature, coBuilders } = req.body;
+  const { buildType, buildUrl, videoUrl, demoUrl, desc, image, name, signature, coBuilders } = req.body;
   const address = req.address;
 
   const verifyOptions = {
     messageId: "buildSubmit",
     address,
+    buildType,
     buildUrl,
     videoUrl,
     demoUrl,
@@ -67,6 +68,7 @@ router.post("/", withRole("builder"), async (req, res) => {
   }
 
   const buildData = {
+    buildType,
     branch: buildUrl,
     demoUrl,
     videoUrl,
