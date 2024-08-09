@@ -38,7 +38,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
   const isEditingExistingBuild = !!build;
 
   // Submission state.
-  const [buildType, setBuildType] = useState("");
+  const [buildType, setBuildType] = useState("dapp");
   const [buildName, setBuildName] = useState("");
   const [description, setDescription] = useState("");
   const [demoUrl, setDemoUrl] = useState("");
@@ -86,7 +86,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
 
   useEffect(() => {
     if (isEditingExistingBuild) {
-      setBuildType(build.buildType ?? "");
+      setBuildType(build.buildType ?? "dapp");
       setBuildName(build.name ?? "");
       setDescription(build.desc ?? "");
       setBuildUrl(build.branch ?? "");
@@ -98,7 +98,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
   }, [isEditingExistingBuild, build]);
 
   const clearForm = () => {
-    setBuildType("");
+    setBuildType("dapp");
     setBuildName("");
     setDescription("");
     setBuildUrl("");
