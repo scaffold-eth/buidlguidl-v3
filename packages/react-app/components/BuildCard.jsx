@@ -16,6 +16,7 @@ import {
   ButtonGroup,
   Link,
   Tooltip,
+    HStack
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { YoutubeFilled } from "@ant-design/icons";
@@ -24,6 +25,7 @@ import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
 import SubmitBuildModal from "./SubmitBuildModal";
 import { USER_ROLES } from "../helpers/constants";
 import BuildLikeButton from "./BuildLikeButton";
+import BuildTypeBadge from "./BuildTypeBadge";
 
 const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
   const address = useUserAddress(userProvider);
@@ -121,7 +123,12 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
         )}
         <NextLink href={`/build/${build.id}`} passHref>
           <Link>
-            <Text fontWeight="bold">{build.name}</Text>
+            <HStack align="center">
+              <Text fontWeight="bold">
+                {build.name}
+              </Text>
+              <BuildTypeBadge type={build.buildType} />
+            </HStack>
           </Link>
         </NextLink>
         <Text color={secondaryFontColor} whiteSpace="pre-wrap" fontSize="sm">
