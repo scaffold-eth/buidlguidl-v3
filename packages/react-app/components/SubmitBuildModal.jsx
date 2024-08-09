@@ -21,7 +21,7 @@ import {
   Image,
   Spinner,
   HStack,
-  VStack,
+  VStack, RadioGroup, Radio,
 } from "@chakra-ui/react";
 import { SERVER_URL as serverUrl } from "../constants";
 import useSignedRequest from "../hooks/useSignedRequest";
@@ -38,6 +38,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
   const isEditingExistingBuild = !!build;
 
   // Submission state.
+  const [buildType, setBuildType] = useState("");
   const [buildName, setBuildName] = useState("");
   const [description, setDescription] = useState("");
   const [demoUrl, setDemoUrl] = useState("");
@@ -85,6 +86,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
 
   useEffect(() => {
     if (isEditingExistingBuild) {
+      setBuildType(build.buildType ?? "");
       setBuildName(build.name ?? "");
       setDescription(build.desc ?? "");
       setBuildUrl(build.branch ?? "");
@@ -96,6 +98,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
   }, [isEditingExistingBuild, build]);
 
   const clearForm = () => {
+    setBuildType("");
     setBuildName("");
     setDescription("");
     setBuildUrl("");
@@ -114,10 +117,11 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
       imageUrl: false,
       coBuilders: !coBuilders.every(address => isAddress(address)),
       videoUrl:
-        videoUrl.length > 0 &&
-        videoUrl.match(
-          /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/g,
-        ) === null,
+          videoUrl.length > 0 &&
+          videoUrl.match(
+              /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/g,
+          ) === null,
+      buildType: !buildType,
     };
 
     setErrors(nextErrors);
@@ -136,6 +140,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
           image: imageUrl,
           name: buildName,
           coBuilders,
+          buildType,
         });
       } else {
         await makeSignedRequest({
@@ -146,6 +151,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
           image: imageUrl,
           name: buildName,
           coBuilders,
+          buildType,
         });
       }
     } catch (error) {
@@ -178,6 +184,20 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
         <ModalHeader>{isEditingExistingBuild ? "Edit" : "New"} Build</ModalHeader>
         <ModalCloseButton />
         <ModalBody px={8} pb={8}>
+          <FormControl mb={4} isRequired isInvalid={errors.buildType}>
+            <FormLabel htmlFor="buildType">
+              <strong>Build Type</strong>
+            </FormLabel>
+            <HStack>
+              <RadioGroup onChange={setBuildType} value={buildType}>
+                <HStack spacing="24px">
+                  <Radio value="dapp">DApp</Radio>
+                  <Radio value="extension">Extension</Radio>
+                </HStack>
+              </RadioGroup>
+            </HStack>
+            <FormErrorMessage>This field is required</FormErrorMessage>
+          </FormControl>
           <FormControl mb={4} isRequired isInvalid={errors.buildName}>
             <FormLabel htmlFor="buildName">
               <strong>Build name</strong>
