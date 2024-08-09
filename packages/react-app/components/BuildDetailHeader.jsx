@@ -20,6 +20,7 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ellipsizedAddress } from "../helpers/strings";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import ImageModal from "./ImageModal";
+import BuildTypeBadge from "../components/BuildTypeBadge";
 
 const Builder = ({ builderAddress }) => {
   const mainnetProviderData = useContext(BlockchainProvidersContext).mainnet;
@@ -93,9 +94,13 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
           textAlign={{ base: "center", md: "start" }}
           maxW={{ base: "100%", md: build.image ? "65%" : "none" }}
         >
-          <Heading as="h1" borderColor={textColor} size="lg">
-            {build.name}
-          </Heading>
+          <HStack align="center">
+            <Heading as="h1" borderColor={textColor} size="lg">
+              {build.name}
+            </Heading>
+
+            <BuildTypeBadge fontSize="1em" type={build.type} />
+          </HStack>
           <HStack>{actionButtons}</HStack>
           <Text>{build.desc}</Text>
         </Stack>
