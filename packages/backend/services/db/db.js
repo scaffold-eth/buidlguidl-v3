@@ -137,6 +137,13 @@ const findBuildById = db.findBuildById;
 const findAllBuilds = db.findAllBuilds;
 
 /**
+ * @param {string} type
+ * @returns {{name: string, builder: string, desc: string, branch: string, readMore: string,
+ *   image: string}[]}
+ */
+const findBuildsByType = db.findBuildsByType;
+
+/**
  * @param {Address} builderAddress
  * @returns {{name: string, desc: string, branch: string, readMore: string,
  *   image: string}[]}
@@ -229,6 +236,7 @@ module.exports = {
   deleteBuild,
   findBuildById,
   findAllBuilds,
+  findBuildsByType,
   findBuilderBuilds,
   featureBuild,
 

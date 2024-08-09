@@ -20,6 +20,15 @@ router.get("/", async (req, res) => {
 });
 
 /**
+ * Get all SE-2 Extension Builds.
+ */
+router.get("/extensions", async (req, res) => {
+  console.log("/builds/extensions");
+  const allBuilds = await db.findBuildsByType("extension");
+  res.json(allBuilds);
+});
+
+/**
  * Get a Build by id.
  */
 router.get("/:buildId", async (req, res) => {
