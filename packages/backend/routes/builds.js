@@ -15,16 +15,13 @@ router.get("/", async (req, res) => {
   console.log("/builds");
   // ToDo. Featured not used now, but keeping it for now.
   const featured = req.query.featured ? Boolean(req.query.featured) : null;
+  const buildType = req.query.type;
+  if (buildType) {
+    const builds = await db.findBuildsByType(buildType, featured);
+    res.json(builds);
+    return;
+  }
   const allBuilds = await db.findAllBuilds(featured);
-  res.json(allBuilds);
-});
-
-/**
- * Get all SE-2 Extension Builds.
- */
-router.get("/extensions", async (req, res) => {
-  console.log("/builds/extensions");
-  const allBuilds = await db.findBuildsByType("extension");
   res.json(allBuilds);
 });
 
@@ -110,13 +107,14 @@ router.post("/", withRole("builder"), async (req, res) => {
  */
 router.patch("/:buildId", withRole("builder"), async (req, res) => {
   const buildId = req.params.buildId;
-  const { buildUrl, demoUrl, videoUrl, desc, image, name, signature, coBuilders } = req.body;
+  const { buildType, buildUrl, demoUrl, videoUrl, desc, image, name, signature, coBuilders } = req.body;
   console.log("EDIT /builds/", buildId);
 
   const address = req.address;
 
   const verifyOptions = {
     messageId: "buildEdit",
+    type: buildType,
     address,
     buildId,
     buildUrl,
