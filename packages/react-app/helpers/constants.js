@@ -4,6 +4,15 @@ export const SRE_CHALLENGE_SUBMISSION_STATUS = {
   SUBMITTED: "SUBMITTED",
 };
 
+export const BUILD_TYPES = {
+  dapp: "DApp",
+  extension: "Extension",
+  challenge: "Challenge",
+  design: "Design",
+  devrel: "DevRel",
+  other: "Other",
+};
+
 export const USER_ROLES = {
   anonymous: "anonymous",
   builder: "builder",
