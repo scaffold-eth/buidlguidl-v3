@@ -21,7 +21,7 @@ import {
   Image,
   Spinner,
   HStack,
-  VStack, RadioGroup, Radio,
+  VStack, RadioGroup, Radio, Select,
 } from "@chakra-ui/react";
 import { SERVER_URL as serverUrl } from "../constants";
 import useSignedRequest from "../hooks/useSignedRequest";
@@ -30,6 +30,7 @@ import AddressInput from "./AddressInput";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import { AddIcon, DeleteIcon, SmallAddIcon } from "@chakra-ui/icons";
 import { isAddress } from "ethers/lib/utils";
+import {BUILD_TYPES} from "../helpers/constants"
 
 export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
   const mainnetProviderData = useContext(BlockchainProvidersContext).mainnet;
@@ -189,12 +190,11 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
               <strong>Build Type</strong>
             </FormLabel>
             <HStack>
-              <RadioGroup onChange={setBuildType} value={buildType}>
-                <HStack spacing="24px">
-                  <Radio value="dapp">DApp</Radio>
-                  <Radio value="extension">Extension</Radio>
-                </HStack>
-              </RadioGroup>
+              <Select onChange={e => setBuildType(e.target.value)} value={buildType}>
+                {Object.entries(BUILD_TYPES).map(([key, label]) =>
+                  <option key={key} value={key}>{label}</option>
+                )}
+              </Select>
             </HStack>
             <FormErrorMessage>This field is required</FormErrorMessage>
           </FormControl>
