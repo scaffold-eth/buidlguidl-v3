@@ -2,6 +2,8 @@ import { Badge } from "@chakra-ui/react";
 import { BUILD_TYPES } from "../helpers/constants";
 
 export default function BuildTypeBadge({ type, ...badgeProps }) {
+  if (!type) return null;
+
   const colorSchemes = {
     dapp: "orange",
     extension: "blue",
