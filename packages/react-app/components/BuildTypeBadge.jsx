@@ -1,27 +1,21 @@
 import { Badge } from "@chakra-ui/react";
 import { BUILD_TYPES } from "../helpers/constants";
 
+const colorSchemes = {
+  dapp: "orange",
+  extension: "blue",
+  challenge: "green",
+  design: "purple",
+  devrel: "pink",
+  other: "gray",
+};
+
 export default function BuildTypeBadge({ type, ...badgeProps }) {
-  if (!type) return null;
+  if (!type || !BUILD_TYPES[type]) return null;
 
-  const colorSchemes = {
-    dapp: "orange",
-    extension: "blue",
-    challenge: "green",
-    design: "purple",
-    devrel: "pink",
-    other: "gray",
-  };
-
-  for (const [key, label] of Object.entries(BUILD_TYPES)) {
-    if (type === key) {
-      return (
-        <Badge colorScheme={colorSchemes[key]} {...badgeProps}>
-          {label}
-        </Badge>
-      );
-    }
-  }
-
-  throw new Error(`Unknown build type: ${type}`);
+  return (
+    <Badge colorScheme={colorSchemes[type]} {...badgeProps}>
+      {BUILD_TYPES[type]}
+    </Badge>
+  );
 }
