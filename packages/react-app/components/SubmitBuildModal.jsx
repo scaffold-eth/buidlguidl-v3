@@ -21,16 +21,17 @@ import {
   Image,
   Spinner,
   HStack,
-  VStack, RadioGroup, Radio, Select,
+  VStack,
+  Select,
 } from "@chakra-ui/react";
 import { SERVER_URL as serverUrl } from "../constants";
 import useSignedRequest from "../hooks/useSignedRequest";
 import useConnectedAddress from "../hooks/useConnectedAddress";
 import AddressInput from "./AddressInput";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
-import { AddIcon, DeleteIcon, SmallAddIcon } from "@chakra-ui/icons";
+import { DeleteIcon, SmallAddIcon } from "@chakra-ui/icons";
 import { isAddress } from "ethers/lib/utils";
-import {BUILD_TYPES} from "../helpers/constants"
+import { BUILD_TYPES } from "../helpers/constants";
 
 export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
   const mainnetProviderData = useContext(BlockchainProvidersContext).mainnet;
@@ -118,10 +119,10 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
       imageUrl: false,
       coBuilders: !coBuilders.every(address => isAddress(address)),
       videoUrl:
-          videoUrl.length > 0 &&
-          videoUrl.match(
-              /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/g,
-          ) === null,
+        videoUrl.length > 0 &&
+        videoUrl.match(
+          /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/g,
+        ) === null,
       buildType: !buildType,
     };
 
@@ -191,9 +192,11 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
             </FormLabel>
             <HStack>
               <Select onChange={e => setBuildType(e.target.value)} value={buildType}>
-                {Object.entries(BUILD_TYPES).map(([key, label]) =>
-                  <option key={key} value={key}>{label}</option>
-                )}
+                {Object.entries(BUILD_TYPES).map(([key, label]) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
               </Select>
             </HStack>
             <FormErrorMessage>This field is required</FormErrorMessage>

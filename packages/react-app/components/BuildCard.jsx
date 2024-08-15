@@ -16,7 +16,7 @@ import {
   ButtonGroup,
   Link,
   Tooltip,
-    HStack
+  HStack,
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { YoutubeFilled } from "@ant-design/icons";
@@ -124,9 +124,7 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
         <NextLink href={`/build/${build.id}`} passHref>
           <Link>
             <HStack align="center">
-              <Text fontWeight="bold">
-                {build.name}
-              </Text>
+              <Text fontWeight="bold">{build.name}</Text>
               <BuildTypeBadge type={build.type} />
             </HStack>
           </Link>
