@@ -6,6 +6,7 @@ const getSignMessageForId = async (messageId, options) => {
   switch (messageId) {
     case "buildSubmit":
       data = {
+        type: options.buildType,
         name: options.name,
         buildUrl: options.buildUrl,
         demoUrl: options.demoUrl,
@@ -23,6 +24,7 @@ const getSignMessageForId = async (messageId, options) => {
 
     case "buildEdit":
       data = {
+        type: options.buildType,
         name: options.name,
         buildUrl: options.buildUrl,
         demoUrl: options.demoUrl,

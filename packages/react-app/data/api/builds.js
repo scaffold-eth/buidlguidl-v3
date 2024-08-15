@@ -5,7 +5,7 @@ import { getGithubApiReadmeFromRepoUrl, getGithubReadmeUrlFromBranchUrl, isGithu
 export const postBuildSubmit = async (
   address,
   signature,
-  { buildUrl, videoUrl, demoUrl, desc, image, name, coBuilders },
+  { buildUrl, videoUrl, demoUrl, desc, image, name, coBuilders, buildType },
 ) => {
   try {
     await axios.post(
@@ -19,6 +19,7 @@ export const postBuildSubmit = async (
         name,
         coBuilders,
         signature,
+        buildType,
       },
       {
         headers: {
@@ -40,7 +41,7 @@ export const postBuildSubmit = async (
 export const patchBuildEdit = async (
   address,
   signature,
-  { buildId, buildUrl, videoUrl, demoUrl, desc, image, name, coBuilders },
+  { buildId, buildUrl, videoUrl, demoUrl, desc, image, name, coBuilders, buildType },
 ) => {
   try {
     await axios.patch(
@@ -54,6 +55,7 @@ export const patchBuildEdit = async (
         name,
         coBuilders,
         signature,
+        buildType,
       },
       {
         headers: {

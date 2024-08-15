@@ -249,6 +249,21 @@ const findAllBuilds = async (featured = null) => {
   return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+const findBuildsByType = async (type, featured = null) => {
+  let buildsSnapshot;
+  if (typeof featured === "boolean") {
+    buildsSnapshot = await database
+      .collection("builds")
+      .where("type", "==", type)
+      .where("featured", "==", featured)
+      .get();
+  } else {
+    buildsSnapshot = await database.collection("builds").where("type", "==", type).get();
+  }
+
+  return buildsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
 const findBuilderBuilds = async builderAddress => {
   const buildsSnapshot = await database.collection("builds").where("builder", "==", builderAddress).get();
   const coBuildsSnapshot = await database
@@ -436,6 +451,7 @@ module.exports = {
   deleteBuild,
   findBuildById,
   findAllBuilds,
+  findBuildsByType,
   findBuilderBuilds,
   featureBuild,
 

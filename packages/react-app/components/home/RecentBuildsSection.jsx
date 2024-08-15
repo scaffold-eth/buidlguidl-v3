@@ -5,6 +5,7 @@ import Card from "../Card";
 import { Flex, Button, VStack, Container, Divider, Heading, chakra, Text, Link } from "@chakra-ui/react";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import DateWithTooltip from "../DateWithTooltip";
+import BuildTypeBadge from "../BuildTypeBadge";
 
 const MAX_DESC_LEN = 150;
 const RecentBuildCard = ({ build }) => {
@@ -17,6 +18,7 @@ const RecentBuildCard = ({ build }) => {
           <Heading size="md" fontWeight="500">
             {build.name}
           </Heading>
+          <BuildTypeBadge type={build.type} />
         </VStack>
         <Divider />
         <VStack align="start" spacing={3} p={5} bg={baseBlue2Color}>

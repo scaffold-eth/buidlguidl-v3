@@ -15,6 +15,12 @@ router.get("/", async (req, res) => {
   console.log("/builds");
   // ToDo. Featured not used now, but keeping it for now.
   const featured = req.query.featured ? Boolean(req.query.featured) : null;
+  const buildType = req.query.type;
+  if (buildType) {
+    const builds = await db.findBuildsByType(buildType, featured);
+    res.json(builds);
+    return;
+  }
   const allBuilds = await db.findAllBuilds(featured);
   res.json(allBuilds);
 });
@@ -45,12 +51,13 @@ router.get("/builder/:builderAddress", async (req, res) => {
  */
 router.post("/", withRole("builder"), async (req, res) => {
   console.log("POST /builds");
-  const { buildUrl, videoUrl, demoUrl, desc, image, name, signature, coBuilders } = req.body;
+  const { buildType, buildUrl, videoUrl, demoUrl, desc, image, name, signature, coBuilders } = req.body;
   const address = req.address;
 
   const verifyOptions = {
     messageId: "buildSubmit",
     address,
+    buildType,
     buildUrl,
     videoUrl,
     demoUrl,
@@ -67,6 +74,7 @@ router.post("/", withRole("builder"), async (req, res) => {
   }
 
   const buildData = {
+    type: buildType,
     branch: buildUrl,
     demoUrl,
     videoUrl,
@@ -99,13 +107,14 @@ router.post("/", withRole("builder"), async (req, res) => {
  */
 router.patch("/:buildId", withRole("builder"), async (req, res) => {
   const buildId = req.params.buildId;
-  const { buildUrl, demoUrl, videoUrl, desc, image, name, signature, coBuilders } = req.body;
+  const { buildType, buildUrl, demoUrl, videoUrl, desc, image, name, signature, coBuilders } = req.body;
   console.log("EDIT /builds/", buildId);
 
   const address = req.address;
 
   const verifyOptions = {
     messageId: "buildEdit",
+    buildType,
     address,
     buildId,
     buildUrl,
@@ -137,6 +146,7 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
   }
 
   const buildData = {
+    type: buildType,
     branch: buildUrl,
     demoUrl,
     videoUrl,

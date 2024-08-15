@@ -24,6 +24,7 @@ import { getBuildDeleteSignMessage, deleteBuild } from "../data/api";
 import SubmitBuildModal from "./SubmitBuildModal";
 import { USER_ROLES } from "../helpers/constants";
 import BuildLikeButton from "./BuildLikeButton";
+import BuildTypeBadge from "./BuildTypeBadge";
 
 const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
   const address = useUserAddress(userProvider);
@@ -110,13 +111,16 @@ const BuildCard = ({ build, userProvider, userRole, onUpdate }) => {
         </Link>
       </NextLink>
       <Flex pt={9} pb={4} px={4} direction="column" minH="240px" h="100%" pos="relative" backgroundColor={baseColor}>
-        {build.videoUrl && (
+        {(build.videoUrl || build.type) && (
           <Box pos="absolute" right={0} top={0} pt="6px" pr="12px">
-            <Link href={build.videoUrl} isExternal>
-              <Tooltip label="Watch build video">
-                <YoutubeFilled />
-              </Tooltip>
-            </Link>
+            <BuildTypeBadge type={build.type} />
+            {build.videoUrl && (
+              <Link href={build.videoUrl} isExternal ml={2} display="inline-flex">
+                <Tooltip label="Watch build video">
+                  <YoutubeFilled />
+                </Tooltip>
+              </Link>
+            )}
           </Box>
         )}
         <NextLink href={`/build/${build.id}`} passHref>

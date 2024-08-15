@@ -1,25 +1,13 @@
 import React, { useContext } from "react";
 import NextLink from "next/link";
 import { useLookupAddress } from "eth-hooks";
-import {
-  Heading,
-  Box,
-  Image,
-  HStack,
-  VStack,
-  Flex,
-  Text,
-  Link,
-  Spacer,
-  useDisclosure,
-  Grid,
-  Stack,
-} from "@chakra-ui/react";
+import { Heading, Box, Image, HStack, VStack, Flex, Text, Link, useDisclosure, Stack } from "@chakra-ui/react";
 import QRPunkBlockie from "./QrPunkBlockie";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ellipsizedAddress } from "../helpers/strings";
 import BlockchainProvidersContext from "../contexts/blockchainProvidersContext";
 import ImageModal from "./ImageModal";
+import BuildTypeBadge from "../components/BuildTypeBadge";
 
 const Builder = ({ builderAddress }) => {
   const mainnetProviderData = useContext(BlockchainProvidersContext).mainnet;
@@ -98,6 +86,7 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
           </Heading>
           <HStack>{actionButtons}</HStack>
           <Text>{build.desc}</Text>
+          <BuildTypeBadge type={build.type} />
         </Stack>
         {build.image && (
           <Box>
