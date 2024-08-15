@@ -98,11 +98,10 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
             <Heading as="h1" borderColor={textColor} size="lg">
               {build.name}
             </Heading>
-
-            <BuildTypeBadge fontSize="1em" type={build.type} />
           </HStack>
           <HStack>{actionButtons}</HStack>
           <Text>{build.desc}</Text>
+          <BuildTypeBadge type={build.type} />
         </Stack>
         {build.image && (
           <Box>
