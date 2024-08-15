@@ -1,20 +1,7 @@
 import React, { useContext } from "react";
 import NextLink from "next/link";
 import { useLookupAddress } from "eth-hooks";
-import {
-  Heading,
-  Box,
-  Image,
-  HStack,
-  VStack,
-  Flex,
-  Text,
-  Link,
-  Spacer,
-  useDisclosure,
-  Grid,
-  Stack,
-} from "@chakra-ui/react";
+import { Heading, Box, Image, HStack, VStack, Flex, Text, Link, useDisclosure, Stack } from "@chakra-ui/react";
 import QRPunkBlockie from "./QrPunkBlockie";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 import { ellipsizedAddress } from "../helpers/strings";
@@ -94,11 +81,9 @@ const BuildDetailHeader = ({ build, actionButtons }) => {
           textAlign={{ base: "center", md: "start" }}
           maxW={{ base: "100%", md: build.image ? "65%" : "none" }}
         >
-          <HStack align="center">
-            <Heading as="h1" borderColor={textColor} size="lg">
-              {build.name}
-            </Heading>
-          </HStack>
+          <Heading as="h1" borderColor={textColor} size="lg">
+            {build.name}
+          </Heading>
           <HStack>{actionButtons}</HStack>
           <Text>{build.desc}</Text>
           <BuildTypeBadge type={build.type} />
