@@ -5,9 +5,9 @@ export const SRE_CHALLENGE_SUBMISSION_STATUS = {
 };
 
 export const BUILD_TYPES = {
-  dapp: "DApp",
-  extension: "Extension",
-  challenge: "Challenge",
+  dapp: "SE-2 DApp",
+  extension: "SE-2 Extension",
+  challenge: "SRE Challenge",
   design: "Design",
   devrel: "DevRel",
   other: "Other",
