@@ -146,6 +146,7 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
   }
 
   const buildData = {
+    type: buildType,
     branch: buildUrl,
     demoUrl,
     videoUrl,
