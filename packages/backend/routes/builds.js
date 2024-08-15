@@ -74,7 +74,7 @@ router.post("/", withRole("builder"), async (req, res) => {
   }
 
   const buildData = {
-    type: buildType,
+    buildType,
     branch: buildUrl,
     demoUrl,
     videoUrl,
@@ -114,7 +114,7 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
 
   const verifyOptions = {
     messageId: "buildEdit",
-    type: buildType,
+    buildType,
     address,
     buildId,
     buildUrl,
