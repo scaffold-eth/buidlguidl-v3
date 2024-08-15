@@ -88,7 +88,7 @@ export default function SubmitBuildModal({ isOpen, onClose, build, onUpdate }) {
 
   useEffect(() => {
     if (isEditingExistingBuild) {
-      setBuildType(build.buildType ?? "dapp");
+      setBuildType(build.type ?? "dapp");
       setBuildName(build.name ?? "");
       setDescription(build.desc ?? "");
       setBuildUrl(build.branch ?? "");
