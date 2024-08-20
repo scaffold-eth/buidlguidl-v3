@@ -32,6 +32,10 @@ app.use("/api", apiRoutes);
 app.use("/cohorts", cohortRoutes);
 app.use("/notifications", notificationsRoutes);
 
+app.get("/healthcheck", (_, res) => {
+  res.status(200).send("ok");
+});
+
 app.get("/sign-message", async (req, res) => {
   const messageId = req.query.messageId;
   const options = req.query;
