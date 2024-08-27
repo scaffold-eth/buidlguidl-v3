@@ -32,14 +32,14 @@ const BatchColumnFilter = ({ filterValue, setFilter, builders }) => {
           rightIcon={<ChevronDownIcon />}
           onClick={() => setIsOpen(!isOpen)}
           bgColor={baseColor}
-          width="200px"
+          width="250px"
           borderRadius="md"
           fontWeight="normal"
         >
           {getButtonLabel()}
         </Button>
       </PopoverTrigger>
-      <PopoverContent width="200px">
+      <PopoverContent width="250px">
         <PopoverBody padding={0}>
           <Input
             placeholder="Search batches..."

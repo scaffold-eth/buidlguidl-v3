@@ -160,10 +160,6 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
     });
   };
 
-  const BatchFilterComponent = ({ column }) => (
-    <BatchColumnFilter filterValue={column.filterValue} setFilter={column.setFilter} builders={builders} />
-  );
-
   const BuilderAddressCellComponent = ({ value }) => (
     <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />
   );
@@ -180,6 +176,37 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       </Text>
     );
   };
+
+  useEffect(() => {
+    async function fetchBuilders() {
+      setIsLoadingBuilders(true);
+      const fetchedBuilders = await axios.get(serverUrl + serverPath);
+
+      const processedBuilders = fetchedBuilders.data
+        .filter(builder => builder.ens !== "austingriffith.eth")
+        .map(builder => ({
+          builder,
+          status: builder.status,
+          stream: builder,
+          builds: builder.builds?.length || 0,
+          socials: builder,
+          userCreated: builderCreated(builder),
+        }));
+
+      setBuilders(processedBuilders);
+      setIsLoadingBuilders(false);
+    }
+
+    fetchBuilders();
+  }, [serverUrl]);
+
+  const BatchFilterComponent = useMemo(() => {
+    const Component = ({ column }) => (
+      <BatchColumnFilter filterValue={column.filterValue} setFilter={column.setFilter} builders={builders} />
+    );
+    Component.displayName = "BatchFilterComponent";
+    return Component;
+  }, [builders]);
 
   const columns = useMemo(
     () => {
@@ -241,31 +268,8 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       return allColumns;
     },
     // eslint-disable-next-line
-    [userRole],
+    [userRole, BatchFilterComponent, builders],
   );
-
-  useEffect(() => {
-    async function fetchBuilders() {
-      setIsLoadingBuilders(true);
-      const fetchedBuilders = await axios.get(serverUrl + serverPath);
-
-      const processedBuilders = fetchedBuilders.data
-        .filter(builder => builder.ens !== "austingriffith.eth")
-        .map(builder => ({
-          builder,
-          status: builder.status,
-          stream: builder,
-          builds: builder.builds?.length || 0,
-          socials: builder,
-          userCreated: builderCreated(builder),
-        }));
-
-      setBuilders(processedBuilders);
-      setIsLoadingBuilders(false);
-    }
-
-    fetchBuilders();
-  }, [serverUrl]);
 
   const {
     getTableProps,
