@@ -36,9 +36,9 @@ import { bySocialWeight } from "../../data/socials";
 import { USER_ROLES } from "../../helpers/constants";
 import StreamTableCell from "../../components/StreamTableCell";
 import MetaSeo from "../../components/MetaSeo";
-import DotIcon from "../../components/icons/DotIcon";
 import BuilderFlags from "../../components/builder/BuilderFlags";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
+import BatchColumnFilter from "../../components/BatchColumnFilter";
 
 const serverPath = "/builders";
 
@@ -93,6 +93,8 @@ const BuilderBuildsCell = ({ buildCount }) => {
 };
 
 const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
+  const { baseColor } = useCustomColorModes();
+
   return (
     <Input
       type="text"
@@ -101,6 +103,8 @@ const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
         setFilter(e.target.value || undefined);
       }}
       placeholder="Search builder"
+      bgColor={baseColor}
+      mb={8}
     />
   );
 };
@@ -116,8 +120,15 @@ const isValueOnEnsOrSocials = (builder, filterValue) => {
   return isOnEns || isOnSocials;
 };
 
+const isInBatch = (builder, filterValue) => {
+  if (!builder.builderBatch) return false;
+
+  return builder.builderBatch === filterValue;
+};
+
 export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
   const [builders, setBuilders] = useState([]);
+  const [amountBuilders, setAmountBuilders] = useState(0);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
   const isAdmin = userRole === USER_ROLES.admin;
   const isLoggedIn = userRole !== null && userRole !== USER_ROLES.anonymous;
@@ -133,6 +144,25 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
       return rowValue !== undefined ? isValueOnEnsOrSocials(rowValue, filterValue) : true;
     });
   };
+
+  const batchFiltering = (rows, id, filterValue) => {
+    if (filterValue === "allBuilders" || filterValue === undefined) {
+      return rows;
+    }
+
+    if (filterValue === "allBatches") {
+      return rows.filter(row => row.values[id]?.builderBatch);
+    }
+
+    return rows.filter(row => {
+      const rowValue = row.values[id];
+      return rowValue !== undefined ? isInBatch(rowValue, filterValue) : true;
+    });
+  };
+
+  const BatchFilterComponent = ({ column }) => (
+    <BatchColumnFilter filterValue={column.filterValue} setFilter={column.setFilter} builders={builders} />
+  );
 
   const BuilderAddressCellComponent = ({ value }) => (
     <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />
@@ -181,6 +211,8 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           Header: "Stream",
           accessor: "stream",
           disableFilters: true,
+          Filter: BatchFilterComponent,
+          filter: batchFiltering,
           // Sorting by stream cap for now.
           sortType: (rowA, rowB) =>
             Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
@@ -261,7 +293,12 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
     usePagination,
   );
 
+  useEffect(() => {
+    setAmountBuilders(page.length);
+  }, [page]);
+
   const ensFilter = headerGroups[0].headers[0];
+  const batchFilter = headerGroups[0].headers[3];
 
   return (
     <Container maxW="container.xl">
@@ -276,15 +313,19 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         <Box overflowX={{ base: "auto", lg: "visible" }} mb={8}>
           <Center mb={5} flexDir="column">
             <Box mb={2}>
-              <chakra.strong mr={2}>Total builders in Batches:</chakra.strong>
-              {builders.length}
+              <chakra.strong mr={2}>Total builders:</chakra.strong>
+              {amountBuilders}
             </Box>
-            <Box mb={8}>
-              <InputGroup bgColor={baseColor}>
+            <Flex direction={{ base: "column", md: "row" }} alignItems="center" mb={4}>
+              <InputGroup mr={{ md: 4 }} mb={{ base: 4, md: 0 }} width={{ base: "100%", md: "auto" }} height="40px">
                 {ensFilter.render("Filter")}
                 <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
               </InputGroup>
-            </Box>
+
+              <Box width={{ base: "100%", md: "auto" }} height="40px">
+                {batchFilter.render("Filter")}
+              </Box>
+            </Flex>
           </Center>
           <Table
             {...getTableProps()}
