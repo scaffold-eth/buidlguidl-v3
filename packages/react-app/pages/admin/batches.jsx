@@ -191,11 +191,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           accessor: "lastActivity",
           sortDescFirst: true,
           disableFilters: true,
-          Cell: ({ value }) => (
-            <Text whiteSpace="nowrap">
-              <DateWithTooltip timestamp={value} />
-            </Text>
-          ),
+          Cell: ({ value }) => <DateWithTooltip timestamp={value} />,
         },
       ];
 
@@ -296,7 +292,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
                   {headerGroup.headers.map(column => (
                     <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id} whiteSpace="nowrap">
                       {column.render("Header")}
-                      <chakra.span pl="4">
+                      <chakra.span key={`span-${index}`} pl="4">
                         {column.isSorted ? (
                           column.isSortedDesc ? (
                             <TriangleDownIcon aria-label="sorted descending" />
@@ -316,11 +312,9 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
                 return (
                   <Tr {...row.getRowProps()} key={row.id}>
                     {row.cells.map(cell => (
-                      <>
-                        <Td {...cell.getCellProps()} key={cell.column.id}>
-                          {cell.render("Cell")}
-                        </Td>
-                      </>
+                      <Td {...cell.getCellProps()} key={cell.column.id}>
+                        {cell.render("Cell")}
+                      </Td>
                     ))}
                   </Tr>
                 );
