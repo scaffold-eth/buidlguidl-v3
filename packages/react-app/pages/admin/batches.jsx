@@ -191,7 +191,11 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           accessor: "lastActivity",
           sortDescFirst: true,
           disableFilters: true,
-          Cell: ({ value }) => <DateWithTooltip timestamp={value} />,
+          Cell: ({ value }) => (
+            <Box whiteSpace="nowrap">
+              <DateWithTooltip timestamp={value} />
+            </Box>
+          ),
         },
       ];
 
