@@ -52,6 +52,7 @@ import BuilderFlags from "./builder/BuilderFlags";
 import MenuItemScholarshipUpdate from "./builder/MenuItemScholarshipUpdate";
 import MenuItemGraduatedUpdate from "./builder/MenuItemGraduatedUpdate";
 import MenuItemDisabledUpdate from "./builder/MenuItemDisabledUpdate";
+import { BATCH_STATUS } from "./BuilderCrudForm";
 
 const BuilderProfileCardSkeleton = ({ isLoaded, children }) => (
   <Skeleton isLoaded={isLoaded}>{isLoaded ? children() : <SkeletonText mt="4" noOfLines={4} spacing="4" />}</Skeleton>
@@ -263,7 +264,16 @@ const BuilderProfileCard = ({
               )}
               {builder.batch?.number && !isNaN(builder.batch.number) && (
                 <Center mt={2} mb={builder.builderCohort?.length > 0 ? 0 : 4}>
-                  <Badge colorScheme="green" textAlign="center">
+                  <Badge
+                    colorScheme={
+                      builder.batch.status === BATCH_STATUS.CANDIDATE
+                        ? "orange"
+                        : builder.batch.status
+                        ? "green"
+                        : "orange"
+                    }
+                    textAlign="center"
+                  >
                     Batch #{builder.batch.number}
                   </Badge>
                 </Center>

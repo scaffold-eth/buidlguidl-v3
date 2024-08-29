@@ -1,6 +1,6 @@
 import React from "react";
-import { Badge, Box, Center, Flex, Link, Progress } from "@chakra-ui/react";
-import { ethers } from "ethers";
+import { Badge, Center, Link } from "@chakra-ui/react";
+import { BATCH_STATUS } from "./BuilderCrudForm";
 
 const CohortDisplay = ({ cohorts }) => {
   console.log(!cohorts);
@@ -20,12 +20,14 @@ const CohortDisplay = ({ cohorts }) => {
 };
 
 const BatchDisplay = ({ batch }) => {
-  console.log(!batch);
   if (!batch) return null;
 
   return (
     <Center mt={2}>
-      <Badge colorScheme="green" textAlign="center">
+      <Badge
+        colorScheme={batch.status === BATCH_STATUS.CANDIDATE ? "orange" : batch.status ? "green" : "orange"}
+        textAlign="center"
+      >
         Batch #{batch.number}
       </Badge>
     </Center>
