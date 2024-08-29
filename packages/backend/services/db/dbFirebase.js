@@ -15,7 +15,7 @@ if (process.env.FIRESTORE_EMULATOR_HOST) {
   console.log("using Firebase **emulator** DB");
 
   firebaseAdmin.initializeApp({
-    projectId: process.env.PROJECT_ID,
+    projectId: process.env.FIRESTORE_PROJECT_ID,
     storageBucket: "buidlguidl-v3.appspot.com",
   });
 
