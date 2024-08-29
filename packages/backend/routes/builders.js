@@ -100,7 +100,10 @@ router.post("/create", withRole("admin"), async (req, res) => {
   }
 
   if (batch !== user.data?.batch) {
-    builderData.batch = { number: batch.number };
+    builderData.batch = {
+      number: batch.number,
+      ...(batch.status !== undefined && { status: batch.status }),
+    };
   }
 
   const ens = await getEnsFromAddress(builderAddress);
@@ -170,8 +173,13 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort ?? {};
   }
 
+  console.log("builder.js - batch data", batch);
+
   if (batch !== user.data?.batch) {
-    builderData.batch = { number: batch.number };
+    builderData.batch = {
+      number: batch.number,
+      ...(batch.status !== undefined && { status: batch.status }),
+    };
   }
 
   // Update user.

@@ -4,3 +4,7 @@ local_database/seed.json
 
 public/*
 !public/.gitkeep
+
+packages/backend/services/db/dbFirebase.js
+
+services/db/dbFirebase.js

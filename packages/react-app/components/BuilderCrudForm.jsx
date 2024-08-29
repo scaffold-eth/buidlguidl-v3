@@ -16,7 +16,6 @@ import {
   ModalCloseButton,
   ModalBody,
   Modal,
-  Input,
   NumberInputField,
   NumberInput,
   NumberIncrementStepper,
@@ -30,6 +29,11 @@ import useSignedRequest from "../hooks/useSignedRequest";
 import useConnectedAddress from "../hooks/useConnectedAddress";
 
 const INITIAL_FORM_STATE = { builderRole: USER_ROLES.builder };
+
+export const BATCH_STATUS = {
+  CANDIDATE: "candidate",
+  GRADUATE: "graduate",
+};
 
 export function BuilderCrudFormModal({ mainnetProvider, builder, isOpen, onClose, onUpdate }) {
   return (
@@ -61,6 +65,7 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [formErrors, setFormErrors] = useState({});
+  const [batchNumber, setBatchNumber] = useState();
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
@@ -80,6 +85,7 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderFunction: builder.function,
         batch: builder.batch,
       });
+      setBatchNumber(builder.batch?.number);
     }
   }, [isEditingBuilder, builder]);
 
@@ -104,7 +110,7 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderStreamAddress: formState.builderStreamAddress,
         batch: formState.batch,
       };
-      console.log(requestPayload);
+      console.log("CRUD FORM - requestPayload", requestPayload);
       if (isEditingBuilder) {
         await makeSignedRequestEdit(requestPayload);
       } else {
@@ -186,7 +192,6 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         </RadioGroup>
         <FormErrorMessage>Required</FormErrorMessage>
       </FormControl>
-
       <FormControl mb={8} isRequired isInvalid={formErrors.builderFunction}>
         <FormLabel htmlFor="builderFunction">
           <strong>Builder Function</strong>
@@ -205,7 +210,6 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         </Select>
         <FormErrorMessage>Required</FormErrorMessage>
       </FormControl>
-
       <FormControl mb={8} isInvalid={formErrors.builderStreamAddress}>
         <FormLabel htmlFor="builderStreamAddress">
           <strong>Stream Address</strong>
@@ -225,7 +229,6 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         />
         <FormErrorMessage>Invalid address</FormErrorMessage>
       </FormControl>
-
       <FormControl mb={8} isInvalid={formErrors.batch}>
         <FormLabel htmlFor="batch">
           <strong>Batch</strong>
@@ -236,12 +239,13 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
           min={0}
           placeholder="Builder Batch"
           value={formState.batch?.number || ""}
-          onChange={value =>
+          onChange={value => {
+            setBatchNumber(value);
             setFormState(prevFormState => ({
               ...prevFormState,
-              batch: { number: value },
-            }))
-          }
+              batch: { ...prevFormState.batch, number: value },
+            }));
+          }}
         >
           <NumberInputField />
           <NumberInputStepper>
@@ -251,6 +255,29 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         </NumberInput>
       </FormControl>
 
+      <FormControl
+        mb={8}
+        isDisabled={!batchNumber || batchNumber === "" || !formState.batch || !formState.batch.number}
+      >
+        <FormLabel htmlFor="batchStatus">
+          <strong>Batch Status</strong>
+        </FormLabel>
+        <RadioGroup
+          id="batchStatus"
+          value={formState.batch?.status}
+          onChange={value => {
+            setFormState(prevFormState => ({
+              ...prevFormState,
+              batch: { ...prevFormState.batch, status: value },
+            }));
+          }}
+        >
+          <Stack direction="row" spacing={4}>
+            <Radio value={BATCH_STATUS.CANDIDATE}>candidate</Radio>
+            <Radio value={BATCH_STATUS.GRADUATE}>graduate</Radio>
+          </Stack>
+        </RadioGroup>
+      </FormControl>
       <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isLoading || isLoadingEdit} isFullWidth>
         {isEditingBuilder ? "Update Builder" : "Add Builder"}
       </Button>

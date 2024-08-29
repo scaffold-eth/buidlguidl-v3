@@ -45,6 +45,7 @@ const useSignedRequest = (actionId, address) => {
     setIsLoading(true);
 
     let signMessage;
+
     try {
       signMessage = await getSignMessage(actionId, address, options);
     } catch (_) {

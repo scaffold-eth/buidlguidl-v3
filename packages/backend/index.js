@@ -43,8 +43,27 @@ app.get("/sign-message", async (req, res) => {
   // necessary to cast into JSON otherwise it is a string and verifySignature fails (because the objects are different)
   const transformedObject = {
     ...options,
-    batch: options.batch && typeof options.batch === "string" ? JSON.parse(options.batch) : options.batch || undefined,
+    batch: (() => {
+      if (!options.batch) return undefined;
+
+      // Parse if batch is a string
+      const parsedBatch = typeof options.batch === "string" ? JSON.parse(options.batch) : options.batch;
+
+      // Create a new object and include only defined properties
+      const resultBatch = {};
+      if (parsedBatch.number !== undefined) {
+        resultBatch.number = parsedBatch.number;
+      }
+      if (parsedBatch.status !== undefined) {
+        resultBatch.status = parsedBatch.status;
+      }
+
+      // Return resultBatch only if it has properties, otherwise return undefined
+      return Object.keys(resultBatch).length > 0 ? resultBatch : undefined;
+    })(),
   };
+
+  console.log("in here", transformedObject);
 
   console.log("/sign-message", messageId);
   res.status(200).send(await getSignMessageForId(messageId, transformedObject));
