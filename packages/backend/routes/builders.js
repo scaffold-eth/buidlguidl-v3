@@ -49,7 +49,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
   }
 
   // ToDo. Param validation.
-  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress, builderCohort, builderBatch } =
+  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress, builderCohort, batch } =
     req.body;
   const address = req.address;
   console.log("POST /builders/create", address, builderAddress);
@@ -67,7 +67,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderRole,
     builderStreamAddress,
     builderCohort,
-    builderBatch,
+    batch,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -99,8 +99,8 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort;
   }
 
-  if (builderBatch) {
-    builderData.builderBatch = builderBatch;
+  if (batch !== user.data?.batch) {
+    builderData.batch = { number: batch.number };
   }
 
   const ens = await getEnsFromAddress(builderAddress);
@@ -126,7 +126,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
   }
 
   // ToDo. Param validation.
-  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress, builderCohort, builderBatch } =
+  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress, builderCohort, batch } =
     req.body;
   const address = req.address;
   console.log("PATCH /builders/update", address, builderAddress);
@@ -139,7 +139,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderRole,
     builderStreamAddress,
     builderCohort,
-    builderBatch,
+    batch,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -170,8 +170,8 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort ?? {};
   }
 
-  if (builderBatch !== user.data.builderBatch) {
-    builderData.builderBatch = builderBatch ?? null;
+  if (batch !== user.data?.batch) {
+    builderData.batch = { number: batch.number };
   }
 
   // Update user.

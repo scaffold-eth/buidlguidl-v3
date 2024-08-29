@@ -40,8 +40,14 @@ app.get("/sign-message", async (req, res) => {
   const messageId = req.query.messageId;
   const options = req.query;
 
+  // necessary to cast into JSON otherwise it is a string and verifySignature fails (because the objects are different)
+  const transformedObject = {
+    ...options,
+    batch: options.batch && typeof options.batch === "string" ? JSON.parse(options.batch) : options.batch || undefined,
+  };
+
   console.log("/sign-message", messageId);
-  res.status(200).send(await getSignMessageForId(messageId, options));
+  res.status(200).send(await getSignMessageForId(messageId, transformedObject));
 });
 
 // If nothing processed the request, return 404

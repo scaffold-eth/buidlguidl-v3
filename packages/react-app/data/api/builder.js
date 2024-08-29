@@ -4,12 +4,12 @@ import { SERVER_URL as serverUrl } from "../../constants";
 export const postCreateUser = async (
   address,
   signature,
-  { builderAddress, builderRole, builderFunction, builderStreamAddress, builderCohort, builderBatch },
+  { builderAddress, builderRole, builderFunction, builderStreamAddress, builderCohort, batch },
 ) => {
   try {
     await axios.post(
       `${serverUrl}/builders/create`,
-      { builderAddress, builderRole, builderFunction, signature, builderStreamAddress, builderCohort, builderBatch },
+      { builderAddress, builderRole, builderFunction, signature, builderStreamAddress, builderCohort, batch },
       {
         headers: {
           address,
@@ -25,12 +25,12 @@ export const postCreateUser = async (
 export const patchEditUser = async (
   address,
   signature,
-  { builderAddress, builderRole, builderFunction, builderStreamAddress, builderCohort, builderBatch },
+  { builderAddress, builderRole, builderFunction, builderStreamAddress, builderCohort, batch },
 ) => {
   try {
     await axios.patch(
       `${serverUrl}/builders/update`,
-      { builderAddress, builderRole, builderFunction, signature, builderStreamAddress, builderCohort, builderBatch },
+      { builderAddress, builderRole, builderFunction, signature, builderStreamAddress, builderCohort, batch },
       {
         headers: {
           address,

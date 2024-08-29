@@ -78,7 +78,7 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderStreamAddress: builder.stream?.streamAddress,
         builderRole: builder.role,
         builderFunction: builder.function,
-        builderBatch: builder.builderBatch,
+        batch: builder.batch,
       });
     }
   }, [isEditingBuilder, builder]);
@@ -102,9 +102,9 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderRole: formState.builderRole,
         builderFunction: formState.builderFunction,
         builderStreamAddress: formState.builderStreamAddress,
-        builderBatch: formState.builderBatch,
+        batch: formState.batch,
       };
-
+      console.log(requestPayload);
       if (isEditingBuilder) {
         await makeSignedRequestEdit(requestPayload);
       } else {
@@ -226,20 +226,20 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         <FormErrorMessage>Invalid address</FormErrorMessage>
       </FormControl>
 
-      <FormControl mb={8} isInvalid={formErrors.builderBatch}>
-        <FormLabel htmlFor="builderBatch">
+      <FormControl mb={8} isInvalid={formErrors.batch}>
+        <FormLabel htmlFor="batch">
           <strong>Batch</strong>
         </FormLabel>
         <NumberInput
-          id="builderBatch"
+          id="batch"
           type="number"
           min={0}
           placeholder="Builder Batch"
-          value={formState.builderBatch || ""}
+          value={formState.batch?.number || ""}
           onChange={value =>
             setFormState(prevFormState => ({
               ...prevFormState,
-              builderBatch: value,
+              batch: { number: value },
             }))
           }
         >

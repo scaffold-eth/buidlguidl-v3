@@ -3,6 +3,7 @@ import { Badge, Box, Center, Flex, Link, Progress } from "@chakra-ui/react";
 import { ethers } from "ethers";
 
 const CohortDisplay = ({ cohorts }) => {
+  console.log(!cohorts);
   if (!cohorts?.length) return null;
 
   return cohorts.map((cohort, i) => {
@@ -19,12 +20,13 @@ const CohortDisplay = ({ cohorts }) => {
 };
 
 const BatchDisplay = ({ batch }) => {
+  console.log(!batch);
   if (!batch) return null;
 
   return (
     <Center mt={2}>
       <Badge colorScheme="green" textAlign="center">
-        Batch #{batch}
+        Batch #{batch.number}
       </Badge>
     </Center>
   );
@@ -32,9 +34,9 @@ const BatchDisplay = ({ batch }) => {
 
 const secondsPerDay = 24 * 60 * 60;
 const BuilderStreamCell = ({ builder }) => {
-  return builder.builderCohort?.length || builder.builderBatch ? (
+  return builder.builderCohort?.length || builder.batch?.number ? (
     <>
-      <BatchDisplay batch={builder.builderBatch} />
+      <BatchDisplay batch={builder.batch} />
       <CohortDisplay cohorts={builder.builderCohort} />
     </>
   ) : (

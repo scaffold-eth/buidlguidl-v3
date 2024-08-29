@@ -261,10 +261,10 @@ const BuilderProfileCard = ({
                   </Tooltip>
                 </Text>
               )}
-              {builder.builderBatch && !isNaN(builder.builderBatch) && (
+              {builder.batch?.number && !isNaN(builder.batch.number) && (
                 <Center mt={2} mb={builder.builderCohort?.length > 0 ? 0 : 4}>
                   <Badge colorScheme="green" textAlign="center">
-                    Batch #{builder.builderBatch}
+                    Batch #{builder.batch.number}
                   </Badge>
                 </Center>
               )}
