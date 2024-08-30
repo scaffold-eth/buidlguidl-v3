@@ -5,8 +5,10 @@ import HeroSection from "../components/home/HeroSection";
 import ActivitySection from "../components/home/ActivitySection";
 import { getAllBuilds, getAllEvents } from "../data/api";
 import RecentBuildsSection from "../components/home/RecentBuildsSection";
+import { getRecentPosts } from "../data/api/blog";
+import BlogSection from "../components/home/BlogSection";
 
-export default function Index({ bgStats, events, builds }) {
+export default function Index({ bgStats, events, builds, posts }) {
   return (
     <>
       <MetaSeo
@@ -17,6 +19,7 @@ export default function Index({ bgStats, events, builds }) {
       <HeroSection {...bgStats} />
       <RecentBuildsSection builds={builds} />
       <ActivitySection events={events} />
+      <BlogSection posts={posts} />
     </>
   );
 }
@@ -25,6 +28,7 @@ export async function getStaticProps() {
   const stats = await getStats();
   const events = await getAllEvents(null, 10);
   const builds = (await getAllBuilds()).sort((a, b) => b.submittedTimestamp - a.submittedTimestamp).slice(0, 4);
+  const posts = await getRecentPosts();
 
   return {
     props: {
@@ -38,6 +42,7 @@ export async function getStaticProps() {
       },
       events,
       builds,
+      posts,
     },
     // 2 hours caching
     revalidate: 7200,
