@@ -20,7 +20,7 @@ const CohortDisplay = ({ cohorts }) => {
 };
 
 const BatchDisplay = ({ batch }) => {
-  if (batch.number === "") return null;
+  if (!batch || batch?.number === "") return null;
 
   return (
     <Center mt={2}>
