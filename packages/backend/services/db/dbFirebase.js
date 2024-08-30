@@ -61,7 +61,11 @@ const findAllUsers = async () => {
 
 const findAllBatchedUsers = async () => {
   // get all users with a batch assigned (builderBatch prop is not null)
-  const buildersSnapshot = await database.collection("users").where("builderBatch", "!=", null).get();
+  console.log("in here!!!");
+  const buildersSnapshot = await database
+    .collection("users")
+    .where("batch.number", "!=", null || "")
+    .get();
   console.log("buildersSnapshot", buildersSnapshot.docs.length);
   // Filter out disabled user. To use it directly on the query,
   // we should create the disabled flag in all documents.
