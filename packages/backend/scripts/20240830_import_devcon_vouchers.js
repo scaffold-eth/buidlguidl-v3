@@ -2,7 +2,7 @@ require("dotenv").config();
 const fs = require("fs");
 const { parse } = require("csv-parse/sync");
 const firebaseAdmin = require("firebase-admin");
-const { encryptData } = require("../utils/encript");
+const { encryptData } = require("../utils/encrypt");
 
 const CSV_FILE_PATH = "./devcon_vouchers.csv";
 

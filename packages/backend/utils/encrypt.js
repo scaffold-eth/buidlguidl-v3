@@ -3,7 +3,7 @@ const crypto = require("crypto");
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || "defaultdevkey".repeat(2);
 const IV_LENGTH = 16;
 
-export const encryptData = text => {
+const encryptData = text => {
   let key = Buffer.from(ENCRYPTION_KEY, "utf8");
 
   // Ensure the key is exactly 32 bytes
@@ -20,7 +20,7 @@ export const encryptData = text => {
   return iv.toString("hex") + ":" + encrypted.toString("hex");
 };
 
-export const decryptData = text => {
+const decryptData = text => {
   let key = Buffer.from(ENCRYPTION_KEY, "utf8");
   key = key.length < 32 ? Buffer.concat([key, Buffer.alloc(32 - key.length)]) : key.subarray(0, 32);
   const [ivHex, encryptedHex] = text.split(":");
@@ -30,4 +30,9 @@ export const decryptData = text => {
   let decrypted = decipher.update(encrypted);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString("utf8");
+};
+
+module.exports = {
+  encryptData,
+  decryptData,
 };

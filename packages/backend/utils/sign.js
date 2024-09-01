@@ -141,6 +141,10 @@ const getSignMessageForId = async (messageId, options) => {
         disabled ? "disabled" : "NOT disabled"
       }`;
     }
+
+    case "devconVoucherClaim":
+      return `I want to claim my Devcon 2024 Bangkok voucher as ${options.builderAddress}`;
+
     default:
       return "Invalid signing option";
   }
