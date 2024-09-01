@@ -430,26 +430,26 @@ const createOrGetDevconVoucherForBuilder = async (builderAddress, type) => {
   // Builder already has a voucher assigned
   if (!voucherSnapshot.empty) {
     const voucher = decryptData(voucherSnapshot.docs[0].data().voucher);
-    return { voucher, ...voucherSnapshot.docs[0].data() };
+    return { ...voucherSnapshot.docs[0].data(), voucher };
   }
 
   // Get a voucher that doesn't have a builder assigned and of type
-  const vouchersSnapshot = await database
+  const newVouchersSnapshot = await database
     .collection("devconVouchers")
     .where("type", "==", type)
     .where("builderAddress", "==", "")
     .get();
 
-  if (voucherSnapshot.empty) {
+  if (newVouchersSnapshot.empty) {
     throw new Error(`No vouchers available for type ${type}`);
   }
 
   // If there is a voucher, assign it to the builder
-  const voucher = vouchersSnapshot.docs[0];
+  const voucher = newVouchersSnapshot.docs[0];
   await voucher.ref.update({ builderAddress });
   const voucherData = voucher.data();
   const decryptedVoucher = decryptData(voucherData.voucher);
-  return { voucher: decryptedVoucher, ...voucherData };
+  return { ...voucherData, voucher: decryptedVoucher, builderAddress };
 };
 
 module.exports = {
@@ -482,4 +482,6 @@ module.exports = {
   setConfigData,
 
   findAllNotifications,
+
+  createOrGetDevconVoucherForBuilder,
 };

@@ -6,6 +6,13 @@ const { verifySignature } = require("../utils/sign");
 const router = express.Router();
 const SRE_BACKEND = "https://scaffold-directory-dev.ew.r.appspot.com";
 
+/**
+ * Check if a builder is eligible for a Devcon voucher based on their status and creation date
+ * Eligibility criteria:
+ * 1. BG batch members created before end of August 2024 (type: batch)
+ * 2. BG member created before end of August 2024 (type: builder)
+ * 3. SRE builders with at least 3 challenges completed and joined before end of August 2024 (type: builder)
+ */
 async function checkEligibility(builderAddress) {
   const END_OF_AUGUST_2024 = 1725148799000;
   const builder = await db.findUserByAddress(builderAddress);
