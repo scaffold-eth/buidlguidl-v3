@@ -3,6 +3,7 @@ const firebaseAdmin = require("firebase-admin");
 const { importSeed } = require("../../local_database/importSeed");
 const { areArraysEqual } = require("../../utils/arrays");
 const { getEnsFromAddress } = require("../../utils/ens");
+const { decryptData } = require("../../utils/encrypt");
 
 if (process.env.FIRESTORE_EMULATOR_HOST) {
   console.log("using Firebase **emulator** DB");
@@ -428,10 +429,8 @@ const createOrGetDevconVoucherForBuilder = async (builderAddress, type) => {
 
   // Builder already has a voucher assigned
   if (!voucherSnapshot.empty) {
-    return {
-      voucher: voucherSnapshot.docs[0].id,
-      ...voucherSnapshot.docs[0].data(),
-    };
+    const voucher = decryptData(voucherSnapshot.docs[0].data().voucher);
+    return { voucher, ...voucherSnapshot.docs[0].data() };
   }
 
   // Get a voucher that doesn't have a builder assigned and of type
@@ -448,7 +447,9 @@ const createOrGetDevconVoucherForBuilder = async (builderAddress, type) => {
   // If there is a voucher, assign it to the builder
   const voucher = vouchersSnapshot.docs[0];
   await voucher.ref.update({ builderAddress });
-  return { voucher: voucher.id, ...voucher.data() };
+  const voucherData = voucher.data();
+  const decryptedVoucher = decryptData(voucherData.voucher);
+  return { voucher: decryptedVoucher, ...voucherData };
 };
 
 module.exports = {
