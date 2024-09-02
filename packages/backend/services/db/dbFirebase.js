@@ -3,14 +3,8 @@ const firebaseAdmin = require("firebase-admin");
 const { importSeed } = require("../../local_database/importSeed");
 const { areArraysEqual } = require("../../utils/arrays");
 const { getEnsFromAddress } = require("../../utils/ens");
+const { decryptData } = require("../../utils/encrypt");
 
-if (process.env.NODE_ENV === "test") {
-  // We won't be using firebase for testing for now. At some point,
-  // we might want to run tests against the Staging firebase instance.
-  throw new Error(
-    `This will connect to the production firestore. Make sure dbFirebase.js is updated before testing against Firebase`,
-  );
-}
 if (process.env.FIRESTORE_EMULATOR_HOST) {
   console.log("using Firebase **emulator** DB");
 
@@ -19,7 +13,7 @@ if (process.env.FIRESTORE_EMULATOR_HOST) {
     storageBucket: "buidlguidl-v3.appspot.com",
   });
 
-  importSeed(firebaseAdmin.firestore());
+  if (process.env.NODE_ENV !== "test") importSeed(firebaseAdmin.firestore());
 } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
   console.log("using Firebase live DB");
   firebaseAdmin.initializeApp({
@@ -429,6 +423,35 @@ const findAllNotifications = async () => {
   return buildersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+const createOrGetDevconVoucherForBuilder = async (builderAddress, type) => {
+  const voucherDoc = database.collection("devconVouchers").where("builderAddress", "==", builderAddress);
+  const voucherSnapshot = await voucherDoc.get();
+
+  // Builder already has a voucher assigned
+  if (!voucherSnapshot.empty) {
+    const voucher = decryptData(voucherSnapshot.docs[0].data().voucher);
+    return { ...voucherSnapshot.docs[0].data(), voucher };
+  }
+
+  // Get a voucher that doesn't have a builder assigned and of type
+  const newVouchersSnapshot = await database
+    .collection("devconVouchers")
+    .where("type", "==", type)
+    .where("builderAddress", "==", "")
+    .get();
+
+  if (newVouchersSnapshot.empty) {
+    throw new Error(`No vouchers available for type ${type}`);
+  }
+
+  // If there is a voucher, assign it to the builder
+  const voucher = newVouchersSnapshot.docs[0];
+  await voucher.ref.update({ builderAddress });
+  const voucherData = voucher.data();
+  const decryptedVoucher = decryptData(voucherData.voucher);
+  return { ...voucherData, voucher: decryptedVoucher, builderAddress };
+};
+
 module.exports = {
   createUser,
   updateUser,
@@ -459,4 +482,6 @@ module.exports = {
   setConfigData,
 
   findAllNotifications,
+
+  createOrGetDevconVoucherForBuilder,
 };
