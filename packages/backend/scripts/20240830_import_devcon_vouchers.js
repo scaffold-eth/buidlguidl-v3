@@ -49,4 +49,11 @@ async function importDevconVouchers() {
   }
 }
 
-importDevconVouchers().catch(console.error);
+importDevconVouchers()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error("Script encountered an error:", error);
+    process.exit(1);
+  });
