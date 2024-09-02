@@ -23,7 +23,9 @@ async function checkEligibility(builderAddress) {
 
   if (builder.exists && builder?.data?.creationTimestamp < END_OF_AUGUST_2024) {
     return { isEligible: true, type: "builder" };
-  } else {
+  }
+
+  try {
     const response = await fetch(`${SRE_BACKEND}/builders/${builderAddress}`);
 
     if (response.status === 404) {
@@ -32,13 +34,18 @@ async function checkEligibility(builderAddress) {
 
     if (response.status === 200) {
       const data = await response.json();
-      const numberOfChallenges = Object.keys(data.challenges).length;
-      if (numberOfChallenges >= 3 && data.creationTimestamp < END_OF_AUGUST_2024) {
+      const completedChallenges = Object.values(data?.challenges || {}).filter(
+        challenge => challenge.status === "ACCEPTED" && challenge.submittedTimestamp < END_OF_AUGUST_2024,
+      );
+      if (completedChallenges.length >= 3) {
         return { isEligible: true, type: "builder" };
       }
     }
 
     return { isEligible: false };
+  } catch (error) {
+    console.error("Error fetching builder data:", error);
+    return { error: error?.message };
   }
 }
 

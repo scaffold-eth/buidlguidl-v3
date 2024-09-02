@@ -58,16 +58,25 @@ describe("GET /devcon/check-eligibility/:builderAddress", () => {
   });
 
   it("should return eligibility for a builder not in BG but in SRE (=> 3 challenges)", async () => {
-    const builderAddress = "0x1f5D55925050416bA7AeD8848Ddd96b4b2AF2939";
+    const builderAddress = "0x8eE31084d2914fA84Baae3460093564934837898";
 
     db.findUserByAddress.mockResolvedValue({ exists: false });
     // You can also comment to test the real SRE backend
     global.fetch = jest.fn(() =>
       Promise.resolve(
-        new Response(JSON.stringify({ challenges: { 1: {}, 2: {}, 3: {} }, creationTimestamp: AUGUST_2024 }), {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-        }),
+        new Response(
+          JSON.stringify({
+            challenges: {
+              1: { status: "ACCEPTED", submittedTimestamp: AUGUST_2024 },
+              2: { status: "ACCEPTED", submittedTimestamp: AUGUST_2024 },
+              3: { status: "ACCEPTED", submittedTimestamp: AUGUST_2024 },
+            },
+          }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          },
+        ),
       ),
     );
 
@@ -84,10 +93,19 @@ describe("GET /devcon/check-eligibility/:builderAddress", () => {
     // You can also comment to test the real SRE backend
     global.fetch = jest.fn(() =>
       Promise.resolve(
-        new Response(JSON.stringify({ challenges: { 1: {}, 2: {}, 3: {} }, creationTimestamp: SEPTEMBER_2024 }), {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-        }),
+        new Response(
+          JSON.stringify({
+            challenges: {
+              1: { status: "ACCEPTED", submittedTimestamp: AUGUST_2024 },
+              2: { status: "ACCEPTED", submittedTimestamp: AUGUST_2024 },
+              3: { status: "ACCEPTED", submittedTimestamp: SEPTEMBER_2024 },
+            },
+          }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          },
+        ),
       ),
     );
 
