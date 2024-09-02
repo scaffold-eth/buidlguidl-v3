@@ -67,7 +67,7 @@ router.post("/claim", async (req, res) => {
 
   const verifyOptions = {
     messageId: "devconVoucherClaim",
-    builderAddress,
+    address: builderAddress,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);

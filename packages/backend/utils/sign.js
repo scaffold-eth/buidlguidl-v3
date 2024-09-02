@@ -143,7 +143,7 @@ const getSignMessageForId = async (messageId, options) => {
     }
 
     case "devconVoucherClaim":
-      return `I want to claim my Devcon 2024 Bangkok voucher as ${options.builderAddress}`;
+      return `I want to claim my Devcon 2024 Bangkok voucher as ${options.address}`;
 
     default:
       return "Invalid signing option";
