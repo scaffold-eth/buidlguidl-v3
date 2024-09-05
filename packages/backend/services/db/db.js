@@ -214,6 +214,14 @@ const getAllChallenges = async () => {
   }, []);
 };
 
+/**
+ * This will create a Devcon voucher for the builder if they don't have one, or return the existing one.
+ *
+ * @param {string} builderAddress
+ * @param {string} type
+ */
+const createOrGetDevconVoucherForBuilder = db.createOrGetDevconVoucherForBuilder;
+
 module.exports = {
   createUser,
   updateUser,
@@ -246,6 +254,8 @@ module.exports = {
   findAllNotifications,
 
   getAllChallenges,
+
+  createOrGetDevconVoucherForBuilder,
 
   __internal_database: db.__internal_database, // testing only
 };

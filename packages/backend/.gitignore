@@ -4,3 +4,4 @@ local_database/seed.json
 
 public/*
 !public/.gitkeep
+devcon_vouchers.csv
