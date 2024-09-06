@@ -23,17 +23,12 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
-import { USER_FUNCTIONS, USER_ROLES } from "../helpers/constants";
+import { USER_FUNCTIONS, USER_ROLES, BATCH_STATUS } from "../helpers/constants";
 import AddressInput from "./AddressInput";
 import useSignedRequest from "../hooks/useSignedRequest";
 import useConnectedAddress from "../hooks/useConnectedAddress";
 
 const INITIAL_FORM_STATE = { builderRole: USER_ROLES.builder };
-
-export const BATCH_STATUS = {
-  CANDIDATE: "candidate",
-  GRADUATE: "graduate",
-};
 
 export function BuilderCrudFormModal({ mainnetProvider, builder, isOpen, onClose, onUpdate }) {
   return (
@@ -110,7 +105,6 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderStreamAddress: formState.builderStreamAddress,
         batch: formState.batch,
       };
-      console.log("CRUD FORM - requestPayload", requestPayload);
 
       if (isEditingBuilder) {
         await makeSignedRequestEdit(requestPayload);

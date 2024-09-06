@@ -1,9 +1,8 @@
 import React from "react";
 import { Badge, Center, Link } from "@chakra-ui/react";
-import { BATCH_STATUS } from "./BuilderCrudForm";
+import { BATCH_STATUS } from "../helpers/constants";
 
 const CohortDisplay = ({ cohorts }) => {
-  console.log(!cohorts);
   if (!cohorts?.length) return null;
 
   return cohorts.map((cohort, i) => {

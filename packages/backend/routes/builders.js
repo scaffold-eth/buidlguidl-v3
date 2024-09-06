@@ -99,7 +99,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort;
   }
 
-  if (batch !== user.data?.batch) {
+  if (batch) {
     builderData.batch = {
       number: batch.number,
       ...(batch.status !== undefined && { status: batch.status }),
@@ -173,9 +173,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort ?? {};
   }
 
-  console.log("builder.js - batch data", batch);
-
-  if (batch !== user.data?.batch) {
+  if (batch) {
     builderData.batch = {
       number: batch.number,
       ...(batch.status !== undefined && { status: batch.status }),

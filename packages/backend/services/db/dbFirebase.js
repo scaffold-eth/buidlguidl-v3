@@ -9,7 +9,7 @@ if (process.env.FIRESTORE_EMULATOR_HOST) {
   console.log("using Firebase **emulator** DB");
 
   firebaseAdmin.initializeApp({
-    projectId: process.env.FIRESTORE_PROJECT_ID,
+    projectId: "buidlguidl-v3",
     storageBucket: "buidlguidl-v3.appspot.com",
   });
 
@@ -55,11 +55,7 @@ const findAllUsers = async () => {
 
 const findAllBatchedUsers = async () => {
   // get all users with a batch assigned (builderBatch prop is not null)
-  console.log("in here!!!");
-  const buildersSnapshot = await database
-    .collection("users")
-    .where("batch.number", "!=", null || "")
-    .get();
+  const buildersSnapshot = await database.collection("users").where("batch.number", ">=", 0).get();
   console.log("buildersSnapshot", buildersSnapshot.docs.length);
   // Filter out disabled user. To use it directly on the query,
   // we should create the disabled flag in all documents.

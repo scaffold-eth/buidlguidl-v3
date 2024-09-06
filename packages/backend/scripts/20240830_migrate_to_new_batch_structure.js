@@ -31,18 +31,16 @@ const db = firebaseAdmin.firestore();
 const main = async () => {
   try {
     console.log("Updating builders schema...");
-    const usersSnapshot = await db.collection("users").get();
+    const usersSnapshot = await db.collection("users").where("builderBatch", ">=", "0").get();
     usersSnapshot.forEach(async doc => {
       const builder = doc.data();
-      if (builder.builderBatch) {
-        const batch = { number: builder.builderBatch, status: "graduate" };
+      const batch = { number: builder.builderBatch, status: "graduate" };
 
-        await db.collection("users").doc(doc.id).update({
-          batch,
-          builderBatch: firebaseAdmin.firestore.FieldValue.delete(),
-        });
-        console.log(`Updated builder ${doc.id} with new batch schema: ${JSON.stringify(batch)}`);
-      }
+      await db.collection("users").doc(doc.id).update({
+        batch,
+        builderBatch: firebaseAdmin.firestore.FieldValue.delete(),
+      });
+      console.log(`Updated builder ${doc.id} with new batch schema: ${JSON.stringify(batch)}`);
     });
   } catch (error) {
     console.error("Error updating builders:", error);

@@ -52,7 +52,7 @@ import BuilderFlags from "./builder/BuilderFlags";
 import MenuItemScholarshipUpdate from "./builder/MenuItemScholarshipUpdate";
 import MenuItemGraduatedUpdate from "./builder/MenuItemGraduatedUpdate";
 import MenuItemDisabledUpdate from "./builder/MenuItemDisabledUpdate";
-import { BATCH_STATUS } from "./BuilderCrudForm";
+import { BATCH_STATUS } from "../helpers/constants";
 
 const BuilderProfileCardSkeleton = ({ isLoaded, children }) => (
   <Skeleton isLoaded={isLoaded}>{isLoaded ? children() : <SkeletonText mt="4" noOfLines={4} spacing="4" />}</Skeleton>
