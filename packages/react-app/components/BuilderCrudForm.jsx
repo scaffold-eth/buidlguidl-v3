@@ -78,7 +78,8 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderStreamAddress: builder.stream?.streamAddress,
         builderRole: builder.role,
         builderFunction: builder.function,
-        batch: builder.batch,
+        batchNumber: builder.batch?.number,
+        batchStatus: builder.batch?.status,
       });
       setBatchNumber(builder.batch?.number);
     }
@@ -103,7 +104,8 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderRole: formState.builderRole,
         builderFunction: formState.builderFunction,
         builderStreamAddress: formState.builderStreamAddress,
-        batch: formState.batch,
+        batchNumber: formState.batchNumber,
+        batchStatus: formState.batchStatus,
       };
 
       if (isEditingBuilder) {
@@ -142,18 +144,6 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
     setFormState(prevFormState => ({
       ...prevFormState,
       [id]: value,
-    }));
-  };
-
-  const handleBatchNumberChange = value => {
-    setBatchNumber(value);
-    setFormState(prevFormState => ({
-      ...prevFormState,
-      batch: {
-        ...prevFormState.batch,
-        number: value,
-        ...(value === "" || value === undefined ? { status: undefined } : {}),
-      },
     }));
   };
 
@@ -237,16 +227,23 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         <FormErrorMessage>Invalid address</FormErrorMessage>
       </FormControl>
       <FormControl mb={8} isInvalid={formErrors.batch}>
-        <FormLabel htmlFor="batch">
+        <FormLabel htmlFor="batchNumber">
           <strong>Batch</strong>
         </FormLabel>
         <NumberInput
-          id="batch"
+          id="batchNumber"
           type="number"
           min={0}
           placeholder="Builder Batch"
-          value={formState.batch?.number || ""}
-          onChange={handleBatchNumberChange}
+          value={formState.batchNumber || ""}
+          onChange={value => {
+            setFormState(prevFormState => ({
+              ...prevFormState,
+              batchNumber: value,
+              batchStatus: value === "" ? "" : prevFormState.batchStatus,
+            }));
+            setBatchNumber(value);
+          }}
         >
           <NumberInputField />
           <NumberInputStepper>
@@ -256,20 +253,17 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         </NumberInput>
       </FormControl>
 
-      <FormControl
-        mb={8}
-        isDisabled={!batchNumber || batchNumber === "" || !formState.batch || !formState.batch.number}
-      >
+      <FormControl mb={8} isDisabled={!batchNumber || batchNumber === "" || !formState.batchNumber}>
         <FormLabel htmlFor="batchStatus">
           <strong>Batch Status</strong>
         </FormLabel>
         <RadioGroup
           id="batchStatus"
-          value={formState.batch?.status}
+          value={formState.batchStatus}
           onChange={value => {
             setFormState(prevFormState => ({
               ...prevFormState,
-              batch: { ...prevFormState.batch, status: value },
+              batchStatus: value,
             }));
           }}
         >

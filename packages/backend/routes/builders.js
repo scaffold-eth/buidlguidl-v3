@@ -49,8 +49,16 @@ router.post("/create", withRole("admin"), async (req, res) => {
   }
 
   // ToDo. Param validation.
-  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress, builderCohort, batch } =
-    req.body;
+  const {
+    builderAddress,
+    builderFunction,
+    builderRole,
+    signature,
+    builderStreamAddress,
+    builderCohort,
+    batchNumber,
+    batchStatus,
+  } = req.body;
   const address = req.address;
   console.log("POST /builders/create", address, builderAddress);
 
@@ -67,7 +75,8 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderRole,
     builderStreamAddress,
     builderCohort,
-    batch,
+    batchNumber,
+    batchStatus,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -99,11 +108,14 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort;
   }
 
-  if (batch) {
+  if (batchNumber !== "") {
     builderData.batch = {
-      number: batch.number,
-      ...(batch.status !== undefined && { status: batch.status }),
+      number: batchNumber,
+      ...(batchStatus !== undefined && batchStatus !== "" && { status: batchStatus }),
     };
+  } else {
+    // if batch number is empty, remove batch data from dataset
+    builderData.batch = null;
   }
 
   const ens = await getEnsFromAddress(builderAddress);
@@ -129,8 +141,16 @@ router.patch("/update", withRole("admin"), async (req, res) => {
   }
 
   // ToDo. Param validation.
-  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress, builderCohort, batch } =
-    req.body;
+  const {
+    builderAddress,
+    builderFunction,
+    builderRole,
+    signature,
+    builderStreamAddress,
+    builderCohort,
+    batchNumber,
+    batchStatus,
+  } = req.body;
   const address = req.address;
   console.log("PATCH /builders/update", address, builderAddress);
 
@@ -142,7 +162,8 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderRole,
     builderStreamAddress,
     builderCohort,
-    batch,
+    batchNumber,
+    batchStatus,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -173,11 +194,14 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort ?? {};
   }
 
-  if (batch) {
+  if (batchNumber !== "") {
     builderData.batch = {
-      number: batch.number,
-      ...(batch.status !== undefined && { status: batch.status }),
+      number: batchNumber,
+      ...(batchStatus !== undefined && batchStatus !== "" && { status: batchStatus }),
     };
+  } else {
+    // if batch number is empty, remove batch data from dataset
+    builderData.batch = null;
   }
 
   // Update user.

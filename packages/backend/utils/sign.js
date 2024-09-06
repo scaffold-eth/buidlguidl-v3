@@ -64,7 +64,8 @@ const getSignMessageForId = async (messageId, options) => {
         builderFunction: options.builderFunction,
         builderRole: options.builderRole,
         builderStreamAddress: options.builderStreamAddress,
-        batch: options.batch,
+        batchNumber: options.batchNumber,
+        batchStatus: options.batchStatus,
         builderCohort: options.builderCohort
           ? typeof options.builderCohort === "string"
             ? JSON.parse(options.builderCohort).name
@@ -79,7 +80,8 @@ const getSignMessageForId = async (messageId, options) => {
         builderFunction: options.builderFunction,
         builderRole: options.builderRole,
         builderStreamAddress: options.builderStreamAddress,
-        batch: options.batch,
+        batchNumber: options.batchNumber,
+        batchStatus: options.batchStatus,
         builderCohort: options.builderCohort
           ? typeof options.builderCohort === "string"
             ? JSON.parse(options.builderCohort).name
