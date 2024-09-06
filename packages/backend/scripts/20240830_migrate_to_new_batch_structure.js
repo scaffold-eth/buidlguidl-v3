@@ -8,7 +8,7 @@ const firebaseAdmin = require("firebase-admin");
 
 if (process.env.FIRESTORE_EMULATOR_HOST) {
   firebaseAdmin.initializeApp({
-    projectId: process.env.FIRESTORE_PROJECT_ID,
+    projectId: "buidlguidl-v3",
     storageBucket: "buidlguidl-v3.appspot.com",
   });
 
