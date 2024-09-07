@@ -108,14 +108,11 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort;
   }
 
-  if (batchNumber !== "") {
+  if (batchNumber) {
     builderData.batch = {
       number: batchNumber,
       ...(batchStatus !== undefined && batchStatus !== "" && { status: batchStatus }),
     };
-  } else {
-    // if batch number is empty, remove batch data from dataset
-    builderData.batch = null;
   }
 
   const ens = await getEnsFromAddress(builderAddress);
@@ -194,14 +191,11 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort ?? {};
   }
 
-  if (batchNumber !== "") {
+  if (batchNumber !== user.data.batch?.number || batchStatus !== user.data.batch?.status) {
     builderData.batch = {
-      number: batchNumber,
-      ...(batchStatus !== undefined && batchStatus !== "" && { status: batchStatus }),
+      number: batchNumber !== undefined ? batchNumber : user.data.batch?.number,
+      status: batchStatus !== undefined ? batchStatus : user.data.batch?.status,
     };
-  } else {
-    // if batch number is empty, remove batch data from dataset
-    builderData.batch = null;
   }
 
   // Update user.
