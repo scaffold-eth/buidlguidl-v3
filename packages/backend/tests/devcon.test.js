@@ -19,7 +19,7 @@ const SEPTEMBER_2024 = 1725580799000;
 describe("GET /devcon/check-eligibility/:builderAddress", () => {
   it("should return eligibility for a builder with a batch", async () => {
     const builderAddress = "0xWhatEver";
-    db.findUserByAddress.mockResolvedValue({ data: { builderBatch: true, creationTimestamp: AUGUST_2024 } });
+    db.findUserByAddress.mockResolvedValue({ data: { batch: { number: true }, creationTimestamp: AUGUST_2024 } });
 
     const res = await request(app).get(`/devcon/check-eligibility/${builderAddress}`);
 
@@ -29,7 +29,7 @@ describe("GET /devcon/check-eligibility/:builderAddress", () => {
 
   it("should return not eligible for a builder with a batch after august 2024", async () => {
     const builderAddress = "0xWhatEver";
-    db.findUserByAddress.mockResolvedValue({ data: { builderBatch: true, creationTimestamp: SEPTEMBER_2024 } });
+    db.findUserByAddress.mockResolvedValue({ data: { batch: { number: true }, creationTimestamp: SEPTEMBER_2024 } });
 
     const res = await request(app).get(`/devcon/check-eligibility/${builderAddress}`);
 

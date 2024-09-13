@@ -10,7 +10,7 @@
         "text": "My Status",
         "timestamp": 1657208443047
       },
-      "batch": { "number": 1, "status": "graduate" },
+      "batch": { "number": "1", "status": "graduate" },
       "builderCohort": [
         {
           "id": "0x2eA63c9C9C114ae85b1027697A906420a23e8572",
@@ -73,7 +73,7 @@
     "0x72fC8b63692B516D0D8748d469faB65C7e4e7389": {
       "creationTimestamp": 1648653501156,
       "role": "builder",
-      "batch": { "number": 3, "status": "candidate" },
+      "batch": { "number": "3", "status": "candidate" },
       "function": "cadets",
       "ensClaimData": {
         "submittedTimestamp": 1648736241913,

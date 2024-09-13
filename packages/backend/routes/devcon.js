@@ -17,7 +17,7 @@ async function checkEligibility(builderAddress) {
   const END_OF_AUGUST_2024 = 1725148799000;
   const builder = await db.findUserByAddress(builderAddress);
 
-  if (builder?.data?.builderBatch && builder?.data?.creationTimestamp < END_OF_AUGUST_2024) {
+  if (builder?.data?.batch?.number && builder?.data?.creationTimestamp < END_OF_AUGUST_2024) {
     return { isEligible: true, type: "batch" };
   }
 
