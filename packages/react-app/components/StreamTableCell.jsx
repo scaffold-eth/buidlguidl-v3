@@ -23,10 +23,7 @@ const BatchDisplay = ({ batch }) => {
 
   return (
     <Center mt={2}>
-      <Badge
-        colorScheme={batch.status === BATCH_STATUS.CANDIDATE ? "orange" : batch.status ? "green" : "orange"}
-        textAlign="center"
-      >
+      <Badge colorScheme={batch.status === BATCH_STATUS.GRADUATE ? "green" : "orange"} textAlign="center">
         Batch #{batch.number}
       </Badge>
     </Center>

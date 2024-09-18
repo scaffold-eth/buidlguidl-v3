@@ -265,13 +265,7 @@ const BuilderProfileCard = ({
               {builder.batch?.number && !isNaN(builder.batch.number) && (
                 <Center mt={2} mb={builder.builderCohort?.length > 0 ? 0 : 4}>
                   <Badge
-                    colorScheme={
-                      builder.batch.status === BATCH_STATUS.CANDIDATE
-                        ? "orange"
-                        : builder.batch.status
-                        ? "green"
-                        : "orange"
-                    }
+                    colorScheme={builder.batch.status === BATCH_STATUS.GRADUATE ? "green" : "orange"}
                     textAlign="center"
                   >
                     Batch #{builder.batch.number}
