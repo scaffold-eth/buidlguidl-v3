@@ -268,8 +268,11 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
           }}
         >
           <Stack direction="row" spacing={4}>
-            <Radio value={BATCH_STATUS.CANDIDATE}>candidate</Radio>
-            <Radio value={BATCH_STATUS.GRADUATE}>graduate</Radio>
+            {Object.values(BATCH_STATUS).map(value => (
+              <Radio key={value} value={value}>
+                {value}
+              </Radio>
+            ))}
           </Stack>
         </RadioGroup>
       </FormControl>
