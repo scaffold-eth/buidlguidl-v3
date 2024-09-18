@@ -111,7 +111,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
   if (batchNumber) {
     builderData.batch = {
       number: batchNumber,
-      ...(batchStatus !== undefined && batchStatus !== "" && { status: batchStatus }),
+      ...(batchStatus && { status: batchStatus }),
     };
   }
 
@@ -193,8 +193,8 @@ router.patch("/update", withRole("admin"), async (req, res) => {
 
   if (batchNumber !== user.data.batch?.number || batchStatus !== user.data.batch?.status) {
     builderData.batch = {
-      number: batchNumber !== undefined ? batchNumber : user.data.batch?.number,
-      status: batchStatus !== undefined ? batchStatus : user.data.batch?.status,
+      number: batchNumber ?? user.data.batch?.number,
+      status: batchStatus ?? user.data.batch?.status,
     };
   }
 
