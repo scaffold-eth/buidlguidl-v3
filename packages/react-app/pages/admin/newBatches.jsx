@@ -121,10 +121,17 @@ const isValueOnEnsOrSocials = (builder, filterValue) => {
 };
 
 const isInBatch = (builder, filterValue) => {
-  if (!builder.builderBatch) return false;
+  if (!builder.batch?.number) return false;
 
-  return builder.builderBatch === filterValue;
+  return builder.batch?.number === filterValue;
 };
+
+const getColumn = (Header, accessor, CellComponent, options = {}) => ({
+  Header,
+  accessor,
+  Cell: CellComponent,
+  ...options,
+});
 
 export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
   const [builders, setBuilders] = useState([]);
@@ -151,26 +158,13 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
     }
 
     if (filterValue === "allBatches") {
-      return rows.filter(row => row.values[id]?.builderBatch);
+      return rows.filter(row => row.values[id]?.batch?.number);
     }
 
     return rows.filter(row => {
       const rowValue = row.values[id];
       return rowValue !== undefined ? isInBatch(rowValue, filterValue) : true;
     });
-  };
-
-  const BuilderAddressCellComponent = ({ value }) => (
-    <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />
-  );
-  const BuilderStatusCellComponent = ({ value }) => <BuilderStatusCell status={value} />;
-  const BuilderBuildsCellComponent = ({ value }) => <BuilderBuildsCell buildCount={value} />;
-  const StreamTableCellComponent = ({ value }) => {
-    return value?.graduated?.status ? "" : <StreamTableCell builder={value} />;
-  };
-  const BuilderSocialLinksCellComponent = ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />;
-  const UserCreatedCellComponent = ({ value }) => {
-    return <DateWithTooltip timestamp={value} />;
   };
 
   useEffect(() => {
@@ -205,66 +199,29 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   }, [builders]);
 
   const columns = useMemo(
-    () => {
-      const allColumns = [
-        {
-          Header: "Builder",
-          accessor: "builder",
-          disableSortBy: true,
-          canFilter: true,
-          Filter: EnsColumnFilter,
-          filter: ensFiltering,
-          Cell: BuilderAddressCellComponent,
-        },
-        {
-          Header: "Status",
-          accessor: "status",
-          disableSortBy: true,
-          disableFilters: true,
-          Cell: BuilderStatusCellComponent,
-        },
-        {
-          Header: "Builds",
-          accessor: "builds",
-          sortDescFirst: true,
-          disableFilters: true,
-          Cell: BuilderBuildsCellComponent,
-        },
-        {
-          Header: "Stream",
-          accessor: "stream",
-          disableFilters: true,
-          Filter: BatchFilterComponent,
-          filter: batchFiltering,
-          // Sorting by stream cap for now.
-          sortType: (rowA, rowB) =>
-            Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
-          Cell: StreamTableCellComponent,
-        },
-        {
-          Header: "Socials",
-          accessor: "socials",
-          disableSortBy: true,
-          disableFilters: true,
-          Cell: BuilderSocialLinksCellComponent,
-        },
-        {
-          Header: "User Created",
-          accessor: "userCreated",
-          sortAscFirst: true,
-          disableFilters: true,
-          Cell: UserCreatedCellComponent,
-        },
-      ];
-
-      if (!isLoggedIn) {
-        allColumns.splice(4, 1);
-      }
-
-      return allColumns;
-    },
-    // eslint-disable-next-line
-    [userRole, BatchFilterComponent, builders],
+    () => [
+      getColumn(
+        "Builder",
+        "builder",
+        ({ value }) => <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />,
+        { disableSortBy: true, Filter: EnsColumnFilter, filter: ensFiltering },
+      ),
+      getColumn("Status", "status", ({ value }) => <BuilderStatusCell status={value} />, { disableSortBy: true }),
+      getColumn("Builds", "builds", ({ value }) => <BuilderBuildsCell buildCount={value} />, { sortDescFirst: true }),
+      getColumn(
+        "Stream",
+        "stream",
+        ({ value }) => (value?.graduated?.status ? "" : <StreamTableCell builder={value} />),
+        { disableFilters: true, Filter: BatchFilterComponent, filter: batchFiltering },
+      ),
+      getColumn("Socials", "socials", ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />, {
+        disableSortBy: true,
+      }),
+      getColumn("User Created", "userCreated", ({ value }) => <DateWithTooltip timestamp={value} />, {
+        sortAscFirst: true,
+      }),
+    ],
+    [BatchFilterComponent, mainnetProvider, isAdmin],
   );
 
   const {

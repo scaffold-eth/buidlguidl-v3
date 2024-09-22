@@ -3,15 +3,26 @@ import { Button, Input, List, ListItem, Popover, PopoverTrigger, PopoverContent,
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 
-const BatchColumnFilter = ({ filterValue, setFilter, builders }) => {
+const BatchColumnFilter = ({ filterValue = "allBuilders", setFilter, builders }) => {
   const { baseColor } = useCustomColorModes();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const batchBuilders = builders.filter(builder => builder.builder.builderBatch);
-  const uniqueBatches = Array.from(new Set(batchBuilders.map(builder => builder.builder.builderBatch)));
+  const batchBuilders = builders.filter(builder => builder.builder.batch?.number);
 
-  const filteredBatches = uniqueBatches.filter(batch => batch.includes(searchTerm)).sort((a, b) => b.localeCompare(a));
+  const uniqueBatches = useMemo(() => {
+    return Array.from(new Set(batchBuilders.map(builder => builder.builder.batch?.number)));
+  }, [batchBuilders]);
+
+  const filteredBatches = useMemo(() => {
+    return [
+      ...(searchTerm === "" || "All Builders".toLowerCase().includes(searchTerm.toLowerCase()) ? ["allBuilders"] : []),
+      ...(searchTerm === "" || "All Batches".toLowerCase().includes(searchTerm.toLowerCase()) ? ["allBatches"] : []),
+      ...uniqueBatches
+        .filter(batch => `Batch ${batch}`.toLowerCase().includes(searchTerm.toLowerCase()))
+        .sort((a, b) => b.localeCompare(a)),
+    ];
+  }, [uniqueBatches, searchTerm]);
 
   const getButtonLabel = () => {
     if (filterValue === "allBuilders") {
@@ -25,8 +36,19 @@ const BatchColumnFilter = ({ filterValue, setFilter, builders }) => {
     }
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+    setSearchTerm("");
+  };
+
+  const handleSelect = batch => {
+    setFilter(batch);
+    setIsOpen(false);
+    setSearchTerm("");
+  };
+
   return (
-    <Popover isOpen={isOpen} onClose={() => setIsOpen(false)} placement="bottom-start">
+    <Popover isOpen={isOpen} onClose={handleClose} placement="bottom-start">
       <PopoverTrigger>
         <Button
           rightIcon={<ChevronDownIcon />}
@@ -54,40 +76,16 @@ const BatchColumnFilter = ({ filterValue, setFilter, builders }) => {
             }}
           />
           <List maxHeight="200px" overflowY="auto">
-            <ListItem
-              padding="8px 12px"
-              _hover={{ bg: "gray.100" }}
-              cursor="pointer"
-              onClick={() => {
-                setFilter("allBuilders");
-                setIsOpen(false);
-              }}
-            >
-              All Builders
-            </ListItem>
-            <ListItem
-              padding="8px 12px"
-              _hover={{ bg: "gray.100" }}
-              cursor="pointer"
-              onClick={() => {
-                setFilter("allBatches");
-                setIsOpen(false);
-              }}
-            >
-              All Batches
-            </ListItem>
             {filteredBatches.map((batch, index) => (
               <ListItem
                 key={index}
                 padding="8px 12px"
                 _hover={{ bg: "gray.100" }}
                 cursor="pointer"
-                onClick={() => {
-                  setFilter(batch);
-                  setIsOpen(false);
-                }}
+                bg={filterValue === batch ? "blue.100" : "white"}
+                onClick={() => handleSelect(batch)}
               >
-                Batch {batch}
+                {batch === "allBuilders" ? "All Builders" : batch === "allBatches" ? "All Batches" : `Batch ${batch}`}
               </ListItem>
             ))}
           </List>
