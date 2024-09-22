@@ -16,7 +16,6 @@ import {
   ModalCloseButton,
   ModalBody,
   Modal,
-  Input,
   NumberInputField,
   NumberInput,
   NumberIncrementStepper,
@@ -24,7 +23,7 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
-import { USER_FUNCTIONS, USER_ROLES } from "../helpers/constants";
+import { USER_FUNCTIONS, USER_ROLES, BATCH_STATUS } from "../helpers/constants";
 import AddressInput from "./AddressInput";
 import useSignedRequest from "../hooks/useSignedRequest";
 import useConnectedAddress from "../hooks/useConnectedAddress";
@@ -61,6 +60,7 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [formErrors, setFormErrors] = useState({});
+  const [batchNumber, setBatchNumber] = useState();
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
@@ -78,8 +78,10 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderStreamAddress: builder.stream?.streamAddress,
         builderRole: builder.role,
         builderFunction: builder.function,
-        builderBatch: builder.builderBatch,
+        batchNumber: builder.batch?.number,
+        batchStatus: builder.batch?.status,
       });
+      setBatchNumber(builder.batch?.number);
     }
   }, [isEditingBuilder, builder]);
 
@@ -102,7 +104,8 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         builderRole: formState.builderRole,
         builderFunction: formState.builderFunction,
         builderStreamAddress: formState.builderStreamAddress,
-        builderBatch: formState.builderBatch,
+        batchNumber: formState.batchNumber,
+        batchStatus: formState.batchStatus,
       };
 
       if (isEditingBuilder) {
@@ -186,7 +189,6 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         </RadioGroup>
         <FormErrorMessage>Required</FormErrorMessage>
       </FormControl>
-
       <FormControl mb={8} isRequired isInvalid={formErrors.builderFunction}>
         <FormLabel htmlFor="builderFunction">
           <strong>Builder Function</strong>
@@ -205,7 +207,6 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         </Select>
         <FormErrorMessage>Required</FormErrorMessage>
       </FormControl>
-
       <FormControl mb={8} isInvalid={formErrors.builderStreamAddress}>
         <FormLabel htmlFor="builderStreamAddress">
           <strong>Stream Address</strong>
@@ -216,32 +217,33 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
           ensProvider={mainnetProvider}
           placeholder="Builder Stream Address"
           value={formState.builderStreamAddress || ""}
-          onChange={value =>
+          onChange={value => {
             setFormState(prevFormState => ({
               ...prevFormState,
               builderStreamAddress: value,
-            }))
-          }
+            }));
+          }}
         />
         <FormErrorMessage>Invalid address</FormErrorMessage>
       </FormControl>
-
-      <FormControl mb={8} isInvalid={formErrors.builderBatch}>
-        <FormLabel htmlFor="builderBatch">
+      <FormControl mb={8} isInvalid={formErrors.batch}>
+        <FormLabel htmlFor="batchNumber">
           <strong>Batch</strong>
         </FormLabel>
         <NumberInput
-          id="builderBatch"
+          id="batchNumber"
           type="number"
           min={0}
           placeholder="Builder Batch"
-          value={formState.builderBatch || ""}
-          onChange={value =>
+          value={formState.batchNumber || ""}
+          onChange={value => {
             setFormState(prevFormState => ({
               ...prevFormState,
-              builderBatch: value,
-            }))
-          }
+              batchNumber: value,
+              batchStatus: value === "" ? "" : prevFormState.batchStatus,
+            }));
+            setBatchNumber(value);
+          }}
         >
           <NumberInputField />
           <NumberInputStepper>
@@ -251,6 +253,29 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
         </NumberInput>
       </FormControl>
 
+      <FormControl mb={8} isDisabled={!batchNumber || batchNumber === "" || !formState.batchNumber}>
+        <FormLabel htmlFor="batchStatus">
+          <strong>Batch Status</strong>
+        </FormLabel>
+        <RadioGroup
+          id="batchStatus"
+          value={formState.batchStatus}
+          onChange={value => {
+            setFormState(prevFormState => ({
+              ...prevFormState,
+              batchStatus: value,
+            }));
+          }}
+        >
+          <Stack direction="row" spacing={4}>
+            {Object.values(BATCH_STATUS).map(value => (
+              <Radio key={value} value={value}>
+                {value}
+              </Radio>
+            ))}
+          </Stack>
+        </RadioGroup>
+      </FormControl>
       <Button colorScheme="blue" px={4} onClick={handleSubmit} isLoading={isLoading || isLoadingEdit} isFullWidth>
         {isEditingBuilder ? "Update Builder" : "Add Builder"}
       </Button>

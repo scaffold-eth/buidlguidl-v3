@@ -29,3 +29,8 @@ export const USER_FUNCTIONS = {
   support: { label: "Support", graphic: "monk_thumb.png", pluralLabel: "Support" },
   advisor: { label: "Advisor", graphic: "cleric_thumb.png", pluralLabel: "Advisors" },
 };
+
+export const BATCH_STATUS = {
+  CANDIDATE: "candidate",
+  GRADUATE: "graduate",
+};

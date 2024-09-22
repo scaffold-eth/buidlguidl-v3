@@ -64,7 +64,8 @@ const getSignMessageForId = async (messageId, options) => {
         builderFunction: options.builderFunction,
         builderRole: options.builderRole,
         builderStreamAddress: options.builderStreamAddress,
-        builderBatch: options.builderBatch,
+        batchNumber: options.batchNumber,
+        batchStatus: options.batchStatus,
         builderCohort: options.builderCohort
           ? typeof options.builderCohort === "string"
             ? JSON.parse(options.builderCohort).name
@@ -79,7 +80,8 @@ const getSignMessageForId = async (messageId, options) => {
         builderFunction: options.builderFunction,
         builderRole: options.builderRole,
         builderStreamAddress: options.builderStreamAddress,
-        builderBatch: options.builderBatch,
+        batchNumber: options.batchNumber,
+        batchStatus: options.batchStatus,
         builderCohort: options.builderCohort
           ? typeof options.builderCohort === "string"
             ? JSON.parse(options.builderCohort).name
@@ -141,6 +143,10 @@ const getSignMessageForId = async (messageId, options) => {
         disabled ? "disabled" : "NOT disabled"
       }`;
     }
+
+    case "devconVoucherClaim":
+      return `I want to claim my Devcon 2024 Bangkok voucher as ${options.address}`;
+
     default:
       return "Invalid signing option";
   }

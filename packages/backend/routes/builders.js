@@ -49,8 +49,16 @@ router.post("/create", withRole("admin"), async (req, res) => {
   }
 
   // ToDo. Param validation.
-  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress, builderCohort, builderBatch } =
-    req.body;
+  const {
+    builderAddress,
+    builderFunction,
+    builderRole,
+    signature,
+    builderStreamAddress,
+    builderCohort,
+    batchNumber,
+    batchStatus,
+  } = req.body;
   const address = req.address;
   console.log("POST /builders/create", address, builderAddress);
 
@@ -67,7 +75,8 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderRole,
     builderStreamAddress,
     builderCohort,
-    builderBatch,
+    batchNumber,
+    batchStatus,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -99,8 +108,11 @@ router.post("/create", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort;
   }
 
-  if (builderBatch) {
-    builderData.builderBatch = builderBatch;
+  if (batchNumber) {
+    builderData.batch = {
+      number: batchNumber,
+      ...(batchStatus && { status: batchStatus }),
+    };
   }
 
   const ens = await getEnsFromAddress(builderAddress);
@@ -126,8 +138,16 @@ router.patch("/update", withRole("admin"), async (req, res) => {
   }
 
   // ToDo. Param validation.
-  const { builderAddress, builderFunction, builderRole, signature, builderStreamAddress, builderCohort, builderBatch } =
-    req.body;
+  const {
+    builderAddress,
+    builderFunction,
+    builderRole,
+    signature,
+    builderStreamAddress,
+    builderCohort,
+    batchNumber,
+    batchStatus,
+  } = req.body;
   const address = req.address;
   console.log("PATCH /builders/update", address, builderAddress);
 
@@ -139,7 +159,8 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderRole,
     builderStreamAddress,
     builderCohort,
-    builderBatch,
+    batchNumber,
+    batchStatus,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -170,8 +191,11 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     builderData.builderCohort = builderCohort ?? {};
   }
 
-  if (builderBatch !== user.data.builderBatch) {
-    builderData.builderBatch = builderBatch ?? null;
+  if (batchNumber !== user.data.batch?.number || batchStatus !== user.data.batch?.status) {
+    builderData.batch = {
+      number: batchNumber ?? user.data.batch?.number,
+      status: batchStatus ?? user.data.batch?.status,
+    };
   }
 
   // Update user.
