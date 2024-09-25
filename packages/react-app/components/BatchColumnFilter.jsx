@@ -3,7 +3,7 @@ import { Button, Input, List, ListItem, Popover, PopoverTrigger, PopoverContent,
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../hooks/useCustomColorModes";
 
-const BatchColumnFilter = ({ filterValue = "allBuilders", setFilter, builders }) => {
+const BatchColumnFilter = ({ filterValue = "allBatches", setFilter, builders }) => {
   const { baseColor } = useCustomColorModes();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +16,6 @@ const BatchColumnFilter = ({ filterValue = "allBuilders", setFilter, builders })
 
   const filteredBatches = useMemo(() => {
     return [
-      ...(searchTerm === "" || "All Builders".toLowerCase().includes(searchTerm.toLowerCase()) ? ["allBuilders"] : []),
       ...(searchTerm === "" || "All Batches".toLowerCase().includes(searchTerm.toLowerCase()) ? ["allBatches"] : []),
       ...uniqueBatches
         .filter(batch => `Batch ${batch}`.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -25,9 +24,7 @@ const BatchColumnFilter = ({ filterValue = "allBuilders", setFilter, builders })
   }, [uniqueBatches, searchTerm]);
 
   const getButtonLabel = () => {
-    if (filterValue === "allBuilders") {
-      return "All Builders";
-    } else if (filterValue === "allBatches") {
+    if (filterValue === "allBatches") {
       return "All Batches";
     } else if (filterValue) {
       return `Batch ${filterValue}`;
@@ -85,7 +82,7 @@ const BatchColumnFilter = ({ filterValue = "allBuilders", setFilter, builders })
                 bg={filterValue === batch ? "blue.100" : "white"}
                 onClick={() => handleSelect(batch)}
               >
-                {batch === "allBuilders" ? "All Builders" : batch === "allBatches" ? "All Batches" : `Batch ${batch}`}
+                {batch === "allBatches" ? "All Batches" : `Batch ${batch}`}
               </ListItem>
             ))}
           </List>
