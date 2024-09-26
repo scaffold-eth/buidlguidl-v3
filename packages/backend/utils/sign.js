@@ -124,6 +124,15 @@ const getSignMessageForId = async (messageId, options) => {
         reachedOut ? "reached out" : "NOT reached out"
       }`;
 
+    case "builderUpdateBatch":
+      // We do this because of the way GET params work (can't send JS objects as in POST requests)
+      if (typeof options.batch === "string") {
+        data = options.batch;
+      } else {
+        data = JSON.stringify(options.batch);
+      }
+      return `I want to set my batch data as ${options.address}:\n\n${data}`;
+
     case "builderUpdateScholarship":
       const scholarship =
         typeof options.scholarship === "boolean" ? options.scholarship : options.scholarship === "true";

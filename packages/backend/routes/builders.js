@@ -227,6 +227,27 @@ router.post("/update-socials", withAddress, async (req, res) => {
   res.status(200).json(updatedUser);
 });
 
+router.post("/set-batch-number", withAddress, async (req, res) => {
+  const { batch, signature } = req.body;
+  const address = req.address;
+  console.log("POST /builders/set-batch-number", address, batch);
+
+  const verifyOptions = {
+    messageId: "builderUpdateBatch",
+    address,
+    batch,
+  };
+
+  const isSignatureValid = await verifySignature(signature, verifyOptions);
+  if (!isSignatureValid) {
+    res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");
+    return;
+  }
+
+  const updatedUser = await db.updateUser(address, { batch });
+  res.status(200).json(updatedUser);
+});
+
 router.post("/update-status", withAddress, async (req, res) => {
   const { status, signature } = req.body;
   const address = req.address;
