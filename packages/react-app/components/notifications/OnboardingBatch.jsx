@@ -1,6 +1,17 @@
 import React from "react";
-import { Box, CloseButton, Flex, Text, Button, Link, Image, Spacer, Tooltip, Input } from "@chakra-ui/react";
-import { useToast, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  CloseButton,
+  Flex,
+  Text,
+  Button,
+  Link,
+  Image,
+  Spacer,
+  Tooltip,
+  useToast,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { getUpdateBatchSignMessage, postUpdateBatch } from "../../data/api";
 import { useUserAddress } from "eth-hooks";
 
