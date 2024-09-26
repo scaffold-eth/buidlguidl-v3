@@ -100,7 +100,7 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
           {!hasTelegram ? (
             <>
               <Text fontSize="sm" color="red.500" mb="2">
-                To join please add your Telegram username first.
+                To join, please update your socials by adding your Telegram username.
               </Text>
             </>
           ) : (
