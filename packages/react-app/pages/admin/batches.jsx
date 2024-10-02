@@ -36,24 +36,14 @@ import { bySocialWeight } from "../../data/socials";
 import { USER_ROLES } from "../../helpers/constants";
 import StreamTableCell from "../../components/StreamTableCell";
 import MetaSeo from "../../components/MetaSeo";
-import DotIcon from "../../components/icons/DotIcon";
 import BuilderFlags from "../../components/builder/BuilderFlags";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
+import BatchColumnFilter from "../../components/BatchColumnFilter";
 
 const serverPath = "/builders/batches";
 
-const builderLastActivity = builder => {
-  const lastBuildSubmission = builder?.builds?.reduce(
-    (prevValue, currentValue) => {
-      return { submittedTimestamp: Math.max(prevValue.submittedTimestamp, currentValue.submittedTimestamp) };
-    },
-    { submittedTimestamp: 0 },
-  );
-  const lastBuildSubmissionTimestamp = lastBuildSubmission?.submittedTimestamp || 0;
-
-  const lastStatusUpdated = builder?.status?.timestamp || 0;
-
-  return Math.max(builder?.creationTimestamp || 0, lastBuildSubmissionTimestamp, lastStatusUpdated);
+const builderCreated = builder => {
+  return builder?.creationTimestamp || 0;
 };
 
 const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
@@ -103,6 +93,8 @@ const BuilderBuildsCell = ({ buildCount }) => {
 };
 
 const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
+  const { baseColor } = useCustomColorModes();
+
   return (
     <Input
       type="text"
@@ -111,6 +103,8 @@ const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
         setFilter(e.target.value || undefined);
       }}
       placeholder="Search builder"
+      bgColor={baseColor}
+      mb={8}
     />
   );
 };
@@ -126,8 +120,15 @@ const isValueOnEnsOrSocials = (builder, filterValue) => {
   return isOnEns || isOnSocials;
 };
 
+const isInBatch = (builder, filterValue) => {
+  if (!builder.batch?.number) return false;
+
+  return builder.batch?.number === filterValue;
+};
+
 export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
   const [builders, setBuilders] = useState([]);
+  const [amountBuilders, setAmountBuilders] = useState(0);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
   const isAdmin = userRole === USER_ROLES.admin;
   const isLoggedIn = userRole !== null && userRole !== USER_ROLES.anonymous;
@@ -144,70 +145,16 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
     });
   };
 
-  const columns = useMemo(
-    () => {
-      const allColumns = [
-        {
-          Header: "Builder",
-          accessor: "builder",
-          disableSortBy: true,
-          canFilter: true,
-          Filter: EnsColumnFilter,
-          filter: ensFiltering,
-          Cell: ({ value }) => <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />,
-        },
-        {
-          Header: "Status",
-          accessor: "status",
-          disableSortBy: true,
-          disableFilters: true,
-          Cell: ({ value }) => <BuilderStatusCell status={value} />,
-        },
-        {
-          Header: "Builds",
-          accessor: "builds",
-          sortDescFirst: true,
-          disableFilters: true,
-          Cell: ({ value }) => <BuilderBuildsCell buildCount={value} />,
-        },
-        {
-          Header: "Stream",
-          accessor: "stream",
-          disableFilters: true,
-          // Sorting by stream cap for now.
-          sortType: (rowA, rowB) =>
-            Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
-          Cell: ({ value }) => (value?.graduated?.status ? "" : <StreamTableCell builder={value} />),
-        },
-        {
-          Header: "Socials",
-          accessor: "socials",
-          disableSortBy: true,
-          disableFilters: true,
-          Cell: ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />,
-        },
-        {
-          Header: "Last Activity",
-          accessor: "lastActivity",
-          sortDescFirst: true,
-          disableFilters: true,
-          Cell: ({ value }) => (
-            <Box whiteSpace="nowrap">
-              <DateWithTooltip timestamp={value} />
-            </Box>
-          ),
-        },
-      ];
+  const batchFiltering = (rows, id, filterValue) => {
+    if (filterValue === "allBatches") {
+      return rows.filter(row => row.values[id]);
+    }
 
-      if (!isLoggedIn) {
-        allColumns.splice(4, 1);
-      }
-
-      return allColumns;
-    },
-    // eslint-disable-next-line
-    [userRole],
-  );
+    return rows.filter(row => {
+      const rowValue = row.values[id];
+      return rowValue !== undefined ? isInBatch(rowValue, filterValue) : true;
+    });
+  };
 
   useEffect(() => {
     async function fetchBuilders() {
@@ -222,7 +169,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           stream: builder,
           builds: builder.builds?.length || 0,
           socials: builder,
-          lastActivity: builderLastActivity(builder),
+          userCreated: builderCreated(builder),
         }));
 
       setBuilders(processedBuilders);
@@ -231,6 +178,90 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
 
     fetchBuilders();
   }, [serverUrl]);
+
+  const BatchFilterComponent = useMemo(() => {
+    const Component = ({ column }) => (
+      <BatchColumnFilter filterValue={column.filterValue} setFilter={column.setFilter} builders={builders} />
+    );
+    Component.displayName = "BatchFilterComponent";
+    return Component;
+  }, [builders]);
+
+  const BuilderAddressCellComponent = ({ value }) => (
+    <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />
+  );
+  const BuilderStatusCellComponent = ({ value }) => <BuilderStatusCell status={value} />;
+  const BuilderBuildsCellComponent = ({ value }) => <BuilderBuildsCell buildCount={value} />;
+  const StreamTableCellComponent = ({ value }) => {
+    return value?.graduated?.status ? "" : <StreamTableCell builder={value} />;
+  };
+  const BuilderSocialLinksCellComponent = ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />;
+  const UserCreatedCellComponent = ({ value }) => {
+    return <DateWithTooltip timestamp={value} />;
+  };
+
+  const columns = useMemo(
+    () => {
+      const allColumns = [
+        {
+          Header: "Builder",
+          accessor: "builder",
+          disableSortBy: true,
+          canFilter: true,
+          Filter: EnsColumnFilter,
+          filter: ensFiltering,
+          Cell: BuilderAddressCellComponent,
+        },
+        {
+          Header: "Status",
+          accessor: "status",
+          disableSortBy: true,
+          disableFilters: true,
+          Cell: BuilderStatusCellComponent,
+        },
+        {
+          Header: "Builds",
+          accessor: "builds",
+          sortDescFirst: true,
+          disableFilters: true,
+          Cell: BuilderBuildsCellComponent,
+        },
+        {
+          Header: "Stream",
+          accessor: "stream",
+          disableFilters: true,
+          Filter: BatchFilterComponent,
+          filter: batchFiltering,
+          // Sorting by stream cap for now.
+          sortType: (rowA, rowB) =>
+            Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
+          Cell: StreamTableCellComponent,
+        },
+        {
+          Header: "Socials",
+          accessor: "socials",
+          disableSortBy: true,
+          disableFilters: true,
+          Cell: BuilderSocialLinksCellComponent,
+        },
+        {
+          Header: "User Created",
+          accessor: "userCreated",
+          sortAscFirst: true,
+          disableFilters: true,
+          Cell: UserCreatedCellComponent,
+        },
+      ];
+
+      if (!isLoggedIn) {
+        allColumns.splice(4, 1);
+      }
+
+      return allColumns;
+    },
+    // eslint-disable-next-line
+    [userRole, BatchFilterComponent, builders],
+  );
 
   const {
     getTableProps,
@@ -251,37 +282,41 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
     {
       columns,
       data: builders,
-      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "stream", desc: false }], []) },
+      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "stream", desc: true }], []) },
     },
     useFilters,
     useSortBy,
     usePagination,
   );
 
+  useEffect(() => {
+    setAmountBuilders(page.length);
+  }, [page]);
+
   const ensFilter = headerGroups[0].headers[0];
+  const batchFilter = headerGroups[0].headers[3];
 
   return (
     <Container maxW="container.xl">
-      <MetaSeo
-        title="All Builders"
-        description="These are all the builder that are part of the BuidlGuidl"
-        image="/assets/infantry_thumb.jpeg"
-      />
       {isLoadingBuilders ? (
         <BuilderListSkeleton />
       ) : (
         <Box overflowX={{ base: "auto", lg: "visible" }} mb={8}>
           <Center mb={5} flexDir="column">
             <Box mb={2}>
-              <chakra.strong mr={2}>Total builders in Batches:</chakra.strong>
-              {builders.length}
+              <chakra.strong mr={2}>Total builders:</chakra.strong>
+              {amountBuilders}
             </Box>
-            <Box mb={8}>
-              <InputGroup bgColor={baseColor}>
+            <Flex direction={{ base: "column", md: "row" }} alignItems="center" mb={4}>
+              <InputGroup mr={{ md: 4 }} mb={{ base: 4, md: 0 }} width={{ base: "100%", md: "auto" }} height="40px">
                 {ensFilter.render("Filter")}
                 <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
               </InputGroup>
-            </Box>
+
+              <Box width={{ base: "100%", md: "auto" }} height="40px">
+                {batchFilter.render("Filter")}
+              </Box>
+            </Flex>
           </Center>
           <Table
             {...getTableProps()}
