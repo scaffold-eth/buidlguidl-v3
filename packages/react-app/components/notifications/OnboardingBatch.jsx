@@ -22,22 +22,13 @@ const NEXT_BATCH = process.env.NEXT_PUBLIC_BATCH_NUMBER;
 const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, onUpdate }) => {
   const address = useUserAddress(userProvider);
 
-  const hasTelegram = builder?.socialLinks?.telegram;
+  const hasBatchNumber = builder?.batch?.number;
+  const isInRecentBatch = builder?.batch?.number === NEXT_BATCH;
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
   const handleUpdateBatch = async () => {
-    // Open a temporary window immediately when the user clicks the button
-    // to set it later when batch data update successfull to the telegram link
-    let telegramWindow = window.open("about:blank");
-
-    // Check if the user already has the current batch number if just redirect to Telegram group
-    if (builder?.batch?.number === NEXT_BATCH) {
-      telegramWindow.location.href = NEXT_BATCH_TELEGRAM;
-      return;
-    }
-
     const batchData = {
       number: NEXT_BATCH,
       status: "candidate",
@@ -52,7 +43,6 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
         status: "error",
         variant: toastVariant,
       });
-      telegramWindow.close();
       return;
     }
 
@@ -65,7 +55,6 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
         status: "error",
         variant: toastVariant,
       });
-      telegramWindow.close();
       return;
     }
 
@@ -80,16 +69,17 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
       if (typeof onUpdate === "function") {
         onUpdate();
       }
-
-      telegramWindow.location.href = NEXT_BATCH_TELEGRAM;
     } catch (error) {
       toast({
         status: "error",
         description: "Can't save your batch number. Please try again.",
         variant: toastVariant,
       });
-      telegramWindow.close();
     }
+  };
+
+  const handleJoinTelegram = () => {
+    window.open(NEXT_BATCH_TELEGRAM);
   };
 
   return (
@@ -107,22 +97,27 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
           developers in open-source projects.
         </Text>
         <Spacer />
-        <Flex alignItems="center" flexDirection="column">
-          {!hasTelegram ? (
-            <>
-              <Text fontSize="sm" color="red.500" mb="2">
-                To join, please update your socials by adding your Telegram username.
-              </Text>
-            </>
-          ) : (
-            <>
-              <Button colorScheme="blue" size="sm" onClick={handleUpdateBatch} mb="2">
+        <Flex alignItems="center" flexDirection="row">
+          <Box mr="5">
+            {hasBatchNumber ? (
+              <Button
+                colorScheme="blue"
+                size="sm"
+                onClick={handleJoinTelegram}
+                isDisabled={!isInRecentBatch}
+                width="180px"
+              >
                 Join Telegram
               </Button>
-            </>
-          )}
+            ) : (
+              <Button colorScheme="orange" size="sm" onClick={handleUpdateBatch} width="180px">
+                Request to join
+              </Button>
+            )}
+          </Box>
           <Text fontSize="xs" color="gray.800">
-            Next batch starting on <strong>{NEXT_BATCH_DATE}</strong>
+            Next batch starting on <br />
+            <strong>{NEXT_BATCH_DATE}</strong>
           </Text>
         </Flex>
       </Flex>

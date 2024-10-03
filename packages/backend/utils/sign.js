@@ -124,18 +124,14 @@ const getSignMessageForId = async (messageId, options) => {
         reachedOut ? "reached out" : "NOT reached out"
       }`;
 
-    case "builderUpdateBatch": {
+    case "builderUpdateBatch":
       // We do this because of the way GET params work (can't send JS objects as in POST requests)
-      let batchNumber;
       if (typeof options.batch === "string") {
-        // Parse the string to a JSON object
-        batchNumber = JSON.parse(options.batch).number;
         data = options.batch;
       } else {
         data = JSON.stringify(options.batch);
       }
-      return `I’d like to request Telegram access for Batch ${batchNumber} using address ${options.address}\n\n\nData sent: ${data}`;
-    }
+      return `I’d like to request Telegram access for the batch program using address ${options.address}\n\n\nData sent: ${data}`;
 
     case "builderUpdateScholarship":
       const scholarship =
