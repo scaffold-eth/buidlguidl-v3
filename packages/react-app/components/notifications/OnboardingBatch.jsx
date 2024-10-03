@@ -5,7 +5,6 @@ import {
   Flex,
   Text,
   Button,
-  Link,
   Image,
   Spacer,
   Tooltip,
