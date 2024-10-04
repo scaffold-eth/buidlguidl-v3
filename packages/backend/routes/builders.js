@@ -14,8 +14,8 @@ router.get("/", async (req, res) => {
   res.status(200).send(builders);
 });
 
-router.get("/batches", async (req, res) => {
-  console.log("/builders/batches");
+router.get("/batchBuilders", async (req, res) => {
+  console.log("/builders/batchBuilders");
   const builders = await db.findAllBatchedUsers();
   res.status(200).send(builders);
 });

@@ -193,6 +193,11 @@ export default function Header({
                   </NextLink>
                 </MenuItem>
                 <MenuItem>
+                  <NextLink href="/admin/batchBuilders" exact>
+                    Batch Builders
+                  </NextLink>
+                </MenuItem>
+                <MenuItem>
                   <span onClick={handleStreamsUpdate}>Run stream indexer</span>
                 </MenuItem>
               </MenuList>
