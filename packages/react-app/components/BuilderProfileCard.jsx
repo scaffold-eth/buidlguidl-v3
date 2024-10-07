@@ -167,7 +167,6 @@ const BuilderProfileCard = ({
       status: "success",
       variant: toastVariant,
     });
-
     fetchBuilder();
     setIsUpdatingSocials(false);
     onClose();
