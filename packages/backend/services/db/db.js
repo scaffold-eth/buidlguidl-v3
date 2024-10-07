@@ -45,6 +45,11 @@ const findAllUsers = db.findAllUsers;
 const findAllBatchedUsers = db.findAllBatchedUsers;
 
 /**
+ */
+
+const findAllBatches = db.findAllBatches;
+
+/**
  *
  * @param {Address} builderAddress
  * @returns {{
@@ -227,6 +232,7 @@ module.exports = {
   updateUser,
   findAllUsers,
   findAllBatchedUsers,
+  findAllBatches,
   findUserByAddress,
   getBuildersWithPendingEnsClaims,
   findAllCohorts,

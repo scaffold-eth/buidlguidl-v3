@@ -35,7 +35,6 @@ import Address from "../../components/Address";
 import { bySocialWeight } from "../../data/socials";
 import { USER_ROLES } from "../../helpers/constants";
 import StreamTableCell from "../../components/StreamTableCell";
-import MetaSeo from "../../components/MetaSeo";
 import BuilderFlags from "../../components/builder/BuilderFlags";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import BatchColumnFilter from "../../components/BatchColumnFilter";
