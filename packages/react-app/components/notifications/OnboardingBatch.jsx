@@ -60,7 +60,9 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
     try {
       await postUpdateBatch(address, signature, batchData);
       toast({
-        description: "Your batch number has been updated",
+        title: "Successfully Joined Batch",
+        description:
+          "You now have access to the Batch Telegram Channel. Click the link in the banner below to join. 👇",
         status: "success",
         variant: toastVariant,
       });
@@ -110,9 +112,12 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
               </Button>
             ) : (
               <Button colorScheme="orange" size="sm" onClick={handleUpdateBatch} width="180px">
-                Request to join
+                Get Telegram Access
               </Button>
             )}
+            <Button colorScheme="orange" size="sm" onClick={handleUpdateBatch} width="180px">
+              Get Telegram Access
+            </Button>
           </Box>
           <Text fontSize="xs" color="gray.800">
             Next batch starting on <br />

@@ -238,6 +238,12 @@ router.post("/set-batch-number", withAddress, async (req, res) => {
     batch,
   };
 
+  const user = await db.findUserByAddress(address);
+  if (user.data.batch.number) {
+    res.status(401).send("🚫 User already in batch");
+    return;
+  }
+
   const isSignatureValid = await verifySignature(signature, verifyOptions);
   if (!isSignatureValid) {
     res.status(401).send(" 🚫 Signature verification failed! Please reload and try again. Sorry! 😅");

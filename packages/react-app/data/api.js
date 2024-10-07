@@ -174,7 +174,6 @@ export const postUpdateSocials = async (address, signature, socialLinks) => {
 };
 
 export const getUpdateBatchSignMessage = async (userAddress, batch) => {
-  console.log("batch", batch);
   try {
     const signMessageResponse = await axios.get(`${serverUrl}/sign-message`, {
       params: {

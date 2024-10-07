@@ -167,10 +167,7 @@ const BuilderProfileCard = ({
       status: "success",
       variant: toastVariant,
     });
-    // to make sure that Onboarding Batches Notification is updated when the user updates their socials
-    if (typeof onUpdate === "function") {
-      onUpdate();
-    }
+
     fetchBuilder();
     setIsUpdatingSocials(false);
     onClose();
