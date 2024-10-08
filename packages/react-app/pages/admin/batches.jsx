@@ -24,44 +24,22 @@ import {
   InputGroup,
   useClipboard,
 } from "@chakra-ui/react";
-import StreamTableCell from "../../components/StreamTableCell";
 import DateWithTooltip from "../../components/DateWithTooltip";
+import BatchNumberCell from "../../components/batches/BatchNumberCell";
+import { CopyIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { useTable, usePagination, useSortBy, useFilters } from "react-table";
+import useCustomColorModes from "../../hooks/useCustomColorModes";
+import BuilderListSkeleton from "../../components/skeletons/BuilderListSkeleton";
+import BatchLinksCell from "../../components/batches/BatchLinksCell";
+import BatchStatusCell from "../../components/batches/BatchStatusCell";
+import ExactDateWithTooltip from "../../components/batches/ExactDateWithTooltip";
 
 const serverPath = "/builders/batches";
-
-const batchCreated = batch => {
-  return batch?.creationTimestamp || 0;
-};
-
-// TODO
-const BatchLinksCell = ({ builder, isAdmin }) => {
-  // const socials = Object.entries(builder.socialLinks ?? {}).sort(bySocialWeight);
-  // return (
-  //   <Flex direction="column">
-  //     <HStack spacing={3} alignItems="center" justifyContent="center">
-  //       {socials.length ? (
-  //         socials.map(([socialId, socialValue]) => <SocialLink id={socialId} key={socialId} value={socialValue} />)
-  //       ) : (
-  //         <Box>-</Box>
-  //       )}
-  //     </HStack>
-  //     {isAdmin && <BuilderFlags builder={builder} />}
-  //   </Flex>
-  // );
-};
-
-// TODO
-const BatchStatusCell = ({ status }) => {
-  return (
-    <Tooltip label={moment(status?.timestamp).fromNow()}>
-      <Text maxW="350">{status?.text}</Text>
-    </Tooltip>
-  );
-};
 
 export default function Batches({ serverUrl, userRole }) {
   const [batches, setBatches] = useState([]);
   const [isLoadingBatches, setIsLoadingBatches] = useState(false);
+  const { baseColor } = useCustomColorModes();
 
   useEffect(() => {
     async function fetchBatches() {
@@ -69,11 +47,9 @@ export default function Batches({ serverUrl, userRole }) {
       const fetchedBatches = await axios.get(serverUrl + serverPath);
 
       const processedBatches = fetchedBatches.data.map(batch => ({
-        // batch,
-        batchNumber: batch.id,
+        batch: batch,
+        batchNumber: batch.number,
         status: batch.status,
-        telegram: batch.telegramLink,
-        contractAddress: batch.contractAddress,
         startDate: batch.startDate,
       }));
 
@@ -84,16 +60,17 @@ export default function Batches({ serverUrl, userRole }) {
     fetchBatches();
   }, [serverUrl]);
 
-  const BatchNumberCellComponent = ({ value }) => {
-    return value?.graduated?.status ? "" : <StreamTableCell builder={value} />;
+  const BatchNumberCellComponent = ({ row }) => {
+    return (
+      <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <BatchNumberCell batch={row.original.batchNumber} status={row.original.status} />
+      </div>
+    );
   };
-
   const BatchCreatedCellComponent = ({ value }) => {
-    return <DateWithTooltip timestamp={value} />;
+    return <ExactDateWithTooltip timestamp={value} />;
   };
-
-  const BatchLinksCellComponent = ({ value }) => <BatchLinksCell batch={value} isAdmin={isAdmin} />;
-
+  const BatchLinksCellComponent = ({ value }) => <BatchLinksCell batch={value} />;
   const BatchStatusCellComponent = ({ value }) => <BatchStatusCell status={value} />;
 
   const columns = useMemo(
@@ -119,66 +96,108 @@ export default function Batches({ serverUrl, userRole }) {
           Header: "Start Date",
           accessor: "startDate",
           disableFilters: true,
-          Filter: BatchFilterComponent,
-          filter: batchFiltering,
-          Cell: StreamTableCellComponent,
+          // Filter: BatchFilterComponent,
+          // filter: batchFiltering,
+          Cell: BatchCreatedCellComponent,
         },
         // have Etherscan, Github, Telegram, Website
         {
           Header: "Links",
-          accessor: "links",
+          accessor: "batch",
           disableSortBy: true,
           disableFilters: true,
           Cell: BatchLinksCellComponent,
         },
-        {
-          Header: "Batch Created",
-          accessor: "batchCreated",
-          sortAscFirst: true,
-          disableFilters: true,
-          Cell: BatchCreatedCellComponent,
-        },
       ];
 
-      if (!isLoggedIn) {
-        allColumns.splice(4, 1);
-      }
+      // if (!isLoggedIn) {
+      //   allColumns.splice(4, 1);
+      // }
 
       return allColumns;
     },
     // eslint-disable-next-line
-    [userRole, BatchFilterComponent, batches],
+    [userRole, batches],
   );
 
-  //   const {
-  //     getTableProps,
-  //     getTableBodyProps,
-  //     headerGroups,
-  //     prepareRow,
-  //     page,
-  //     canPreviousPage,
-  //     canNextPage,
-  //     pageOptions,
-  //     pageCount,
-  //     gotoPage,
-  //     nextPage,
-  //     previousPage,
-  //     setPageSize,
-  //     state: { pageIndex, pageSize },
-  //   } = useTable(
-  //     {
-  //       columns,
-  //       data: builders,
-  //       initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "stream", desc: true }], []) },
-  //     },
-  //     useFilters,
-  //     useSortBy,
-  //     usePagination,
-  //   );
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    {
+      columns,
+      data: batches,
+      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "stream", desc: true }], []) },
+    },
+    useFilters,
+    useSortBy,
+    usePagination,
+  );
+
+  const batchFilter = headerGroups[0].headers[0];
 
   return (
     <>
-      <h1>Admin Batches</h1>;<button onClick={() => console.log(batches)}>Refresh</button>
+      <Container maxW="container.xl">
+        {isLoadingBatches ? (
+          <BuilderListSkeleton />
+        ) : (
+          <Table
+            {...getTableProps()}
+            wordBreak={{ base: "normal", lg: "break-word" }}
+            background={baseColor}
+            colorScheme="customBaseColorScheme"
+            size="sm"
+          >
+            <Thead>
+              {headerGroups.map((headerGroup, index) => (
+                <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                  {headerGroup.headers.map(column => (
+                    <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id} whiteSpace="nowrap">
+                      {column.render("Header")}
+                      <chakra.span key={`span-${index}`} pl="4">
+                        {column.isSorted ? (
+                          column.isSortedDesc ? (
+                            <TriangleDownIcon aria-label="sorted descending" />
+                          ) : (
+                            <TriangleUpIcon aria-label="sorted ascending" />
+                          )
+                        ) : null}
+                      </chakra.span>
+                    </Th>
+                  ))}
+                </Tr>
+              ))}
+            </Thead>
+            <Tbody {...getTableBodyProps()}>
+              {page.map(row => {
+                prepareRow(row);
+                return (
+                  <Tr {...row.getRowProps()} key={row.id}>
+                    {row.cells.map(cell => (
+                      <Td {...cell.getCellProps()} key={cell.column.id}>
+                        {cell.render("Cell")}
+                      </Td>
+                    ))}
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+        )}
+      </Container>
     </>
   );
 }

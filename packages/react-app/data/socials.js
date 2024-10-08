@@ -4,6 +4,8 @@ import DiscordIcon from "../components/icons/DiscordIcon";
 import GithubIcon from "../components/icons/GithubIcon";
 import EmailIcon from "../components/icons/EmailIcon";
 import IntagramIcon from "../components/icons/IntagramIcon";
+import EthIcon from "../components/icons/EthIcon";
+import WebsiteIcon from "../components/icons/WebsiteIcon";
 
 export const socials = {
   telegram: {
@@ -49,6 +51,20 @@ export const socials = {
     icon: IntagramIcon,
     getLink: value => `https://instagram.com/${value}`,
     weight: 5,
+  },
+  etherscan: {
+    label: "Etherscan",
+    placeholder: "Your Etherscan address",
+    icon: EthIcon,
+    getLink: value => `https://etherscan.io/address/${value}`,
+    weight: 6,
+  },
+  website: {
+    label: "Website",
+    placeholder: "Your website URL",
+    icon: WebsiteIcon,
+    getLink: value => `https://batch${value}.buidlguidl.com`,
+    weight: 7,
   },
 };
 
