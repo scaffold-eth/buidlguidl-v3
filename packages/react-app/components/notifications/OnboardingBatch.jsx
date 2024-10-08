@@ -115,9 +115,6 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
                 Get Telegram Access
               </Button>
             )}
-            <Button colorScheme="orange" size="sm" onClick={handleUpdateBatch} width="180px">
-              Get Telegram Access
-            </Button>
           </Box>
           <Text fontSize="xs" color="gray.800">
             Next batch starting on <br />

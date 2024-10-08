@@ -239,7 +239,7 @@ router.post("/set-batch-number", withAddress, async (req, res) => {
   };
 
   const user = await db.findUserByAddress(address);
-  if (user.data.batch.number) {
+  if (user.data?.batch?.number) {
     res.status(401).send("🚫 User already in batch");
     return;
   }
