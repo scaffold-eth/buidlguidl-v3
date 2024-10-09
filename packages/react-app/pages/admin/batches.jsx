@@ -34,8 +34,7 @@ import SocialLink from "../../components/SocialLink";
 import Address from "../../components/Address";
 import { bySocialWeight } from "../../data/socials";
 import { USER_ROLES } from "../../helpers/constants";
-import StreamTableCell from "../../components/StreamTableCell";
-import MetaSeo from "../../components/MetaSeo";
+import BuilderBatchNumberCell from "../../components/batches/BuilderBatchNumberCell";
 import BuilderFlags from "../../components/builder/BuilderFlags";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import BatchColumnFilter from "../../components/BatchColumnFilter";
@@ -121,12 +120,11 @@ const isValueOnEnsOrSocials = (builder, filterValue) => {
 };
 
 const isInBatch = (builder, filterValue) => {
-  if (!builder.batch?.number) return false;
-
-  return builder.batch?.number === filterValue;
+  if (!builder.number) return false;
+  return builder.number === filterValue;
 };
 
-export default function BuilderListView({ serverUrl, mainnetProvider, userRole }) {
+export default function BatchBuilderListView({ serverUrl, mainnetProvider, userRole }) {
   const [builders, setBuilders] = useState([]);
   const [amountBuilders, setAmountBuilders] = useState(0);
   const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
@@ -147,7 +145,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
 
   const batchFiltering = (rows, id, filterValue) => {
     if (filterValue === "allBatches") {
-      return rows.filter(row => row.values[id]);
+      return rows;
     }
 
     return rows.filter(row => {
@@ -166,7 +164,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
         .map(builder => ({
           builder,
           status: builder.status,
-          stream: builder,
+          batch: builder.batch,
           builds: builder.builds?.length || 0,
           socials: builder,
           userCreated: builderCreated(builder),
@@ -192,8 +190,8 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
   );
   const BuilderStatusCellComponent = ({ value }) => <BuilderStatusCell status={value} />;
   const BuilderBuildsCellComponent = ({ value }) => <BuilderBuildsCell buildCount={value} />;
-  const StreamTableCellComponent = ({ value }) => {
-    return value?.graduated?.status ? "" : <StreamTableCell builder={value} />;
+  const BatchTableCellComponent = ({ value }) => {
+    return <BuilderBatchNumberCell batch={value} />;
   };
   const BuilderSocialLinksCellComponent = ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />;
   const UserCreatedCellComponent = ({ value }) => {
@@ -227,15 +225,18 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
           Cell: BuilderBuildsCellComponent,
         },
         {
-          Header: "Stream",
-          accessor: "stream",
+          Header: "Batch",
+          accessor: "batch",
           disableFilters: true,
           Filter: BatchFilterComponent,
           filter: batchFiltering,
-          // Sorting by stream cap for now.
-          sortType: (rowA, rowB) =>
-            Number(rowA.values?.stream?.cap || 0) > Number(rowB.values?.stream?.cap || 0) ? 1 : -1,
-          Cell: StreamTableCellComponent,
+          sortType: (rowA, rowB) => {
+            const aNumber = rowA.original.batch?.number ?? 0;
+            const bNumber = rowB.original.batch?.number ?? 0;
+
+            return aNumber - bNumber;
+          },
+          Cell: BatchTableCellComponent,
         },
         {
           Header: "Socials",
@@ -282,7 +283,7 @@ export default function BuilderListView({ serverUrl, mainnetProvider, userRole }
     {
       columns,
       data: builders,
-      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "stream", desc: true }], []) },
+      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "batch", desc: true }], []) },
     },
     useFilters,
     useSortBy,
