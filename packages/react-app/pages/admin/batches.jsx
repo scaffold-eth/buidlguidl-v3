@@ -34,7 +34,7 @@ import SocialLink from "../../components/SocialLink";
 import Address from "../../components/Address";
 import { bySocialWeight } from "../../data/socials";
 import { USER_ROLES } from "../../helpers/constants";
-import BuilderBatchNumberCell from "../../components/batches/BuilderBatchNumberCell";
+import BuilderBatchNumberCell from "../../components/batch-builders/BatchBuilderNumberCell";
 import BuilderFlags from "../../components/builder/BuilderFlags";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import BatchColumnFilter from "../../components/BatchColumnFilter";
@@ -145,13 +145,19 @@ export default function BatchBuilderListView({ serverUrl, mainnetProvider, userR
 
   const batchFiltering = (rows, id, filterValue) => {
     if (filterValue === "allBatches") {
+      console.log("rows", rows);
+      setAmountBuilders(rows.length);
       return rows;
     }
 
-    return rows.filter(row => {
+    const filteredRows = rows.filter(row => {
       const rowValue = row.values[id];
       return rowValue !== undefined ? isInBatch(rowValue, filterValue) : true;
     });
+
+    setAmountBuilders(filteredRows.length);
+
+    return filteredRows;
   };
 
   useEffect(() => {
@@ -291,8 +297,8 @@ export default function BatchBuilderListView({ serverUrl, mainnetProvider, userR
   );
 
   useEffect(() => {
-    setAmountBuilders(page.length);
-  }, [page]);
+    setAmountBuilders(builders.length);
+  }, [builders]);
 
   const ensFilter = headerGroups[0].headers[0];
   const batchFilter = headerGroups[0].headers[3];
