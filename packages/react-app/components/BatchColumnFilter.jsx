@@ -19,7 +19,11 @@ const BatchColumnFilter = ({ filterValue = "allBatches", setFilter, builders }) 
       ...(searchTerm === "" || "All Batches".toLowerCase().includes(searchTerm.toLowerCase()) ? ["allBatches"] : []),
       ...uniqueBatches
         .filter(batch => `Batch ${batch}`.toLowerCase().includes(searchTerm.toLowerCase()))
-        .sort((a, b) => b.localeCompare(a)),
+        .sort((a, b) => {
+          const numA = parseInt(a, 10);
+          const numB = parseInt(b, 10);
+          return numB - numA;
+        }),
     ];
   }, [uniqueBatches, searchTerm]);
 
