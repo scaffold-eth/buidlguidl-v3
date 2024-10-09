@@ -33,6 +33,7 @@ import BuilderListSkeleton from "../../components/skeletons/BuilderListSkeleton"
 import BatchLinksCell from "../../components/batches/BatchLinksCell";
 import BatchStatusCell from "../../components/batches/BatchStatusCell";
 import ExactDateWithTooltip from "../../components/batches/ExactDateWithTooltip";
+import { USER_ROLES } from "../../helpers/constants";
 
 const serverPath = "/builders/batches";
 
@@ -40,6 +41,7 @@ export default function Batches({ serverUrl, userRole }) {
   const [batches, setBatches] = useState([]);
   const [isLoadingBatches, setIsLoadingBatches] = useState(false);
   const { baseColor } = useCustomColorModes();
+  const isAdmin = userRole === USER_ROLES.admin;
 
   useEffect(() => {
     async function fetchBatches() {
@@ -60,13 +62,9 @@ export default function Batches({ serverUrl, userRole }) {
     fetchBatches();
   }, [serverUrl]);
 
-  const BatchNumberCellComponent = ({ row }) => {
-    return (
-      <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <BatchNumberCell batch={row.original.batchNumber} status={row.original.status} />
-      </div>
-    );
-  };
+  const BatchNumberCellComponent = ({ row }) => (
+    <BatchNumberCell batch={row.original.batchNumber} status={row.original.status} />
+  );
   const BatchCreatedCellComponent = ({ value }) => {
     return <ExactDateWithTooltip timestamp={value} />;
   };
