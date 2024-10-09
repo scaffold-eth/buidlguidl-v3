@@ -23,10 +23,18 @@ import {
   InputRightElement,
   InputGroup,
   useClipboard,
+  IconButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import DateWithTooltip from "../../components/DateWithTooltip";
 import BatchNumberCell from "../../components/batches/BatchNumberCell";
-import { CopyIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { CopyIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon, EditIcon } from "@chakra-ui/icons";
 import { useTable, usePagination, useSortBy, useFilters } from "react-table";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import BuilderListSkeleton from "../../components/skeletons/BuilderListSkeleton";
@@ -42,6 +50,8 @@ export default function Batches({ serverUrl, userRole }) {
   const [isLoadingBatches, setIsLoadingBatches] = useState(false);
   const { baseColor } = useCustomColorModes();
   const isAdmin = userRole === USER_ROLES.admin;
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedBatch, setSelectedBatch] = useState(null);
 
   useEffect(() => {
     async function fetchBatches() {
@@ -70,6 +80,20 @@ export default function Batches({ serverUrl, userRole }) {
   };
   const BatchLinksCellComponent = ({ value }) => <BatchLinksCell batch={value} />;
   const BatchStatusCellComponent = ({ value }) => <BatchStatusCell status={value} />;
+  const BatchEditComponent = ({ row }) => (
+    <Tooltip label="Edit Batch">
+      <IconButton
+        aria-label="Edit batch"
+        icon={<EditIcon />}
+        size="sm"
+        variant="ghost"
+        onClick={() => {
+          setSelectedBatch(row.original.batch);
+          setIsEditModalOpen(true);
+        }}
+      />
+    </Tooltip>
+  );
 
   const columns = useMemo(
     () => {
@@ -98,13 +122,18 @@ export default function Batches({ serverUrl, userRole }) {
           // filter: batchFiltering,
           Cell: BatchCreatedCellComponent,
         },
-        // have Etherscan, Github, Telegram, Website
         {
           Header: "Links",
           accessor: "batch",
           disableSortBy: true,
           disableFilters: true,
           Cell: BatchLinksCellComponent,
+        },
+        {
+          Header: "Edit",
+          disableSortBy: true,
+          disableFilters: true,
+          Cell: BatchEditComponent,
         },
       ];
 
@@ -196,6 +225,29 @@ export default function Batches({ serverUrl, userRole }) {
           </Table>
         )}
       </Container>
+
+      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Batch</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {/* TODO:Add form fields for editing the batch */}
+            {selectedBatch && (
+              <div>
+                <Text>Editing Batch: {selectedBatch.number}</Text>
+                {/* Add more fields as needed */}
+              </div>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={() => setIsModalOpen(false)}>
+              Close
+            </Button>
+            <Button variant="ghost">Save</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
