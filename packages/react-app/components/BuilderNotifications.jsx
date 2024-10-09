@@ -11,7 +11,7 @@ const notificationComponents = {
   OnboardingBatch: OnboardingBatch,
 };
 
-const NotificationItem = ({ notification, onMarkAsRead, builder }) => {
+const NotificationItem = ({ notification, onMarkAsRead, builder, userProvider, onUpdate }) => {
   const plausible = usePlausible();
   const bannerBg = useColorModeValue("blue.100", "blue.900");
 
@@ -28,7 +28,15 @@ const NotificationItem = ({ notification, onMarkAsRead, builder }) => {
 
   if (notification.component && notificationComponents[notification.component]) {
     const Component = notificationComponents[notification.component];
-    return <Component notification={notification} onMarkAsRead={onMarkAsRead} />;
+    return (
+      <Component
+        notification={notification}
+        onMarkAsRead={onMarkAsRead}
+        builder={builder}
+        userProvider={userProvider}
+        onUpdate={onUpdate}
+      />
+    );
   }
 
   return (
@@ -46,11 +54,10 @@ const NotificationItem = ({ notification, onMarkAsRead, builder }) => {
   );
 };
 
-const BuilderNotifications = ({ builder }) => {
+const BuilderNotifications = ({ builder, userProvider, onUpdate }) => {
   const { notifications, markNotificationAsRead } = useNotifications();
 
   if (!notifications || notifications.length === 0) return null;
-
   return (
     <VStack align="stretch" spacing="4" mb="4">
       {notifications.map(notification => (
@@ -59,6 +66,8 @@ const BuilderNotifications = ({ builder }) => {
           notification={notification}
           onMarkAsRead={markNotificationAsRead}
           builder={builder}
+          userProvider={userProvider}
+          onUpdate={onUpdate}
         />
       ))}
     </VStack>

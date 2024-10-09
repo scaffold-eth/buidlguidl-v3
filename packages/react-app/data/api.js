@@ -172,3 +172,42 @@ export const postUpdateSocials = async (address, signature, socialLinks) => {
     throw new Error(`Couldn't save the socials`);
   }
 };
+
+export const getUpdateBatchSignMessage = async (userAddress, batch) => {
+  try {
+    const signMessageResponse = await axios.get(`${serverUrl}/sign-message`, {
+      params: {
+        messageId: "builderUpdateBatch",
+        address: userAddress,
+        batch,
+      },
+    });
+
+    return signMessageResponse.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Couldn't get the signature message`);
+  }
+};
+
+export const postUpdateBatch = async (address, signature, batch) => {
+  try {
+    await axios.post(
+      `${serverUrl}/builders/set-batch-number`,
+      { batch, signature },
+      {
+        headers: {
+          address,
+        },
+      },
+    );
+  } catch (error) {
+    if (error.request?.status === 401) {
+      const accessError = new Error(`Access denied`);
+      accessError.status = 401;
+      throw accessError;
+    }
+    console.error(error);
+    throw new Error(`Couldn't save the batch data`);
+  }
+};
