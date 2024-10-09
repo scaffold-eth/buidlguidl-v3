@@ -145,7 +145,6 @@ export default function BatchBuilderListView({ serverUrl, mainnetProvider, userR
 
   const batchFiltering = (rows, id, filterValue) => {
     if (filterValue === "allBatches") {
-      console.log("rows", rows);
       setAmountBuilders(rows.length);
       return rows;
     }
