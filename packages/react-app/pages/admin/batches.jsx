@@ -34,7 +34,7 @@ import {
 } from "@chakra-ui/react";
 import DateWithTooltip from "../../components/DateWithTooltip";
 import BatchNumberCell from "../../components/batches/BatchNumberCell";
-import { CopyIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon, EditIcon } from "@chakra-ui/icons";
+import { CopyIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { useTable, usePagination, useSortBy, useFilters } from "react-table";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import BuilderListSkeleton from "../../components/skeletons/BuilderListSkeleton";
@@ -45,6 +45,24 @@ import { USER_ROLES } from "../../helpers/constants";
 
 const serverPath = "/builders/batches";
 
+// TODO: double check this, adapt to batch number
+const BatchColumnFilter = ({ column: { filterValue, setFilter } }) => {
+  const { baseColor } = useCustomColorModes();
+
+  return (
+    <Input
+      type="text"
+      value={filterValue || ""}
+      onChange={e => {
+        setFilter(e.target.value || undefined);
+      }}
+      placeholder="Search for batch"
+      bgColor={baseColor}
+      mb={8}
+    />
+  );
+};
+
 export default function Batches({ serverUrl, userRole }) {
   const [batches, setBatches] = useState([]);
   const [isLoadingBatches, setIsLoadingBatches] = useState(false);
@@ -52,6 +70,19 @@ export default function Batches({ serverUrl, userRole }) {
   const isAdmin = userRole === USER_ROLES.admin;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
+  const [amountBatches, setAmountBatches] = useState();
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const batchFiltering = (rows, id, filterValue) => {
+    return rows.filter(row => {
+      const rowValue = row.values[id];
+      const rowValueString = String(rowValue).toLowerCase();
+      const filterValueString = String(filterValue).toLowerCase();
+      return rowValueString.includes(filterValueString);
+    });
+  };
 
   useEffect(() => {
     async function fetchBatches() {
@@ -102,9 +133,9 @@ export default function Batches({ serverUrl, userRole }) {
           Header: "Batch",
           accessor: "batchNumber",
           //   disableSortBy: true,
-          //   canFilter: true,
-          //   Filter: EnsColumnFilter,
-          //   filter: ensFiltering,
+          canFilter: true,
+          Filter: BatchColumnFilter,
+          filter: batchFiltering,
           Cell: BatchNumberCellComponent,
         },
         {
@@ -118,8 +149,6 @@ export default function Batches({ serverUrl, userRole }) {
           Header: "Start Date",
           accessor: "startDate",
           disableFilters: true,
-          // Filter: BatchFilterComponent,
-          // filter: batchFiltering,
           Cell: BatchCreatedCellComponent,
         },
         {
@@ -173,56 +202,89 @@ export default function Batches({ serverUrl, userRole }) {
     usePagination,
   );
 
+  const handleSearch = value => {
+    setSearchTerm(value);
+    // You may want to implement actual filtering logic here
+  };
+
+  const openAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+
   const batchFilter = headerGroups[0].headers[0];
 
   return (
     <>
       <Container maxW="container.xl">
         {isLoadingBatches ? (
+          // TODO: double check BuilderListSkeleton
           <BuilderListSkeleton />
         ) : (
-          <Table
-            {...getTableProps()}
-            wordBreak={{ base: "normal", lg: "break-word" }}
-            background={baseColor}
-            colorScheme="customBaseColorScheme"
-            size="sm"
-          >
-            <Thead>
-              {headerGroups.map((headerGroup, index) => (
-                <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                  {headerGroup.headers.map(column => (
-                    <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id} whiteSpace="nowrap">
-                      {column.render("Header")}
-                      <chakra.span key={`span-${index}`} pl="4">
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <TriangleDownIcon aria-label="sorted descending" />
-                          ) : (
-                            <TriangleUpIcon aria-label="sorted ascending" />
-                          )
-                        ) : null}
-                      </chakra.span>
-                    </Th>
-                  ))}
-                </Tr>
-              ))}
-            </Thead>
-            <Tbody {...getTableBodyProps()}>
-              {page.map(row => {
-                prepareRow(row);
-                return (
-                  <Tr {...row.getRowProps()} key={row.id}>
-                    {row.cells.map(cell => (
-                      <Td {...cell.getCellProps()} key={cell.column.id}>
-                        {cell.render("Cell")}
-                      </Td>
+          <Box overflowX={{ base: "auto", lg: "visible" }} mb={8}>
+            <Center mb={5} flexDir="column">
+              <Box mb={2}>
+                <chakra.strong mr={2}>Total batches:</chakra.strong>
+                {amountBatches}
+              </Box>
+              <Flex direction={{ base: "column", md: "row" }} alignItems="center" mb={4}>
+                <InputGroup mr={{ md: 4 }} mb={{ base: 4, md: 0 }} width={{ base: "100%", md: "auto" }} height="40px">
+                  {batchFilter.render("Filter")}
+                  <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
+                </InputGroup>
+
+                <Button
+                  leftIcon={<AddIcon />}
+                  colorScheme="blue"
+                  onClick={openAddModal}
+                  width={{ base: "100%", md: "auto" }}
+                >
+                  Add Batch
+                </Button>
+              </Flex>
+            </Center>
+            <Table
+              {...getTableProps()}
+              wordBreak={{ base: "normal", lg: "break-word" }}
+              background={baseColor}
+              colorScheme="customBaseColorScheme"
+              size="sm"
+            >
+              <Thead>
+                {headerGroups.map((headerGroup, index) => (
+                  <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                    {headerGroup.headers.map(column => (
+                      <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id} whiteSpace="nowrap">
+                        {column.render("Header")}
+                        <chakra.span key={`span-${index}`} pl="4">
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <TriangleDownIcon aria-label="sorted descending" />
+                            ) : (
+                              <TriangleUpIcon aria-label="sorted ascending" />
+                            )
+                          ) : null}
+                        </chakra.span>
+                      </Th>
                     ))}
                   </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
+                ))}
+              </Thead>
+              <Tbody {...getTableBodyProps()}>
+                {page.map(row => {
+                  prepareRow(row);
+                  return (
+                    <Tr {...row.getRowProps()} key={row.id}>
+                      {row.cells.map(cell => (
+                        <Td {...cell.getCellProps()} key={cell.column.id}>
+                          {cell.render("Cell")}
+                        </Td>
+                      ))}
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </Box>
         )}
       </Container>
 
