@@ -62,6 +62,10 @@ const findAllBatches = db.findAllBatches;
  */
 const findUserByAddress = db.findUserByAddress;
 
+// --- Batches
+const findBatchByNumber = db.findBatchByNumber;
+const createBatch = db.createBatch;
+
 // --- Cohorts
 /**
  *
@@ -237,6 +241,9 @@ module.exports = {
   getBuildersWithPendingEnsClaims,
   findAllCohorts,
   updateCohortData,
+
+  findBatchByNumber,
+  createBatch,
 
   createEvent,
   findAllEvents,

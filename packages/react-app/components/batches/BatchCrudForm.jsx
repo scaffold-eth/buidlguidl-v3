@@ -65,7 +65,7 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
-  const { isLoading, makeSignedRequest } = useSignedRequest("builderCreate", address);
+  const { isLoading, makeSignedRequest } = useSignedRequest("batchCreate", address);
   const { isLoading: isLoadingEdit, makeSignedRequest: makeSignedRequestEdit } = useSignedRequest("batchEdit", address);
 
   useEffect(() => {
@@ -119,7 +119,7 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
 
     toast({
       status: "success",
-      description: "Builder saved successfully!",
+      description: "Batch saved successfully!",
       variant: toastVariant,
     });
 
@@ -129,22 +129,8 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
     }
   };
 
-  const handleInputChange = event => {
-    console.log(event);
-    event.persist();
-    const target = event.target;
-    const id = target.id;
-    const value = target.value;
-
-    setFormState(prevFormState => ({
-      ...prevFormState,
-      [id]: value,
-    }));
-  };
-
   return (
     <>
-      <Button onClick={() => console.log(formState)}>Log Form State</Button>
       <FormControl mb={8} isRequired isInvalid={formErrors.batchNumber}>
         <FormLabel htmlFor="batchNumber">
           <strong>Batch Number</strong>
@@ -216,7 +202,7 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
         />
         <FormErrorMessage>Required</FormErrorMessage>
       </FormControl>
-      <FormControl mb={8} isInvalid={formErrors.builderStreamAddress}>
+      <FormControl mb={8} isInvalid={formErrors.batchContractAddress}>
         <FormLabel htmlFor="batchContractAddress">
           <strong>Batch Registry Contract Address</strong>
         </FormLabel>
@@ -225,11 +211,11 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
           id="batchContractAddress"
           ensProvider={mainnetProvider}
           placeholder="Registry Contract Address"
-          value={formState.builderStreamAddress || ""}
+          value={formState.batchContractAddress || ""}
           onChange={value => {
             setFormState(prevFormState => ({
               ...prevFormState,
-              builderStreamAddress: value,
+              batchContractAddress: value,
             }));
           }}
         />

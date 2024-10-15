@@ -92,6 +92,20 @@ const getBuildersWithPendingEnsClaims = async () => {
   return usersEnsPendingSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+// --- Batches
+const findBatchByNumber = async batchNumber => {
+  const batchSnapshot = await database.collection("batches").doc(batchNumber).get();
+  if (!batchSnapshot.exists) {
+    return { exists: false };
+  }
+  return { exists: true, data: { id: batchSnapshot.id, ...batchSnapshot.data() } };
+};
+
+const createBatch = async (batchNumber, batchData) => {
+  const batchDoc = database.collection("batches").doc(batchNumber);
+  await batchDoc.set(batchData);
+};
+
 // --- Events
 const createEvent = event => {
   return database.collection("events").add(event);
@@ -472,6 +486,9 @@ module.exports = {
   findUserByAddress,
   findAllCohorts,
   updateCohortData,
+
+  findBatchByNumber,
+  createBatch,
 
   createEvent,
   findAllEvents,

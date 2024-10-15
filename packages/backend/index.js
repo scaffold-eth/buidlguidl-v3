@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const { getSignMessageForId } = require("./utils/sign");
 
 const buildersRoutes = require("./routes/builders");
+const batchesRoutes = require("./routes/batches");
 const buildsRoutes = require("./routes/builds");
 const eventsRoutes = require("./routes/events");
 const streamsRoutes = require("./routes/streams");
@@ -25,6 +26,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/builders", buildersRoutes);
+app.use("/batches", batchesRoutes);
 app.use("/builds", buildsRoutes);
 app.use("/latest-events", eventsRoutes);
 app.use("/streams", streamsRoutes);
