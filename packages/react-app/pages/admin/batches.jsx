@@ -6,7 +6,6 @@ import {
   ButtonGroup,
   Center,
   Container,
-  Link,
   Text,
   Table,
   Thead,
@@ -18,11 +17,9 @@ import {
   Flex,
   Select,
   Tooltip,
-  HStack,
   Input,
   InputRightElement,
   InputGroup,
-  useClipboard,
   IconButton,
 } from "@chakra-ui/react";
 
@@ -150,6 +147,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
         icon={<EditIcon />}
         size="sm"
         variant="ghost"
+        isDisabled={!isAdmin}
         onClick={() => {
           setSelectedBatch({
             ...row.original.batch,
@@ -206,9 +204,9 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
         },
       ];
 
-      // if (!isLoggedIn) {
-      //   allColumns.splice(4, 1);
-      // }
+      if (!isAdmin) {
+        allColumns.splice(5, 1);
+      }
 
       return allColumns;
     },
@@ -263,6 +261,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
                 </InputGroup>
                 <Button
                   leftIcon={<AddIcon />}
+                  isDisabled={!isAdmin}
                   colorScheme="blue"
                   onClick={() => setIsAddModalOpen(true)}
                   width={{ base: "100%", md: "auto" }}

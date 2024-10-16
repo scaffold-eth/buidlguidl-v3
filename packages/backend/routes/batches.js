@@ -2,9 +2,7 @@ const express = require("express");
 const { ethers } = require("ethers");
 const db = require("../services/db/db");
 const { verifySignature } = require("../utils/sign");
-const { withAddress, withRole } = require("../middlewares/auth");
-const { EVENT_TYPES, createEvent } = require("../utils/events");
-const { getEnsFromAddress } = require("../utils/ens");
+const { withRole } = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -64,14 +62,13 @@ router.post("/create", withRole("admin"), async (req, res) => {
   await db.createBatch(batchData);
   batch = await db.findBatchByNumber(batchNumber);
   console.log("New batch created: ", batchNumber);
-  // TODO: create event
+  // TODO: create event, do we need it for batches?
   //   const event = createEvent(EVENT_TYPES.USER_CREATE, { userAddress: builderAddress }, signature);
   //   db.createEvent(event); // INFO: async, no await here
 
   res.json(batch.data);
 });
 
-// TODO: implement
 router.patch("/update", withRole("admin"), async (req, res) => {
   const neededBodyProps = ["batchNumber", "batchStatus", "batchStartDate", "batchTelegramLink"];
   if (neededBodyProps.some(prop => req.body[prop] === undefined)) {
@@ -79,7 +76,6 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     return;
   }
 
-  // ToDo. Param validation.
   const { signature, batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress, id } = req.body;
   const address = req.address;
   console.log("PATCH /batches/update", address, batchNumber);
