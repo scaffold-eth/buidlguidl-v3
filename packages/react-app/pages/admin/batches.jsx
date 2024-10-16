@@ -44,7 +44,8 @@ import ExactDateWithTooltip from "../../components/batches/ExactDateWithTooltip"
 import { BatchCrudForm } from "../../components/batches/BatchCrudForm";
 import { USER_ROLES } from "../../helpers/constants";
 
-const serverPath = "/builders/batches";
+const serverPathBatches = "/builders/batches";
+const serverPathBatchGraduateBuilders = "/builders/batchGraduateBuilders";
 
 // TODO: double check this, adapt to batch number
 const BatchColumnFilter = ({ column: { filterValue, setFilter } }) => {
@@ -72,6 +73,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [amountBatches, setAmountBatches] = useState();
+  const [graduatesCount, setGraduatesCount] = useState({});
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -88,7 +90,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   const fetchBatches = useCallback(async () => {
     setIsLoadingBatches(true);
     try {
-      const fetchedBatches = await axios.get(serverUrl + serverPath);
+      const fetchedBatches = await axios.get(serverUrl + serverPathBatches);
       const processedBatches = fetchedBatches.data.map(batch => ({
         batch: batch,
         batchNumber: batch.number,
@@ -104,9 +106,36 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     }
   }, [serverUrl]);
 
+  const fetchGraduatesCount = useCallback(async () => {
+    const fetchedBatchGraduateBuilders = await axios.get(serverUrl + serverPathBatchGraduateBuilders);
+    const graduatesCounts = {};
+
+    batches.forEach(
+      batch => {
+        const batchNumber = batch.batchNumber;
+        graduatesCounts[batchNumber] = 0;
+
+        fetchedBatchGraduateBuilders.data.forEach(builder => {
+          if (builder.batch && builder.batch.number === String(batchNumber)) {
+            graduatesCounts[batchNumber]++;
+          }
+        });
+      },
+      [batches],
+    );
+
+    setGraduatesCount(graduatesCounts);
+  }, [batches, serverUrl]);
+
   useEffect(() => {
     fetchBatches();
   }, [fetchBatches]);
+
+  useEffect(() => {
+    if (batches.length > 0) {
+      fetchGraduatesCount();
+    }
+  }, [batches, fetchGraduatesCount]);
 
   const BatchNumberCellComponent = ({ row }) => (
     <BatchNumberCell batch={row.original.batchNumber} status={row.original.status} />
@@ -116,6 +145,11 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   };
   const BatchLinksCellComponent = ({ value }) => <BatchLinksCell batch={value} />;
   const BatchStatusCellComponent = ({ value }) => <BatchStatusCell status={value} />;
+  const BatchGraduatesCellComponent = ({ row }) => {
+    const count = graduatesCount[row.original.batchNumber] || 0;
+    return <Text>{count}</Text>;
+  };
+
   const BatchEditComponent = ({ row }) => (
     <Tooltip label="Edit Batch">
       <IconButton
@@ -157,6 +191,12 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
           Cell: BatchCreatedCellComponent,
         },
         {
+          Header: "Graduates",
+          accessor: row => graduatesCount[row.batchNumber] || 0,
+          disableFilters: true,
+          Cell: BatchGraduatesCellComponent,
+        },
+        {
           Header: "Links",
           accessor: "batch",
           disableSortBy: true,
@@ -178,7 +218,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
       return allColumns;
     },
     // eslint-disable-next-line
-    [userRole, batches],
+    [userRole, batches, graduatesCount],
   );
 
   const {

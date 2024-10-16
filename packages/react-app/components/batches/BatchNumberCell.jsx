@@ -4,7 +4,6 @@ import { getStatusColor } from "./BatchStatusCell";
 
 const BatchNumberCell = ({ batch, status }) => {
   if (!batch) return null;
-  console.log("statusValue", status);
   const colorScheme = getStatusColor(status);
   if (!colorScheme) {
     return null;
