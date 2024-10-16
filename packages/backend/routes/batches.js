@@ -50,20 +50,21 @@ router.post("/create", withRole("admin"), async (req, res) => {
   }
 
   const batchData = {
-    batchNumber: Number(batchNumber),
-    batchStatus,
-    batchStartDate,
-    batchTelegramLink,
+    number: Number(batchNumber),
+    status: batchStatus,
+    startDate: Number(batchStartDate),
+    telegramLink: batchTelegramLink,
   };
 
   if (batchContractAddress) {
-    batchData.batchContractAddress = batchContractAddress;
+    batchData.contractAddress = batchContractAddress;
   }
 
-  // Create user.
+  // Create batch.
   await db.createBatch(batchNumber, batchData);
   batch = await db.findBatchByNumber(batchNumber);
   console.log("New batch created: ", batchNumber);
+  // TODO: create event
   //   const event = createEvent(EVENT_TYPES.USER_CREATE, { userAddress: builderAddress }, signature);
   //   db.createEvent(event); // INFO: async, no await here
 
@@ -72,36 +73,25 @@ router.post("/create", withRole("admin"), async (req, res) => {
 
 // TODO: implement
 router.patch("/update", withRole("admin"), async (req, res) => {
-  const neededBodyProps = ["builderAddress", "builderFunction", "builderRole", "signature"];
+  const neededBodyProps = ["batchNumber", "batchStatus", "batchStartDate", "batchTelegramLink"];
   if (neededBodyProps.some(prop => req.body[prop] === undefined)) {
     res.status(400).send(`Missing required body property. Required: ${neededBodyProps.join(", ")}`);
     return;
   }
 
   // ToDo. Param validation.
-  const {
-    builderAddress,
-    builderFunction,
-    builderRole,
-    signature,
-    builderStreamAddress,
-    builderCohort,
-    batchNumber,
-    batchStatus,
-  } = req.body;
+  const { signature, batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress } = req.body;
   const address = req.address;
-  console.log("PATCH /builders/update", address, builderAddress);
+  console.log("PATCH /batches/update", address, batchNumber);
 
   const verifyOptions = {
-    messageId: "builderEdit",
+    messageId: "batchEdit",
     address,
-    builderAddress,
-    builderFunction,
-    builderRole,
-    builderStreamAddress,
-    builderCohort,
     batchNumber,
     batchStatus,
+    batchStartDate,
+    batchTelegramLink,
+    batchContractAddress,
   };
 
   const isSignatureValid = await verifySignature(signature, verifyOptions);
@@ -110,41 +100,25 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     return;
   }
 
-  let user = await db.findUserByAddress(builderAddress);
+  let batch = await db.findBatchByNumber(batchNumber);
 
-  if (!user.exists) {
-    res.status(400).send("The builder doesn't exist");
-    return;
-  }
-
-  const builderData = {
-    role: builderRole,
-    function: builderFunction,
+  const batchData = {
+    number: Number(batchNumber),
+    status: batchStatus,
+    startDate: Number(batchStartDate),
+    telegramLink: batchTelegramLink,
   };
 
-  if (builderStreamAddress !== user.data.stream?.streamAddress) {
-    builderData.stream = {
-      streamAddress: builderStreamAddress,
-    };
+  if (batchContractAddress) {
+    batchData.contractAddress = batchContractAddress;
   }
 
-  if (builderCohort !== user.data.builderCohort?.name) {
-    builderData.builderCohort = builderCohort ?? {};
-  }
+  //   Update batch
+  await db.updateBatch(batchNumber, batchData);
+  batch = await db.findBatchByNumber(batchNumber);
+  console.log("batch updated: ", batchNumber);
 
-  if (batchNumber !== user.data.batch?.number || batchStatus !== user.data.batch?.status) {
-    builderData.batch = {
-      number: batchNumber ?? user.data.batch?.number,
-      status: batchStatus ?? user.data.batch?.status,
-    };
-  }
-
-  // Update user.
-  await db.updateUser(builderAddress, builderData);
-  user = await db.findUserByAddress(builderAddress);
-  console.log("User updated: ", builderAddress);
-
-  res.json(user.data);
+  res.json(batch.data);
 });
 
 module.exports = router;

@@ -28,6 +28,7 @@ import { USER_FUNCTIONS, USER_ROLES, BATCH_STATUS } from "../../helpers/constant
 import AddressInput from "../AddressInput";
 import useSignedRequest from "../../hooks/useSignedRequest";
 import useConnectedAddress from "../../hooks/useConnectedAddress";
+import moment from "moment";
 
 const INITIAL_FORM_STATE = { batchStatus: BATCH_STATUS.CLOSED };
 
@@ -73,12 +74,18 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
       setFormState({
         batchNumber: batch.number,
         batchStatus: batch.status,
-        batchStartDate: batch.startDate,
+        batchStartDate: moment(batch.startDate).format("YYYY-MM-DD"),
         batchTelegramLink: batch.telegramLink,
         batchContractAddress: batch.contractAddress,
       });
     }
   }, [isEditingBatch, batch]);
+
+  const formatDateForInput = timestamp => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toISOString().split("T")[0];
+  };
 
   const handleSubmit = async () => {
     const nextErrors = {
@@ -95,10 +102,14 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
     }
 
     try {
+      const selectedDate = new Date(formState.batchStartDate);
+      // Set the specific time 17:00:00 for UTC-7:00 so that aligns with moment
+      selectedDate.setUTCHours(17 + 7, 0, 0, 0);
+
       const requestPayload = {
-        batchNumber: formState.batchNumber,
+        batchNumber: String(formState.batchNumber),
         batchStatus: formState.batchStatus,
-        batchStartDate: new Date(formState.batchStartDate).getTime(),
+        batchStartDate: String(selectedDate.getTime()),
         batchTelegramLink: formState.batchTelegramLink,
         batchContractAddress: formState.batchContractAddress,
       };
@@ -140,6 +151,7 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
           type="number"
           min={0}
           placeholder="Batch Number"
+          isDisabled={isEditingBatch}
           value={formState.batchNumber || ""}
           onChange={value => {
             setFormState(prevFormState => ({

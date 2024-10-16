@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import axios from "axios";
 import {
   Box,
@@ -41,6 +41,7 @@ import BuilderListSkeleton from "../../components/skeletons/BuilderListSkeleton"
 import BatchLinksCell from "../../components/batches/BatchLinksCell";
 import BatchStatusCell from "../../components/batches/BatchStatusCell";
 import ExactDateWithTooltip from "../../components/batches/ExactDateWithTooltip";
+import { BatchCrudForm } from "../../components/batches/BatchCrudForm";
 import { USER_ROLES } from "../../helpers/constants";
 
 const serverPath = "/builders/batches";
@@ -63,7 +64,7 @@ const BatchColumnFilter = ({ column: { filterValue, setFilter } }) => {
   );
 };
 
-export default function Batches({ serverUrl, userRole }) {
+export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   const [batches, setBatches] = useState([]);
   const [isLoadingBatches, setIsLoadingBatches] = useState(false);
   const { baseColor } = useCustomColorModes();
@@ -84,24 +85,28 @@ export default function Batches({ serverUrl, userRole }) {
     });
   };
 
-  useEffect(() => {
-    async function fetchBatches() {
-      setIsLoadingBatches(true);
+  const fetchBatches = useCallback(async () => {
+    setIsLoadingBatches(true);
+    try {
       const fetchedBatches = await axios.get(serverUrl + serverPath);
-
       const processedBatches = fetchedBatches.data.map(batch => ({
         batch: batch,
         batchNumber: batch.number,
         status: batch.status,
         startDate: batch.startDate,
       }));
-
       setBatches(processedBatches);
+      setAmountBatches(processedBatches.length);
+    } catch (error) {
+      console.error("Error fetching batches:", error);
+    } finally {
       setIsLoadingBatches(false);
     }
-
-    fetchBatches();
   }, [serverUrl]);
+
+  useEffect(() => {
+    fetchBatches();
+  }, [fetchBatches]);
 
   const BatchNumberCellComponent = ({ row }) => (
     <BatchNumberCell batch={row.original.batchNumber} status={row.original.status} />
@@ -231,11 +236,10 @@ export default function Batches({ serverUrl, userRole }) {
                   {batchFilter.render("Filter")}
                   <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
                 </InputGroup>
-
                 <Button
                   leftIcon={<AddIcon />}
                   colorScheme="blue"
-                  onClick={openAddModal}
+                  onClick={() => setIsAddModalOpen(true)}
                   width={{ base: "100%", md: "auto" }}
                 >
                   Add Batch
@@ -288,26 +292,40 @@ export default function Batches({ serverUrl, userRole }) {
         )}
       </Container>
 
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+      {/* Add Batch Modal */}
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add New Batch</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <BatchCrudForm
+              mainnetProvider={mainnetProvider}
+              onUpdate={() => {
+                setIsAddModalOpen(false);
+                fetchBatches();
+              }}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {/* Edit Batch Modal */}
+      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} size="xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit Batch</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {/* TODO:Add form fields for editing the batch */}
-            {selectedBatch && (
-              <div>
-                <Text>Editing Batch: {selectedBatch.number}</Text>
-                {/* Add more fields as needed */}
-              </div>
-            )}
+            <BatchCrudForm
+              mainnetProvider={mainnetProvider}
+              batch={selectedBatch}
+              onUpdate={() => {
+                setIsEditModalOpen(false);
+                fetchBatches();
+              }}
+            />
           </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={() => setIsModalOpen(false)}>
-              Close
-            </Button>
-            <Button variant="ghost">Save</Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

@@ -65,6 +65,7 @@ const findUserByAddress = db.findUserByAddress;
 // --- Batches
 const findBatchByNumber = db.findBatchByNumber;
 const createBatch = db.createBatch;
+const updateBatch = db.updateBatch;
 
 // --- Cohorts
 /**
@@ -244,6 +245,7 @@ module.exports = {
 
   findBatchByNumber,
   createBatch,
+  updateBatch,
 
   createEvent,
   findAllEvents,

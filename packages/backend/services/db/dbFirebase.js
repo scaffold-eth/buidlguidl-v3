@@ -106,6 +106,11 @@ const createBatch = async (batchNumber, batchData) => {
   await batchDoc.set(batchData);
 };
 
+const updateBatch = async (batchNumber, batchData) => {
+  const batchDoc = database.collection("batches").doc(String(batchNumber));
+  await batchDoc.update(batchData);
+};
+
 // --- Events
 const createEvent = event => {
   return database.collection("events").add(event);
@@ -489,6 +494,7 @@ module.exports = {
 
   findBatchByNumber,
   createBatch,
+  updateBatch,
 
   createEvent,
   findAllEvents,
