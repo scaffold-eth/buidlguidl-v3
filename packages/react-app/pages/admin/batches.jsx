@@ -30,12 +30,12 @@ import BatchNumberCell from "../../components/batches/BatchNumberCell";
 import { SearchIcon, TriangleDownIcon, TriangleUpIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { useTable, usePagination, useSortBy, useFilters } from "react-table";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
-import BuilderListSkeleton from "../../components/skeletons/BuilderListSkeleton";
 import BatchLinksCell from "../../components/batches/BatchLinksCell";
 import BatchStatusCell from "../../components/batches/BatchStatusCell";
 import ExactDateWithTooltip from "../../components/batches/ExactDateWithTooltip";
 import { USER_ROLES } from "../../helpers/constants";
 import { BatchCrudFormModal } from "../../components/batches/BatchCrudForm";
+import BatchesListSkeleton from "../../components/skeletons/BatchesListSkeleton";
 
 const serverPathBatches = "/builders/batches";
 const serverPathBatchGraduateBuilders = "/builders/batchGraduateBuilders";
@@ -248,8 +248,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     <>
       <Container maxW="container.xl">
         {isLoadingBatches ? (
-          // TODO: double check BuilderListSkeleton
-          <BuilderListSkeleton />
+          <BatchesListSkeleton />
         ) : (
           <Box overflowX={{ base: "auto", lg: "visible" }} mb={8}>
             <Center mb={5} flexDir="column">
