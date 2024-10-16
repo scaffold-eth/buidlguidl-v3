@@ -33,13 +33,14 @@ export const postCreateBatch = async (
 export const patchEditBatch = async (
   address,
   signature,
-  { batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress },
+  { batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress, id },
 ) => {
   try {
     await axios.patch(
       `${serverUrl}/batches/update`,
       {
         signature,
+        id,
         batchNumber,
         batchStatus,
         batchStartDate,

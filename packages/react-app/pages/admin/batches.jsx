@@ -151,7 +151,10 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
         size="sm"
         variant="ghost"
         onClick={() => {
-          setSelectedBatch(row.original.batch);
+          setSelectedBatch({
+            ...row.original.batch,
+            id: row.original.batch.id,
+          });
           setIsEditModalOpen(true);
         }}
       />
@@ -164,7 +167,6 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
         {
           Header: "Batch",
           accessor: "batchNumber",
-          //   disableSortBy: true,
           canFilter: true,
           Filter: BatchColumnFilter,
           filter: batchFiltering,

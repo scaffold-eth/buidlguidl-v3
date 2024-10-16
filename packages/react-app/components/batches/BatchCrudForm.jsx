@@ -72,6 +72,7 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
   useEffect(() => {
     if (isEditingBatch) {
       setFormState({
+        id: batch.id,
         batchNumber: batch.number,
         batchStatus: batch.status,
         batchStartDate: moment(batch.startDate).format("YYYY-MM-DD"),
@@ -80,12 +81,6 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
       });
     }
   }, [isEditingBatch, batch]);
-
-  const formatDateForInput = timestamp => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return date.toISOString().split("T")[0];
-  };
 
   const handleSubmit = async () => {
     const nextErrors = {
@@ -115,6 +110,7 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
       };
 
       if (isEditingBatch) {
+        requestPayload.id = formState.id;
         await makeSignedRequestEdit(requestPayload);
       } else {
         await makeSignedRequest(requestPayload);
@@ -151,7 +147,6 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
           type="number"
           min={0}
           placeholder="Batch Number"
-          isDisabled={isEditingBatch}
           value={formState.batchNumber || ""}
           onChange={value => {
             setFormState(prevFormState => ({

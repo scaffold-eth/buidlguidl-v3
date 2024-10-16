@@ -56,7 +56,7 @@ const findAllUsers = async () => {
 const findAllBatchedUsers = async () => {
   // get all users with a batch assigned (builderBatch prop is not null)
   const buildersSnapshot = await database.collection("users").where("batch.number", "!=", null).get();
-  console.log("buildersSnapshot", buildersSnapshot.docs.length);
+  console.log("batchBuildersSnapshot", buildersSnapshot.docs.length);
   // Filter out disabled user. To use it directly on the query,
   // we should create the disabled flag in all documents.
   return buildersSnapshot.docs
@@ -67,7 +67,7 @@ const findAllBatchedUsers = async () => {
 const findAllBatches = async () => {
   // get all users with a batch assigned (builderBatch prop is not null)
   const batchesSnapshot = await database.collection("batches").get();
-  console.log("buildersSnapshot", batchesSnapshot.docs.length);
+  console.log("batchesSnapshot", batchesSnapshot.docs.length);
   // Filter out disabled user. To use it directly on the query,
   // we should create the disabled flag in all documents.
   return batchesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -101,13 +101,18 @@ const findBatchByNumber = async batchNumber => {
   return { exists: true, data: { id: batchSnapshot.id, ...batchSnapshot.data() } };
 };
 
-const createBatch = async (batchNumber, batchData) => {
-  const batchDoc = database.collection("batches").doc(batchNumber);
+const createBatch = async batchData => {
+  const batchesSnapshot = await database.collection("batches").get();
+
+  // Index starts with 0
+  const newBatchIndex = String(batchesSnapshot.docs.length);
+
+  const batchDoc = database.collection("batches").doc(newBatchIndex);
   await batchDoc.set(batchData);
 };
 
-const updateBatch = async (batchNumber, batchData) => {
-  const batchDoc = database.collection("batches").doc(String(batchNumber));
+const updateBatch = async (id, batchData) => {
+  const batchDoc = database.collection("batches").doc(String(id));
   await batchDoc.update(batchData);
 };
 

@@ -61,7 +61,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
   }
 
   // Create batch.
-  await db.createBatch(batchNumber, batchData);
+  await db.createBatch(batchData);
   batch = await db.findBatchByNumber(batchNumber);
   console.log("New batch created: ", batchNumber);
   // TODO: create event
@@ -80,7 +80,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
   }
 
   // ToDo. Param validation.
-  const { signature, batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress } = req.body;
+  const { signature, batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress, id } = req.body;
   const address = req.address;
   console.log("PATCH /batches/update", address, batchNumber);
 
@@ -114,7 +114,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
   }
 
   //   Update batch
-  await db.updateBatch(batchNumber, batchData);
+  await db.updateBatch(id, batchData);
   batch = await db.findBatchByNumber(batchNumber);
   console.log("batch updated: ", batchNumber);
 
