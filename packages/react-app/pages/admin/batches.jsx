@@ -24,25 +24,18 @@ import {
   InputGroup,
   useClipboard,
   IconButton,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
 } from "@chakra-ui/react";
-import DateWithTooltip from "../../components/DateWithTooltip";
+
 import BatchNumberCell from "../../components/batches/BatchNumberCell";
-import { CopyIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
+import { SearchIcon, TriangleDownIcon, TriangleUpIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { useTable, usePagination, useSortBy, useFilters } from "react-table";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import BuilderListSkeleton from "../../components/skeletons/BuilderListSkeleton";
 import BatchLinksCell from "../../components/batches/BatchLinksCell";
 import BatchStatusCell from "../../components/batches/BatchStatusCell";
 import ExactDateWithTooltip from "../../components/batches/ExactDateWithTooltip";
-import { BatchCrudForm } from "../../components/batches/BatchCrudForm";
 import { USER_ROLES } from "../../helpers/constants";
+import { BatchCrudFormModal } from "../../components/batches/BatchCrudForm";
 
 const serverPathBatches = "/builders/batches";
 const serverPathBatchGraduateBuilders = "/builders/batchGraduateBuilders";
@@ -240,21 +233,12 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     {
       columns,
       data: batches,
-      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "stream", desc: true }], []) },
+      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "batchNumber", desc: true }], []) },
     },
     useFilters,
     useSortBy,
     usePagination,
   );
-
-  const handleSearch = value => {
-    setSearchTerm(value);
-    // You may want to implement actual filtering logic here
-  };
-
-  const openAddModal = () => {
-    setIsAddModalOpen(true);
-  };
 
   const batchFilter = headerGroups[0].headers[0];
 
@@ -328,46 +312,71 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
                 })}
               </Tbody>
             </Table>
+            <Center mt={4}>
+              <ButtonGroup>
+                <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+                  {"<<"}
+                </Button>
+                <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
+                  {"<"}
+                </Button>
+                <Button onClick={() => nextPage()} disabled={!canNextPage}>
+                  {">"}
+                </Button>
+                <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                  {">>"}
+                </Button>
+              </ButtonGroup>
+            </Center>
+            <Center mt={4}>
+              <Text mr={4}>
+                Page{" "}
+                <strong>
+                  {pageIndex + 1} of {pageOptions.length}
+                </strong>{" "}
+              </Text>
+              <Box>
+                <Select
+                  isFullWidth={false}
+                  value={pageSize}
+                  onChange={e => {
+                    setPageSize(Number(e.target.value));
+                  }}
+                >
+                  {[25, 50, 100].map(pageSizeOption => (
+                    <option key={pageSizeOption} value={pageSizeOption}>
+                      Show {pageSizeOption}
+                    </option>
+                  ))}
+                </Select>
+              </Box>
+            </Center>
           </Box>
         )}
       </Container>
 
       {/* Add Batch Modal */}
-      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} size="xl">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add New Batch</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <BatchCrudForm
-              mainnetProvider={mainnetProvider}
-              onUpdate={() => {
-                setIsAddModalOpen(false);
-                fetchBatches();
-              }}
-            />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <BatchCrudFormModal
+        mainnetProvider={mainnetProvider}
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onUpdate={() => {
+          setIsAddModalOpen(false);
+          fetchBatches();
+        }}
+      />
 
       {/* Edit Batch Modal */}
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} size="xl">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Edit Batch</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <BatchCrudForm
-              mainnetProvider={mainnetProvider}
-              batch={selectedBatch}
-              onUpdate={() => {
-                setIsEditModalOpen(false);
-                fetchBatches();
-              }}
-            />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <BatchCrudFormModal
+        mainnetProvider={mainnetProvider}
+        batch={selectedBatch}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onUpdate={() => {
+          setIsEditModalOpen(false);
+          fetchBatches();
+        }}
+      />
     </>
   );
 }

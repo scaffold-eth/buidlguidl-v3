@@ -32,31 +32,31 @@ import moment from "moment";
 
 const INITIAL_FORM_STATE = { batchStatus: BATCH_STATUS.CLOSED };
 
-// export function BatchCrudFormModal({ mainnetProvider, builder, isOpen, onClose, onUpdate }) {
-//   return (
-//     <Modal isOpen={isOpen} onClose={onClose}>
-//       <ModalOverlay />
-//       <ModalContent>
-//         <ModalHeader>Edit Builder</ModalHeader>
-//         <ModalCloseButton />
-//         <ModalBody p={6}>
-//           <BatchCrudForm
-//             builder={builder}
-//             mainnetProvider={mainnetProvider}
-//             onUpdate={() => {
-//               onClose();
-//               if (typeof onUpdate === "function") {
-//                 onUpdate();
-//               }
-//             }}
-//           />
-//         </ModalBody>
-//       </ModalContent>
-//     </Modal>
-//   );
-// }
+export function BatchCrudFormModal({ mainnetProvider, batch, isOpen, onClose, onUpdate }) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} size="xl">
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{batch ? "Edit Batch" : "Add New Batch"}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <BatchCrudForm
+            mainnetProvider={mainnetProvider}
+            batch={batch}
+            onUpdate={() => {
+              onClose();
+              if (typeof onUpdate === "function") {
+                onUpdate();
+              }
+            }}
+          />
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
 
-export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
+function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
   const address = useConnectedAddress();
   const isEditingBatch = !!batch;
 
@@ -167,7 +167,7 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
             <NumberDecrementStepper />
           </NumberInputStepper>
         </NumberInput>
-        <FormErrorMessage>Invalid address</FormErrorMessage>
+        <FormErrorMessage>Required batch number</FormErrorMessage>
       </FormControl>
       <FormControl mb={8} isRequired isInvalid={formErrors.batchStatus}>
         <FormLabel htmlFor="batchStatus">
@@ -188,7 +188,7 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
             <Radio value={BATCH_STATUS.OPEN}>{BATCH_STATUS.OPEN}</Radio>
           </Stack>
         </RadioGroup>
-        <FormErrorMessage>Required</FormErrorMessage>
+        <FormErrorMessage>Required batch status</FormErrorMessage>
       </FormControl>
       <FormControl mb={8} isRequired isInvalid={formErrors.batchStartDate}>
         <FormLabel htmlFor="batchStartDate">
@@ -200,9 +200,9 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
           value={formState.batchStartDate || ""}
           onChange={e => setFormState(prev => ({ ...prev, batchStartDate: e.target.value }))}
         />
-        <FormErrorMessage>Required</FormErrorMessage>
+        <FormErrorMessage>Required date</FormErrorMessage>
       </FormControl>
-      <FormControl mb={8} isRequired isInvalid={formErrors.telegramLink}>
+      <FormControl mb={8} isRequired isInvalid={formErrors.batchTelegramLink}>
         <FormLabel htmlFor="batchTelegramLink">
           <strong>Telegram Join Link</strong>
         </FormLabel>
@@ -212,7 +212,7 @@ export function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
           value={formState.batchTelegramLink || ""}
           onChange={e => setFormState(prev => ({ ...prev, batchTelegramLink: e.target.value }))}
         />
-        <FormErrorMessage>Required</FormErrorMessage>
+        <FormErrorMessage>Required link</FormErrorMessage>
       </FormControl>
       <FormControl mb={8} isInvalid={formErrors.batchContractAddress}>
         <FormLabel htmlFor="batchContractAddress">
