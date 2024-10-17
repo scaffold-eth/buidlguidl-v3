@@ -97,6 +97,12 @@ router.patch("/update", withRole("admin"), async (req, res) => {
   }
 
   let batch = await db.findBatchByNumber(batchNumber);
+  const batchById = await db.findBatchById(id);
+
+  if (batch.exists && batch.data.number !== batchById.data.number) {
+    res.status(400).send("The batch already exists");
+    return;
+  }
 
   const batchData = {
     number: Number(batchNumber),
@@ -114,6 +120,13 @@ router.patch("/update", withRole("admin"), async (req, res) => {
   batch = await db.findBatchByNumber(batchNumber);
   console.log("batch updated: ", batchNumber);
 
+  res.json(batch.data);
+});
+
+router.get("/:batchNumber", async (req, res) => {
+  console.log("GET /batches/:batchNumber", req.params.batchNumber);
+  const batchNumber = req.params.batchNumber;
+  const batch = await db.findBatchByNumber(batchNumber);
   res.json(batch.data);
 });
 

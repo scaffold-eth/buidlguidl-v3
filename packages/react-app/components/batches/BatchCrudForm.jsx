@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   FormControl,
   FormLabel,
@@ -6,7 +6,6 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  Select,
   useToast,
   useColorModeValue,
   FormErrorMessage,
@@ -24,11 +23,14 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
-import { USER_FUNCTIONS, USER_ROLES, BATCH_STATUS } from "../../helpers/constants";
+import { BATCH_STATUS } from "../../helpers/constants";
 import AddressInput from "../AddressInput";
 import useSignedRequest from "../../hooks/useSignedRequest";
 import useConnectedAddress from "../../hooks/useConnectedAddress";
 import moment from "moment";
+import { SERVER_URL as serverUrl } from "../../constants";
+import axios from "axios";
+import { debounce } from "lodash";
 
 const INITIAL_FORM_STATE = { batchStatus: BATCH_STATUS.CLOSED };
 
@@ -57,11 +59,15 @@ export function BatchCrudFormModal({ mainnetProvider, batch, isOpen, onClose, on
 }
 
 function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
+  const currentBatchNumber = batch?.number;
+
   const address = useConnectedAddress();
   const isEditingBatch = !!batch;
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [formErrors, setFormErrors] = useState({});
+  const [isBatchNumberTaken, setIsBatchNumberTaken] = useState(false);
+  const [isBatchNumberChanged, setIsBatchNumberChanged] = useState(false);
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
@@ -69,12 +75,52 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
   const { isLoading, makeSignedRequest } = useSignedRequest("batchCreate", address);
   const { isLoading: isLoadingEdit, makeSignedRequest: makeSignedRequestEdit } = useSignedRequest("batchEdit", address);
 
+  const fetchBatchData = useCallback(async batchNumber => {
+    try {
+      const response = await axios.get(`${serverUrl}/batches/${batchNumber}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching batch data:", error);
+      toast({
+        description: "Error fetching batch data. Please try again.",
+        status: "error",
+        variant: toastVariant,
+      });
+      return null;
+    }
+  });
+
+  const debouncedFetchBatchData = useCallback(
+    debounce(async batchNumber => {
+      if (batchNumber) {
+        const batchData = await fetchBatchData(batchNumber);
+        setIsBatchNumberTaken(!!batchData && batchNumber !== String(currentBatchNumber));
+      }
+    }, 300),
+    [fetchBatchData],
+  );
+
+  const handleBatchNumberChange = value => {
+    setFormState(prevFormState => ({
+      ...prevFormState,
+      batchNumber: value,
+      batchStatus: value === "" ? "" : prevFormState.batchStatus,
+    }));
+
+    setIsBatchNumberChanged(value !== String(currentBatchNumber));
+
+    if (value && isEditingBatch) {
+      debouncedFetchBatchData(value);
+    }
+  };
+
   useEffect(() => {
     if (isEditingBatch) {
       setFormState({
         id: batch.id,
         batchNumber: batch.number,
-        batchStatus: batch.status,
+        // Somehow led to errors when editing batch, thats why we set it to closed
+        batchStatus: batch.status || BATCH_STATUS.CLOSED,
         batchStartDate: moment(batch.startDate).format("YYYY-MM-DD"),
         batchTelegramLink: batch.telegramLink,
         batchContractAddress: batch.contractAddress,
@@ -84,7 +130,7 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
 
   const handleSubmit = async () => {
     const nextErrors = {
-      batchNumber: !formState.batchNumber || isNaN(formState.batchNumber),
+      batchNumber: !formState.batchNumber || isNaN(formState.batchNumber) || isBatchNumberTaken,
       batchStatus: !formState.batchStatus,
       batchStartDate: !formState.batchStartDate,
       batchTelegramLink: !formState.batchTelegramLink,
@@ -138,7 +184,7 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
 
   return (
     <>
-      <FormControl mb={8} isRequired isInvalid={formErrors.batchNumber}>
+      <FormControl mb={8} isRequired isInvalid={formErrors.batchNumber || isBatchNumberTaken}>
         <FormLabel htmlFor="batchNumber">
           <strong>Batch Number</strong>
         </FormLabel>
@@ -147,14 +193,8 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
           type="number"
           min={0}
           placeholder="Batch Number"
-          value={formState.batchNumber || ""}
-          onChange={value => {
-            setFormState(prevFormState => ({
-              ...prevFormState,
-              batchNumber: value,
-              batchStatus: value === "" ? "" : prevFormState.batchStatus,
-            }));
-          }}
+          value={formState.batchNumber !== undefined ? formState.batchNumber : ""}
+          onChange={handleBatchNumberChange}
         >
           <NumberInputField />
           <NumberInputStepper>
@@ -162,7 +202,13 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
             <NumberDecrementStepper />
           </NumberInputStepper>
         </NumberInput>
-        <FormErrorMessage>Required batch number</FormErrorMessage>
+        <FormErrorMessage>
+          {formErrors.batchNumber
+            ? "Required batch number"
+            : isBatchNumberTaken
+            ? "This batch number is already taken"
+            : null}
+        </FormErrorMessage>
       </FormControl>
       <FormControl mb={8} isRequired isInvalid={formErrors.batchStatus}>
         <FormLabel htmlFor="batchStatus">

@@ -65,7 +65,6 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   const [amountBatches, setAmountBatches] = useState();
   const [graduatesCount, setGraduatesCount] = useState({});
 
-  const [searchTerm, setSearchTerm] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const batchFiltering = (rows, id, filterValue) => {
@@ -211,7 +210,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
       return allColumns;
     },
     // eslint-disable-next-line
-    [userRole, batches, graduatesCount],
+    [userRole, graduatesCount],
   );
 
   const {

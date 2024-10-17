@@ -94,11 +94,18 @@ const getBuildersWithPendingEnsClaims = async () => {
 
 // --- Batches
 const findBatchByNumber = async batchNumber => {
-  const batchSnapshot = await database.collection("batches").doc(batchNumber).get();
-  if (!batchSnapshot.exists) {
+  const batchesSnapshot = await database.collection("batches").where("number", "==", Number(batchNumber)).get();
+  if (batchesSnapshot.empty) {
     return { exists: false };
   }
-  return { exists: true, data: { id: batchSnapshot.id, ...batchSnapshot.data() } };
+
+  const batchDoc = batchesSnapshot.docs[0];
+  return { exists: true, data: { id: batchDoc.id, ...batchDoc.data() } };
+};
+
+const findBatchById = async batchId => {
+  const batchDoc = await database.collection("batches").doc(batchId).get();
+  return { exists: true, data: { id: batchDoc.id, ...batchDoc.data() } };
 };
 
 const createBatch = async batchData => {
@@ -498,6 +505,7 @@ module.exports = {
   updateCohortData,
 
   findBatchByNumber,
+  findBatchById,
   createBatch,
   updateBatch,
 

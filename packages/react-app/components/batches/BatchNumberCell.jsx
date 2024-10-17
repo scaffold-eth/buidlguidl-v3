@@ -1,9 +1,11 @@
 import React from "react";
-import { Badge, Center, Flex } from "@chakra-ui/react";
+import { Badge, Flex } from "@chakra-ui/react";
 import { getStatusColor } from "./BatchStatusCell";
 
 const BatchNumberCell = ({ batch, status }) => {
-  if (!batch) return null;
+  // Check if batch is null, undefined, or an empty string
+  if (batch === null || batch === undefined || batch === "") return null;
+
   const colorScheme = getStatusColor(status);
   if (!colorScheme) {
     return null;
