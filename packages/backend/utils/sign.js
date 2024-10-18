@@ -156,6 +156,30 @@ const getSignMessageForId = async (messageId, options) => {
     case "devconVoucherClaim":
       return `I want to claim my Devcon 2024 Bangkok voucher as ${options.address}`;
 
+    case "batchCreate":
+      data = {
+        batchNumber: options.batchNumber,
+        batchStatus: options.batchStatus,
+        batchStartDate: options.batchStartDate,
+        batchTelegramLink: options.batchTelegramLink,
+        batchContractAddress: options.batchContractAddress,
+      };
+      return `I want to create a new batch as ${options.address}:\n\n${JSON.stringify(data, null, 2)}`;
+
+    case "batchEdit":
+      data = {
+        batchNumber: options.batchNumber,
+        batchStatus: options.batchStatus,
+        batchStartDate: options.batchStartDate,
+        batchTelegramLink: options.batchTelegramLink,
+        batchContractAddress: options.batchContractAddress,
+      };
+      return `I want to edit the batch "${options.batchNumber}" as ${options.address}:\n\n${JSON.stringify(
+        data,
+        null,
+        2,
+      )}`;
+
     default:
       return "Invalid signing option";
   }

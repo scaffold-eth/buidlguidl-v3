@@ -56,7 +56,7 @@ const findAllUsers = async () => {
 const findAllBatchedUsers = async () => {
   // get all users with a batch assigned (builderBatch prop is not null)
   const buildersSnapshot = await database.collection("users").where("batch.number", "!=", null).get();
-  console.log("buildersSnapshot", buildersSnapshot.docs.length);
+  console.log("batchBuildersSnapshot", buildersSnapshot.docs.length);
   // Filter out disabled user. To use it directly on the query,
   // we should create the disabled flag in all documents.
   return buildersSnapshot.docs
@@ -81,6 +81,44 @@ const getBuildersWithPendingEnsClaims = async () => {
   const usersEnsPendingSnapshot = await database.collection("users").where("ensClaimData.provided", "==", false).get();
 
   return usersEnsPendingSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+// --- Batches
+
+const findAllBatches = async () => {
+  const batchesSnapshot = await database.collection("batches").get();
+  console.log("batchesSnapshot", batchesSnapshot.docs.length);
+  return batchesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+const findBatchByNumber = async batchNumber => {
+  const batchesSnapshot = await database.collection("batches").where("number", "==", Number(batchNumber)).get();
+  if (batchesSnapshot.empty) {
+    return { exists: false };
+  }
+
+  const batchDoc = batchesSnapshot.docs[0];
+  return { exists: true, data: { id: batchDoc.id, ...batchDoc.data() } };
+};
+
+const findBatchById = async batchId => {
+  const batchDoc = await database.collection("batches").doc(batchId).get();
+  return { exists: true, data: { id: batchDoc.id, ...batchDoc.data() } };
+};
+
+const createBatch = async batchData => {
+  const batchesSnapshot = await database.collection("batches").get();
+
+  // Index starts with 0
+  const newBatchIndex = String(batchesSnapshot.docs.length);
+
+  const batchDoc = database.collection("batches").doc(newBatchIndex);
+  await batchDoc.set(batchData);
+};
+
+const updateBatch = async (id, batchData) => {
+  const batchDoc = database.collection("batches").doc(String(id));
+  await batchDoc.update(batchData);
 };
 
 // --- Events
@@ -462,6 +500,12 @@ module.exports = {
   findUserByAddress,
   findAllCohorts,
   updateCohortData,
+
+  findAllBatches,
+  findBatchByNumber,
+  findBatchById,
+  createBatch,
+  updateBatch,
 
   createEvent,
   findAllEvents,

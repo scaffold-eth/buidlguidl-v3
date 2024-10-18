@@ -30,7 +30,12 @@ export const USER_FUNCTIONS = {
   advisor: { label: "Advisor", graphic: "cleric_thumb.png", pluralLabel: "Advisors" },
 };
 
-export const BATCH_STATUS = {
+export const BATCH_BUILDER_STATUS = {
   CANDIDATE: "candidate",
   GRADUATE: "graduate",
+};
+
+export const BATCH_STATUS = {
+  CLOSED: "closed",
+  OPEN: "open",
 };

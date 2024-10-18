@@ -45,6 +45,9 @@ const findAllUsers = db.findAllUsers;
 const findAllBatchedUsers = db.findAllBatchedUsers;
 
 /**
+ */
+
+/**
  *
  * @param {Address} builderAddress
  * @returns {{
@@ -56,6 +59,13 @@ const findAllBatchedUsers = db.findAllBatchedUsers;
  * }}
  */
 const findUserByAddress = db.findUserByAddress;
+
+// --- Batches
+const findAllBatches = db.findAllBatches;
+const findBatchByNumber = db.findBatchByNumber;
+const findBatchById = db.findBatchById;
+const createBatch = db.createBatch;
+const updateBatch = db.updateBatch;
 
 // --- Cohorts
 /**
@@ -231,6 +241,12 @@ module.exports = {
   getBuildersWithPendingEnsClaims,
   findAllCohorts,
   updateCohortData,
+
+  findAllBatches,
+  findBatchByNumber,
+  findBatchById,
+  createBatch,
+  updateBatch,
 
   createEvent,
   findAllEvents,
