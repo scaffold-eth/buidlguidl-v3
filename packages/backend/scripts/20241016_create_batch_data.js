@@ -105,14 +105,14 @@ const batches = [
     status: "closed",
     telegramLink: "https://t.me/+7MtWL2ZlRjhlZGUx",
     startDate: 1728959980000,
-    contractAddress: "0x107d6F280a05f07B59039143CA21e3f917AAFA30",
+    contractAddress: "0x0e51b39aa58887b43c14E9C831E77eE52BA38A29",
   },
   {
     number: 11,
     status: "open",
     telegramLink: "https://t.me/+uqfwR0bnF8ZhZDcy",
     startDate: 1731983980000,
-    contractAddress: "0x107d6F280a05f07B59039143CA21e3f917AAFA30",
+    contractAddress: "",
   },
 ];
 
