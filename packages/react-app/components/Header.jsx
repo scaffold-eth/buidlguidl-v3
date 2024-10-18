@@ -188,12 +188,12 @@ export default function Header({
                   </NextLink>
                 </MenuItem>
                 <MenuItem>
-                  <NextLink href="/admin/batches" exact>
+                  <NextLink href="/admin/batchesOverview" exact>
                     Batches
                   </NextLink>
                 </MenuItem>
                 <MenuItem>
-                  <NextLink href="/admin/batchBuilders" exact>
+                  <NextLink href="/admin/batches" exact>
                     Batch Builders
                   </NextLink>
                 </MenuItem>
