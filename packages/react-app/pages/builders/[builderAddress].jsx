@@ -239,7 +239,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           )}
         </GridItem>
         <GridItem colSpan={{ base: 1, xl: 3 }}>
-          {isMyProfile && <BuilderNotifications builder={builder} />}
+          {isMyProfile && <BuilderNotifications builder={builder} userProvider={userProvider} onUpdate={refreshData} />}
           <Flex spacing={4} mb={8} direction={{ base: "column-reverse", md: "row" }}>
             {isLoadingBuilder && <BuilderProfileStreamSkeleton />}
             {StreamInfo}

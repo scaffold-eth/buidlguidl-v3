@@ -124,6 +124,15 @@ const getSignMessageForId = async (messageId, options) => {
         reachedOut ? "reached out" : "NOT reached out"
       }`;
 
+    case "builderUpdateBatch":
+      // We do this because of the way GET params work (can't send JS objects as in POST requests)
+      if (typeof options.batch === "string") {
+        data = options.batch;
+      } else {
+        data = JSON.stringify(options.batch);
+      }
+      return `I’d like to request Telegram access for the batch program using address ${options.address}\n\n\nData sent: ${data}`;
+
     case "builderUpdateScholarship":
       const scholarship =
         typeof options.scholarship === "boolean" ? options.scholarship : options.scholarship === "true";

@@ -15,9 +15,10 @@ const SRE_BACKEND = "https://scaffold-directory-dev.ew.r.appspot.com";
  */
 async function checkEligibility(builderAddress) {
   const END_OF_AUGUST_2024 = 1725148799000;
+  const MID_OCTOBER_2024 = 1729036825000;
   const builder = await db.findUserByAddress(builderAddress);
 
-  if (builder?.data?.batch?.number && builder?.data?.creationTimestamp < END_OF_AUGUST_2024) {
+  if (builder?.data?.batch?.number && builder?.data?.creationTimestamp < MID_OCTOBER_2024) {
     return { isEligible: true, type: "batch" };
   }
 
