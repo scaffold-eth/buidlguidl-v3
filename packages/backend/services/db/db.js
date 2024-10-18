@@ -47,8 +47,6 @@ const findAllBatchedUsers = db.findAllBatchedUsers;
 /**
  */
 
-const findAllBatches = db.findAllBatches;
-
 /**
  *
  * @param {Address} builderAddress
@@ -63,6 +61,7 @@ const findAllBatches = db.findAllBatches;
 const findUserByAddress = db.findUserByAddress;
 
 // --- Batches
+const findAllBatches = db.findAllBatches;
 const findBatchByNumber = db.findBatchByNumber;
 const findBatchById = db.findBatchById;
 const createBatch = db.createBatch;
@@ -238,12 +237,12 @@ module.exports = {
   updateUser,
   findAllUsers,
   findAllBatchedUsers,
-  findAllBatches,
   findUserByAddress,
   getBuildersWithPendingEnsClaims,
   findAllCohorts,
   updateCohortData,
 
+  findAllBatches,
   findBatchByNumber,
   findBatchById,
   createBatch,

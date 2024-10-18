@@ -64,15 +64,6 @@ const findAllBatchedUsers = async () => {
     .map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-const findAllBatches = async () => {
-  // get all users with a batch assigned (builderBatch prop is not null)
-  const batchesSnapshot = await database.collection("batches").get();
-  console.log("batchesSnapshot", batchesSnapshot.docs.length);
-  // Filter out disabled user. To use it directly on the query,
-  // we should create the disabled flag in all documents.
-  return batchesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-};
-
 const findUserByAddress = async builderAddress => {
   const builderSnapshot = await getUserSnapshotById(builderAddress);
   if (!builderSnapshot.exists) {
@@ -93,6 +84,13 @@ const getBuildersWithPendingEnsClaims = async () => {
 };
 
 // --- Batches
+
+const findAllBatches = async () => {
+  const batchesSnapshot = await database.collection("batches").get();
+  console.log("batchesSnapshot", batchesSnapshot.docs.length);
+  return batchesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
 const findBatchByNumber = async batchNumber => {
   const batchesSnapshot = await database.collection("batches").where("number", "==", Number(batchNumber)).get();
   if (batchesSnapshot.empty) {
@@ -499,11 +497,11 @@ module.exports = {
   updateUser,
   findAllUsers,
   findAllBatchedUsers,
-  findAllBatches,
   findUserByAddress,
   findAllCohorts,
   updateCohortData,
 
+  findAllBatches,
   findBatchByNumber,
   findBatchById,
   createBatch,

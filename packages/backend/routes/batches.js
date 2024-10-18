@@ -13,7 +13,6 @@ router.post("/create", withRole("admin"), async (req, res) => {
     return;
   }
 
-  // ToDo. Param validation.
   const { signature, batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress } = req.body;
   const address = req.address;
   console.log("POST /batches/create", address, batchNumber);
@@ -41,7 +40,6 @@ router.post("/create", withRole("admin"), async (req, res) => {
 
   let batch = await db.findBatchByNumber(batchNumber);
 
-  // TODO: show it in the front-end
   if (batch.exists) {
     res.status(400).send("The batch already exists");
     return;
