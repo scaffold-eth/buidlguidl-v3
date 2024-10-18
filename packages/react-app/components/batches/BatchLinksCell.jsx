@@ -7,7 +7,7 @@ const BatchLinksCell = ({ batch }) => {
   }
   return (
     <HStack spacing={3} alignItems="center" justifyContent="flex-start">
-      <SocialLink id="etherscan" value={batch.contractAddress} />
+      <SocialLink id="etherscanOP" value={batch.contractAddress} />
       <SocialLink id="telegram" value={batch.telegram} />
       <SocialLink id="website" value={batch.number} />
       <SocialLink id="github" value={`/BuidlGuidl/batch${batch.number}.buidlguidl.com`} />

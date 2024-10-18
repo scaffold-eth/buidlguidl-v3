@@ -61,9 +61,11 @@ const importSeed = async database => {
   });
 
   // Batches
-  Object.entries(seedToImport.batches).forEach(([batchId, batchData]) => {
-    database.collection("batches").doc(batchId).set(batchData);
-  });
+  if (seedToImport.batches) {
+    Object.entries(seedToImport.batches).forEach(([batchId, batchData]) => {
+      database.collection("batches").doc(batchId).set(batchData);
+    });
+  }
 };
 
 module.exports = {

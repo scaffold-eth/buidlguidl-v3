@@ -81,6 +81,22 @@
       }
     }
   },
+  "batches": {
+    "1": {
+      "number": 1,
+      "status": "closed",
+      "telegramLink": "https://t.me/+RdnBKIvVnDw5MTky",
+      "startDate": 1725840000000,
+      "contractAddress": "0x2eA63c9C9C114ae85b1027697A906420a23e8572"
+    },
+    "2": {
+      "number": 2,
+      "status": "open",
+      "telegramLink": "https://t.me/+RdnBKIvVnDw5MTky",
+      "startDate": 1728950400000,
+      "contractAddress": "0x2eA63c9C9C114ae85b1027697A906420a23e8572"
+    }
+  },
   "builds": {
     "06bb3c9d-784b-44d1-b7e2-1ae5affdfa8b": {
       "branch": "https://github.com/moonshotcollective/scaffold-directory",

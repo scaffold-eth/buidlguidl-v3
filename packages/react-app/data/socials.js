@@ -59,12 +59,19 @@ export const socials = {
     getLink: value => `https://etherscan.io/address/${value}`,
     weight: 6,
   },
+  etherscanOP: {
+    label: "EtherscanOP",
+    placeholder: "Your EtherscanOP address",
+    icon: EthIcon,
+    getLink: value => `https://optimistic.etherscan.io/address/${value}`,
+    weight: 7,
+  },
   website: {
     label: "Website",
     placeholder: "Your website URL",
     icon: WebsiteIcon,
     getLink: value => `https://batch${value}.buidlguidl.com`,
-    weight: 7,
+    weight: 8,
   },
 };
 

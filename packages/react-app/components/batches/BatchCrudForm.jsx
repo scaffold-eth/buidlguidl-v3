@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   FormControl,
   FormLabel,
@@ -75,30 +75,32 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
   const { isLoading, makeSignedRequest } = useSignedRequest("batchCreate", address);
   const { isLoading: isLoadingEdit, makeSignedRequest: makeSignedRequestEdit } = useSignedRequest("batchEdit", address);
 
-  const fetchBatchData = useCallback(async batchNumber => {
-    try {
-      const response = await axios.get(`${serverUrl}/batches/${batchNumber}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching batch data:", error);
-      toast({
-        description: "Error fetching batch data. Please try again.",
-        status: "error",
-        variant: toastVariant,
-      });
-      return null;
-    }
-  });
+  const fetchBatchData = useCallback(
+    async batchNumber => {
+      try {
+        const response = await axios.get(`${serverUrl}/batches/${batchNumber}`);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching batch data:", error);
+        toast({
+          description: "Error fetching batch data. Please try again.",
+          status: "error",
+          variant: toastVariant,
+        });
+        return null;
+      }
+    },
+    [toast, toastVariant],
+  );
 
-  const debouncedFetchBatchData = useCallback(
+  const debouncedFetchBatchData = useRef(
     debounce(async batchNumber => {
       if (batchNumber) {
         const batchData = await fetchBatchData(batchNumber);
         setIsBatchNumberTaken(!!batchData && batchNumber !== String(currentBatchNumber));
       }
     }, 300),
-    [fetchBatchData],
-  );
+  ).current;
 
   const handleBatchNumberChange = value => {
     setFormState(prevFormState => ({
