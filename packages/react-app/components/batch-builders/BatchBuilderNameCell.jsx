@@ -2,7 +2,7 @@ import React from "react";
 import { Badge, Center, Link } from "@chakra-ui/react";
 import { BATCH_BUILDER_STATUS } from "../../helpers/constants";
 
-const BuilderBatchNumberCell = ({ batch }) => {
+const BuilderBatchNameCell = ({ batch }) => {
   if (!batch || batch?.number === "") return null;
 
   return (
@@ -14,4 +14,4 @@ const BuilderBatchNumberCell = ({ batch }) => {
   );
 };
 
-export default BuilderBatchNumberCell;
+export default BuilderBatchNameCell;

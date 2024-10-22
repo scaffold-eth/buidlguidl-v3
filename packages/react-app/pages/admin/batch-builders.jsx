@@ -34,7 +34,7 @@ import SocialLink from "../../components/SocialLink";
 import Address from "../../components/Address";
 import { bySocialWeight } from "../../data/socials";
 import { USER_ROLES } from "../../helpers/constants";
-import BuilderBatchNumberCell from "../../components/batch-builders/BatchBuilderNumberCell";
+import BuilderBatchNameCell from "../../components/batch-builders/BatchBuilderNameCell";
 import BuilderFlags from "../../components/builder/BuilderFlags";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import BatchColumnFilter from "../../components/BatchColumnFilter";
@@ -196,7 +196,7 @@ export default function BatchBuilderListView({ serverUrl, mainnetProvider, userR
   const BuilderStatusCellComponent = ({ value }) => <BuilderStatusCell status={value} />;
   const BuilderBuildsCellComponent = ({ value }) => <BuilderBuildsCell buildCount={value} />;
   const BatchTableCellComponent = ({ value }) => {
-    return <BuilderBatchNumberCell batch={value} />;
+    return <BuilderBatchNameCell batch={value} />;
   };
   const BuilderSocialLinksCellComponent = ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />;
   const UserCreatedCellComponent = ({ value }) => {

@@ -4,14 +4,14 @@ import { SERVER_URL as serverUrl } from "../../constants";
 export const postCreateBatch = async (
   address,
   signature,
-  { batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress },
+  { batchName, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress },
 ) => {
   try {
     await axios.post(
       `${serverUrl}/batches/create`,
       {
         signature,
-        batchNumber,
+        batchName,
         batchStatus,
         batchStartDate,
         batchTelegramLink,
@@ -33,7 +33,7 @@ export const postCreateBatch = async (
 export const patchEditBatch = async (
   address,
   signature,
-  { batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress, id },
+  { batchName, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress, id },
 ) => {
   try {
     await axios.patch(
@@ -41,7 +41,7 @@ export const patchEditBatch = async (
       {
         signature,
         id,
-        batchNumber,
+        batchName,
         batchStatus,
         batchStartDate,
         batchTelegramLink,

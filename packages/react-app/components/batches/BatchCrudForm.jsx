@@ -15,11 +15,6 @@ import {
   ModalCloseButton,
   ModalBody,
   Modal,
-  NumberInputField,
-  NumberInput,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  NumberInputStepper,
   Input,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
@@ -59,15 +54,14 @@ export function BatchCrudFormModal({ mainnetProvider, batch, isOpen, onClose, on
 }
 
 function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
-  const currentBatchNumber = batch?.number;
+  const currentbatchName = batch?.name;
 
   const address = useConnectedAddress();
   const isEditingBatch = !!batch;
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [formErrors, setFormErrors] = useState({});
-  const [isBatchNumberTaken, setIsBatchNumberTaken] = useState(false);
-  const [isBatchNumberChanged, setIsBatchNumberChanged] = useState(false);
+  const [isbatchNameTaken, setIsbatchNameTaken] = useState(false);
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
@@ -76,9 +70,9 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
   const { isLoading: isLoadingEdit, makeSignedRequest: makeSignedRequestEdit } = useSignedRequest("batchEdit", address);
 
   const fetchBatchData = useCallback(
-    async batchNumber => {
+    async batchName => {
       try {
-        const response = await axios.get(`${serverUrl}/batches/${batchNumber}`);
+        const response = await axios.get(`${serverUrl}/batches/${batchName}`);
         return response.data;
       } catch (error) {
         console.error("Error fetching batch data:", error);
@@ -94,22 +88,20 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
   );
 
   const debouncedFetchBatchData = useRef(
-    debounce(async batchNumber => {
-      if (batchNumber) {
-        const batchData = await fetchBatchData(batchNumber);
-        setIsBatchNumberTaken(!!batchData && batchNumber !== String(currentBatchNumber));
+    debounce(async batchName => {
+      if (batchName) {
+        const batchData = await fetchBatchData(batchName);
+        setIsbatchNameTaken(!!batchData && batchName !== String(currentbatchName));
       }
     }, 300),
   ).current;
 
-  const handleBatchNumberChange = value => {
+  const handlebatchNameChange = value => {
     setFormState(prevFormState => ({
       ...prevFormState,
-      batchNumber: value,
+      batchName: value,
       batchStatus: value === "" ? "" : prevFormState.batchStatus,
     }));
-
-    setIsBatchNumberChanged(value !== String(currentBatchNumber));
 
     if (value && isEditingBatch) {
       debouncedFetchBatchData(value);
@@ -120,7 +112,7 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
     if (isEditingBatch) {
       setFormState({
         id: batch.id,
-        batchNumber: batch.number,
+        batchName: batch.name,
         // Somehow led to errors when editing batch, thats why we set it to closed
         batchStatus: batch.status || BATCH_STATUS.CLOSED,
         batchStartDate: moment(batch.startDate).format("YYYY-MM-DD"),
@@ -132,7 +124,7 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
 
   const handleSubmit = async () => {
     const nextErrors = {
-      batchNumber: !formState.batchNumber || isNaN(formState.batchNumber) || isBatchNumberTaken,
+      batchName: !formState.batchName || isbatchNameTaken,
       batchStatus: !formState.batchStatus,
       batchStartDate: !formState.batchStartDate,
       batchTelegramLink: !formState.batchTelegramLink,
@@ -150,7 +142,7 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
       selectedDate.setUTCHours(17 + 7, 0, 0, 0);
 
       const requestPayload = {
-        batchNumber: String(formState.batchNumber),
+        batchName: formState.batchName,
         batchStatus: formState.batchStatus,
         batchStartDate: String(selectedDate.getTime()),
         batchTelegramLink: formState.batchTelegramLink,
@@ -186,30 +178,18 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
 
   return (
     <>
-      <FormControl mb={8} isRequired isInvalid={formErrors.batchNumber || isBatchNumberTaken}>
-        <FormLabel htmlFor="batchNumber">
-          <strong>Batch Number</strong>
+      <FormControl mb={8} isRequired isInvalid={formErrors.batchName || isbatchNameTaken}>
+        <FormLabel htmlFor="batchName">
+          <strong>Batch Name</strong>
         </FormLabel>
-        <NumberInput
-          id="batchNumber"
-          type="number"
-          min={0}
-          placeholder="Batch Number"
-          value={formState.batchNumber !== undefined ? formState.batchNumber : ""}
-          onChange={handleBatchNumberChange}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
+        <Input
+          id="batchName"
+          placeholder="Batch Name"
+          value={formState.batchName || ""}
+          onChange={e => handlebatchNameChange(e.target.value)}
+        />
         <FormErrorMessage>
-          {formErrors.batchNumber
-            ? "Required batch number"
-            : isBatchNumberTaken
-            ? "This batch number is already taken"
-            : null}
+          {formErrors.batchName ? "Required batch name" : isbatchNameTaken ? "This batch name is already taken" : null}
         </FormErrorMessage>
       </FormControl>
       <FormControl mb={8} isRequired isInvalid={formErrors.batchStatus}>

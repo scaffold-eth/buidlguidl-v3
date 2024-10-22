@@ -91,8 +91,8 @@ const findAllBatches = async () => {
   return batchesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-const findBatchByNumber = async batchNumber => {
-  const batchesSnapshot = await database.collection("batches").where("number", "==", Number(batchNumber)).get();
+const findBatchByName = async batchName => {
+  const batchesSnapshot = await database.collection("batches").where("name", "==", batchName).get();
   if (batchesSnapshot.empty) {
     return { exists: false };
   }
@@ -497,7 +497,7 @@ module.exports = {
   updateCohortData,
 
   findAllBatches,
-  findBatchByNumber,
+  findBatchByName,
   findBatchById,
   createBatch,
   updateBatch,

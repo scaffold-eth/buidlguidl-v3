@@ -158,7 +158,7 @@ const getSignMessageForId = async (messageId, options) => {
 
     case "batchCreate":
       data = {
-        batchNumber: options.batchNumber,
+        batchName: options.batchName,
         batchStatus: options.batchStatus,
         batchStartDate: options.batchStartDate,
         batchTelegramLink: options.batchTelegramLink,
@@ -168,13 +168,13 @@ const getSignMessageForId = async (messageId, options) => {
 
     case "batchEdit":
       data = {
-        batchNumber: options.batchNumber,
+        batchName: options.batchName,
         batchStatus: options.batchStatus,
         batchStartDate: options.batchStartDate,
         batchTelegramLink: options.batchTelegramLink,
         batchContractAddress: options.batchContractAddress,
       };
-      return `I want to edit the batch "${options.batchNumber}" as ${options.address}:\n\n${JSON.stringify(
+      return `I want to edit the batch "${options.batchName}" as ${options.address}:\n\n${JSON.stringify(
         data,
         null,
         2,

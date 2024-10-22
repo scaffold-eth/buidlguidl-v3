@@ -23,7 +23,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 
-import BatchNumberCell from "../../components/batches/BatchNumberCell";
+import BatchNameCell from "../../components/batches/BatchNameCell";
 import { SearchIcon, TriangleDownIcon, TriangleUpIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { useTable, usePagination, useSortBy, useFilters } from "react-table";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
@@ -82,7 +82,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
       const fetchedBatches = await axios.get(serverUrl + serverPathBatches);
       const processedBatches = fetchedBatches.data.map(batch => ({
         batch: batch,
-        batchNumber: batch.number,
+        batchName: batch.name,
         status: batch.status,
         startDate: batch.startDate,
       }));
@@ -101,12 +101,12 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
 
     batches.forEach(
       batch => {
-        const batchNumber = batch.batchNumber;
-        graduatesCounts[batchNumber] = 0;
+        const batchName = batch.batchName;
+        graduatesCounts[batchName] = 0;
 
         fetchedBatchGraduateBuilders.data.forEach(builder => {
-          if (builder.batch && builder.batch.number === String(batchNumber)) {
-            graduatesCounts[batchNumber]++;
+          if (builder.batch && builder.batch.number === String(batchName)) {
+            graduatesCounts[batchName]++;
           }
         });
       },
@@ -126,8 +126,8 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     }
   }, [batches, fetchGraduatesCount]);
 
-  const BatchNumberCellComponent = ({ row }) => (
-    <BatchNumberCell batch={row.original.batchNumber} status={row.original.status} />
+  const BatchNameCellComponent = ({ row }) => (
+    <BatchNameCell batch={row.original.batchName} status={row.original.status} />
   );
   const BatchCreatedCellComponent = ({ value }) => {
     return <ExactDateWithTooltip timestamp={value} />;
@@ -135,7 +135,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   const BatchLinksCellComponent = ({ value }) => <BatchLinksCell batch={value} />;
   const BatchStatusCellComponent = ({ value }) => <BatchStatusCell status={value} />;
   const BatchGraduatesCellComponent = ({ row }) => {
-    const count = graduatesCount[row.original.batchNumber] || 0;
+    const count = graduatesCount[row.original.batchName] || 0;
     return <Text>{count}</Text>;
   };
 
@@ -163,11 +163,12 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
       const allColumns = [
         {
           Header: "Batch",
-          accessor: "batchNumber",
+          accessor: "batchName",
           canFilter: true,
+          disableSortBy: true,
           Filter: BatchColumnFilter,
           filter: batchFiltering,
-          Cell: BatchNumberCellComponent,
+          Cell: BatchNameCellComponent,
         },
         {
           Header: "Status",
@@ -184,7 +185,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
         },
         {
           Header: "Graduates",
-          accessor: row => graduatesCount[row.batchNumber] || 0,
+          accessor: row => graduatesCount[row.batchName] || 0,
           disableFilters: true,
           Cell: BatchGraduatesCellComponent,
         },
@@ -232,7 +233,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     {
       columns,
       data: batches,
-      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "batchNumber", desc: true }], []) },
+      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "startDate", desc: true }], []) },
     },
     useFilters,
     useSortBy,

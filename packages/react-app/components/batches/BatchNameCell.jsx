@@ -2,7 +2,7 @@ import React from "react";
 import { Badge, Flex } from "@chakra-ui/react";
 import { getStatusColor } from "./BatchStatusCell";
 
-const BatchNumberCell = ({ batch, status }) => {
+const BatchNameCell = ({ batch, status }) => {
   // Check if batch is null, undefined, or an empty string
   if (batch === null || batch === undefined || batch === "") return null;
 
@@ -20,4 +20,4 @@ const BatchNumberCell = ({ batch, status }) => {
   );
 };
 
-export default BatchNumberCell;
+export default BatchNameCell;

@@ -13,15 +13,15 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/create", withRole("admin"), async (req, res) => {
-  const neededBodyProps = ["batchNumber", "batchStatus", "batchStartDate", "batchTelegramLink"];
+  const neededBodyProps = ["batchName", "batchStatus", "batchStartDate", "batchTelegramLink"];
   if (neededBodyProps.some(prop => req.body[prop] === undefined)) {
     res.status(400).send(`Missing required body property. Required: ${neededBodyProps.join(", ")}`);
     return;
   }
 
-  const { signature, batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress } = req.body;
+  const { signature, batchName, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress } = req.body;
   const address = req.address;
-  console.log("POST /batches/create", address, batchNumber);
+  console.log("POST /batches/create", address, batchName);
 
   if (batchContractAddress && !ethers.utils.isAddress(batchContractAddress)) {
     res.status(400).send("Invalid address");
@@ -31,7 +31,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
   const verifyOptions = {
     messageId: "batchCreate",
     address,
-    batchNumber,
+    batchName,
     batchStatus,
     batchStartDate: String(batchStartDate),
     batchTelegramLink,
@@ -44,7 +44,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
     return;
   }
 
-  let batch = await db.findBatchByNumber(batchNumber);
+  let batch = await db.findBatchByName(batchName);
 
   if (batch.exists) {
     res.status(400).send("The batch already exists");
@@ -52,7 +52,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
   }
 
   const batchData = {
-    number: Number(batchNumber),
+    name: batchName,
     status: batchStatus,
     startDate: Number(batchStartDate),
     telegramLink: batchTelegramLink,
@@ -64,8 +64,8 @@ router.post("/create", withRole("admin"), async (req, res) => {
 
   // Create batch.
   await db.createBatch(batchData);
-  batch = await db.findBatchByNumber(batchNumber);
-  console.log("New batch created: ", batchNumber);
+  batch = await db.findBatchByName(batchName);
+  console.log("New batch created: ", batchName);
   // TODO: create event, do we need it for batches?
   //   const event = createEvent(EVENT_TYPES.USER_CREATE, { userAddress: builderAddress }, signature);
   //   db.createEvent(event); // INFO: async, no await here
@@ -74,20 +74,20 @@ router.post("/create", withRole("admin"), async (req, res) => {
 });
 
 router.patch("/update", withRole("admin"), async (req, res) => {
-  const neededBodyProps = ["batchNumber", "batchStatus", "batchStartDate", "batchTelegramLink"];
+  const neededBodyProps = ["batchName", "batchStatus", "batchStartDate", "batchTelegramLink"];
   if (neededBodyProps.some(prop => req.body[prop] === undefined)) {
     res.status(400).send(`Missing required body property. Required: ${neededBodyProps.join(", ")}`);
     return;
   }
 
-  const { signature, batchNumber, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress, id } = req.body;
+  const { signature, batchName, batchStatus, batchStartDate, batchTelegramLink, batchContractAddress, id } = req.body;
   const address = req.address;
-  console.log("PATCH /batches/update", address, batchNumber);
+  console.log("PATCH /batches/update", address, batchName);
 
   const verifyOptions = {
     messageId: "batchEdit",
     address,
-    batchNumber,
+    batchName,
     batchStatus,
     batchStartDate,
     batchTelegramLink,
@@ -100,7 +100,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     return;
   }
 
-  let batch = await db.findBatchByNumber(batchNumber);
+  let batch = await db.findBatchByName(batchName);
   const batchById = await db.findBatchById(id);
 
   if (batch.exists && batch.data.number !== batchById.data.number) {
@@ -109,7 +109,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
   }
 
   const batchData = {
-    number: Number(batchNumber),
+    name: batchName,
     status: batchStatus,
     startDate: Number(batchStartDate),
     telegramLink: batchTelegramLink,
@@ -121,16 +121,16 @@ router.patch("/update", withRole("admin"), async (req, res) => {
 
   //   Update batch
   await db.updateBatch(id, batchData);
-  batch = await db.findBatchByNumber(batchNumber);
-  console.log("batch updated: ", batchNumber);
+  batch = await db.findBatchByName(batchName);
+  console.log("batch updated: ", batchName);
 
   res.json(batch.data);
 });
 
-router.get("/:batchNumber", async (req, res) => {
-  console.log("GET /batches/:batchNumber", req.params.batchNumber);
-  const batchNumber = req.params.batchNumber;
-  const batch = await db.findBatchByNumber(batchNumber);
+router.get("/:batchName", async (req, res) => {
+  console.log("GET /batches/:batchName", req.params.batchName);
+  const batchName = req.params.batchName;
+  const batch = await db.findBatchByName(batchName);
   res.json(batch.data);
 });
 
