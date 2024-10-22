@@ -39,7 +39,7 @@ const batches = [
   {
     name: "0",
     status: "closed",
-    telegramLink: "https://t.me/+RdnBKIvVnDw5MTky",
+    telegramLink: "https://t.me/+ZTk_VugeviswOGYx",
     startDate: 1702377580000,
     contractAddress: "0x0A7d97d392e7400D15460ae0C9799951a3719393",
   },
@@ -74,21 +74,21 @@ const batches = [
   {
     name: "5",
     status: "closed",
-    telegramLink: "https://t.me/+RdnBKIvVnDw5MTky",
+    telegramLink: "https://t.me/+ZUxysiR4LK9hZDdh",
     startDate: 1714991980000,
     contractAddress: "0xbca09b5c1Fc2bF789Dd74c2fF57443CE90221501",
   },
   {
     name: "6",
     status: "closed",
-    telegramLink: "https://t.me/+RdnBKIvVnDw5MTky",
+    telegramLink: "https://t.me/+ofFvVTQ7zyc2YjVh",
     startDate: 1717411180000,
     contractAddress: "0x94255172df94530E24cBbcbD3B981C69430431aa",
   },
   {
     name: "7",
     status: "closed",
-    telegramLink: "https://t.me/+RdnBKIvVnDw5MTky",
+    telegramLink: "https://t.me/+oueOa47o0owyOTVh",
     startDate: 1720435180000,
     contractAddress: "0x216E6213DE1740a3f02dd24B1A08DCe95C82dE84",
   },
