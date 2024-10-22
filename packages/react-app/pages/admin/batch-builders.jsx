@@ -39,7 +39,7 @@ import BuilderFlags from "../../components/builder/BuilderFlags";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import BatchColumnFilter from "../../components/BatchColumnFilter";
 
-const serverPath = "/builders/batchBuilders";
+const serverPath = "/builders/batches";
 
 const builderCreated = builder => {
   return builder?.creationTimestamp || 0;
