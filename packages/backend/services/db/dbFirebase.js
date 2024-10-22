@@ -107,13 +107,8 @@ const findBatchById = async batchId => {
 };
 
 const createBatch = async batchData => {
-  const batchesSnapshot = await database.collection("batches").get();
-
-  // Index starts with 0
-  const newBatchIndex = String(batchesSnapshot.docs.length);
-
-  const batchDoc = database.collection("batches").doc(newBatchIndex);
-  await batchDoc.set(batchData);
+  const batchDoc = await database.collection("batches").add(batchData);
+  return batchDoc;
 };
 
 const updateBatch = async (id, batchData) => {

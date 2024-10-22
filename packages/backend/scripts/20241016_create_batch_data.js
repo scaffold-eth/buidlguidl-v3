@@ -28,7 +28,7 @@ if (process.env.FIRESTORE_EMULATOR_HOST) {
 // // Docs: https://firebase.google.com/docs/firestore/quickstart#node.js_1
 const db = firebaseAdmin.firestore();
 
-// Missing telegram links up to batch 7 - link to dummy tg group
+// Add batch data manually to not reveal data
 const batches = [
   {
     number: 0,
@@ -119,9 +119,9 @@ const batches = [
 const main = async () => {
   try {
     console.log("Creating batches...");
-    const batchPromises = batches.map(async (batch, index) => {
-      await db.collection("batches").doc(index.toString()).set(batch);
-      console.log(`Created batch ${batch.number} with index ${index}`);
+    const batchPromises = batches.map(async batch => {
+      await db.collection("batches").add(batch);
+      console.log(`Created batch ${batch.number} with index ${batch.id}`);
     });
 
     await Promise.all(batchPromises);
