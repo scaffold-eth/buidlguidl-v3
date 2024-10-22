@@ -20,7 +20,7 @@ router.get("/batches", async (req, res) => {
   res.status(200).send(builders);
 });
 
-router.get("/batchGraduateBuilders", async (req, res) => {
+router.get("/batch-graduates", async (req, res) => {
   const builders = await db.findAllBatchedUsers();
   const graduateBuilders = builders.filter(builder => builder.batch && builder.batch.status === "graduate");
   res.status(200).send(graduateBuilders);
