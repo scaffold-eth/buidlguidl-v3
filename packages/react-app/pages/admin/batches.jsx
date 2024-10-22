@@ -37,7 +37,6 @@ import BatchesListSkeleton from "../../components/skeletons/BatchesListSkeleton"
 const serverPathBatches = "/batches";
 const serverPathBatchGraduateBuilders = "/builders/batch-graduates";
 
-// TODO: double check this, adapt to batch number
 const BatchColumnFilter = ({ column: { filterValue, setFilter } }) => {
   const { baseColor } = useCustomColorModes();
 

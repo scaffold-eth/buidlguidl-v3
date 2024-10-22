@@ -29,7 +29,6 @@ export const postCreateBatch = async (
   }
 };
 
-// TODO: implement
 export const patchEditBatch = async (
   address,
   signature,
