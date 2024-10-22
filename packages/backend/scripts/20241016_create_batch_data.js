@@ -34,7 +34,6 @@ if (process.env.FIRESTORE_EMULATOR_HOST) {
 // // Docs: https://firebase.google.com/docs/firestore/quickstart#node.js_1
 const db = firebaseAdmin.firestore();
 
-// Add batch data manually to not reveal data
 const batches = [
   {
     name: "0",
