@@ -6,6 +6,12 @@ const { withRole } = require("../middlewares/auth");
 
 const router = express.Router();
 
+router.get("/", async (req, res) => {
+  console.log("/batches");
+  const batches = await db.findAllBatches();
+  res.status(200).send(batches);
+});
+
 router.post("/create", withRole("admin"), async (req, res) => {
   const neededBodyProps = ["batchNumber", "batchStatus", "batchStartDate", "batchTelegramLink"];
   if (neededBodyProps.some(prop => req.body[prop] === undefined)) {

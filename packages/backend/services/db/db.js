@@ -45,9 +45,6 @@ const findAllUsers = db.findAllUsers;
 const findAllBatchedUsers = db.findAllBatchedUsers;
 
 /**
- */
-
-/**
  *
  * @param {Address} builderAddress
  * @returns {{

@@ -34,7 +34,7 @@ import { USER_ROLES } from "../../helpers/constants";
 import { BatchCrudFormModal } from "../../components/batches/BatchCrudForm";
 import BatchesListSkeleton from "../../components/skeletons/BatchesListSkeleton";
 
-const serverPathBatches = "/builders/batches";
+const serverPathBatches = "/batches";
 const serverPathBatchGraduateBuilders = "/builders/batchGraduateBuilders";
 
 // TODO: double check this, adapt to batch number
