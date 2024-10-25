@@ -83,14 +83,14 @@
   },
   "batches": {
     "1asdasda123123": {
-      "number": "1",
+      "name": "1",
       "status": "closed",
       "telegramLink": "https://t.me/+RdnBKIvVnDw5MTky",
       "startDate": 1725840000000,
       "contractAddress": "0x2eA63c9C9C114ae85b1027697A906420a23e8572"
     },
     "2adasdasdasd112ed": {
-      "number": "2",
+      "name": "2",
       "status": "open",
       "telegramLink": "https://t.me/+RdnBKIvVnDw5MTky",
       "startDate": 1728950400000,
