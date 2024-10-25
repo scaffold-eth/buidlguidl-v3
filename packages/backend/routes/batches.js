@@ -65,10 +65,6 @@ router.post("/create", withRole("admin"), async (req, res) => {
   // Create batch.
   await db.createBatch(batchData);
   batch = await db.findBatchByName(batchName);
-  console.log("New batch created: ", batchName);
-  // TODO: create event, do we need it for batches?
-  //   const event = createEvent(EVENT_TYPES.USER_CREATE, { userAddress: builderAddress }, signature);
-  //   db.createEvent(event); // INFO: async, no await here
 
   res.json(batch.data);
 });
