@@ -12,6 +12,7 @@ import {
   postUpdateGraduatedFlag,
   postUpdateDisabledFlag,
 } from "../data/api/builder";
+import { patchEditBatch, postCreateBatch } from "../data/api/batch";
 import { patchProvideEns, postClaimEns } from "../data/api/ens";
 import { postStreamsUpdate } from "../data/api/streams";
 
@@ -30,6 +31,8 @@ const actionIdToRequest = {
   builderUpdateScholarship: postUpdateScholarshipFlag,
   builderUpdateGraduated: postUpdateGraduatedFlag,
   builderUpdateDisabled: postUpdateDisabledFlag,
+  batchCreate: postCreateBatch,
+  batchEdit: patchEditBatch,
 };
 
 const useSignedRequest = (actionId, address) => {

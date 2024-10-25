@@ -1,14 +1,11 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import axios from "axios";
-import moment from "moment";
-import NextLink from "next/link";
 import {
   Box,
   Button,
   ButtonGroup,
   Center,
   Container,
-  Link,
   Text,
   Table,
   Thead,
@@ -20,78 +17,27 @@ import {
   Flex,
   Select,
   Tooltip,
-  HStack,
   Input,
   InputRightElement,
   InputGroup,
-  useClipboard,
+  IconButton,
 } from "@chakra-ui/react";
+
+import BatchNameCell from "../../components/batches/BatchNameCell";
+import { SearchIcon, TriangleDownIcon, TriangleUpIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { useTable, usePagination, useSortBy, useFilters } from "react-table";
-import { CopyIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import BuilderListSkeleton from "../../components/skeletons/BuilderListSkeleton";
-import DateWithTooltip from "../../components/DateWithTooltip";
-import SocialLink from "../../components/SocialLink";
-import Address from "../../components/Address";
-import { bySocialWeight } from "../../data/socials";
-import { USER_ROLES } from "../../helpers/constants";
-import BuilderBatchNumberCell from "../../components/batch-builders/BatchBuilderNumberCell";
-import BuilderFlags from "../../components/builder/BuilderFlags";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
-import BatchColumnFilter from "../../components/BatchColumnFilter";
+import BatchLinksCell from "../../components/batches/BatchLinksCell";
+import BatchStatusCell from "../../components/batches/BatchStatusCell";
+import ExactDateWithTooltip from "../../components/batches/ExactDateWithTooltip";
+import { USER_ROLES } from "../../helpers/constants";
+import { BatchCrudFormModal } from "../../components/batches/BatchCrudForm";
+import BatchesListSkeleton from "../../components/skeletons/BatchesListSkeleton";
 
-const serverPath = "/builders/batches";
+const serverPathBatches = "/batches";
+const serverPathBatchGraduateBuilders = "/builders/batch-graduates";
 
-const builderCreated = builder => {
-  return builder?.creationTimestamp || 0;
-};
-
-const BuilderSocialLinksCell = ({ builder, isAdmin }) => {
-  const socials = Object.entries(builder.socialLinks ?? {}).sort(bySocialWeight);
-
-  return (
-    <Flex direction="column">
-      <HStack spacing={3} alignItems="center" justifyContent="center">
-        {socials.length ? (
-          socials.map(([socialId, socialValue]) => <SocialLink id={socialId} key={socialId} value={socialValue} />)
-        ) : (
-          <Box>-</Box>
-        )}
-      </HStack>
-      {isAdmin && <BuilderFlags builder={builder} />}
-    </Flex>
-  );
-};
-
-const BuilderAddressCell = ({ builder, mainnetProvider }) => {
-  const { hasCopied, onCopy } = useClipboard(builder?.id);
-
-  return (
-    <Flex alignItems="center" whiteSpace="nowrap">
-      <NextLink href={`/builders/${builder.id}`} passHref>
-        <Link pos="relative" d="inline-block">
-          <Address address={builder.id} ensProvider={mainnetProvider} w="12.5" fontSize="16" cachedEns={builder.ens} />
-        </Link>
-      </NextLink>
-      <Tooltip label={hasCopied ? "Copied!" : "Copy address"} closeOnClick={false}>
-        <CopyIcon cursor="pointer" onClick={onCopy} ml={"7px"} />
-      </Tooltip>
-    </Flex>
-  );
-};
-
-const BuilderStatusCell = ({ status }) => {
-  return (
-    <Tooltip label={moment(status?.timestamp).fromNow()}>
-      <Text maxW="350">{status?.text}</Text>
-    </Tooltip>
-  );
-};
-
-const BuilderBuildsCell = ({ buildCount }) => {
-  return <Text>{buildCount}</Text>;
-};
-
-const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
+const BatchColumnFilter = ({ column: { filterValue, setFilter } }) => {
   const { baseColor } = useCustomColorModes();
 
   return (
@@ -101,172 +47,170 @@ const EnsColumnFilter = ({ column: { filterValue, setFilter } }) => {
       onChange={e => {
         setFilter(e.target.value || undefined);
       }}
-      placeholder="Search builder"
+      placeholder="Search for batch"
       bgColor={baseColor}
       mb={8}
     />
   );
 };
 
-const isValueOnEnsOrSocials = (builder, filterValue) => {
-  const isOnEns = String(builder.ens).toLowerCase().includes(String(filterValue).toLowerCase());
-  const isOnSocials =
-    builder.socialLinks &&
-    Object.entries(builder.socialLinks ?? {}).some(([_, social]) => {
-      return String(social).toLowerCase().includes(String(filterValue).toLowerCase());
-    });
-
-  return isOnEns || isOnSocials;
-};
-
-const isInBatch = (builder, filterValue) => {
-  if (!builder.number) return false;
-  return builder.number === filterValue;
-};
-
-export default function BatchBuilderListView({ serverUrl, mainnetProvider, userRole }) {
-  const [builders, setBuilders] = useState([]);
-  const [amountBuilders, setAmountBuilders] = useState(0);
-  const [isLoadingBuilders, setIsLoadingBuilders] = useState(false);
-  const isAdmin = userRole === USER_ROLES.admin;
-  const isLoggedIn = userRole !== null && userRole !== USER_ROLES.anonymous;
+export default function Batches({ serverUrl, userRole, mainnetProvider }) {
+  const [batches, setBatches] = useState([]);
+  const [isLoadingBatches, setIsLoadingBatches] = useState(false);
   const { baseColor } = useCustomColorModes();
+  const isAdmin = userRole === USER_ROLES.admin;
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [amountBatches, setAmountBatches] = useState();
+  const [graduatesCount, setGraduatesCount] = useState({});
 
-  const ensFiltering = (rows, id, filterValue) => {
-    if (filterValue.length < 3) {
-      return rows;
-    }
-
-    return rows.filter(row => {
-      const rowValue = row.values[id];
-      return rowValue !== undefined ? isValueOnEnsOrSocials(rowValue, filterValue) : true;
-    });
-  };
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const batchFiltering = (rows, id, filterValue) => {
-    if (filterValue === "allBatches") {
-      setAmountBuilders(rows.length);
-      return rows;
-    }
-
-    const filteredRows = rows.filter(row => {
+    return rows.filter(row => {
       const rowValue = row.values[id];
-      return rowValue !== undefined ? isInBatch(rowValue, filterValue) : true;
+      const rowValueString = String(rowValue).toLowerCase();
+      const filterValueString = String(filterValue).toLowerCase();
+      return rowValueString.includes(filterValueString);
     });
-
-    setAmountBuilders(filteredRows.length);
-
-    return filteredRows;
   };
 
-  useEffect(() => {
-    async function fetchBuilders() {
-      setIsLoadingBuilders(true);
-      const fetchedBuilders = await axios.get(serverUrl + serverPath);
-
-      const processedBuilders = fetchedBuilders.data
-        .filter(builder => builder.ens !== "austingriffith.eth")
-        .map(builder => ({
-          builder,
-          status: builder.status,
-          batch: builder.batch,
-          builds: builder.builds?.length || 0,
-          socials: builder,
-          userCreated: builderCreated(builder),
-        }));
-
-      setBuilders(processedBuilders);
-      setIsLoadingBuilders(false);
+  const fetchBatches = useCallback(async () => {
+    setIsLoadingBatches(true);
+    try {
+      const fetchedBatches = await axios.get(serverUrl + serverPathBatches);
+      const processedBatches = fetchedBatches.data.map(batch => ({
+        batch: batch,
+        batchName: batch.name,
+        status: batch.status,
+        startDate: batch.startDate,
+      }));
+      setBatches(processedBatches);
+      setAmountBatches(processedBatches.length);
+    } catch (error) {
+      console.error("Error fetching batches:", error);
+    } finally {
+      setIsLoadingBatches(false);
     }
-
-    fetchBuilders();
   }, [serverUrl]);
 
-  const BatchFilterComponent = useMemo(() => {
-    const Component = ({ column }) => (
-      <BatchColumnFilter filterValue={column.filterValue} setFilter={column.setFilter} builders={builders} />
-    );
-    Component.displayName = "BatchFilterComponent";
-    return Component;
-  }, [builders]);
+  const fetchGraduatesCount = useCallback(async () => {
+    const fetchedBatchGraduateBuilders = await axios.get(serverUrl + serverPathBatchGraduateBuilders);
+    const graduatesCounts = {};
 
-  const BuilderAddressCellComponent = ({ value }) => (
-    <BuilderAddressCell builder={value} mainnetProvider={mainnetProvider} />
+    batches.forEach(
+      batch => {
+        const batchName = batch.batchName;
+        graduatesCounts[batchName] = 0;
+
+        fetchedBatchGraduateBuilders.data.forEach(builder => {
+          if (builder.batch && builder.batch.number === String(batchName)) {
+            graduatesCounts[batchName]++;
+          }
+        });
+      },
+      [batches],
+    );
+
+    setGraduatesCount(graduatesCounts);
+  }, [batches, serverUrl]);
+
+  useEffect(() => {
+    fetchBatches();
+  }, [fetchBatches]);
+
+  useEffect(() => {
+    if (batches.length > 0) {
+      fetchGraduatesCount();
+    }
+  }, [batches, fetchGraduatesCount]);
+
+  const BatchNameCellComponent = ({ row }) => (
+    <BatchNameCell batch={row.original.batchName} status={row.original.status} />
   );
-  const BuilderStatusCellComponent = ({ value }) => <BuilderStatusCell status={value} />;
-  const BuilderBuildsCellComponent = ({ value }) => <BuilderBuildsCell buildCount={value} />;
-  const BatchTableCellComponent = ({ value }) => {
-    return <BuilderBatchNumberCell batch={value} />;
+  const BatchCreatedCellComponent = ({ value }) => {
+    return <ExactDateWithTooltip timestamp={value} />;
   };
-  const BuilderSocialLinksCellComponent = ({ value }) => <BuilderSocialLinksCell builder={value} isAdmin={isAdmin} />;
-  const UserCreatedCellComponent = ({ value }) => {
-    return <DateWithTooltip timestamp={value} />;
+  const BatchLinksCellComponent = ({ value }) => <BatchLinksCell batch={value} />;
+  const BatchStatusCellComponent = ({ value }) => <BatchStatusCell status={value} />;
+  const BatchGraduatesCellComponent = ({ row }) => {
+    const count = graduatesCount[row.original.batchName] || 0;
+    return <Text>{count}</Text>;
   };
+
+  const BatchEditComponent = ({ row }) => (
+    <Tooltip label="Edit Batch">
+      <IconButton
+        aria-label="Edit batch"
+        icon={<EditIcon />}
+        size="sm"
+        variant="ghost"
+        isDisabled={!isAdmin}
+        onClick={() => {
+          setSelectedBatch({
+            ...row.original.batch,
+            id: row.original.batch.id,
+          });
+          setIsEditModalOpen(true);
+        }}
+      />
+    </Tooltip>
+  );
 
   const columns = useMemo(
     () => {
       const allColumns = [
         {
-          Header: "Builder",
-          accessor: "builder",
-          disableSortBy: true,
+          Header: "Batch",
+          accessor: "batchName",
           canFilter: true,
-          Filter: EnsColumnFilter,
-          filter: ensFiltering,
-          Cell: BuilderAddressCellComponent,
+          disableSortBy: true,
+          Filter: BatchColumnFilter,
+          filter: batchFiltering,
+          Cell: BatchNameCellComponent,
         },
         {
           Header: "Status",
           accessor: "status",
           disableSortBy: true,
           disableFilters: true,
-          Cell: BuilderStatusCellComponent,
+          Cell: BatchStatusCellComponent,
         },
         {
-          Header: "Builds",
-          accessor: "builds",
-          sortDescFirst: true,
+          Header: "Start Date",
+          accessor: "startDate",
           disableFilters: true,
-          Cell: BuilderBuildsCellComponent,
+          Cell: BatchCreatedCellComponent,
         },
         {
-          Header: "Batch",
+          Header: "Graduates",
+          accessor: row => graduatesCount[row.batchName] || 0,
+          disableFilters: true,
+          Cell: BatchGraduatesCellComponent,
+        },
+        {
+          Header: "Links",
           accessor: "batch",
-          disableFilters: true,
-          Filter: BatchFilterComponent,
-          filter: batchFiltering,
-          sortType: (rowA, rowB) => {
-            const aNumber = rowA.original.batch?.number ?? 0;
-            const bNumber = rowB.original.batch?.number ?? 0;
-
-            return aNumber - bNumber;
-          },
-          Cell: BatchTableCellComponent,
-        },
-        {
-          Header: "Socials",
-          accessor: "socials",
           disableSortBy: true,
           disableFilters: true,
-          Cell: BuilderSocialLinksCellComponent,
+          Cell: BatchLinksCellComponent,
         },
         {
-          Header: "User Created",
-          accessor: "userCreated",
-          sortAscFirst: true,
+          Header: "Edit",
+          disableSortBy: true,
           disableFilters: true,
-          Cell: UserCreatedCellComponent,
+          Cell: BatchEditComponent,
         },
       ];
 
-      if (!isLoggedIn) {
-        allColumns.splice(4, 1);
+      if (!isAdmin) {
+        allColumns.splice(5, 1);
       }
 
       return allColumns;
     },
     // eslint-disable-next-line
-    [userRole, BatchFilterComponent, builders],
+    [userRole, graduatesCount],
   );
 
   const {
@@ -287,127 +231,151 @@ export default function BatchBuilderListView({ serverUrl, mainnetProvider, userR
   } = useTable(
     {
       columns,
-      data: builders,
-      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "batch", desc: true }], []) },
+      data: batches,
+      initialState: { pageIndex: 0, pageSize: 25, sortBy: useMemo(() => [{ id: "startDate", desc: true }], []) },
     },
     useFilters,
     useSortBy,
     usePagination,
   );
 
-  useEffect(() => {
-    setAmountBuilders(builders.length);
-  }, [builders]);
-
-  const ensFilter = headerGroups[0].headers[0];
-  const batchFilter = headerGroups[0].headers[3];
+  const batchFilter = headerGroups[0].headers[0];
 
   return (
-    <Container maxW="container.xl">
-      {isLoadingBuilders ? (
-        <BuilderListSkeleton />
-      ) : (
-        <Box overflowX={{ base: "auto", lg: "visible" }} mb={8}>
-          <Center mb={5} flexDir="column">
-            <Box mb={2}>
-              <chakra.strong mr={2}>Total builders:</chakra.strong>
-              {amountBuilders}
-            </Box>
-            <Flex direction={{ base: "column", md: "row" }} alignItems="center" mb={4}>
-              <InputGroup mr={{ md: 4 }} mb={{ base: 4, md: 0 }} width={{ base: "100%", md: "auto" }} height="40px">
-                {ensFilter.render("Filter")}
-                <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
-              </InputGroup>
-
-              <Box width={{ base: "100%", md: "auto" }} height="40px">
-                {batchFilter.render("Filter")}
+    <>
+      <Container maxW="container.xl">
+        {isLoadingBatches ? (
+          <BatchesListSkeleton />
+        ) : (
+          <Box overflowX={{ base: "auto", lg: "visible" }} mb={8}>
+            <Center mb={5} flexDir="column">
+              <Box mb={2}>
+                <chakra.strong mr={2}>Total batches:</chakra.strong>
+                {amountBatches}
               </Box>
-            </Flex>
-          </Center>
-          <Table
-            {...getTableProps()}
-            wordBreak={{ base: "normal", lg: "break-word" }}
-            background={baseColor}
-            colorScheme="customBaseColorScheme"
-            size="sm"
-          >
-            <Thead>
-              {headerGroups.map((headerGroup, index) => (
-                <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                  {headerGroup.headers.map(column => (
-                    <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id} whiteSpace="nowrap">
-                      {column.render("Header")}
-                      <chakra.span key={`span-${index}`} pl="4">
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <TriangleDownIcon aria-label="sorted descending" />
-                          ) : (
-                            <TriangleUpIcon aria-label="sorted ascending" />
-                          )
-                        ) : null}
-                      </chakra.span>
-                    </Th>
-                  ))}
-                </Tr>
-              ))}
-            </Thead>
-            <Tbody {...getTableBodyProps()}>
-              {page.map(row => {
-                prepareRow(row);
-                return (
-                  <Tr {...row.getRowProps()} key={row.id}>
-                    {row.cells.map(cell => (
-                      <Td {...cell.getCellProps()} key={cell.column.id}>
-                        {cell.render("Cell")}
-                      </Td>
+              <Flex direction={{ base: "column", md: "row" }} alignItems="center" mb={4}>
+                <InputGroup mr={{ md: 4 }} mb={{ base: 4, md: 0 }} width={{ base: "100%", md: "auto" }} height="40px">
+                  {batchFilter.render("Filter")}
+                  <InputRightElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={<SearchIcon />} />
+                </InputGroup>
+                <Button
+                  leftIcon={<AddIcon />}
+                  isDisabled={!isAdmin}
+                  colorScheme="blue"
+                  onClick={() => setIsAddModalOpen(true)}
+                  width={{ base: "100%", md: "auto" }}
+                >
+                  Add Batch
+                </Button>
+              </Flex>
+            </Center>
+            <Table
+              {...getTableProps()}
+              wordBreak={{ base: "normal", lg: "break-word" }}
+              background={baseColor}
+              colorScheme="customBaseColorScheme"
+              size="sm"
+            >
+              <Thead>
+                {headerGroups.map((headerGroup, index) => (
+                  <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                    {headerGroup.headers.map(column => (
+                      <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id} whiteSpace="nowrap">
+                        {column.render("Header")}
+                        <chakra.span key={`span-${index}`} pl="4">
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <TriangleDownIcon aria-label="sorted descending" />
+                            ) : (
+                              <TriangleUpIcon aria-label="sorted ascending" />
+                            )
+                          ) : null}
+                        </chakra.span>
+                      </Th>
                     ))}
                   </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
-
-          <Center mt={4}>
-            <ButtonGroup>
-              <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-                {"<<"}
-              </Button>
-              <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                {"<"}
-              </Button>
-              <Button onClick={() => nextPage()} disabled={!canNextPage}>
-                {">"}
-              </Button>
-              <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-                {">>"}
-              </Button>
-            </ButtonGroup>
-          </Center>
-          <Center mt={4}>
-            <Text mr={4}>
-              Page{" "}
-              <strong>
-                {pageIndex + 1} of {pageOptions.length}
-              </strong>{" "}
-            </Text>
-            <Box>
-              <Select
-                isFullWidth={false}
-                value={pageSize}
-                onChange={e => {
-                  setPageSize(Number(e.target.value));
-                }}
-              >
-                {[25, 50, 100].map(pageSizeOption => (
-                  <option key={pageSizeOption} value={pageSizeOption}>
-                    Show {pageSizeOption}
-                  </option>
                 ))}
-              </Select>
-            </Box>
-          </Center>
-        </Box>
-      )}
-    </Container>
+              </Thead>
+              <Tbody {...getTableBodyProps()}>
+                {page.map(row => {
+                  prepareRow(row);
+                  return (
+                    <Tr {...row.getRowProps()} key={row.id}>
+                      {row.cells.map(cell => (
+                        <Td {...cell.getCellProps()} key={cell.column.id}>
+                          {cell.render("Cell")}
+                        </Td>
+                      ))}
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+            <Center mt={4}>
+              <ButtonGroup>
+                <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+                  {"<<"}
+                </Button>
+                <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
+                  {"<"}
+                </Button>
+                <Button onClick={() => nextPage()} disabled={!canNextPage}>
+                  {">"}
+                </Button>
+                <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                  {">>"}
+                </Button>
+              </ButtonGroup>
+            </Center>
+            <Center mt={4}>
+              <Text mr={4}>
+                Page{" "}
+                <strong>
+                  {pageIndex + 1} of {pageOptions.length}
+                </strong>{" "}
+              </Text>
+              <Box>
+                <Select
+                  isFullWidth={false}
+                  value={pageSize}
+                  onChange={e => {
+                    setPageSize(Number(e.target.value));
+                  }}
+                >
+                  {[25, 50, 100].map(pageSizeOption => (
+                    <option key={pageSizeOption} value={pageSizeOption}>
+                      Show {pageSizeOption}
+                    </option>
+                  ))}
+                </Select>
+              </Box>
+            </Center>
+          </Box>
+        )}
+      </Container>
+
+      {/* Add Batch Modal */}
+      <BatchCrudFormModal
+        mainnetProvider={mainnetProvider}
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onUpdate={() => {
+          setIsAddModalOpen(false);
+          fetchBatches();
+        }}
+      />
+
+      {/* Edit Batch Modal */}
+      <BatchCrudFormModal
+        mainnetProvider={mainnetProvider}
+        batch={selectedBatch}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onUpdate={() => {
+          setIsEditModalOpen(false);
+          fetchBatches();
+        }}
+      />
+    </>
   );
 }

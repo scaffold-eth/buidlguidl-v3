@@ -23,7 +23,7 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
-import { USER_FUNCTIONS, USER_ROLES, BATCH_STATUS } from "../helpers/constants";
+import { USER_FUNCTIONS, USER_ROLES, BATCH_BUILDER_STATUS } from "../helpers/constants";
 import AddressInput from "./AddressInput";
 import useSignedRequest from "../hooks/useSignedRequest";
 import useConnectedAddress from "../hooks/useConnectedAddress";
@@ -268,7 +268,7 @@ export function BuilderCrudForm({ mainnetProvider, builder, onUpdate }) {
           }}
         >
           <Stack direction="row" spacing={4}>
-            {Object.values(BATCH_STATUS).map(value => (
+            {Object.values(BATCH_BUILDER_STATUS).map(value => (
               <Radio key={value} value={value}>
                 {value}
               </Radio>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge, Center, Link } from "@chakra-ui/react";
-import { BATCH_STATUS } from "../helpers/constants";
+import { BATCH_BUILDER_STATUS } from "../helpers/constants";
 
 const CohortDisplay = ({ cohorts }) => {
   if (!cohorts?.length) return null;
@@ -23,7 +23,7 @@ const BatchDisplay = ({ batch }) => {
 
   return (
     <Center mt={2}>
-      <Badge colorScheme={batch.status === BATCH_STATUS.GRADUATE ? "green" : "orange"} textAlign="center">
+      <Badge colorScheme={batch.status === BATCH_BUILDER_STATUS.GRADUATE ? "green" : "orange"} textAlign="center">
         Batch #{batch.number}
       </Badge>
     </Center>

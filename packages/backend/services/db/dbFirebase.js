@@ -56,7 +56,7 @@ const findAllUsers = async () => {
 const findAllBatchedUsers = async () => {
   // get all users with a batch assigned (builderBatch prop is not null)
   const buildersSnapshot = await database.collection("users").where("batch.number", "!=", null).get();
-  console.log("buildersSnapshot", buildersSnapshot.docs.length);
+
   // Filter out disabled user. To use it directly on the query,
   // we should create the disabled flag in all documents.
   return buildersSnapshot.docs
@@ -81,6 +81,38 @@ const getBuildersWithPendingEnsClaims = async () => {
   const usersEnsPendingSnapshot = await database.collection("users").where("ensClaimData.provided", "==", false).get();
 
   return usersEnsPendingSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+// --- Batches
+
+const findAllBatches = async () => {
+  const batchesSnapshot = await database.collection("batches").get();
+  return batchesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+const findBatchByName = async batchName => {
+  const batchesSnapshot = await database.collection("batches").where("name", "==", batchName).get();
+  if (batchesSnapshot.empty) {
+    return { exists: false };
+  }
+
+  const batchDoc = batchesSnapshot.docs[0];
+  return { exists: true, data: { id: batchDoc.id, ...batchDoc.data() } };
+};
+
+const findBatchById = async batchId => {
+  const batchDoc = await database.collection("batches").doc(batchId).get();
+  return { exists: true, data: { id: batchDoc.id, ...batchDoc.data() } };
+};
+
+const createBatch = async batchData => {
+  const batchDoc = await database.collection("batches").add(batchData);
+  return batchDoc;
+};
+
+const updateBatch = async (id, batchData) => {
+  const batchDoc = database.collection("batches").doc(String(id));
+  await batchDoc.update(batchData);
 };
 
 // --- Events
@@ -462,6 +494,12 @@ module.exports = {
   findUserByAddress,
   findAllCohorts,
   updateCohortData,
+
+  findAllBatches,
+  findBatchByName,
+  findBatchById,
+  createBatch,
+  updateBatch,
 
   createEvent,
   findAllEvents,
