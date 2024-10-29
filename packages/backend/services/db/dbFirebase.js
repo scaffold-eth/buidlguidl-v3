@@ -90,6 +90,20 @@ const findAllBatches = async () => {
   return batchesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+const findLatestOpenBatch = async () => {
+  const batchesSnapshot = await database
+    .collection("batches")
+    .where("status", "==", "open")
+    .orderBy("startDate", "desc")
+    .limit(1)
+    .get();
+  if (batchesSnapshot.empty) {
+    return { exists: false };
+  }
+  const batchDoc = batchesSnapshot.docs[0];
+  return { exists: true, data: { id: batchDoc.id, ...batchDoc.data() } };
+};
+
 const findBatchByName = async batchName => {
   const batchesSnapshot = await database.collection("batches").where("name", "==", batchName).get();
   if (batchesSnapshot.empty) {
@@ -500,6 +514,7 @@ module.exports = {
   findBatchById,
   createBatch,
   updateBatch,
+  findLatestOpenBatch,
 
   createEvent,
   findAllEvents,

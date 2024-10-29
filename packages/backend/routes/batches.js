@@ -12,6 +12,12 @@ router.get("/", async (req, res) => {
   res.status(200).send(batches);
 });
 
+router.get("/latest-open", async (req, res) => {
+  console.log("/batches/latest-open");
+  const batch = await db.findLatestOpenBatch();
+  res.status(200).send(batch);
+});
+
 router.post("/create", withRole("admin"), async (req, res) => {
   const neededBodyProps = ["batchName", "batchStatus", "batchStartDate", "batchTelegramLink"];
   if (neededBodyProps.some(prop => req.body[prop] === undefined)) {
