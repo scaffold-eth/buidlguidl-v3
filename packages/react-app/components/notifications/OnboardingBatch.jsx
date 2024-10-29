@@ -18,7 +18,7 @@ import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
 
-const serverPathBatches = "/batches/latest-open";
+const serverPath = "/batches/latest-open";
 
 const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, onUpdate }) => {
   const address = useUserAddress(userProvider);
@@ -34,7 +34,7 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
   const fetchLatestOpenBatch = useCallback(async () => {
     setIsLoadingOpenBatch(true);
     try {
-      const fetchedBatch = await axios.get(SERVER_URL + serverPathBatches);
+      const fetchedBatch = await axios.get(SERVER_URL + serverPath);
       setLatestOpenBatch(fetchedBatch.data.data);
     } catch (error) {
       console.error("Error fetching batch:", error);
