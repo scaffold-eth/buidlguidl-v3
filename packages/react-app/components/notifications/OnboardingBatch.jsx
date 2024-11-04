@@ -31,21 +31,21 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
-  const fetchLatestOpenBatch = useCallback(async () => {
-    setIsLoadingOpenBatch(true);
-    try {
-      const fetchedBatch = await axios.get(SERVER_URL + serverPath);
-      setLatestOpenBatch(fetchedBatch.data.data);
-    } catch (error) {
-      console.error("Error fetching batch:", error);
-    } finally {
-      setIsLoadingOpenBatch(false);
-    }
-  }, []);
-
   useEffect(() => {
+    const fetchLatestOpenBatch = async () => {
+      setIsLoadingOpenBatch(true);
+      try {
+        const fetchedBatch = await axios.get(SERVER_URL + serverPath);
+        setLatestOpenBatch(fetchedBatch.data.data);
+      } catch (error) {
+        console.error("Error fetching batch:", error);
+      } finally {
+        setIsLoadingOpenBatch(false);
+      }
+    };
+
     fetchLatestOpenBatch();
-  }, [fetchLatestOpenBatch]);
+  }, []);
 
   const handleUpdateBatch = async () => {
     const batchData = {
