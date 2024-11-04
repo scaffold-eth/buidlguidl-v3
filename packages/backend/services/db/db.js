@@ -63,6 +63,7 @@ const findBatchByName = db.findBatchByName;
 const findBatchById = db.findBatchById;
 const createBatch = db.createBatch;
 const updateBatch = db.updateBatch;
+const findLatestOpenBatch = db.findLatestOpenBatch;
 
 // --- Cohorts
 /**
@@ -244,6 +245,7 @@ module.exports = {
   findBatchById,
   createBatch,
   updateBatch,
+  findLatestOpenBatch,
 
   createEvent,
   findAllEvents,

@@ -13,23 +13,43 @@ import {
 } from "@chakra-ui/react";
 import { getUpdateBatchSignMessage, postUpdateBatch } from "../../data/api";
 import { useUserAddress } from "eth-hooks";
+import { SERVER_URL } from "../../constants";
+import { useState, useCallback, useEffect } from "react";
+import axios from "axios";
+import moment from "moment";
 
-const NEXT_BATCH_TELEGRAM = process.env.NEXT_PUBLIC_BATCH_TELEGRAM;
-const NEXT_BATCH_DATE = process.env.NEXT_PUBLIC_BATCH_DATE;
-const NEXT_BATCH = process.env.NEXT_PUBLIC_BATCH_NUMBER;
+const serverPath = "/batches/latest-open";
 
 const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, onUpdate }) => {
   const address = useUserAddress(userProvider);
+  const [latestOpenBatch, setLatestOpenBatch] = useState(null);
+  const [isLoadingOpenBatch, setIsLoadingOpenBatch] = useState(false);
 
   const hasBatchNumber = builder?.batch?.number;
-  const isInRecentBatch = builder?.batch?.number === NEXT_BATCH;
+  const isInRecentBatch = builder?.batch?.number === latestOpenBatch?.name;
 
   const toast = useToast({ position: "top", isClosable: true });
   const toastVariant = useColorModeValue("subtle", "solid");
 
+  useEffect(() => {
+    const fetchLatestOpenBatch = async () => {
+      setIsLoadingOpenBatch(true);
+      try {
+        const fetchedBatch = await axios.get(SERVER_URL + serverPath);
+        setLatestOpenBatch(fetchedBatch.data.data);
+      } catch (error) {
+        console.error("Error fetching batch:", error);
+      } finally {
+        setIsLoadingOpenBatch(false);
+      }
+    };
+
+    fetchLatestOpenBatch();
+  }, []);
+
   const handleUpdateBatch = async () => {
     const batchData = {
-      number: NEXT_BATCH,
+      number: latestOpenBatch?.name,
       status: "candidate",
     };
 
@@ -80,55 +100,61 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
   };
 
   const handleJoinTelegram = () => {
-    window.open(NEXT_BATCH_TELEGRAM);
+    window.open(latestOpenBatch?.telegramLink);
   };
 
+  if (isLoadingOpenBatch || !latestOpenBatch || (hasBatchNumber && !isInRecentBatch)) {
+    return null;
+  }
+
   return (
-    <Flex background="linear-gradient(180deg, #EAFFA9 24.48%, #EDEFFF 100%)" position="relative">
-      <Flex width={{ base: "100%", md: "60%" }} px="30px" py="30px" direction="column">
-        <Box maxW="200px">
-          <Image src="/assets/onboarding_batches_logo.png" alt="onboarding batches illustration: futuristic train" />
-        </Box>
-        <Text fontSize="30px" fontWeight="bold" lineHeight="1.2" color="gray.800">
-          Welcome to BuidlGuidl!
-        </Text>
-        <Text fontSize="sm" my="2" color="gray.800">
-          To help you get started in the Ethereum ecosystem, we've created the BuidlGuidl onboarding batch program. Dive
-          into end-to-end dApp development, receive mentorship from BG members, and learn how to collaborate with fellow
-          developers in open-source projects.
-        </Text>
-        <Spacer />
-        <Flex alignItems="center" flexDirection="row">
-          <Box mr="5">
-            {hasBatchNumber ? (
-              <Button
-                colorScheme="blue"
-                size="sm"
-                onClick={handleJoinTelegram}
-                isDisabled={!isInRecentBatch}
-                width="180px"
-              >
-                Join Telegram
-              </Button>
-            ) : (
-              <Button colorScheme="orange" size="sm" onClick={handleUpdateBatch} width="180px">
-                Get Telegram Access
-              </Button>
-            )}
+    <>
+      <Flex background="linear-gradient(180deg, #EAFFA9 24.48%, #EDEFFF 100%)" position="relative">
+        <Flex width={{ base: "100%", md: "60%" }} px="30px" py="30px" direction="column">
+          <Box maxW="200px">
+            <Image src="/assets/onboarding_batches_logo.png" alt="onboarding batches illustration: futuristic train" />
           </Box>
-          <Text fontSize="xs" color="gray.800">
-            Next batch starting on <br />
-            <strong>{NEXT_BATCH_DATE}</strong>
+          <Text fontSize="30px" fontWeight="bold" lineHeight="1.2" color="gray.800">
+            Welcome to BuidlGuidl!
           </Text>
+          <Text fontSize="sm" my="2" color="gray.800">
+            To help you get started in the Ethereum ecosystem, we've created the BuidlGuidl onboarding batch program.
+            Dive into end-to-end dApp development, receive mentorship from BG members, and learn how to collaborate with
+            fellow developers in open-source projects.
+          </Text>
+          <Spacer />
+          <Flex alignItems="center" flexDirection="row">
+            <Box mr="5">
+              {hasBatchNumber ? (
+                <Button
+                  colorScheme="blue"
+                  size="sm"
+                  onClick={handleJoinTelegram}
+                  isDisabled={!isInRecentBatch}
+                  width="180px"
+                >
+                  Join Telegram
+                </Button>
+              ) : (
+                <Button colorScheme="orange" size="sm" onClick={handleUpdateBatch} width="180px">
+                  Get Telegram Access
+                </Button>
+              )}
+            </Box>
+            <Text fontSize="xs" color="gray.800">
+              Batch <strong>{latestOpenBatch?.name}</strong> starting on <br />
+              <strong>{moment(latestOpenBatch?.startDate).format("MMMM D, YYYY")}</strong>
+            </Text>
+          </Flex>
         </Flex>
+        <Box width="50%" display={{ base: "none", md: "inline-block" }}>
+          <Image src="/assets/onboarding_batches.png" alt="onboarding batches illustration: futuristic train" />
+        </Box>
+        <Tooltip label="Mark as Read" aria-label="Mark as Read">
+          <CloseButton position="absolute" right="4px" top="4px" onClick={() => onMarkAsRead(notification.id)} />
+        </Tooltip>
       </Flex>
-      <Box width="50%" display={{ base: "none", md: "inline-block" }}>
-        <Image src="/assets/onboarding_batches.png" alt="onboarding batches illustration: futuristic train" />
-      </Box>
-      <Tooltip label="Mark as Read" aria-label="Mark as Read">
-        <CloseButton position="absolute" right="4px" top="4px" onClick={() => onMarkAsRead(notification.id)} />
-      </Tooltip>
-    </Flex>
+    </>
   );
 };
 
