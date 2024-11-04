@@ -103,58 +103,57 @@ const OnboardingBatch = ({ notification, onMarkAsRead, builder, userProvider, on
     window.open(latestOpenBatch?.telegramLink);
   };
 
+  if (isLoadingOpenBatch || !latestOpenBatch || (hasBatchNumber && !isInRecentBatch)) {
+    return null;
+  }
+
   return (
     <>
-      {!isLoadingOpenBatch && latestOpenBatch && (!hasBatchNumber || isInRecentBatch) && (
-        <Flex background="linear-gradient(180deg, #EAFFA9 24.48%, #EDEFFF 100%)" position="relative">
-          <Flex width={{ base: "100%", md: "60%" }} px="30px" py="30px" direction="column">
-            <Box maxW="200px">
-              <Image
-                src="/assets/onboarding_batches_logo.png"
-                alt="onboarding batches illustration: futuristic train"
-              />
-            </Box>
-            <Text fontSize="30px" fontWeight="bold" lineHeight="1.2" color="gray.800">
-              Welcome to BuidlGuidl!
-            </Text>
-            <Text fontSize="sm" my="2" color="gray.800">
-              To help you get started in the Ethereum ecosystem, we've created the BuidlGuidl onboarding batch program.
-              Dive into end-to-end dApp development, receive mentorship from BG members, and learn how to collaborate
-              with fellow developers in open-source projects.
-            </Text>
-            <Spacer />
-            <Flex alignItems="center" flexDirection="row">
-              <Box mr="5">
-                {hasBatchNumber ? (
-                  <Button
-                    colorScheme="blue"
-                    size="sm"
-                    onClick={handleJoinTelegram}
-                    isDisabled={!isInRecentBatch}
-                    width="180px"
-                  >
-                    Join Telegram
-                  </Button>
-                ) : (
-                  <Button colorScheme="orange" size="sm" onClick={handleUpdateBatch} width="180px">
-                    Get Telegram Access
-                  </Button>
-                )}
-              </Box>
-              <Text fontSize="xs" color="gray.800">
-                Next batch <strong>{latestOpenBatch?.name}</strong> starting on <br />
-                <strong>{moment(latestOpenBatch?.startDate).format("MMMM D, YYYY")}</strong>
-              </Text>
-            </Flex>
-          </Flex>
-          <Box width="50%" display={{ base: "none", md: "inline-block" }}>
-            <Image src="/assets/onboarding_batches.png" alt="onboarding batches illustration: futuristic train" />
+      <Flex background="linear-gradient(180deg, #EAFFA9 24.48%, #EDEFFF 100%)" position="relative">
+        <Flex width={{ base: "100%", md: "60%" }} px="30px" py="30px" direction="column">
+          <Box maxW="200px">
+            <Image src="/assets/onboarding_batches_logo.png" alt="onboarding batches illustration: futuristic train" />
           </Box>
-          <Tooltip label="Mark as Read" aria-label="Mark as Read">
-            <CloseButton position="absolute" right="4px" top="4px" onClick={() => onMarkAsRead(notification.id)} />
-          </Tooltip>
+          <Text fontSize="30px" fontWeight="bold" lineHeight="1.2" color="gray.800">
+            Welcome to BuidlGuidl!
+          </Text>
+          <Text fontSize="sm" my="2" color="gray.800">
+            To help you get started in the Ethereum ecosystem, we've created the BuidlGuidl onboarding batch program.
+            Dive into end-to-end dApp development, receive mentorship from BG members, and learn how to collaborate with
+            fellow developers in open-source projects.
+          </Text>
+          <Spacer />
+          <Flex alignItems="center" flexDirection="row">
+            <Box mr="5">
+              {hasBatchNumber ? (
+                <Button
+                  colorScheme="blue"
+                  size="sm"
+                  onClick={handleJoinTelegram}
+                  isDisabled={!isInRecentBatch}
+                  width="180px"
+                >
+                  Join Telegram
+                </Button>
+              ) : (
+                <Button colorScheme="orange" size="sm" onClick={handleUpdateBatch} width="180px">
+                  Get Telegram Access
+                </Button>
+              )}
+            </Box>
+            <Text fontSize="xs" color="gray.800">
+              Batch <strong>{latestOpenBatch?.name}</strong> starting on <br />
+              <strong>{moment(latestOpenBatch?.startDate).format("MMMM D, YYYY")}</strong>
+            </Text>
+          </Flex>
         </Flex>
-      )}
+        <Box width="50%" display={{ base: "none", md: "inline-block" }}>
+          <Image src="/assets/onboarding_batches.png" alt="onboarding batches illustration: futuristic train" />
+        </Box>
+        <Tooltip label="Mark as Read" aria-label="Mark as Read">
+          <CloseButton position="absolute" right="4px" top="4px" onClick={() => onMarkAsRead(notification.id)} />
+        </Tooltip>
+      </Flex>
     </>
   );
 };
