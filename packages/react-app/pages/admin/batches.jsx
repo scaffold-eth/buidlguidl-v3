@@ -96,6 +96,10 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     }
   }, [serverUrl]);
 
+  useEffect(() => {
+    fetchBatches();
+  }, [fetchBatches]);
+
   const fetchGraduatesCount = useCallback(async () => {
     const fetchedBatchGraduateBuilders = await axios.get(serverUrl + serverPathBatchGraduateBuilders);
     const graduatesCounts = {};
@@ -116,6 +120,12 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
 
     setGraduatesCount(graduatesCounts);
   }, [batches, serverUrl]);
+
+  useEffect(() => {
+    if (batches.length > 0) {
+      fetchGraduatesCount();
+    }
+  }, [batches, fetchGraduatesCount]);
 
   const fetchParticipantsCount = useCallback(async () => {
     const fetchedBatchParticipants = await axios.get(serverUrl + serverPathBatchParticipants);
@@ -139,13 +149,10 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   }, [batches, serverUrl]);
 
   useEffect(() => {
-    fetchBatches();
-  }, [fetchBatches]);
-
-  useEffect(() => {
     if (batches.length > 0) {
-      fetchGraduatesCount();
-      fetchParticipantsCount();
+      Promise.all([fetchGraduatesCount(), fetchParticipantsCount()]).catch(error => {
+        console.error("Error fetching counts:", error);
+      });
     }
   }, [batches, fetchGraduatesCount, fetchParticipantsCount]);
 
