@@ -36,6 +36,7 @@ import BatchesListSkeleton from "../../components/skeletons/BatchesListSkeleton"
 
 const serverPathBatches = "/batches";
 const serverPathBatchGraduateBuilders = "/builders/batch-graduates";
+const serverPathBatchParticipants = "/builders/batches";
 
 const BatchColumnFilter = ({ column: { filterValue, setFilter } }) => {
   const { baseColor } = useCustomColorModes();
@@ -63,6 +64,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [amountBatches, setAmountBatches] = useState();
   const [graduatesCount, setGraduatesCount] = useState({});
+  const [participantsCount, setParticipantsCount] = useState({});
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -115,6 +117,27 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     setGraduatesCount(graduatesCounts);
   }, [batches, serverUrl]);
 
+  const fetchParticipantsCount = useCallback(async () => {
+    const fetchedBatchParticipants = await axios.get(serverUrl + serverPathBatchParticipants);
+    const participantsCounts = {};
+
+    batches.forEach(
+      batch => {
+        const batchName = batch.batchName;
+        participantsCounts[batchName] = 0;
+
+        fetchedBatchParticipants.data.forEach(builder => {
+          if (builder.batch && builder.batch.number === String(batchName)) {
+            participantsCounts[batchName]++;
+          }
+        });
+      },
+      [batches],
+    );
+
+    setParticipantsCount(participantsCounts);
+  }, [batches, serverUrl]);
+
   useEffect(() => {
     fetchBatches();
   }, [fetchBatches]);
@@ -122,8 +145,9 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   useEffect(() => {
     if (batches.length > 0) {
       fetchGraduatesCount();
+      fetchParticipantsCount();
     }
-  }, [batches, fetchGraduatesCount]);
+  }, [batches, fetchGraduatesCount, fetchParticipantsCount]);
 
   const BatchNameCellComponent = ({ row }) => (
     <BatchNameCell batch={row.original.batchName} status={row.original.status} />
@@ -133,9 +157,14 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   };
   const BatchLinksCellComponent = ({ value }) => <BatchLinksCell batch={value} />;
   const BatchStatusCellComponent = ({ value }) => <BatchStatusCell status={value} />;
-  const BatchGraduatesCellComponent = ({ row }) => {
-    const count = graduatesCount[row.original.batchName] || 0;
-    return <Text>{count}</Text>;
+  const BatchBuildersCountCellComponent = ({ row }) => {
+    const gradCount = graduatesCount[row.original.batchName] || 0;
+    const partCount = participantsCount[row.original.batchName] || 0;
+    return (
+      <Text textAlign="center">
+        {gradCount} / {partCount} {"     "}
+      </Text>
+    );
   };
 
   const BatchEditComponent = ({ row }) => (
@@ -183,10 +212,11 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
           Cell: BatchCreatedCellComponent,
         },
         {
-          Header: "Graduates",
+          Header: "Graduates / Participants",
           accessor: row => graduatesCount[row.batchName] || 0,
           disableFilters: true,
-          Cell: BatchGraduatesCellComponent,
+          Cell: BatchBuildersCountCellComponent,
+          headerAlign: "center",
         },
         {
           Header: "Links",
@@ -280,7 +310,12 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
                 {headerGroups.map((headerGroup, index) => (
                   <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                     {headerGroup.headers.map(column => (
-                      <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id} whiteSpace="nowrap">
+                      <Th
+                        {...column.getHeaderProps(column.getSortByToggleProps())}
+                        key={column.id}
+                        whiteSpace="nowrap"
+                        textAlign={column.headerAlign || "left"}
+                      >
                         {column.render("Header")}
                         <chakra.span key={`span-${index}`} pl="4">
                           {column.isSorted ? (
@@ -302,7 +337,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
                   return (
                     <Tr {...row.getRowProps()} key={row.id}>
                       {row.cells.map(cell => (
-                        <Td {...cell.getCellProps()} key={cell.column.id}>
+                        <Td {...cell.getCellProps()} key={cell.column.id} textAlign={cell.column.align || "left"}>
                           {cell.render("Cell")}
                         </Td>
                       ))}
