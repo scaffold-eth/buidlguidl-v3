@@ -96,10 +96,6 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     }
   }, [serverUrl]);
 
-  useEffect(() => {
-    fetchBatches();
-  }, [fetchBatches]);
-
   const fetchGraduatesCount = useCallback(async () => {
     const fetchedBatchGraduateBuilders = await axios.get(serverUrl + serverPathBatchGraduateBuilders);
     const graduatesCounts = {};
@@ -121,12 +117,6 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     setGraduatesCount(graduatesCounts);
   }, [batches, serverUrl]);
 
-  useEffect(() => {
-    if (batches.length > 0) {
-      fetchGraduatesCount();
-    }
-  }, [batches, fetchGraduatesCount]);
-
   const fetchParticipantsCount = useCallback(async () => {
     const fetchedBatchParticipants = await axios.get(serverUrl + serverPathBatchParticipants);
     const participantsCounts = {};
@@ -147,6 +137,10 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
 
     setParticipantsCount(participantsCounts);
   }, [batches, serverUrl]);
+
+  useEffect(() => {
+    fetchBatches();
+  }, [fetchBatches]);
 
   useEffect(() => {
     if (batches.length > 0) {
