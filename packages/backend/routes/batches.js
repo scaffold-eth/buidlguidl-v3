@@ -15,7 +15,6 @@ router.get("/", async (req, res) => {
   const stats = batches.map(batch => {
     const batchBuilders = builders.filter(builder => builder.batch?.number === batch.name);
     const batchGraduates = batchBuilders.filter(builder => builder.batch?.status === "graduate");
-    console.log("batch", batch);
 
     return {
       id: batch.id,
