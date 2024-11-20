@@ -35,8 +35,6 @@ import { BatchCrudFormModal } from "../../components/batches/BatchCrudForm";
 import BatchesListSkeleton from "../../components/skeletons/BatchesListSkeleton";
 
 const serverPathBatches = "/batches";
-const serverPathBatchGraduateBuilders = "/builders/batch-graduates";
-const serverPathBatchParticipants = "/builders/batches";
 
 const BatchColumnFilter = ({ column: { filterValue, setFilter } }) => {
   const { baseColor } = useCustomColorModes();
@@ -62,9 +60,6 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
   const isAdmin = userRole === USER_ROLES.admin;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
-  const [amountBatches, setAmountBatches] = useState();
-  const [graduatesCount, setGraduatesCount] = useState({});
-  const [participantsCount, setParticipantsCount] = useState({});
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -81,14 +76,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     setIsLoadingBatches(true);
     try {
       const fetchedBatches = await axios.get(serverUrl + serverPathBatches);
-      const processedBatches = fetchedBatches.data.map(batch => ({
-        batch: batch,
-        batchName: batch.name,
-        status: batch.status,
-        startDate: batch.startDate,
-      }));
-      setBatches(processedBatches);
-      setAmountBatches(processedBatches.length);
+      setBatches(fetchedBatches.data);
     } catch (error) {
       console.error("Error fetching batches:", error);
     } finally {
@@ -96,74 +84,24 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
     }
   }, [serverUrl]);
 
-  const fetchGraduatesCount = useCallback(async () => {
-    const fetchedBatchGraduateBuilders = await axios.get(serverUrl + serverPathBatchGraduateBuilders);
-    const graduatesCounts = {};
-
-    batches.forEach(
-      batch => {
-        const batchName = batch.batchName;
-        graduatesCounts[batchName] = 0;
-
-        fetchedBatchGraduateBuilders.data.forEach(builder => {
-          if (builder.batch && builder.batch.number === String(batchName)) {
-            graduatesCounts[batchName]++;
-          }
-        });
-      },
-      [batches],
-    );
-
-    setGraduatesCount(graduatesCounts);
-  }, [batches, serverUrl]);
-
-  const fetchParticipantsCount = useCallback(async () => {
-    const fetchedBatchParticipants = await axios.get(serverUrl + serverPathBatchParticipants);
-    const participantsCounts = {};
-
-    batches.forEach(
-      batch => {
-        const batchName = batch.batchName;
-        participantsCounts[batchName] = 0;
-
-        fetchedBatchParticipants.data.forEach(builder => {
-          if (builder.batch && builder.batch.number === String(batchName)) {
-            participantsCounts[batchName]++;
-          }
-        });
-      },
-      [batches],
-    );
-
-    setParticipantsCount(participantsCounts);
-  }, [batches, serverUrl]);
-
   useEffect(() => {
     fetchBatches();
   }, [fetchBatches]);
 
-  useEffect(() => {
-    if (batches.length > 0) {
-      Promise.all([fetchGraduatesCount(), fetchParticipantsCount()]).catch(error => {
-        console.error("Error fetching counts:", error);
-      });
-    }
-  }, [batches, fetchGraduatesCount, fetchParticipantsCount]);
-
-  const BatchNameCellComponent = ({ row }) => (
-    <BatchNameCell batch={row.original.batchName} status={row.original.status} />
-  );
+  const BatchNameCellComponent = ({ row }) => <BatchNameCell batch={row.original.name} status={row.original.status} />;
   const BatchCreatedCellComponent = ({ value }) => {
     return <ExactDateWithTooltip timestamp={value} />;
   };
-  const BatchLinksCellComponent = ({ value }) => <BatchLinksCell batch={value} />;
+  const BatchLinksCellComponent = ({ row }) => {
+    return <BatchLinksCell batch={row.original} />;
+  };
   const BatchStatusCellComponent = ({ value }) => <BatchStatusCell status={value} />;
   const BatchBuildersCountCellComponent = ({ row }) => {
-    const gradCount = graduatesCount[row.original.batchName] || 0;
-    const partCount = participantsCount[row.original.batchName] || 0;
+    const gradCount = row.original.graduates;
+    const partCount = row.original.totalParticipants;
     return (
       <Text textAlign="center">
-        {gradCount} / {partCount} {"     "}
+        {gradCount} / {partCount}
       </Text>
     );
   };
@@ -178,8 +116,8 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
         isDisabled={!isAdmin}
         onClick={() => {
           setSelectedBatch({
-            ...row.original.batch,
-            id: row.original.batch.id,
+            ...row.original,
+            id: row.original.id,
           });
           setIsEditModalOpen(true);
         }}
@@ -192,9 +130,8 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
       const allColumns = [
         {
           Header: "Batch",
-          accessor: "batchName",
+          accessor: "name",
           canFilter: true,
-          disableSortBy: true,
           Filter: BatchColumnFilter,
           filter: batchFiltering,
           Cell: BatchNameCellComponent,
@@ -214,14 +151,14 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
         },
         {
           Header: "Graduates / Participants",
-          accessor: row => graduatesCount[row.batchName] || 0,
+          accessor: row => row.graduates,
           disableFilters: true,
           Cell: BatchBuildersCountCellComponent,
           headerAlign: "center",
         },
         {
           Header: "Links",
-          accessor: "batch",
+          accessor: row => row.original,
           disableSortBy: true,
           disableFilters: true,
           Cell: BatchLinksCellComponent,
@@ -241,7 +178,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
       return allColumns;
     },
     // eslint-disable-next-line
-    [userRole, graduatesCount],
+    [userRole],
   );
 
   const {
@@ -282,7 +219,7 @@ export default function Batches({ serverUrl, userRole, mainnetProvider }) {
             <Center mb={5} flexDir="column">
               <Box mb={2}>
                 <chakra.strong mr={2}>Total batches:</chakra.strong>
-                {amountBatches}
+                {batches.length}
               </Box>
               <Flex direction={{ base: "column", md: "row" }} alignItems="center" mb={4}>
                 <InputGroup mr={{ md: 4 }} mb={{ base: 4, md: 0 }} width={{ base: "100%", md: "auto" }} height="40px">
