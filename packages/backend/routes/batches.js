@@ -8,8 +8,27 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   console.log("/batches");
+
+  const builders = await db.findAllBatchedUsers();
   const batches = await db.findAllBatches();
-  res.status(200).send(batches);
+
+  const stats = batches.map(batch => {
+    const batchBuilders = builders.filter(builder => builder.batch?.number === batch.name);
+    const batchGraduates = batchBuilders.filter(builder => builder.batch?.status === "graduate");
+
+    return {
+      id: batch.id,
+      name: batch.name,
+      status: batch.status,
+      startDate: batch.startDate,
+      telegramLink: batch.telegramLink,
+      contractAddress: batch.contractAddress,
+      totalParticipants: batchBuilders.length,
+      graduates: batchGraduates.length,
+    };
+  });
+
+  res.status(200).json(stats);
 });
 
 router.get("/latest-open", async (req, res) => {
