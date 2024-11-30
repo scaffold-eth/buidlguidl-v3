@@ -3,6 +3,7 @@ const { ethers } = require("ethers");
 const db = require("../services/db/db");
 const { verifySignature } = require("../utils/sign");
 const { withRole } = require("../middlewares/auth");
+const { getNFTContractAddress } = require("../utils/contracts");
 
 const router = express.Router();
 
@@ -85,6 +86,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
 
   if (batchContractAddress) {
     batchData.contractAddress = batchContractAddress;
+    batchData.nftContractAddress = await getNFTContractAddress(batchContractAddress);
   }
 
   // Create batch.
@@ -138,6 +140,10 @@ router.patch("/update", withRole("admin"), async (req, res) => {
 
   if (batchContractAddress) {
     batchData.contractAddress = batchContractAddress;
+    batchData.nftContractAddress = await getNFTContractAddress(batchContractAddress);
+  } else {
+    batchData.contractAddress = "0x0000000000000000000000000000000000000000";
+    batchData.nftContractAddress = "0x0000000000000000000000000000000000000000";
   }
 
   //   Update batch
