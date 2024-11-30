@@ -142,8 +142,8 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     batchData.contractAddress = batchContractAddress;
     batchData.nftContractAddress = await getNFTContractAddress(batchContractAddress);
   } else {
-    batchData.contractAddress = "0x0000000000000000000000000000000000000000";
-    batchData.nftContractAddress = "0x0000000000000000000000000000000000000000";
+    batchData.contractAddress = "";
+    batchData.nftContractAddress = "";
   }
 
   //   Update batch

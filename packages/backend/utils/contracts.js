@@ -13,7 +13,7 @@ async function getNFTContractAddress(contractAddress) {
     return nftContractAddress;
   } catch (error) {
     console.log("Could not fetch NFT contract address:", error.message);
-    return "0x0000000000000000000000000000000000000000";
+    return "";
   }
 }
 
