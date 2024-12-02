@@ -138,8 +138,7 @@ function BatchCrudForm({ mainnetProvider, batch, onUpdate }) {
 
     try {
       const selectedDate = new Date(formState.batchStartDate);
-      // Set the specific time 17:00:00 for UTC-7:00 so that aligns with moment
-      selectedDate.setUTCHours(17 + 7, 0, 0, 0);
+      selectedDate.setUTCHours(0, 0, 0, 0);
 
       const requestPayload = {
         batchName: formState.batchName,
