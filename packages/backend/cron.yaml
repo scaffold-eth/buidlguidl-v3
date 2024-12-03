@@ -1,11 +1,4 @@
 cron:
-- description: "Update stream data"
-  url: /streams/update
-  schedule: every 60 mins
-  retry_parameters:
-    job_retry_limit: 2
-    min_backoff_seconds: 2.5
-    max_doublings: 5
 - description: "Look up newENS"
   url: /ens/update
   schedule: every 12 hours
