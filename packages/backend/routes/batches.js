@@ -138,12 +138,12 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     telegramLink: batchTelegramLink,
   };
 
-  if (batchContractAddress) {
-    batchData.contractAddress = batchContractAddress;
-    batchData.nftContractAddress = await getNFTContractAddress(batchContractAddress);
-  } else {
+  if (!batchContractAddress) {
     batchData.contractAddress = "";
     batchData.nftContractAddress = "";
+  } else if (batchContractAddress !== batch.data.contractAddress) {
+    batchData.contractAddress = batchContractAddress;
+    batchData.nftContractAddress = await getNFTContractAddress(batchContractAddress);
   }
 
   //   Update batch
