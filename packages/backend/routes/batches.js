@@ -24,6 +24,7 @@ router.get("/", async (req, res) => {
       startDate: batch.startDate,
       telegramLink: batch.telegramLink,
       contractAddress: batch.contractAddress,
+      nftContractAddress: batch.nftContractAddress,
       totalParticipants: batchBuilders.length,
       graduates: batchGraduates.length,
     };
