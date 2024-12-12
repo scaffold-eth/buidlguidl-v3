@@ -37,9 +37,15 @@ const main = async () => {
       const batch = doc.data();
       if (batch.contractAddress) {
         const nftContractAddress = await getNFTContractAddress(batch.contractAddress);
+        if (!nftContractAddress) {
+          console.log("Skipping batch", batch.name);
+          return;
+        }
+
         await db.collection("batches").doc(doc.id).update({
           nftContractAddress,
         });
+
         console.log(`Updated batch ${batch.name} with NFT contract address: ${nftContractAddress}`);
       }
     });

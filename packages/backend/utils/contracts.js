@@ -12,7 +12,7 @@ async function getNFTContractAddress(contractAddress) {
     const nftContractAddress = await contract.batchGraduationNFT();
     return nftContractAddress;
   } catch (error) {
-    console.log("Could not fetch NFT contract address:", error.message);
+    console.error("Could not fetch NFT contract address:", error.message);
     return "";
   }
 }
