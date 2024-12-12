@@ -3,6 +3,7 @@ const { ethers } = require("ethers");
 const db = require("../services/db/db");
 const { verifySignature } = require("../utils/sign");
 const { withRole } = require("../middlewares/auth");
+const { getNFTContractAddress } = require("../utils/contracts");
 
 const router = express.Router();
 
@@ -23,6 +24,7 @@ router.get("/", async (req, res) => {
       startDate: batch.startDate,
       telegramLink: batch.telegramLink,
       contractAddress: batch.contractAddress,
+      nftContractAddress: batch.nftContractAddress,
       totalParticipants: batchBuilders.length,
       graduates: batchGraduates.length,
     };
@@ -85,6 +87,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
 
   if (batchContractAddress) {
     batchData.contractAddress = batchContractAddress;
+    batchData.nftContractAddress = await getNFTContractAddress(batchContractAddress);
   }
 
   // Create batch.
@@ -136,8 +139,12 @@ router.patch("/update", withRole("admin"), async (req, res) => {
     telegramLink: batchTelegramLink,
   };
 
-  if (batchContractAddress) {
+  if (!batchContractAddress) {
+    batchData.contractAddress = "";
+    batchData.nftContractAddress = "";
+  } else if (batchContractAddress !== batch.data.contractAddress) {
     batchData.contractAddress = batchContractAddress;
+    batchData.nftContractAddress = await getNFTContractAddress(batchContractAddress);
   }
 
   //   Update batch
