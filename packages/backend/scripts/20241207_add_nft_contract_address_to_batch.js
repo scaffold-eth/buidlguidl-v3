@@ -8,15 +8,12 @@
 require("dotenv").config();
 const firebaseAdmin = require("firebase-admin");
 const { getNFTContractAddress } = require("../utils/contracts");
-// const { importSeed } = require("../local_database/importSeed");
 
 if (process.env.FIRESTORE_EMULATOR_HOST) {
   firebaseAdmin.initializeApp({
     projectId: "buidlguidl-v3",
     storageBucket: "buidlguidl-v3.appspot.com",
   });
-
-  // importSeed(firebaseAdmin.firestore());
 } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
   console.log("using Firebase live DB");
   firebaseAdmin.initializeApp({
@@ -29,7 +26,6 @@ if (process.env.FIRESTORE_EMULATOR_HOST) {
   });
 }
 
-// // Docs: https://firebase.google.com/docs/firestore/quickstart#node.js_1
 const db = firebaseAdmin.firestore();
 
 const main = async () => {
