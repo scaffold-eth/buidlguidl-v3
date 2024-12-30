@@ -84,6 +84,11 @@ const columns = [
     accessor: "withdraws",
     maxWidth: 150,
     Cell: ({ value }) => <LastWithdrawCell withdraws={value} />,
+    sortType: (rowA, rowB) => {
+      const lastA = rowA.values.withdraws.sort((a, b) => b.timestamp - a.timestamp)[0]?.timestamp || 0;
+      const lastB = rowB.values.withdraws.sort((a, b) => b.timestamp - a.timestamp)[0]?.timestamp || 0;
+      return lastA - lastB;
+    }
   },
 ];
 
