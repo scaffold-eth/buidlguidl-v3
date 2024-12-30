@@ -121,7 +121,8 @@ export default function Fund() {
         return acc;
       }, {});
 
-      const computedCohorts = cohorts.map(cohort => {
+
+      const computedCohorts = cohorts.filter(cohort => !!cohort.balance).map(cohort => {
         return {
           cohort: {
             name: cohort.name,
