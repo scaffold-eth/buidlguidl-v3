@@ -88,7 +88,7 @@ const columns = [
       const lastA = rowA.values.withdraws.sort((a, b) => b.timestamp - a.timestamp)[0]?.timestamp || 0;
       const lastB = rowB.values.withdraws.sort((a, b) => b.timestamp - a.timestamp)[0]?.timestamp || 0;
       return lastA - lastB;
-    }
+    },
   },
 ];
 
@@ -126,22 +126,23 @@ export default function Fund() {
         return acc;
       }, {});
 
-
-      const computedCohorts = cohorts.filter(cohort => !!cohort.balance).map(cohort => {
-        return {
-          cohort: {
-            name: cohort.name,
-            url: cohort.url,
-          },
-          stream: {
-            address: cohort.id,
-            chainId: cohort.chainId,
-          },
-          withdrawsTotal: groupedByStreamAddress[cohort.id]?.length,
-          withdraws: groupedByStreamAddress[cohort.id] ?? [],
-          ...cohort,
-        };
-      });
+      const computedCohorts = cohorts
+        .filter(cohort => !!cohort.balance)
+        .map(cohort => {
+          return {
+            cohort: {
+              name: cohort.name,
+              url: cohort.url,
+            },
+            stream: {
+              address: cohort.id,
+              chainId: cohort.chainId,
+            },
+            withdrawsTotal: groupedByStreamAddress[cohort.id]?.length,
+            withdraws: groupedByStreamAddress[cohort.id] ?? [],
+            ...cohort,
+          };
+        });
 
       setCohortData(computedCohorts);
       setIsLoadingCohorts(false);
@@ -169,7 +170,11 @@ export default function Fund() {
     {
       columns,
       data: cohortData,
-      initialState: { pageIndex: 0, pageSize: 100, sortBy: useMemo(() => [{ id: "balance", desc: false }], []) },
+      initialState: {
+        pageIndex: 0,
+        pageSize: 100,
+        sortBy: useMemo(() => [{ id: "withdraws", desc: true }], []),
+      },
     },
     useSortBy,
     usePagination,
