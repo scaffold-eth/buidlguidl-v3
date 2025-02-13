@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import {
   Box,
-  Button,
-  ButtonGroup,
   Center,
   Container,
   Flex,
@@ -16,35 +14,39 @@ import {
   Th,
   Td,
   chakra,
-  Select,
 } from "@chakra-ui/react";
-import { useTable, usePagination, useSortBy, useRowSelect } from "react-table";
+import { useTable, useSortBy, useRowSelect } from "react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import WithdrawStatsSkeleton from "../../components/skeletons/WithdrawStatsSkeleton";
-import { getAllCohorts } from "../../data/api/builder";
 import axios from "axios";
-import { SERVER_URL as serverUrl } from "../../constants";
+import { PONDER_URL as ponderUrl } from "../../constants";
 import DateWithTooltip from "../../components/DateWithTooltip";
 import { eventDisplay } from "../../helpers/events";
 import { AddressWithBlockExplorer } from "../../components";
+import { formatEther } from "@ethersproject/units";
 
-const CohortAddressCell = ({ cohort }) => (
-  <Link href={cohort.url} isExternal fontWeight="700" color="teal.500">
-    {cohort.name}
+const CohortAddressCell = ({ name, url }) => (
+  <Link href={url} isExternal fontWeight="700" color="teal.500">
+    {name}
   </Link>
 );
 
-const LastWithdrawCell = ({ withdraws }) => {
-  const lastEvent = withdraws.sort((a, b) => b.timestamp - a.timestamp)[0];
-
-  if (!lastEvent) {
+const LastWithdrawCell = ({ withdraws, chainId }) => {
+  if (withdraws.length === 0) {
     return "-";
   }
 
+  const lastEvent = withdraws[0];
+
   return (
     <>
-      <DateWithTooltip mb={2} timestamp={lastEvent.timestamp} />
+      <DateWithTooltip mb={2} timestamp={lastEvent.timestamp * 1000} />
+      <AddressWithBlockExplorer address={lastEvent.builder} chainId={chainId} w="10" fontSize="16" />
+      <Text>withdrew Ξ {parseFloat(lastEvent.amount).toFixed(4)}</Text>
+      <Text fontStyle="italic" mt={2} wordBreak="break-all" fontSize="xs">
+        "{lastEvent.reason}"
+      </Text>
       {eventDisplay(lastEvent)}
     </>
   );
@@ -53,12 +55,12 @@ const LastWithdrawCell = ({ withdraws }) => {
 const columns = [
   {
     Header: "Cohort",
-    accessor: "cohort",
-    Cell: ({ value }) => <CohortAddressCell cohort={value} />,
+    accessor: row => { return { name: row.name, url: row.url } },
+    Cell: ({ value }) => <CohortAddressCell name={value.name} url={value.url} />,
   },
   {
     Header: "Stream",
-    accessor: "stream",
+    accessor: row => { return { address: row.address, chainId: row.chainId } },
     Cell: ({ value }) => (
       <AddressWithBlockExplorer address={value.address} chainId={value.chainId} w="10" fontSize="16" />
     ),
@@ -66,85 +68,74 @@ const columns = [
   {
     Header: "Balance",
     accessor: "balance",
-    // Sorting by stream cap for now.
-    Cell: ({ value }) => <>Ξ {parseFloat(value).toFixed(4)}</>,
+    // Balance rounded to 4 decimals
+    Cell: ({ value }) => <>Ξ {formatEther(BigInt(value) - (BigInt(value) % 100000000000000n))}</>,
   },
   {
     Header: "Nº builders",
     accessor: "builders",
-    Cell: ({ value }) => <>{Object.keys(value).length}</>,
+    Cell: ({ value }) => <>{value.totalCount}</>,
   },
   {
     Header: "Nº of withdraws",
-    accessor: "withdrawsTotal",
+    accessor: "withdrawals.totalCount",
     Cell: ({ value }) => <>{value}</>,
   },
   {
     Header: "Last withdraw",
-    accessor: "withdraws",
+    accessor: row => { return { chainId: row.chainId, withdraws: row.withdrawals.items } },
     maxWidth: 150,
-    Cell: ({ value }) => <LastWithdrawCell withdraws={value} />,
-    sortType: (rowA, rowB) => {
-      const lastA = rowA.values.withdraws.sort((a, b) => b.timestamp - a.timestamp)[0]?.timestamp || 0;
-      const lastB = rowB.values.withdraws.sort((a, b) => b.timestamp - a.timestamp)[0]?.timestamp || 0;
-      return lastA - lastB;
-    },
+    Cell: ({ value }) => <LastWithdrawCell withdraws={value.withdraws} chainId={value.chainId} />,
   },
 ];
 
 export default function Fund() {
-  const [isLoadingEvents, setIsLoadingEvents] = useState(false);
   const [isLoadingCohorts, setIsLoadingCohorts] = useState(true);
   const [cohortData, setCohortData] = useState([]);
   const { secondaryFontColor, baseColor } = useCustomColorModes();
 
-  const isLoading = isLoadingEvents || isLoadingCohorts;
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoadingCohorts(true);
-      const cohorts = await getAllCohorts();
 
-      let events = [];
+      let query = `
+        query {
+          cohortInformations {
+            items {
+              address
+              chainId
+              name
+              url
+              balance
+              builders(where: { amount_gt: 0 }) {
+                totalCount
+              }
+              withdrawals(orderBy: "timestamp", orderDirection: "desc", limit: 1) {
+                totalCount
+                items {
+                  id
+                  builder
+                  amount
+                  reason
+                  timestamp
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      let cohorts = [];
       try {
-        const response = await axios.get(`${serverUrl}/latest-events?type=cohort.withdraw`);
-        events = response.data;
+        const responsePonder = await axios.post(`${ponderUrl}`, { query });
+        cohorts = responsePonder.data.data.cohortInformations.items;
+        cohorts.sort((a, b) => (a.withdrawals.items.length > 0 ? a.withdrawals.items[0].timestamp : 0) - (b.withdrawals.items.length > 0 ? b.withdrawals.items[0].timestamp : 0))
+        setCohortData(cohorts);
       } catch (error) {
         console.error(error);
-        throw new Error(`Couldn't get the cohort withdraw events from the server`);
+        throw new Error(`Couldn't get the cohorts information from Ponder`);
       }
 
-      const groupedByStreamAddress = events.reduce((acc, event) => {
-        const address = event.payload.streamAddress;
-
-        if (!acc[address]) {
-          acc[address] = [];
-        }
-
-        acc[address].push(event);
-
-        return acc;
-      }, {});
-
-      const computedCohorts = cohorts
-        .filter(cohort => !!cohort.balance)
-        .map(cohort => {
-          return {
-            cohort: {
-              name: cohort.name,
-              url: cohort.url,
-            },
-            stream: {
-              address: cohort.id,
-              chainId: cohort.chainId,
-            },
-            withdrawsTotal: groupedByStreamAddress[cohort.id]?.length,
-            withdraws: groupedByStreamAddress[cohort.id] ?? [],
-            ...cohort,
-          };
-        });
-
-      setCohortData(computedCohorts);
       setIsLoadingCohorts(false);
     };
 
@@ -156,28 +147,16 @@ export default function Fund() {
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
+    rows,
   } = useTable(
     {
       columns,
       data: cohortData,
       initialState: {
-        pageIndex: 0,
-        pageSize: 100,
         sortBy: useMemo(() => [{ id: "withdraws", desc: true }], []),
       },
     },
     useSortBy,
-    usePagination,
     useRowSelect,
   );
 
@@ -191,7 +170,7 @@ export default function Fund() {
           Active Cohorts
         </Text>
       </Container>
-      {isLoading ? (
+      {isLoadingCohorts ? (
         <WithdrawStatsSkeleton />
       ) : (
         <Box overflowX="auto" mb={8}>
@@ -222,7 +201,7 @@ export default function Fund() {
               ))}
             </Thead>
             <Tbody {...getTableBodyProps()}>
-              {page.map(row => {
+              {rows.map(row => {
                 prepareRow(row);
                 return (
                   <Tr {...row.getRowProps()} key={row.id}>
@@ -244,46 +223,6 @@ export default function Fund() {
               })}
             </Tbody>
           </Table>
-
-          <Center mt={4}>
-            <ButtonGroup>
-              <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-                {"<<"}
-              </Button>
-              <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                {"<"}
-              </Button>
-              <Button onClick={() => nextPage()} disabled={!canNextPage}>
-                {">"}
-              </Button>
-              <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-                {">>"}
-              </Button>
-            </ButtonGroup>
-          </Center>
-          <Center mt={4}>
-            <Text mr={4}>
-              Page{" "}
-              <strong>
-                {pageIndex + 1} of {pageOptions.length}
-              </strong>{" "}
-            </Text>
-            <Box>
-              <Select
-                isFullWidth={false}
-                value={pageSize}
-                onChange={e => {
-                  setPageSize(Number(e.target.value));
-                }}
-              >
-                {[25, 50, 100].map(pageSizeOption => (
-                  <option key={pageSizeOption} value={pageSizeOption}>
-                    Show {pageSizeOption}
-                  </option>
-                ))}
-              </Select>
-            </Box>
-          </Center>
         </Box>
       )}
     </Container>
