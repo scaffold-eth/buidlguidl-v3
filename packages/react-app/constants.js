@@ -297,6 +297,7 @@ export const NETWORK = chainId => {
 
 // export const SERVER_URL = "https://backend.ether.delivery:49832"
 export const SERVER_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:49832";
+export const PONDER_URL = process.env.NEXT_PUBLIC_PONDER_URL ?? "http://localhost:42069";
 export const SRE_SERVER_URL = process.env.NEXT_PUBLIC_SRE_BACKEND_URL ?? "http://localhost:49832";
 export const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT ?? "development";
 
