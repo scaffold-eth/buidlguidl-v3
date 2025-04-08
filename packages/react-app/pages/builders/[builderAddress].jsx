@@ -32,10 +32,9 @@ import SubmitBuildModal from "../../components/SubmitBuildModal";
 import DateWithTooltip from "../../components/DateWithTooltip";
 import useCustomColorModes from "../../hooks/useCustomColorModes";
 import { getWithdrawEvents } from "../../data/api/streams";
-import { getChallengeEventsForUser, getSreBuilder } from "../../data/api/sre";
+import { getSreBuilderChallengeData } from "../../data/api/sre";
 import BuilderChallengesTable from "../../components/BuilderChallengesTable";
 import { SERVER_URL as serverUrl } from "../../constants";
-import { SreChallengeInfo } from "../../data/SreChallenges";
 import MetaSeo from "../../components/MetaSeo";
 import { getTelegramAccessForBuilder } from "../../helpers/server/getTelegramAccessForBuilder";
 import { byTimestamp } from "../../helpers/sorting";
@@ -55,7 +54,6 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
   const [isLoadingBuilder, setIsLoadingBuilder] = useState(false);
   const [builderChallenges, setBuilderChallenges] = useState([]);
   const [isLoadingTimestamps, setIsLoadingTimestamps] = useState(false);
-  const [challengeEvents, setChallengeEvents] = useState([]);
   const [isLoadingBuilderChallenges, setIsLoadingBuilderChallenges] = useState(false);
   const [streamDisplay, setStreamDisplay] = useState(null);
   const isMyProfile = builderAddress === address;
@@ -73,17 +71,13 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
 
   const fetchBuilderChallenges = useCallback(async () => {
     setIsLoadingBuilderChallenges(true);
-    const challengesFromBuilder = await getSreBuilder(builderAddress);
+    const challengesFromBuilder = await getSreBuilderChallengeData(builderAddress);
 
-    let builderChallengesData = Object.entries(challengesFromBuilder.challenges ?? {});
+    const builderChallengesData = challengesFromBuilder.challenges || [];
 
-    if (builderChallengesData.length) {
-      builderChallengesData = builderChallengesData.sort((a, b) => {
-        const [aChallenge] = a;
-        const [bChallenge] = b;
-        return SreChallengeInfo[aChallenge]?.id > SreChallengeInfo[bChallenge]?.id ? 1 : -1;
-      });
-    }
+    builderChallengesData.sort((a, b) => {
+      return a.challenge.sortOrder > b.challenge.sortOrder ? 1 : -1;
+    });
 
     setBuilderChallenges(builderChallengesData);
     setIsLoadingBuilderChallenges(false);
@@ -135,25 +129,6 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
     });
   }, [builder]);
 
-  useEffect(() => {
-    if (!builderAddress) {
-      return;
-    }
-
-    async function fetchChallengeEvents() {
-      setIsLoadingTimestamps(true);
-      try {
-        const fetchedChallengeEvents = await getChallengeEventsForUser(builderAddress);
-        setChallengeEvents(fetchedChallengeEvents.sort(byTimestamp).reverse());
-        setIsLoadingTimestamps(false);
-      } catch (error) {
-        console.log("Cant fetch challenge events", error);
-      }
-    }
-    fetchChallengeEvents();
-    // eslint-disable-next-line
-  }, [builderAddress]);
-
   const StreamInfo = isMyProfile && !isLoadingBuilder && !!streamDisplay && (
     <Flex
       mr={{ base: 0, md: 2 }}
@@ -196,7 +171,11 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
         <Flex align="center" justify="center" direction="column" p={4} mt={4} bgColor={baseOrangeColor}>
           <Text mb={2} fontSize="xs">
             The BuidlGuidl is no longer funding <strong>Simple Streams</strong>. Read more about it{" "}
-            <Link href="https://mirror.xyz/austingriffith.eth/-jXBWxpIPMByDrqLBKBvi93iKUGkI4zp8Pt7E6jGAqk" isExternal textDecoration="underline">
+            <Link
+              href="https://mirror.xyz/austingriffith.eth/-jXBWxpIPMByDrqLBKBvi93iKUGkI4zp8Pt7E6jGAqk"
+              isExternal
+              textDecoration="underline"
+            >
               here
             </Link>
             .
@@ -289,12 +268,8 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
                 </Box>
               </Flex>
             ))}
-          {!isLoadingBuilderChallenges && Object.keys(builderChallenges).length !== 0 && (
-            <BuilderChallengesTable
-              challenges={builderChallenges}
-              isLoadingTimestamps={isLoadingTimestamps}
-              challengeEvents={challengeEvents}
-            />
+          {!isLoadingBuilderChallenges && builderChallenges.length !== 0 && (
+            <BuilderChallengesTable challenges={builderChallenges} isLoadingTimestamps={isLoadingTimestamps} />
           )}
           {!isLoadingBuilder && withdrawEvents.length !== 0 && (
             <Box mb={4}>
