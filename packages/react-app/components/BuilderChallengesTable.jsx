@@ -7,7 +7,7 @@ import useCustomColorModes from "../hooks/useCustomColorModes";
 
 const SRE_FRONTEND = "https://speedrunethereum.com";
 
-export default function BuilderChallengesTable({ challenges, isLoadingTimestamps, challengeEvents }) {
+export default function BuilderChallengesTable({ challenges, isLoadingTimestamps }) {
   const { baseColor } = useCustomColorModes();
 
   return (
@@ -27,13 +27,11 @@ export default function BuilderChallengesTable({ challenges, isLoadingTimestamps
             </Tr>
           </Thead>
           <Tbody>
-            {challenges.map(([challengeId, lastSubmission]) => {
+            {challenges.map(challenge => {
+              const challengeId = challenge.challengeId;
               if (!SreChallengeInfo[challengeId]) {
                 return null;
               }
-              const lastEventForChallenge = challengeEvents?.filter(
-                event => event.payload.challengeId === challengeId,
-              )[0];
 
               return (
                 <Tr key={challengeId}>
@@ -48,18 +46,12 @@ export default function BuilderChallengesTable({ challenges, isLoadingTimestamps
                     </Link>
                   </Td>
                   <Td>
-                    <Link
-                      // Legacy branchUrl
-                      href={lastSubmission.contractUrl || lastSubmission.branchUrl}
-                      color="teal.500"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <Link href={challenge.contractUrl} color="teal.500" target="_blank" rel="noopener noreferrer">
                       Code
                     </Link>
                   </Td>
                   <Td>
-                    <Link href={lastSubmission.deployedUrl} color="teal.500" target="_blank" rel="noopener noreferrer">
+                    <Link href={challenge.frontendUrl} color="teal.500" target="_blank" rel="noopener noreferrer">
                       Demo
                     </Link>
                   </Td>
@@ -67,14 +59,14 @@ export default function BuilderChallengesTable({ challenges, isLoadingTimestamps
                     {isLoadingTimestamps ? (
                       <SkeletonText noOfLines={1} />
                     ) : (
-                      <DateWithTooltip timestamp={lastEventForChallenge?.timestamp} />
+                      <DateWithTooltip timestamp={challenge.submittedAt} />
                     )}
                   </Td>
                   <Td>
                     <ChallengeStatusTag
-                      status={lastSubmission.status}
-                      comment={lastSubmission.reviewComment}
-                      autograding={lastSubmission.autograding}
+                      status={challenge.reviewAction}
+                      comment={challenge.reviewComment}
+                      autograding={challenge.challenge.autograding}
                     />
                   </Td>
                 </Tr>
