@@ -313,7 +313,14 @@ const BuilderProfileCard = ({
                 )
               )}
               {isMyProfile && (
-                <Button mb={3} size="xs" variant="outline" onClick={onOpen} colorScheme="customBaseColorScheme">
+                <Button
+                  mb={3}
+                  size="xs"
+                  variant="outline"
+                  onClick={onOpen}
+                  colorScheme="customBaseColorScheme"
+                  disabled
+                >
                   Update socials
                 </Button>
               )}
@@ -356,7 +363,14 @@ const BuilderProfileCard = ({
                 />
               </FormControl>
             ))}
-            <Button colorScheme="blue" onClick={handleUpdateSocials} isLoading={isUpdatingSocials} isFullWidth mt={4}>
+            <Button
+              colorScheme="blue"
+              onClick={handleUpdateSocials}
+              isLoading={isUpdatingSocials}
+              isFullWidth
+              mt={4}
+              disabled
+            >
               Update
             </Button>
           </ModalBody>

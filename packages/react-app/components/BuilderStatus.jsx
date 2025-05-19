@@ -75,7 +75,15 @@ const BuilderStatus = ({ builder }) => {
           )}
         </Box>
         {isMyProfile && (
-          <Button mt={3} size="xs" variant="outline" onClick={onOpen} isFullWidth colorScheme="customBaseColorScheme">
+          <Button
+            mt={3}
+            size="xs"
+            variant="outline"
+            onClick={onOpen}
+            isFullWidth
+            colorScheme="customBaseColorScheme"
+            disabled
+          >
             Update status
           </Button>
         )}
