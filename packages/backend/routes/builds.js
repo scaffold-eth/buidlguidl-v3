@@ -4,7 +4,7 @@ const db = require("../services/db/db");
 const storage = require("../services/storage/storage");
 const { verifySignature } = require("../utils/sign");
 const { EVENT_TYPES, createEvent } = require("../utils/events");
-const { withRole } = require("../middlewares/auth");
+const { withRole, readOnlyMode } = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -49,7 +49,7 @@ router.get("/builder/:builderAddress", async (req, res) => {
 /**
  * Create a new build.
  */
-router.post("/", withRole("builder"), async (req, res) => {
+router.post("/", readOnlyMode, withRole("builder"), async (req, res) => {
   console.log("POST /builds");
   const { buildType, buildUrl, videoUrl, demoUrl, desc, image, name, signature, coBuilders } = req.body;
   const address = req.address;
@@ -105,7 +105,7 @@ router.post("/", withRole("builder"), async (req, res) => {
 /**
  * Edit a build.
  */
-router.patch("/:buildId", withRole("builder"), async (req, res) => {
+router.patch("/:buildId", readOnlyMode, withRole("builder"), async (req, res) => {
   const buildId = req.params.buildId;
   const { buildType, buildUrl, demoUrl, videoUrl, desc, image, name, signature, coBuilders } = req.body;
   console.log("EDIT /builds/", buildId);
@@ -176,7 +176,7 @@ router.patch("/:buildId", withRole("builder"), async (req, res) => {
 /**
  * Delete a build.
  */
-router.delete("/:buildId", withRole("builder"), async (req, res) => {
+router.delete("/:buildId", readOnlyMode, withRole("builder"), async (req, res) => {
   const buildId = req.params.buildId;
   console.log("DELETE /builds/", buildId);
 
@@ -222,7 +222,7 @@ router.delete("/:buildId", withRole("builder"), async (req, res) => {
   res.sendStatus(200);
 });
 
-router.post("/upload-img", withRole("builder"), async (req, res) => {
+router.post("/upload-img", readOnlyMode, withRole("builder"), async (req, res) => {
   const form = formidable();
 
   form.parse(req, async (err, fields, files) => {
@@ -246,7 +246,7 @@ router.post("/upload-img", withRole("builder"), async (req, res) => {
 /**
  * Post a like for a build.
  */
-router.post("/like", withRole("builder"), async (req, res) => {
+router.post("/like", readOnlyMode, withRole("builder"), async (req, res) => {
   const { buildId, signature, userAddress } = req.body;
   console.log(`POST /builds/like`);
   const address = req.address;
@@ -290,7 +290,7 @@ router.post("/like", withRole("builder"), async (req, res) => {
 /**
  * Feature / Unfeature a build
  */
-router.patch("/", withRole("admin"), async (req, res) => {
+router.patch("/", readOnlyMode, withRole("admin"), async (req, res) => {
   console.log("PATCH /builds");
   const { buildId, featured, signature, userAddress } = req.body;
   const address = req.address;

@@ -58,8 +58,19 @@ const withApiKey = (req, res, next) => {
   next();
 };
 
+/**
+ * Middleware to disable write operations and return read-only mode message
+ */
+const readOnlyMode = (req, res, next) => {
+  res.status(503).json({
+    error: "BG3.5 backend is in read-only mode",
+    message: "Due to SRE migration, the backend is in read-only mode for most of its operations.",
+  });
+};
+
 module.exports = {
   withAddress,
   withRole,
   withApiKey,
+  readOnlyMode,
 };

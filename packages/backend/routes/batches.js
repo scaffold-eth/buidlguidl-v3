@@ -2,7 +2,7 @@ const express = require("express");
 const { ethers } = require("ethers");
 const db = require("../services/db/db");
 const { verifySignature } = require("../utils/sign");
-const { withRole } = require("../middlewares/auth");
+const { withRole, readOnlyMode } = require("../middlewares/auth");
 const { getNFTContractAddress } = require("../utils/contracts");
 
 const router = express.Router();
@@ -39,7 +39,7 @@ router.get("/latest-open", async (req, res) => {
   res.status(200).send(batch);
 });
 
-router.post("/create", withRole("admin"), async (req, res) => {
+router.post("/create", readOnlyMode, withRole("admin"), async (req, res) => {
   const neededBodyProps = ["batchName", "batchStatus", "batchStartDate", "batchTelegramLink"];
   if (neededBodyProps.some(prop => req.body[prop] === undefined)) {
     res.status(400).send(`Missing required body property. Required: ${neededBodyProps.join(", ")}`);
@@ -97,7 +97,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
   res.json(batch.data);
 });
 
-router.patch("/update", withRole("admin"), async (req, res) => {
+router.patch("/update", readOnlyMode, withRole("admin"), async (req, res) => {
   const neededBodyProps = ["batchName", "batchStatus", "batchStartDate", "batchTelegramLink"];
   if (neededBodyProps.some(prop => req.body[prop] === undefined)) {
     res.status(400).send(`Missing required body property. Required: ${neededBodyProps.join(", ")}`);
