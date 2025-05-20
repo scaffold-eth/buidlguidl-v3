@@ -218,6 +218,22 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
           )}
         </GridItem>
         <GridItem colSpan={{ base: 1, xl: 3 }}>
+          <Flex align="center" justify="center" direction="column" p={4} mb={4} bgColor="yellow.100">
+            <Text fontWeight="bold" mb={2}>
+              ⚠️ Profile Migration ⚠️
+            </Text>
+            <Text textAlign="center" mb={4}>
+              BG profiles have been migrated to SpeedRunEthereum, which will have the canonical profiles where builders
+              can create their onchain portfolio.
+            </Text>
+            <Text>
+              {" "}
+              Check this builder profile{" "}
+              <Link href={`https://speedrunethereum.com/builders/${builder?.id}`} isExternal textDecoration="underline">
+                here
+              </Link>
+            </Text>
+          </Flex>
           {isMyProfile && <BuilderNotifications builder={builder} userProvider={userProvider} onUpdate={refreshData} />}
           <Flex spacing={4} mb={8} direction={{ base: "column-reverse", md: "row" }}>
             {isLoadingBuilder && <BuilderProfileStreamSkeleton />}
@@ -229,7 +245,7 @@ export default function BuilderProfileView({ serverUrl, mainnetProvider, address
             </Heading>
             <Spacer />
             {isMyProfile && (
-              <Button variant="secondary" mb={8} onClick={onOpen}>
+              <Button variant="secondary" mb={8} onClick={onOpen} disabled>
                 Submit New Build
               </Button>
             )}

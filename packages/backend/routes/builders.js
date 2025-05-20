@@ -2,7 +2,7 @@ const express = require("express");
 const { ethers } = require("ethers");
 const db = require("../services/db/db");
 const { verifySignature } = require("../utils/sign");
-const { withAddress, withRole } = require("../middlewares/auth");
+const { withAddress, withRole, readOnlyMode } = require("../middlewares/auth");
 const { EVENT_TYPES, createEvent } = require("../utils/events");
 const { getEnsFromAddress } = require("../utils/ens");
 
@@ -47,7 +47,7 @@ router.get("/:builderAddress", async (req, res) => {
   res.status(200).json(builder.data);
 });
 
-router.post("/create", withRole("admin"), async (req, res) => {
+router.post("/create", readOnlyMode, withRole("admin"), async (req, res) => {
   const neededBodyProps = ["builderAddress", "builderFunction", "builderRole", "signature"];
   if (neededBodyProps.some(prop => req.body[prop] === undefined)) {
     res.status(400).send(`Missing required body property. Required: ${neededBodyProps.join(", ")}`);
@@ -136,7 +136,7 @@ router.post("/create", withRole("admin"), async (req, res) => {
   res.json(user.data);
 });
 
-router.patch("/update", withRole("admin"), async (req, res) => {
+router.patch("/update", readOnlyMode, withRole("admin"), async (req, res) => {
   const neededBodyProps = ["builderAddress", "builderFunction", "builderRole", "signature"];
   if (neededBodyProps.some(prop => req.body[prop] === undefined)) {
     res.status(400).send(`Missing required body property. Required: ${neededBodyProps.join(", ")}`);
@@ -212,7 +212,7 @@ router.patch("/update", withRole("admin"), async (req, res) => {
   res.json(user.data);
 });
 
-router.post("/update-socials", withAddress, async (req, res) => {
+router.post("/update-socials", readOnlyMode, withAddress, async (req, res) => {
   const { socialLinks, signature } = req.body;
   const address = req.address;
   console.log("POST /builders/update-socials", address, socialLinks);
@@ -233,7 +233,7 @@ router.post("/update-socials", withAddress, async (req, res) => {
   res.status(200).json(updatedUser);
 });
 
-router.post("/set-batch-number", withAddress, async (req, res) => {
+router.post("/set-batch-number", readOnlyMode, withAddress, async (req, res) => {
   const { batch, signature } = req.body;
   const address = req.address;
   console.log("POST /builders/set-batch-number", address, batch);
@@ -260,7 +260,7 @@ router.post("/set-batch-number", withAddress, async (req, res) => {
   res.status(200).json(updatedUser);
 });
 
-router.post("/update-status", withAddress, async (req, res) => {
+router.post("/update-status", readOnlyMode, withAddress, async (req, res) => {
   const { status, signature } = req.body;
   const address = req.address;
   console.log("POST /builders/update-status", address, status);
@@ -290,7 +290,7 @@ router.post("/update-status", withAddress, async (req, res) => {
   res.status(200).json(updatedUser);
 });
 
-router.post("/update-location", withAddress, async (req, res) => {
+router.post("/update-location", readOnlyMode, withAddress, async (req, res) => {
   const { location, signature } = req.body;
   const address = req.address;
   console.log("POST /builders/update-location", address, location);
@@ -312,7 +312,7 @@ router.post("/update-location", withAddress, async (req, res) => {
   res.status(200).json(updatedUser);
 });
 
-router.post("/update-reached-out", withRole("admin"), async (request, response) => {
+router.post("/update-reached-out", readOnlyMode, withRole("admin"), async (request, response) => {
   const { reachedOut, builderAddress, signature } = request.body;
   const address = request.address;
   console.log("POST /builders/update-reached-out", address, reachedOut);
@@ -334,7 +334,7 @@ router.post("/update-reached-out", withRole("admin"), async (request, response) 
   response.status(200).send(updatedUser);
 });
 
-router.post("/update-scholarship", withRole("admin"), async (request, response) => {
+router.post("/update-scholarship", readOnlyMode, withRole("admin"), async (request, response) => {
   const { scholarship, builderAddress, signature } = request.body;
   const address = request.address;
   console.log("POST /builders/update-scholarship", address, scholarship);
@@ -356,7 +356,7 @@ router.post("/update-scholarship", withRole("admin"), async (request, response) 
   response.status(200).send(updatedUser);
 });
 
-router.post("/update-graduated", withRole("admin"), async (request, response) => {
+router.post("/update-graduated", readOnlyMode, withRole("admin"), async (request, response) => {
   const { graduated, reason, builderAddress, signature } = request.body;
   const address = request.address;
   console.log("POST /builders/update-graduated", address, graduated, reason);
@@ -384,7 +384,7 @@ router.post("/update-graduated", withRole("admin"), async (request, response) =>
   response.status(200).send(updatedUser);
 });
 
-router.post("/update-disabled", withRole("admin"), async (request, response) => {
+router.post("/update-disabled", readOnlyMode, withRole("admin"), async (request, response) => {
   const { disabled, builderAddress, signature } = request.body;
   const address = request.address;
   console.log("POST /builders/update-disabled", address, disabled);

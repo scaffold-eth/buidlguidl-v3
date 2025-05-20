@@ -2,7 +2,7 @@ const express = require("express");
 const ethers = require("ethers");
 const db = require("../services/db/db");
 const { getStreamEvents, updateStreamsForBuilders } = require("../utils/streams");
-const { withRole } = require("../middlewares/auth");
+const { withRole, readOnlyMode } = require("../middlewares/auth");
 const { verifySignature } = require("../utils/sign");
 
 const router = express.Router();
@@ -28,7 +28,7 @@ router.get("/update", async (req, res) => {
 /**
  * Update all builders stream data. (POST)
  */
-router.post("/update", withRole("builder"), async (req, res) => {
+router.post("/update", readOnlyMode, withRole("builder"), async (req, res) => {
   console.log("POST /streams/update");
 
   const { signature } = req.body;
@@ -56,7 +56,7 @@ router.post("/update", withRole("builder"), async (req, res) => {
 /**
  * Update a single builder stream data.
  */
-router.post("/update-single", withRole("builder"), async (req, res) => {
+router.post("/update-single", readOnlyMode, withRole("builder"), async (req, res) => {
   const address = req.address;
   console.log("/streams/update-single", address);
 
