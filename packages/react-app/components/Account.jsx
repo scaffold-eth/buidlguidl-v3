@@ -154,10 +154,10 @@ export default function Account({
           _active={{ background: "none" }}
         >
           <Text color={primaryFontColor} fontWeight="bold" textAlign="center" mb={1}>
-            Join the BuidlGuidl
+            ⚠️ Profile Migration ⚠️
           </Text>
           <Text color={secondaryFontColor} fontSize="sm" fontWeight="normal" textAlign="center" mb={6}>
-            Complete SpeedRunEthereum to join the BuidlGuidl
+            BG profiles have been migrated to SpeedRunEthereum
           </Text>
           <Box m="auto" p="px" borderWidth="1px" borderColor={dividerColor} borderRadius={8}>
             <QRPunkBlockie address={address} w={19} borderRadius={6} />
