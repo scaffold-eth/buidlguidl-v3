@@ -135,24 +135,21 @@ export default function BuildDetailView({ build }) {
 export async function getServerSideProps(context) {
   const { buildId } = context.params;
 
-  if (!buildId) return;
-  let fetchedBuild;
-  try {
-    fetchedBuild = await getBuildById(buildId);
-  } catch (err) {
-    console.log(err);
-    return {
-      notFound: true,
-    };
+  if (!buildId) {
+    return { notFound: true };
   }
 
-  if (!fetchedBuild) {
-    return {
-      notFound: true,
-    };
+  const mapping = require("../../data/build-redirects.json");
+  const newId = mapping[buildId];
+
+  if (!newId) {
+    return { notFound: true };
   }
 
   return {
-    props: { build: fetchedBuild },
+    redirect: {
+      destination: `https://speedrunethereum.com/builds/${newId}`,
+      permanent: true,
+    },
   };
 }
