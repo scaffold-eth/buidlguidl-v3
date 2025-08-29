@@ -4,13 +4,14 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import ReactMarkdown from "react-markdown";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { chakraMarkdownComponents } from "../../helpers/chakraMarkdownTheme";
-import { getBuildById, getGithubBuildReadme } from "../../data/api/builds";
+import { getGithubBuildReadme } from "../../data/api/builds";
 import BuildDetailHeader from "../../components/BuildDetailHeader";
 import BuildLikeButton from "../../components/BuildLikeButton";
 import useConnectedAddress from "../../hooks/useConnectedAddress";
 import { getYoutubeVideoId } from "../../helpers/strings";
 import { useRouter } from "next/router";
 import MetaSeo from "../../components/MetaSeo";
+import uuidv5 from 'uuid/v5';
 
 export default function BuildDetailView({ build }) {
   const address = useConnectedAddress();
@@ -132,6 +133,8 @@ export default function BuildDetailView({ build }) {
   );
 }
 
+const FIREBASE_TO_UUID_NAMESPACE = "ddeb27fb-d9a0-4624-be4d-4615062daed4";
+
 export async function getServerSideProps(context) {
   const { buildId } = context.params;
 
@@ -139,12 +142,8 @@ export async function getServerSideProps(context) {
     return { notFound: true };
   }
 
-  const mapping = require("../../data/build-redirects.json");
-  const newId = mapping[buildId];
-
-  if (!newId) {
-    return { notFound: true };
-  }
+  const id = String(buildId);
+  const newId = uuidv5(id, FIREBASE_TO_UUID_NAMESPACE);
 
   return {
     redirect: {
