@@ -141,7 +141,7 @@ export default function Header({
             <NextLink href="/activity">Activity</NextLink>
           </chakra.li>
           <chakra.li key="/builds">
-            <NextLink href="/builds">Builds</NextLink>
+            <NextLink href="https://speedrunethereum.com/builds">Builds</NextLink>
           </chakra.li>
           <chakra.li key="/builders">
             <NextLink href="/builders">Builders</NextLink>

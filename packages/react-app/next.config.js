@@ -7,4 +7,13 @@ module.exports = withTM({
 
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: "/builds",
+        destination: "https://speedrunethereum.com/builds",
+        permanent: true,
+      },
+    ];
+  },
 });
