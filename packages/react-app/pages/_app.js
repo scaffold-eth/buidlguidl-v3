@@ -98,7 +98,7 @@ function MyApp({ Component, pageProps }) {
 
     if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
     const scaffoldEthProviderPromise = providerPromiseWrapper(
-      new StaticJsonRpcProvider("https://rpc.scaffoldeth.io:48544"),
+      new StaticJsonRpcProvider("https://mainnet.rpc.buidlguidl.com"),
     );
 
     // attempt to connect to our own scaffold eth rpc and if that fails fall back to infura...
